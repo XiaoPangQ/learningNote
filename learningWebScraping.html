@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python 爬虫从入门到精通 · 学习笔记（小白友好版）</title>
+    <style>
+      :root {
+        --py: #3776ab;
+        --py-dark: #1f2d3d;
+        --py-yellow: #ffd43b;
+        --bg: #ffffff;
+        --bg-soft: #f6f8fa;
+        --bg-code: #f3f4f6;
+        --text: #1f2329;
+        --text-soft: #5a6270;
+        --border: #e3e6ea;
+        --mnemonic-bg: #fff8e1;
+        --mnemonic-border: #f0a020;
+        --tip-bg: #e7f1f9;
+        --tip-border: #3776ab;
+        --warn-bg: #fdecea;
+        --warn-border: #e57373;
+        --why-bg: #eef5e9;
+        --why-border: #4caf50;
+        --law-bg: #fdeeee;
+        --law-border: #c62828;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 84px;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+          'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        background: var(--bg-soft);
+        color: var(--text);
+        line-height: 1.75;
+        font-size: 15px;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: linear-gradient(90deg, var(--py-dark), #2c3e50);
+        color: #fff;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+      .topbar .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--py), var(--py-yellow));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+        color: #fff;
+      }
+      .topbar h1 {
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .topbar .sub {
+        font-size: 12px;
+        opacity: 0.85;
+        margin-left: auto;
+      }
+      .wrap {
+        display: flex;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .toc-overlay {
+        display: none;
+      }
+      nav.toc {
+        position: sticky;
+        top: 64px;
+        align-self: flex-start;
+        height: calc(100vh - 64px);
+        overflow-y: auto;
+        width: 244px;
+        flex-shrink: 0;
+        padding: 18px 0;
+        font-size: 13px;
+      }
+      nav.toc .grp {
+        font-weight: 700;
+        color: var(--py-dark);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 14px 6px 6px;
+      }
+      nav.toc .home-link {
+        margin: 0 0 12px;
+        padding: 7px 14px;
+        color: var(--py);
+        font-weight: 600;
+      }
+      nav.toc .home-link:hover {
+        background: #dcebf7;
+      }
+      nav.toc a {
+        display: block;
+        padding: 5px 14px;
+        color: var(--text-soft);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.15s;
+        line-height: 1.45;
+      }
+      nav.toc a:hover {
+        background: var(--bg-code);
+        color: var(--py);
+      }
+      nav.toc a.active {
+        background: #dcebf7;
+        color: var(--py);
+        font-weight: 600;
+      }
+      main {
+        flex: 1;
+        min-width: 0;
+        padding: 22px 0 60px 28px;
+        max-width: 920px;
+      }
+      @media (max-width: 880px) {
+        .menu-toggle {
+          display: block;
+          position: fixed;
+          top: 14px;
+          right: 14px;
+          z-index: 110;
+          padding: 9px 13px;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          border-radius: 7px;
+          background: var(--py-dark);
+          color: #fff;
+          font: inherit;
+          font-size: 13px;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+          cursor: pointer;
+        }
+        .menu-toggle:hover {
+          background: var(--py);
+        }
+        .toc-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(31, 45, 61, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .toc-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .wrap {
+          padding: 0 14px;
+        }
+        nav.toc {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 100;
+          width: min(300px, 84vw);
+          height: 100vh;
+          overflow-y: auto;
+          background: #fff;
+          border-right: 1px solid var(--border);
+          border-radius: 0;
+          margin: 0;
+          padding: 76px 16px 24px;
+          box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+        }
+        nav.toc.open {
+          transform: translateX(0);
+        }
+        main {
+          padding-left: 0;
+        }
+      }
+      .part {
+        margin: 34px 0 8px;
+        font-size: 21px;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(90deg, var(--py), #5a9fd4);
+        padding: 10px 16px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      section {
+        margin: 26px 0;
+        padding-top: 6px;
+      }
+      section h2 {
+        font-size: 19px;
+        color: var(--py-dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 7px;
+        margin-bottom: 12px;
+      }
+      section h2 .num {
+        color: var(--py);
+        margin-right: 6px;
+      }
+      h3 {
+        font-size: 15px;
+        color: var(--py-dark);
+        margin: 16px 0 8px;
+      }
+      p {
+        margin: 9px 0;
+      }
+      ul,
+      ol {
+        margin: 9px 0 9px 24px;
+      }
+      li {
+        margin: 4px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        font-size: 14px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      th {
+        background: var(--py-dark);
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      td {
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfc;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      pre {
+        background: var(--bg-code);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--py);
+        border-radius: 8px;
+        padding: 13px 16px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-size: 13.5px;
+        line-height: 1.6;
+      }
+      code {
+        font-family:
+          'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      }
+      :not(pre) > code {
+        background: var(--bg-code);
+        color: #c0392b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+      .mnemonic {
+        background: var(--mnemonic-bg);
+        border: 1px solid var(--mnemonic-border);
+        border-left: 4px solid var(--mnemonic-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0;
+        white-space: pre-line;
+        font-weight: 500;
+      }
+      .mnemonic::before {
+        content: '口诀';
+        display: inline-block;
+        background: var(--mnemonic-border);
+        color: #5d4037;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      .tip {
+        background: var(--tip-bg);
+        border-left: 4px solid var(--tip-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .tip::before {
+        content: '提示';
+        display: inline-block;
+        background: var(--tip-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .warn {
+        background: var(--warn-bg);
+        border-left: 4px solid var(--warn-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .warn::before {
+        content: '避坑';
+        display: inline-block;
+        background: var(--warn-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .why {
+        background: var(--why-bg);
+        border-left: 4px solid var(--why-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .why::before {
+        content: '为什么';
+        display: inline-block;
+        background: var(--why-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .law {
+        background: var(--law-bg);
+        border-left: 4px solid var(--law-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0;
+      }
+      .law::before {
+        content: '法律红线';
+        display: inline-block;
+        background: var(--law-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .analogy {
+        background: #fff;
+        border: 1px dashed var(--py);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .analogy::before {
+        content: '打个比方';
+        display: inline-block;
+        background: var(--py);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .lead {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        color: var(--text-soft);
+      }
+      .route-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 14px 0;
+      }
+      footer {
+        text-align: center;
+        color: var(--text-soft);
+        font-size: 12px;
+        padding: 26px 0 40px;
+        border-top: 1px solid var(--border);
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-controls="toc"
+      aria-expanded="false">
+      ☰ 目录
+    </button>
+    <div class="toc-overlay" id="tocOverlay"></div>
+
+    <div class="topbar">
+      <div class="logo">Py</div>
+      <h1>Python 爬虫从入门到精通 · 学习笔记</h1>
+      <span class="sub">小白友好 · 多比喻 · 讲红线</span>
+    </div>
+
+    <div class="wrap">
+      <nav class="toc" id="toc">
+        <a class="home-link" href="index.html">← 返回首页</a>
+        <div class="grp">入门篇</div>
+        <a href="#s1">1. 爬虫是什么</a>
+        <a href="#s2">2. HTTP 基础</a>
+        <a href="#s3">3. requests 库入门</a>
+        <a href="#s4">4. 正则表达式</a>
+        <a href="#s5">5. BeautifulSoup 解析</a>
+        <a href="#s6">6. JSON 数据处理</a>
+        <a href="#s7">7. 第一个完整爬虫</a>
+        <div class="grp">进阶篇</div>
+        <a href="#s8">8. XPath 与 lxml</a>
+        <a href="#s9">9. 请求头与反爬基础</a>
+        <a href="#s10">10. 会话与 Cookie 登录</a>
+        <a href="#s11">11. 分页与翻页爬取</a>
+        <a href="#s12">12. 多线程多进程加速</a>
+        <a href="#s13">13. 异步 asyncio + aiohttp</a>
+        <a href="#s14">14. 数据存储</a>
+        <div class="grp">精通篇</div>
+        <a href="#s15">15. Selenium 动态渲染</a>
+        <a href="#s16">16. Playwright 自动化</a>
+        <a href="#s17">17. 反爬与应对</a>
+        <a href="#s18">18. Scrapy 框架</a>
+        <a href="#s19">19. 反爬破解思路</a>
+        <a href="#s20">20. 数据清洗与去重</a>
+        <a href="#s21">21. 法律红线与 robots.txt</a>
+        <a href="#s22">22. 面试口诀与速查表</a>
+        <a href="#route">学习路线建议</a>
+      </nav>
+
+      <main>
+        <p class="lead">
+          本笔记面向零基础小白。每个概念先讲<strong>是什么</strong>、再讲<strong>为什么</strong>、最后给<strong>可复制的代码</strong>。风格：表格归纳
+          + 口诀记忆 + 比喻助记。重点：**会用，更要合法合规地爬**。
+        </p>
+
+        <div class="part" id="p1">第一篇：入门篇（打地基）</div>
+
+        <section id="s1">
+          <h2><span class="num">1.</span>爬虫是什么</h2>
+          <p>
+            <strong>一句话</strong>：爬虫（网络爬虫 / Web
+            Crawler）是一段**自动从网页上批量抓取数据**的程序。
+          </p>
+
+          <div class="analogy">
+            爬虫像你派了个「机器人助理」去网站：帮你打开网页 → 找到你要的信息 →
+            抄下来 → 带回来整理成表格。手动抄 100 页要一天，爬虫几秒搞定。
+          </div>
+
+          <h3>爬虫的四个步骤（牢记，贯穿全文）</h3>
+          <table>
+            <tr>
+              <th>步骤</th>
+              <th>动作</th>
+              <th>对应工具</th>
+            </tr>
+            <tr>
+              <td>① 发起请求</td>
+              <td>向网页要数据</td>
+              <td>requests</td>
+            </tr>
+            <tr>
+              <td>② 获取响应</td>
+              <td>拿到网页 HTML/JSON</td>
+              <td>response.text / json()</td>
+            </tr>
+            <tr>
+              <td>③ 解析数据</td>
+              <td>从 HTML 里抠出内容</td>
+              <td>正则 / BeautifulSoup / XPath</td>
+            </tr>
+            <tr>
+              <td>④ 保存数据</td>
+              <td>存到文件或数据库</td>
+              <td>CSV / Excel / SQLite</td>
+            </tr>
+          </table>
+
+          <div class="law">
+            <strong>务必先知道</strong
+            >：爬虫本身是技术，但<strong>爬取不当可能违法</strong>。三条底线：①
+            不爬个人隐私/账号数据；② 不绕过付费墙、不攻击服务器（高并发
+            DDoS）；③ 遵守 robots.txt 和网站服务条款。更多见第 21 节。
+          </div>
+          <div class="mnemonic">
+            请求响应再解析，最后保存四步走； 爬虫技术本中立，合法合规是前提。
+          </div>
+        </section>
+
+        <section id="s2">
+          <h2><span class="num">2.</span>HTTP 基础</h2>
+          <p>
+            爬虫本质是在和网站「说 HTTP 话」。懂一点
+            HTTP，遇到问题才看得懂报错。
+          </p>
+
+          <div class="analogy">
+            HTTP
+            像「点菜」：你（客户端）拿着菜单（URL）对服务员（服务器）说「给我来一份首页」，服务员按你的要求（请求头）上菜（响应），并告诉你这道菜的状态（状态码）。
+          </div>
+
+          <h3>核心三要素</h3>
+          <table>
+            <tr>
+              <th>要素</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>URL</td>
+              <td>网址，定位资源</td>
+              <td>https://example.com/news</td>
+            </tr>
+            <tr>
+              <td>方法 Method</td>
+              <td>GET 取数据 / POST 提交</td>
+              <td>GET、POST</td>
+            </tr>
+            <tr>
+              <td>请求头 Headers</td>
+              <td>附带的信息（身份、浏览器）</td>
+              <td>User-Agent、Cookie</td>
+            </tr>
+          </table>
+
+          <h3>必背状态码</h3>
+          <table>
+            <tr>
+              <th>状态码</th>
+              <th>含义</th>
+              <th>爬虫常见场景</th>
+            </tr>
+            <tr>
+              <td>200</td>
+              <td>成功</td>
+              <td>正常拿到数据</td>
+            </tr>
+            <tr>
+              <td>301/302</td>
+              <td>重定向</td>
+              <td>页面跳转了</td>
+            </tr>
+            <tr>
+              <td>403</td>
+              <td>禁止访问</td>
+              <td>被反爬拦截了</td>
+            </tr>
+            <tr>
+              <td>404</td>
+              <td>找不到</td>
+              <td>URL 写错</td>
+            </tr>
+            <tr>
+              <td>418/429</td>
+              <td>被识别/限流</td>
+              <td>请求太频繁了</td>
+            </tr>
+            <tr>
+              <td>500</td>
+              <td>服务器错误</td>
+              <td>网站挂了</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            二百成功，三百跳转，四百客户端，五百服务器。
+          </div>
+        </section>
+
+        <section id="s3">
+          <h2><span class="num">3.</span>requests 库入门</h2>
+          <p>
+            <code>requests</code> 是 Python 最常用的 HTTP 库，发请求简单到一行。
+          </p>
+          <p><strong>安装</strong>：<code>pip install requests</code></p>
+          <pre><code>import requests
+
+# 1. 发起 GET 请求
+resp = requests.get('https://example.com')
+
+# 2. 看状态码
+print(resp.status_code)      # 200
+
+# 3. 获取内容（两种）
+print(resp.text)             # 字符串（HTML 源码）
+print(resp.content)          # 字节（图片/文件用这个）
+
+# 4. 带参数请求
+resp = requests.get('https://api.example.com/search',
+                    params={'q': 'python', 'page': 1})
+print(resp.url)  # 看拼接后的地址
+print(resp.json())  # 响应是 JSON 时直接转字典</code></pre>
+
+          <h3>GET 与 POST</h3>
+          <table>
+            <tr>
+              <th>方法</th>
+              <th>用途</th>
+              <th>参数放哪</th>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>取数据（搜索、浏览）</td>
+              <td>params（拼到 URL 后面）</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>提交数据（登录、表单）</td>
+              <td>data 或 json（放请求体）</td>
+            </tr>
+          </table>
+          <pre><code># POST 提交表单
+resp = requests.post('https://example.com/login',
+                     data={'username': 'tom', 'password': '123'})</code></pre>
+
+          <h3>一定要加超时</h3>
+          <div class="warn">
+            不加
+            timeout，遇到卡死的网站会<strong>永远等下去</strong>。养成习惯：<code
+              >requests.get(url, timeout=10)</code
+            >。
+          </div>
+        </section>
+
+        <section id="s4">
+          <h2><span class="num">4.</span>正则表达式</h2>
+          <p>
+            <strong>正则</strong> = 一套「匹配字符串模式」的规则，用来从 HTML
+            文本里抠数据。HTML 很规整时好用，太复杂就别硬来（改用第 5 节
+            BeautifulSoup）。
+          </p>
+
+          <h3>高频元字符</h3>
+          <table>
+            <tr>
+              <th>符号</th>
+              <th>含义</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>.</td>
+              <td>任意字符（除换行）</td>
+              <td>a.c 匹配 abc</td>
+            </tr>
+            <tr>
+              <td>*</td>
+              <td>前一个重复 0 到多次</td>
+              <td>ab* 匹配 a、ab、abb</td>
+            </tr>
+            <tr>
+              <td>+</td>
+              <td>前一个重复 1 到多次</td>
+              <td>ab+ 匹配 ab、abb</td>
+            </tr>
+            <tr>
+              <td>?</td>
+              <td>前一个 0 或 1 次</td>
+              <td>colou?r 匹配 color/colour</td>
+            </tr>
+            <tr>
+              <td>\d</td>
+              <td>数字</td>
+              <td>\d+ 匹配一串数字</td>
+            </tr>
+            <tr>
+              <td>\w</td>
+              <td>字母数字下划线</td>
+              <td>\w+ 匹配单词</td>
+            </tr>
+            <tr>
+              <td>[abc]</td>
+              <td>字符集</td>
+              <td>匹配 a 或 b 或 c</td>
+            </tr>
+            <tr>
+              <td>( )</td>
+              <td>分组，用来「抓取」</td>
+              <td>(\d+) 提取数字</td>
+            </tr>
+            <tr>
+              <td>.*?</td>
+              <td>非贪婪，尽量少匹配</td>
+              <td>爬虫最爱用</td>
+            </tr>
+          </table>
+
+          <pre><code>import re
+
+html = '&lt;title&gt;今日新闻&lt;/title&gt;'
+
+# 用分组 () 抓取标签里的内容
+m = re.search(r'&lt;title&gt;(.*?)&lt;/title&gt;', html)
+print(m.group(1))  # 今日新闻
+
+# 抓取所有数字
+text = '价格 99 元，销量 1200 件'
+print(re.findall(r'\d+', text))  # ['99', '1200']</code></pre>
+          <div class="mnemonic">
+            点星问加元字符，\d\w 记牢靠； 括号分组来抓取，.*? 非贪婪。
+          </div>
+        </section>
+
+        <section id="s5">
+          <h2><span class="num">5.</span>BeautifulSoup 解析</h2>
+          <p>
+            <strong>BeautifulSoup（bs4）</strong>：把 HTML
+            变成可查询的「树」，用 <code>find</code> /
+            <code>select</code> 精准定位元素，比正则好维护。
+          </p>
+          <p>
+            <strong>安装</strong>：<code>pip install beautifulsoup4 lxml</code>
+          </p>
+          <pre><code>from bs4 import BeautifulSoup
+import requests
+
+html = requests.get('https://example.com').text
+soup = BeautifulSoup(html, 'lxml')   # 解析成树
+
+# 1. 按标签找（第一个）
+title = soup.find('h1')
+print(title.text)
+
+# 2. 按 class / id 找
+box = soup.find('div', class_='content')   # 注意 class 后要加下划线
+
+# 3. CSS 选择器（最推荐，前端同学友好）
+items = soup.select('ul.list &gt; li')          # 找所有 li
+for li in items:
+    print(li.text.strip())
+
+# 4. 找多个 + 取属性
+links = soup.find_all('a')
+for a in links:
+    print(a.get('href'))                      # 取链接
+    print(a.text.strip())                     # 取文字</code></pre>
+
+          <h3>常用选择对照</h3>
+          <table>
+            <tr>
+              <th>需求</th>
+              <th>方法</th>
+            </tr>
+            <tr>
+              <td>找第一个</td>
+              <td>soup.find('标签')</td>
+            </tr>
+            <tr>
+              <td>找所有</td>
+              <td>soup.find_all('标签')</td>
+            </tr>
+            <tr>
+              <td>CSS 选择器</td>
+              <td>soup.select('#id .class')</td>
+            </tr>
+            <tr>
+              <td>取文字</td>
+              <td>元素.text</td>
+            </tr>
+            <tr>
+              <td>取属性</td>
+              <td>元素.get('href')</td>
+            </tr>
+          </table>
+          <div class="warn">
+            两个坑：① <code>class</code> 是 Python 关键字，要写成
+            <code>class_</code>；② 用 CSS 选择器时
+            <code>select_one</code> 返回第一个，<code>select</code> 返回列表。
+          </div>
+        </section>
+
+        <section id="s6">
+          <h2><span class="num">6.</span>JSON 数据处理</h2>
+          <p>
+            很多网站数据不是 HTML，而是通过接口返回
+            <strong>JSON</strong>（本质就是 Python
+            的字典/列表）。这种反而最好爬。
+          </p>
+          <pre><code>import requests
+
+resp = requests.get('https://api.example.com/data')
+data = resp.json()   # 直接转成字典/列表
+
+# JSON 结构里取数据：一层层用键
+items = data['data']['list']
+for it in items:
+    print(it['title'], it['price'])</code></pre>
+
+          <div class="analogy">
+            HTML 像「已经摆盘上桌的菜」，要挑菜叶子（解析）；JSON
+            像「后厨直接给的食材清单」，拿来就能用，干净又省事。
+          </div>
+
+          <h3>怎么找到 JSON 接口？</h3>
+          <ol>
+            <li>打开浏览器 F12（开发者工具）→ Network（网络）标签。</li>
+            <li>刷新页面，找 <code>XHR / Fetch</code> 类型的请求。</li>
+            <li>
+              点进去看 Response（响应），是 JSON 就赚到了——直接 requests
+              模拟这个接口即可。
+            </li>
+          </ol>
+          <div class="mnemonic">
+            HTML 要解析，JSON 拿来就用； F12 找接口，爬虫省一半。
+          </div>
+        </section>
+
+        <section id="s7">
+          <h2><span class="num">7.</span>第一个完整爬虫</h2>
+          <p>
+            把前面四步串起来，写一个抓取「某网站标题」的完整示例（用 httpbin
+            这种练习站最安全）。
+          </p>
+          <pre><code>import requests
+from bs4 import BeautifulSoup
+import time
+
+def fetch_page(url):
+    # 伪装浏览器 + 超时
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+    resp = requests.get(url, headers=headers, timeout=10)
+    resp.raise_for_status()   # 状态码非 200 直接报错
+    return resp.text
+
+def parse(html):
+    soup = BeautifulSoup(html, 'lxml')
+    titles = [a.text.strip() for a in soup.select('h2')]
+    return titles
+
+def save(data, filename='result.txt'):
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(data))
+
+if __name__ == '__main__':
+    url = 'https://example.com'
+    html = fetch_page(url)
+    titles = parse(html)
+    save(titles)
+    print(f'抓取完成，共 {len(titles)} 条')
+    time.sleep(1)   # 礼貌爬取：稍作停顿</code></pre>
+
+          <div class="tip">
+            <strong>好习惯清单</strong>：① 加 User-Agent 伪装；② 加 timeout；③
+            加 try/except 容错；④ 加 sleep 别把别人服务器打挂；⑤ 尊重
+            robots.txt。
+          </div>
+        </section>
+
+        <div class="part" id="p2">第二篇：进阶篇（更高效）</div>
+
+        <section id="s8">
+          <h2><span class="num">8.</span>XPath 与 lxml</h2>
+          <p>
+            <strong>XPath</strong> = 一套在 XML/HTML
+            里「按路径」找节点的语法，速度快、表达能力强。
+          </p>
+          <p><strong>安装</strong>：<code>pip install lxml</code></p>
+          <pre><code>from lxml import html as lh
+
+doc = lh.fromstring(html_text)
+
+# 常用 XPath 写法
+titles = doc.xpath('//h2/text()')                # 所有 h2 的文字
+hrefs  = doc.xpath('//a/@href')                  # 所有 a 的链接
+first  = doc.xpath('//div[@class="box"]/p/text()') # 按属性筛选</code></pre>
+
+          <h3>XPath 速查</h3>
+          <table>
+            <tr>
+              <th>语法</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>//div</td>
+              <td>任意层级的 div</td>
+            </tr>
+            <tr>
+              <td>/div/p</td>
+              <td>直接子级路径</td>
+            </tr>
+            <tr>
+              <td>[@class="x"]</td>
+              <td>属性筛选</td>
+            </tr>
+            <tr>
+              <td>/text()</td>
+              <td>取文字</td>
+            </tr>
+            <tr>
+              <td>/@href</td>
+              <td>取属性值</td>
+            </tr>
+            <tr>
+              <td>//li[1]</td>
+              <td>第 1 个 li</td>
+            </tr>
+            <tr>
+              <td>contains(@class,'x')</td>
+              <td>属性包含</td>
+            </tr>
+          </table>
+          <div class="tip">
+            BeautifulSoup 好懂、XPath 好写。新手：简单用
+            bs4，复杂结构、追求速度用 XPath。
+          </div>
+        </section>
+
+        <section id="s9">
+          <h2><span class="num">9.</span>请求头与反爬基础</h2>
+          <p>
+            很多网站靠「你是不是真人浏览器」来判断要不要拦你。最简单对策：<strong>带上完整请求头</strong>。
+          </p>
+          <pre><code>headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    'Referer': 'https://example.com/',   # 从哪个页面跳来的
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+}
+resp = requests.get(url, headers=headers, timeout=10)</code></pre>
+
+          <table>
+            <tr>
+              <th>请求头</th>
+              <th>作用</th>
+            </tr>
+            <tr>
+              <td>User-Agent</td>
+              <td>告诉服务器你是什么浏览器</td>
+            </tr>
+            <tr>
+              <td>Referer</td>
+              <td>来源页，防爬图片/盗链常用</td>
+            </tr>
+            <tr>
+              <td>Cookie</td>
+              <td>身份凭证（登录态）</td>
+            </tr>
+            <tr>
+              <td>X-Requested-With</td>
+              <td>标记是否 Ajax 请求</td>
+            </tr>
+          </table>
+          <div class="warn">
+            User-Agent
+            是基础中的基础，但<strong>只靠它不够</strong>。真正的反爬是多方位的（IP
+            频率、行为、验证码），见第 17、19 节。
+          </div>
+        </section>
+
+        <section id="s10">
+          <h2><span class="num">10.</span>会话与 Cookie 登录</h2>
+          <p>
+            登录后才能看的页面，需要带上「登录凭证」。用
+            <code>Session</code> 自动保存 Cookie，全程保持登录态。
+          </p>
+
+          <div class="analogy">
+            Cookie
+            像「游乐园手环」。你买票（登录）后戴上，之后每个项目（请求）只要抬手亮手环（自动带
+            Cookie）就能进，不用反复买票。
+          </div>
+          <pre><code>import requests
+
+s = requests.Session()   # 关键：用会话保持 Cookie
+
+# 1. 先登录（POST 提交账号密码）
+login_data = {'username': 'tom', 'password': '123456'}
+s.post('https://example.com/login', data=login_data)
+
+# 2. 再访问需要登录的页面，自动带上 Cookie
+resp = s.get('https://example.com/profile')
+print(resp.text)</code></pre>
+
+          <h3>Cookie 两种处理方式</h3>
+          <table>
+            <tr>
+              <th>方式</th>
+              <th>场景</th>
+            </tr>
+            <tr>
+              <td>Session 自动管理</td>
+              <td>正常登录流程（推荐）</td>
+            </tr>
+            <tr>
+              <td>手动复制 Cookie 字符串</td>
+              <td>自己账号已登录，直接 F12 复制 Cookie 填进 headers</td>
+            </tr>
+          </table>
+          <div class="law">
+            ⚠️ 用 Cookie
+            爬取<strong>自己账号</strong>允许的数据没问题；但爬取他人隐私数据、批量注册账号等是违法的，坚决不做。
+          </div>
+        </section>
+
+        <section id="s11">
+          <h2><span class="num">11.</span>分页与翻页爬取</h2>
+          <p>
+            列表数据通常分多页，关键是<strong>找出页码规律</strong>，用循环抓全。
+          </p>
+          <pre><code>import requests
+from bs4 import BeautifulSoup
+
+def get_page(page):
+    url = f'https://example.com/list?page={page}'   # 页码拼进 URL
+    return requests.get(url, timeout=10).text
+
+all_data = []
+for page in range(1, 11):          # 抓 1~10 页
+    html = get_page(page)
+    soup = BeautifulSoup(html, 'lxml')
+    for item in soup.select('.item'):
+        all_data.append(item.text.strip())
+    print(f'第 {page} 页完成')</code></pre>
+
+          <div class="warn">
+            三种翻页形态别搞混：①
+            <strong>URL 带页码</strong>（?page=2，最好爬）；②
+            <strong>滚动加载</strong>（下拉才出数据，要找接口）；③
+            <strong>「下一页」按钮</strong>（循环提取下一页链接直到没有）。
+          </div>
+          <div class="tip">
+            抓取要留神：加
+            <code>time.sleep(1)</code> 间隔，别几十页连打把对方服务器冲垮。
+          </div>
+        </section>
+
+        <section id="s12">
+          <h2><span class="num">12.</span>多线程多进程加速</h2>
+          <p>
+            爬虫大部分时间在「等网络」。单线程像一个人排队打水，<strong
+              >多线程 = 好几个人同时打水</strong
+            >，能数倍提速。
+          </p>
+
+          <div class="analogy">
+            单线程：一个人挨个去 10 家店买咖啡。多线程：雇 10
+            个人同时各去一家店，总时间≈最慢的那家。
+          </div>
+          <pre><code>import requests
+from concurrent.futures import ThreadPoolExecutor
+
+def fetch(url):
+    return requests.get(url, timeout=10).status_code
+
+urls = ['https://example.com'] * 20   # 20 个任务
+
+# 开 5 个线程同时爬
+with ThreadPoolExecutor(max_workers=5) as pool:
+    results = pool.map(fetch, urls)
+    print(list(results))</code></pre>
+
+          <table>
+            <tr>
+              <th>方案</th>
+              <th>适用</th>
+              <th>注意</th>
+            </tr>
+            <tr>
+              <td>多线程 threading</td>
+              <td>IO 密集（网络请求）</td>
+              <td>✅ 爬虫首选</td>
+            </tr>
+            <tr>
+              <td>多进程 multiprocessing</td>
+              <td>CPU 密集（大量计算）</td>
+              <td>爬虫少用</td>
+            </tr>
+            <tr>
+              <td>线程池 ThreadPoolExecutor</td>
+              <td>任务量大</td>
+              <td>✅ 简单好用</td>
+            </tr>
+          </table>
+          <div class="warn">
+            多线程不是越多越快——开太多会被网站封 IP。合理控制并发数（一般
+            5~10），并控制频率。
+          </div>
+        </section>
+
+        <section id="s13">
+          <h2><span class="num">13.</span>异步 asyncio + aiohttp</h2>
+          <p>
+            比多线程更省资源的「并发」方案：单线程内用<strong>协程</strong>，等待时不占用线程，能同时开几百上千个请求。
+          </p>
+          <p><strong>安装</strong>：<code>pip install aiohttp</code></p>
+          <pre><code>import asyncio
+import aiohttp
+
+async def fetch(session, url):
+    async with session.get(url) as resp:
+        return resp.status
+
+async def main():
+    urls = ['https://example.com'] * 100
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch(session, u) for u in urls]
+        results = await asyncio.gather(*tasks)
+    print(len(results))
+
+asyncio.run(main())</code></pre>
+          <div class="why">
+            为什么异步快？多线程靠「多个人」，异步靠「一个人同时等很多个」。等待时
+            CPU 去干别的，几乎不浪费，所以能轻松扛上千并发。
+          </div>
+          <div class="tip">
+            选择：数据量几百页 → 多线程够用；需要成百上千并发 → 上
+            aiohttp。异步代码难一点，先吃透再上。
+          </div>
+        </section>
+
+        <section id="s14">
+          <h2><span class="num">14.</span>数据存储</h2>
+          <table>
+            <tr>
+              <th>方式</th>
+              <th>场景</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>CSV</td>
+              <td>表格数据，Excel 可开</td>
+              <td>csv 模块</td>
+            </tr>
+            <tr>
+              <td>JSON</td>
+              <td>结构化数据</td>
+              <td>json.dump</td>
+            </tr>
+            <tr>
+              <td>SQLite</td>
+              <td>要查询、数据量大</td>
+              <td>sqlite3 模块</td>
+            </tr>
+            <tr>
+              <td>MySQL/MongoDB</td>
+              <td>生产级大项目</td>
+              <td>pymysql / pymongo</td>
+            </tr>
+          </table>
+          <pre><code>import csv
+
+# 存 CSV（Excel 能直接打开）
+rows = [{'name': '商品A', 'price': 99}, {'name': '商品B', 'price': 199}]
+with open('data.csv', 'w', newline='', encoding='utf-8-sig') as f:
+    writer = csv.DictWriter(f, fieldnames=['name', 'price'])
+    writer.writeheader()
+    writer.writerows(rows)</code></pre>
+          <div class="warn">
+            CSV 中文乱码？用 <code>encoding='utf-8-sig'</code>（带 BOM，Excel
+            才认得）。
+          </div>
+        </section>
+
+        <div class="part" id="p3">第三篇：精通篇（动态页与反爬）</div>
+
+        <section id="s15">
+          <h2><span class="num">15.</span>Selenium 动态渲染</h2>
+          <p>
+            有些页面数据是 JS 动态渲染的，requests 拿到的是空壳。这时用
+            <strong>Selenium</strong> 驱动真实浏览器，等页面渲染完再抓。
+          </p>
+          <p>
+            <strong>安装</strong>：<code>pip install selenium</code
+            >（还需浏览器驱动）
+          </p>
+          <pre><code>from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+driver = webdriver.Chrome()          # 打开浏览器
+driver.get('https://example.com')
+
+# 等元素出现再取
+title = driver.find_element(By.CSS_SELECTOR, 'h1').text
+items = driver.find_elements(By.CSS_SELECTOR, '.item')
+for it in items:
+    print(it.text)
+
+driver.quit()   # 用完记得关</code></pre>
+          <table>
+            <tr>
+              <th>定位方式</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>CSS 选择器</td>
+              <td>By.CSS_SELECTOR, '.class'</td>
+            </tr>
+            <tr>
+              <td>XPath</td>
+              <td>By.XPATH, '//div[@id="x"]'</td>
+            </tr>
+            <tr>
+              <td>文本</td>
+              <td>By.LINK_TEXT, '下一页'</td>
+            </tr>
+          </table>
+          <div class="warn">
+            Selenium
+            慢、耗资源、易被反爬识别，只适合「少量动态页」。现代项目更推荐第 16
+            节的 Playwright。
+          </div>
+        </section>
+
+        <section id="s16">
+          <h2><span class="num">16.</span>Playwright 自动化</h2>
+          <p>
+            <strong>Playwright</strong> 是微软出的现代浏览器自动化工具，比
+            Selenium 更快、更稳、功能更强（可拦截网络、等待更智能）。
+          </p>
+          <p>
+            <strong>安装</strong>：<code>pip install playwright</code> 然后
+            <code>playwright install</code>
+          </p>
+          <pre><code>from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)   # headless 无界面
+    page = browser.new_page()
+    page.goto('https://example.com')
+    page.wait_for_selector('.item')              # 等元素出现
+
+    titles = page.locator('.item').all_text_contents()
+    print(titles)
+    browser.close()</code></pre>
+          <div class="tip">
+            Playwright 杀手锏：能<strong>拦截接口响应</strong>直接拿
+            JSON，能<strong>模拟点击、输入、滚动</strong>，是动态页爬取的现代首选。
+          </div>
+        </section>
+
+        <section id="s17">
+          <h2><span class="num">17.</span>反爬与应对</h2>
+          <p>
+            反爬是「网站拦你」和「你设法正常抓」的博弈。常见反爬手段及对策：
+          </p>
+          <table>
+            <tr>
+              <th>反爬手段</th>
+              <th>现象</th>
+              <th>对策</th>
+            </tr>
+            <tr>
+              <td>User-Agent 校验</td>
+              <td>403</td>
+              <td>带真实 UA</td>
+            </tr>
+            <tr>
+              <td>IP 频率限制</td>
+              <td>429 / 封 IP</td>
+              <td>降速 + IP 代理池</td>
+            </tr>
+            <tr>
+              <td>验证码</td>
+              <td>弹验证码</td>
+              <td>打码平台 / 降低频率 / 手动</td>
+            </tr>
+            <tr>
+              <td>登录校验</td>
+              <td>跳登录页</td>
+              <td>Session + Cookie</td>
+            </tr>
+            <tr>
+              <td>JS 动态渲染</td>
+              <td>拿到空 HTML</td>
+              <td>Playwright / 找接口</td>
+            </tr>
+            <tr>
+              <td>浏览器指纹</td>
+              <td>识别自动化</td>
+              <td>Playwright 隐藏特征</td>
+            </tr>
+          </table>
+
+          <h3>IP 代理示例</h3>
+          <pre><code>proxies = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
+resp = requests.get(url, proxies=proxies, timeout=10)</code></pre>
+          <div class="warn">
+            应对反爬要<strong>克制</strong>：降低频率、尊重对方是最优解。过度对抗（撞验证码、暴力破解）可能触碰法律。
+          </div>
+        </section>
+
+        <section id="s18">
+          <h2><span class="num">18.</span>Scrapy 框架</h2>
+          <p>
+            当爬虫规模变大（几百个站点、几百万数据），手写 requests 太累。用
+            <strong>Scrapy</strong>
+            框架统一管理：调度、下载、解析、去重、持久化一条龙。
+          </p>
+          <p><strong>安装</strong>：<code>pip install scrapy</code></p>
+          <pre><code># 命令行创建项目
+scrapy startproject myproject
+scrapy genspider example example.com</code></pre>
+          <pre><code># spiders/example.py（核心爬虫逻辑）
+import scrapy
+
+class ExampleSpider(scrapy.Spider):
+    name = 'example'
+    start_urls = ['https://example.com']
+
+    def parse(self, response):
+        for title in response.css('h2::text').getall():
+            yield {'title': title}   # 产出数据，自动存</code></pre>
+          <div class="tip">
+            Scrapy
+            自带的<strong>去重、并发、pipeline、中间件</strong>非常完善，是企业级爬虫标准方案。中小项目
+            requests 够用，大项目上 Scrapy。
+          </div>
+        </section>
+
+        <section id="s19">
+          <h2><span class="num">19.</span>反爬破解思路</h2>
+          <p>遇到爬不到，按这个「排查顺序」走，能解决 90% 问题：</p>
+          <ol>
+            <li>
+              <strong>先看状态码</strong>：403 带 UA；429 降速；404 查 URL。
+            </li>
+            <li>
+              <strong>比对请求头</strong>：F12 把浏览器真实请求头全复制过来。
+            </li>
+            <li>
+              <strong>看是不是动态渲染</strong>：F12 找 XHR 接口，直接 requests
+              那个接口。
+            </li>
+            <li><strong>看是不是要登录</strong>：Session 或复制 Cookie。</li>
+            <li><strong>看是否限 IP</strong>：降速 + sleep + 代理。</li>
+            <li><strong>最后才是 Playwright</strong> 模拟真实浏览器。</li>
+          </ol>
+          <div class="mnemonic">
+            先状态后请求，再接口再登录； 降速加代理，最后上浏览器。
+          </div>
+        </section>
+
+        <section id="s20">
+          <h2><span class="num">20.</span>数据清洗与去重</h2>
+          <p>爬下来的数据常常有空格、重复、格式乱，需要清洗。</p>
+          <pre><code># 去空格、去空行
+clean = [t.strip() for t in raw if t.strip()]
+
+# 列表去重（保序）
+seen = set()
+unique = []
+for x in data:
+    if x not in seen:
+        seen.add(x)
+        unique.append(x)
+
+# 用 pandas 更省事
+import pandas as pd
+df = pd.DataFrame(rows)
+df = df.drop_duplicates()          # 去重
+df['price'] = df['price'].astype(float)  # 转类型
+df.to_excel('result.xlsx', index=False)</code></pre>
+          <div class="tip">
+            数据量大、要分析时直接用 <strong>pandas</strong>（<code
+              >pip install pandas</code
+            >），清洗、去重、导出 Excel 一行搞定。
+          </div>
+        </section>
+
+        <section id="s21">
+          <h2><span class="num">21.</span>法律红线与 robots.txt</h2>
+          <div class="law">
+            <strong>三条铁律（务必遵守）</strong>：①
+            不爬个人隐私、账号密码、通讯录等敏感数据；②
+            不绕过付费墙、不攻击服务器、不搞高并发 DDoS；③ 遵守 robots.txt
+            和网站条款。违法的典型：爬取公民个人信息、破解登录、破坏计算机信息系统。
+          </div>
+
+          <h3>robots.txt</h3>
+          <p>
+            网站根目录的
+            <code>robots.txt</code>
+            声明了「哪些可以爬、哪些不让爬」。礼貌的爬虫会先看它。
+          </p>
+          <pre><code># 访问 https://example.com/robots.txt 常见内容
+User-agent: *        # 对所有爬虫
+Disallow: /admin/    # 禁止爬 /admin/
+Disallow: /private/  # 禁止爬 /private/
+Allow: /public/      # 允许爬 /public/</code></pre>
+          <div class="warn">
+            robots.txt
+            是「君子协定」不是法律，但<strong>遵守它是基本礼仪</strong>；而爬取隐私/攻击服务器则直接违法，两者性质完全不同。
+          </div>
+        </section>
+
+        <section id="s22">
+          <h2><span class="num">22.</span>面试口诀与速查表</h2>
+          <table>
+            <tr>
+              <th>问题</th>
+              <th>一句话答案</th>
+            </tr>
+            <tr>
+              <td>爬虫流程</td>
+              <td>请求→响应→解析→保存</td>
+            </tr>
+            <tr>
+              <td>requests 加超时</td>
+              <td>timeout=10，防卡死</td>
+            </tr>
+            <tr>
+              <td>动态页面怎么办</td>
+              <td>找接口 / Playwright</td>
+            </tr>
+            <tr>
+              <td>反爬常见手段</td>
+              <td>UA、IP 限频、验证码、登录、JS 渲染</td>
+            </tr>
+            <tr>
+              <td>加速方案</td>
+              <td>多线程 / 异步 asyncio</td>
+            </tr>
+            <tr>
+              <td>登录态保持</td>
+              <td>Session + Cookie</td>
+            </tr>
+            <tr>
+              <td>大项目用什么</td>
+              <td>Scrapy 框架</td>
+            </tr>
+            <tr>
+              <td>JSON 接口怎么找</td>
+              <td>F12 → Network → XHR</td>
+            </tr>
+            <tr>
+              <td>CSV 中文乱码</td>
+              <td>encoding='utf-8-sig'</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            请求响应解析存，四步流程记在心； UA 超时加异常，礼貌停顿别乱冲；
+            静态 bs4，动态找接口； 并发用线程，大项目 Scrapy；
+            合规是底线，robots 要遵守。
+          </div>
+        </section>
+
+        <section id="route">
+          <h2>学习路线建议（30 天冲刺）</h2>
+          <div class="route-box">
+            <table>
+              <tr>
+                <th>阶段</th>
+                <th>天数</th>
+                <th>重点任务</th>
+              </tr>
+              <tr>
+                <td>入门</td>
+                <td>1–8</td>
+                <td>requests + bs4 抓 3 个静态站（新闻、博客、榜单）</td>
+              </tr>
+              <tr>
+                <td>进阶</td>
+                <td>9–20</td>
+                <td>学会找 JSON 接口、登录、翻页、多线程，存 CSV/Excel</td>
+              </tr>
+              <tr>
+                <td>精通</td>
+                <td>21–30</td>
+                <td>
+                  Playwright 动态页、Scrapy 框架、反爬应对，做一个完整小项目
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="tip">
+            小白终极心法：<strong>先爬通一个网站 → 再折腾提速 → 再啃反爬</strong
+            >。每次只解决一个问题，别一上来就挑战反爬最狠的大站。合法合规、礼貌爬取，是走得更远的底气。
+          </div>
+        </section>
+
+        <footer>
+          Python 爬虫从入门到精通 · 学习笔记　|　小白友好 · 多比喻 · 讲红线
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      ;(function () {
+        const menuToggle = document.getElementById('menuToggle')
+        const toc = document.getElementById('toc')
+        const tocOverlay = document.getElementById('tocOverlay')
+        function setTocOpen(isOpen) {
+          toc.classList.toggle('open', isOpen)
+          tocOverlay.classList.toggle('open', isOpen)
+          menuToggle.setAttribute('aria-expanded', String(isOpen))
+        }
+        menuToggle.addEventListener('click', () =>
+          setTocOpen(!toc.classList.contains('open')),
+        )
+        tocOverlay.addEventListener('click', () => setTocOpen(false))
+        toc
+          .querySelectorAll('a')
+          .forEach((link) =>
+            link.addEventListener('click', () => setTocOpen(false)),
+          )
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setTocOpen(false)
+        })
+
+        const links = document.querySelectorAll('nav.toc a[href^="#"]')
+        const map = {}
+        links.forEach((a) => {
+          const id = a.getAttribute('href').slice(1)
+          const el = document.getElementById(id)
+          if (el) map[id] = a
+        })
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                links.forEach((a) => a.classList.remove('active'))
+                const id = e.target.id
+                if (map[id]) map[id].classList.add('active')
+              }
+            })
+          },
+          { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+        )
+        Object.keys(map).forEach((id) => {
+          const el = document.getElementById(id)
+          if (el) io.observe(el)
+        })
+      })()
+    </script>
+  </body>
+</html>
