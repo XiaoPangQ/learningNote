@@ -9,6 +9,7 @@
 3. [Linux 命令大全](learningLinuxCommand.html)
 4. [Docker 从入门到精通](learningDocker.html)
 5. [Vue 3 从入门到精通](learningVue.html)
+6. [React 从入门到精通](learningReact.html)
 
 也可以从首页进入全部笔记：[技术学习笔记](index.html)
 

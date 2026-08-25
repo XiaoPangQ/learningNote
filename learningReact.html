@@ -1,0 +1,1630 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 从入门到精通 · 学习笔记（小白友好版）</title>
+    <style>
+      :root {
+        --react: #087ea5;
+        --react-dark: #20232a;
+        --bg: #ffffff;
+        --bg-soft: #f6f8fa;
+        --bg-code: #f3f4f6;
+        --text: #1f2329;
+        --text-soft: #5a6270;
+        --border: #e3e6ea;
+        --mnemonic-bg: #fff8e1;
+        --mnemonic-border: #f0a020;
+        --tip-bg: #e7f5f9;
+        --tip-border: #087ea5;
+        --warn-bg: #fdecea;
+        --warn-border: #e57373;
+        --why-bg: #eef5e9;
+        --why-border: #4caf50;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 84px;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+          'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        background: var(--bg-soft);
+        color: var(--text);
+        line-height: 1.75;
+        font-size: 15px;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: linear-gradient(90deg, var(--react-dark), #1c2a33);
+        color: #fff;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+      .topbar .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: var(--react);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 18px;
+        color: #fff;
+      }
+      .topbar h1 {
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .topbar .sub {
+        font-size: 12px;
+        opacity: 0.85;
+        margin-left: auto;
+      }
+      .wrap {
+        display: flex;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .toc-overlay {
+        display: none;
+      }
+      nav.toc {
+        position: sticky;
+        top: 64px;
+        align-self: flex-start;
+        height: calc(100vh - 64px);
+        overflow-y: auto;
+        width: 244px;
+        flex-shrink: 0;
+        padding: 18px 0;
+        font-size: 13px;
+      }
+      nav.toc .grp {
+        font-weight: 700;
+        color: var(--react-dark);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 14px 6px 6px;
+      }
+      nav.toc .home-link {
+        margin: 0 0 12px;
+        padding: 7px 14px;
+        color: var(--react);
+        font-weight: 600;
+      }
+      nav.toc .home-link:hover {
+        background: #d6eef4;
+      }
+      nav.toc a {
+        display: block;
+        padding: 5px 14px;
+        color: var(--text-soft);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.15s;
+        line-height: 1.45;
+      }
+      nav.toc a:hover {
+        background: var(--bg-code);
+        color: var(--react);
+      }
+      nav.toc a.active {
+        background: #d6eef4;
+        color: var(--react);
+        font-weight: 600;
+      }
+      main {
+        flex: 1;
+        min-width: 0;
+        padding: 22px 0 60px 28px;
+        max-width: 920px;
+      }
+      @media (max-width: 880px) {
+        .menu-toggle {
+          display: block;
+          position: fixed;
+          top: 14px;
+          right: 14px;
+          z-index: 110;
+          padding: 9px 13px;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          border-radius: 7px;
+          background: var(--react-dark);
+          color: #fff;
+          font: inherit;
+          font-size: 13px;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+          cursor: pointer;
+        }
+        .menu-toggle:hover {
+          background: var(--react);
+        }
+        .toc-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(31, 35, 41, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .toc-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .wrap {
+          padding: 0 14px;
+        }
+        nav.toc {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 100;
+          width: min(300px, 84vw);
+          height: 100vh;
+          overflow-y: auto;
+          background: #fff;
+          border-right: 1px solid var(--border);
+          border-radius: 0;
+          margin: 0;
+          padding: 76px 16px 24px;
+          box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+        }
+        nav.toc.open {
+          transform: translateX(0);
+        }
+        main {
+          padding-left: 0;
+        }
+      }
+      .part {
+        margin: 34px 0 8px;
+        font-size: 21px;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(90deg, var(--react), #16a0c4);
+        padding: 10px 16px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      section {
+        margin: 26px 0;
+        padding-top: 6px;
+      }
+      section h2 {
+        font-size: 19px;
+        color: var(--react-dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 7px;
+        margin-bottom: 12px;
+      }
+      section h2 .num {
+        color: var(--react);
+        margin-right: 6px;
+      }
+      h3 {
+        font-size: 15px;
+        color: var(--react-dark);
+        margin: 16px 0 8px;
+      }
+      p {
+        margin: 9px 0;
+      }
+      ul,
+      ol {
+        margin: 9px 0 9px 24px;
+      }
+      li {
+        margin: 4px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        font-size: 14px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      th {
+        background: var(--react-dark);
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      td {
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfc;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      pre {
+        background: var(--bg-code);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--react);
+        border-radius: 8px;
+        padding: 13px 16px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-size: 13.5px;
+        line-height: 1.6;
+      }
+      code {
+        font-family:
+          'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      }
+      :not(pre) > code {
+        background: var(--bg-code);
+        color: #c0392b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+      .mnemonic {
+        background: var(--mnemonic-bg);
+        border: 1px solid var(--mnemonic-border);
+        border-left: 4px solid var(--mnemonic-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0;
+        white-space: pre-line;
+        font-weight: 500;
+      }
+      .mnemonic::before {
+        content: '口诀';
+        display: inline-block;
+        background: var(--mnemonic-border);
+        color: #5d4037;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      .tip {
+        background: var(--tip-bg);
+        border-left: 4px solid var(--tip-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .tip::before {
+        content: '提示';
+        display: inline-block;
+        background: var(--tip-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .warn {
+        background: var(--warn-bg);
+        border-left: 4px solid var(--warn-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .warn::before {
+        content: '避坑';
+        display: inline-block;
+        background: var(--warn-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .why {
+        background: var(--why-bg);
+        border-left: 4px solid var(--why-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .why::before {
+        content: '为什么';
+        display: inline-block;
+        background: var(--why-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .lead {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        color: var(--text-soft);
+      }
+      .route-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 14px 0;
+      }
+      .analogy {
+        background: #fff;
+        border: 1px dashed var(--react);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .analogy::before {
+        content: '打个比方';
+        display: inline-block;
+        background: var(--react);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      footer {
+        text-align: center;
+        color: var(--text-soft);
+        font-size: 12px;
+        padding: 26px 0 40px;
+        border-top: 1px solid var(--border);
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-controls="toc"
+      aria-expanded="false">
+      ☰ 目录
+    </button>
+    <div class="toc-overlay" id="tocOverlay"></div>
+
+    <div class="topbar">
+      <div class="logo">R</div>
+      <h1>React 从入门到精通 · 学习笔记</h1>
+      <span class="sub">小白友好 · 多比喻 · 多为什么</span>
+    </div>
+
+    <div class="wrap">
+      <nav class="toc" id="toc">
+        <a class="home-link" href="index.html">← 返回首页</a>
+        <div class="grp">入门篇</div>
+        <a href="#s1">1. React 是什么</a>
+        <a href="#s2">2. 快速上手</a>
+        <a href="#s3">3. JSX 语法</a>
+        <a href="#s4">4. 组件与 Props</a>
+        <a href="#s5">5. 事件处理</a>
+        <a href="#s6">6. 条件渲染</a>
+        <a href="#s7">7. 列表渲染</a>
+        <a href="#s8">8. 表单与受控组件</a>
+        <div class="grp">进阶篇</div>
+        <a href="#s9">9. State 与 useState</a>
+        <a href="#s10">10. 副作用 useEffect</a>
+        <a href="#s11">11. Hooks 进阶</a>
+        <a href="#s12">12. 自定义 Hook</a>
+        <a href="#s13">13. 组件通信方式</a>
+        <a href="#s14">14. 样式方案</a>
+        <a href="#s15">15. 性能优化</a>
+        <div class="grp">精通篇</div>
+        <a href="#s16">16. React Router 路由</a>
+        <a href="#s17">17. 状态管理</a>
+        <a href="#s18">18. 数据请求 React Query</a>
+        <a href="#s19">19. TypeScript 集成</a>
+        <a href="#s20">20. Next.js 与 SSR</a>
+        <a href="#s21">21. 原理：Fiber 与虚拟 DOM</a>
+        <a href="#s22">22. React 18 并发特性</a>
+        <a href="#s23">23. 面试口诀与速查表</a>
+        <a href="#route">学习路线建议</a>
+      </nav>
+
+      <main>
+        <p class="lead">
+          本笔记面向零基础小白。每个概念先讲<strong>是什么</strong>、再讲<strong>为什么</strong>、最后给<strong>可复制的代码</strong>。风格：表格归纳
+          + 口诀记忆 + 比喻助记。React 主线版本为
+          <strong>React 18 + 函数组件 + Hooks</strong>。
+        </p>
+
+        <div class="part" id="p1">第一篇：入门篇（打地基）</div>
+
+        <section id="s1">
+          <h2><span class="num">1.</span>React 是什么</h2>
+          <p>
+            <strong>一句话</strong>：React 是 Facebook（现 Meta）开发的<strong
+              >用于构建用户界面的 JavaScript 库</strong
+            >。注意它只是「库」不是「框架」——它管视图，路由/状态/请求等你自己搭配。
+          </p>
+
+          <div class="analogy">
+            React
+            像一盒乐高积木：你不用一块大橡皮雕刻整座雕像，而是用小积木（组件）一块块拼出页面。坏了哪块换哪块，复用方便。
+          </div>
+
+          <h3>核心思想（三条命根子）</h3>
+          <table>
+            <tr>
+              <th>思想</th>
+              <th>含义</th>
+              <th>小白理解</th>
+            </tr>
+            <tr>
+              <td>组件化</td>
+              <td>页面由可复用组件拼成</td>
+              <td>页面 = 组件 + 组件 + 组件</td>
+            </tr>
+            <tr>
+              <td>声明式</td>
+              <td>你描述「数据长什么样」，React 帮你更新</td>
+              <td>画设计图，不用自己砌墙</td>
+            </tr>
+            <tr>
+              <td>单向数据流</td>
+              <td>数据从父→子流动，不回流</td>
+              <td>水只能往低处流，追问题好查</td>
+            </tr>
+          </table>
+
+          <h3>React vs Vue 速览（学过 Vue 的看这里）</h3>
+          <table>
+            <tr>
+              <th>对比项</th>
+              <th>React</th>
+              <th>Vue</th>
+            </tr>
+            <tr>
+              <td>写法</td>
+              <td>JSX（JS 里写 HTML）</td>
+              <td>模板 template</td>
+            </tr>
+            <tr>
+              <td>状态</td>
+              <td>useState，不可变更新</td>
+              <td>ref/reactive，可变</td>
+            </tr>
+            <tr>
+              <td>定位</td>
+              <td>只管视图的「库」</td>
+              <td>渐进式「框架」</td>
+            </tr>
+            <tr>
+              <td>上手</td>
+              <td>概念少、但 JS 要扎实</td>
+              <td>模板指令多、上手快</td>
+            </tr>
+          </table>
+
+          <div class="mnemonic">
+            组件拼乐高，声明画设计图； 数据单向流，React 只是库。
+          </div>
+        </section>
+
+        <section id="s2">
+          <h2><span class="num">2.</span>快速上手</h2>
+          <p>
+            小白推荐用 <strong>Vite</strong> 创建项目（比老牌 CRA
+            快很多）。只需装了 Node。
+          </p>
+          <pre><code>npm create vite@latest my-react-app -- --template react
+cd my-react-app
+npm install
+npm run dev</code></pre>
+          <p>
+            浏览器打开终端提示的地址（一般是
+            <code>http://localhost:5173</code>），看到转动 logo 就成功了。
+          </p>
+
+          <h3>项目目录速记</h3>
+          <table>
+            <tr>
+              <th>文件/目录</th>
+              <th>作用</th>
+            </tr>
+            <tr>
+              <td>index.html</td>
+              <td>页面入口，挂载点 &lt;div id="root"&gt;</td>
+            </tr>
+            <tr>
+              <td>src/main.jsx</td>
+              <td>JS 入口，把 App 组件挂到 root</td>
+            </tr>
+            <tr>
+              <td>src/App.jsx</td>
+              <td>根组件，你从这开始写</td>
+            </tr>
+            <tr>
+              <td>src/components/</td>
+              <td>放你自己拆的组件</td>
+            </tr>
+          </table>
+
+          <p><strong>最小可运行组件</strong></p>
+          <pre><code>function App() {
+  return &lt;h1&gt;你好，React！&lt;/h1&gt;
+}
+
+export default App</code></pre>
+          <div class="tip">
+            React 组件本质就是一个<strong>返回 JSX 的函数</strong
+            >。函数名首字母<strong>必须大写</strong>（小写会被当成 HTML 标签）。
+          </div>
+        </section>
+
+        <section id="s3">
+          <h2><span class="num">3.</span>JSX 语法（重中之重）</h2>
+          <p>
+            <strong>JSX = 在 JavaScript 里写类 HTML 的语法</strong>。它不是真的
+            HTML，是 <code>React.createElement</code> 的语法糖，但写起来像 HTML
+            就行。
+          </p>
+
+          <div class="why">
+            为什么不直接用
+            <code>React.createElement</code>？因为它嵌套写起来又长又丑，JSX
+            让你像写 HTML 一样直观，编译后还是变成 createElement。
+          </div>
+
+          <h3>JSX 核心规则（记住能少踩 80% 的坑）</h3>
+          <table>
+            <tr>
+              <th>规则</th>
+              <th>说明</th>
+              <th>正确示例</th>
+            </tr>
+            <tr>
+              <td>1. 返回单根</td>
+              <td>一个组件只能返回一个根元素</td>
+              <td>用 &lt;&gt;...&lt;/&gt; 包裹</td>
+            </tr>
+            <tr>
+              <td>2. class→className</td>
+              <td>因为 class 是 JS 关键字</td>
+              <td>&lt;div className="box"&gt;</td>
+            </tr>
+            <tr>
+              <td>3. 表达式用 {}</td>
+              <td>动态值放花括号里</td>
+              <td>{user.name}</td>
+            </tr>
+            <tr>
+              <td>4. 属性驼峰</td>
+              <td>onclick→onClick、for→htmlFor</td>
+              <td>onClick={handle}</td>
+            </tr>
+            <tr>
+              <td>5. 布尔/null 不渲染</td>
+              <td>false、null、undefined 不显示</td>
+              <td>{flag && &lt;p&gt;显示&lt;/p&gt;}</td>
+            </tr>
+            <tr>
+              <td>6. 标签必须闭合</td>
+              <td>单标签也要自闭合</td>
+              <td>&lt;img /&gt; &lt;br /&gt;</td>
+            </tr>
+          </table>
+
+          <pre><code>function Greet({ name }) {
+  return (
+    &lt;&gt;
+      &lt;h1 className="title"&gt;你好 {name}&lt;/h1&gt;
+      &lt;p&gt;现在是 {new Date().toLocaleTimeString()}&lt;/p&gt;
+    &lt;/&gt;
+  )
+}</code></pre>
+          <div class="warn">
+            JSX 里写注释要用 <code>{/* 注释 */}</code>，不能直接写
+            <code>&lt;!-- --&gt;</code>。
+          </div>
+          <div class="mnemonic">
+            单根 class 改名，花括号塞表达式； 标签全闭合，属性走驼峰。
+          </div>
+        </section>
+
+        <section id="s4">
+          <h2><span class="num">4.</span>组件与 Props</h2>
+          <p>
+            <strong>组件</strong>就是返回 JSX 的函数；<strong>Props</strong>
+            就是外部传进来的数据（像函数参数）。
+          </p>
+
+          <div class="analogy">
+            组件 = 函数，Props =
+            函数参数。父组件调用子组件时，像传参一样把数据塞进去。
+          </div>
+
+          <pre><code>// 子组件：接收 props
+function Welcome({ name, age = 18 }) {
+  return &lt;p&gt;{name}，今年 {age} 岁&lt;/p&gt;
+}
+
+// 父组件：传 props
+function App() {
+  return &lt;Welcome name="小明" age={20} /&gt;
+}</code></pre>
+
+          <table>
+            <tr>
+              <th>要点</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>解构接收</td>
+              <td>常用 { name } 解构 props，写起来干净</td>
+            </tr>
+            <tr>
+              <td>默认值</td>
+              <td>age = 18 给默认值</td>
+            </tr>
+            <tr>
+              <td>只读</td>
+              <td>Props 是只读的，子组件<strong>不能改</strong> props</td>
+            </tr>
+            <tr>
+              <td>可传任意类型</td>
+              <td>字符串、数字、函数、对象、JSX 都行</td>
+            </tr>
+          </table>
+          <div class="why">
+            为什么 props
+            只读？保证单向数据流——数据从父来、子只消费，问题永远能顺藤摸瓜找到源头。
+          </div>
+        </section>
+
+        <section id="s5">
+          <h2><span class="num">5.</span>事件处理</h2>
+          <p>
+            React 事件写法类似原生，但用驼峰
+            <code>onClick</code>，且传入的是<strong>函数</strong>而不是字符串。
+          </p>
+          <pre><code>function Btn() {
+  function handleClick(e) {
+    alert('点了！')
+    e.stopPropagation()  // 阻止冒泡
+  }
+  return &lt;button onClick={handleClick}&gt;点我&lt;/button&gt;
+}</code></pre>
+
+          <h3>常见事件</h3>
+          <table>
+            <tr>
+              <th>事件</th>
+              <th>触发</th>
+            </tr>
+            <tr>
+              <td>onClick</td>
+              <td>点击</td>
+            </tr>
+            <tr>
+              <td>onChange</td>
+              <td>输入框内容变化</td>
+            </tr>
+            <tr>
+              <td>onSubmit</td>
+              <td>表单提交（需 e.preventDefault()）</td>
+            </tr>
+            <tr>
+              <td>onMouseEnter / onLeave</td>
+              <td>鼠标移入/移出</td>
+            </tr>
+          </table>
+          <div class="warn">
+            传函数时不要写成
+            <code>onClick={handleClick()}</code
+            >（带括号会<strong>立即执行</strong>一次）。要传引用不带括号；要传参则用箭头包裹：<code
+              >onClick={() =&gt; del(id)}</code
+            >。
+          </div>
+        </section>
+
+        <section id="s6">
+          <h2><span class="num">6.</span>条件渲染</h2>
+          <p>
+            React 没有 <code>v-if</code>，用 JS 的 <code>if</code> / 三元 /
+            <code>&&</code> 来控制。
+          </p>
+          <pre><code>// 1. 三元：二选一
+{isLogin ? &lt;Logout/&gt; : &lt;Login/&gt;}
+
+// 2. 逻辑与 &&：满足才显示
+{hasMsg &amp;&amp; &lt;Badge /&gt;}
+
+// 3. 提前 return：列表为空直接不渲染
+function List({ items }) {
+  if (items.length === 0) return &lt;p&gt;暂无数据&lt;/p&gt;
+  return &lt;ul&gt;{items.map(...)}&lt;/ul&gt;
+}</code></pre>
+          <div class="warn">
+            <code>&&</code> 左边必须是<strong>布尔</strong>。若写
+            <code>{count && &lt;P/&gt;}</code> 而 count=0，会渲染出一个
+            <strong>0</strong> 字符在页面上。改成
+            <code>{count &gt; 0 && ...}</code> 更安全。
+          </div>
+          <div class="mnemonic">
+            三元二选一，逻辑与做开关； 为空早 return，布尔才用 &&。
+          </div>
+        </section>
+
+        <section id="s7">
+          <h2><span class="num">7.</span>列表渲染</h2>
+          <p>
+            React 用 <code>.map()</code> 把数组变成一组 JSX，每个元素必须给唯一
+            <code>key</code>。
+          </p>
+          <pre><code>const todos = [
+  { id: 1, text: '吃饭' },
+  { id: 2, text: '睡觉' }
+]
+
+function TodoList() {
+  return (
+    &lt;ul&gt;
+      {todos.map(t =&gt; &lt;li key={t.id}&gt;{t.text}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  )
+}</code></pre>
+
+          <div class="why">
+            为什么必须 key？React 用 key
+            判断「哪些项是同一个」。增删时它能精准复用对应
+            DOM，避免错位。用稳定唯一 id，<strong>不要用数组 index</strong
+            >（顺序变动会错乱）。
+          </div>
+          <div class="tip">
+            需要「序号」展示时，map 第二个参数就是索引：<code
+              >.map((t, i) =&gt; ...)</code
+            >，但展示用可以，<strong>不要拿它当 key</strong>。
+          </div>
+        </section>
+
+        <section id="s8">
+          <h2><span class="num">8.</span>表单与受控组件</h2>
+          <p>
+            <strong>受控组件</strong> = 表单的值由 React state
+            控制，输入框变成「数据的投影」。
+          </p>
+
+          <div class="analogy">
+            普通输入框像「自记自账的小本子」，内容它自己管；受控组件像「对讲机」，输入框只是个麦克风，真正的内容存在
+            state 这个总台。
+          </div>
+          <pre><code>import { useState } from 'react'
+
+function Form() {
+  const [text, setText] = useState('')
+  return (
+    &lt;input
+      value={text}                         // 值来自 state
+      onChange={e =&gt; setText(e.target.value)} // 输入同步回 state
+    /&gt;
+  )
+}</code></pre>
+          <table>
+            <tr>
+              <th>表单项</th>
+              <th>取值方式</th>
+            </tr>
+            <tr>
+              <td>text / textarea</td>
+              <td>e.target.value</td>
+            </tr>
+            <tr>
+              <td>checkbox</td>
+              <td>e.target.checked</td>
+            </tr>
+            <tr>
+              <td>select</td>
+              <td>e.target.value</td>
+            </tr>
+            <tr>
+              <td>多选 checkbox 组</td>
+              <td>用数组 state + 判断包含</td>
+            </tr>
+          </table>
+          <div class="tip">
+            表单很多字段时别一个个写 state，可以放一个对象 state，或直接用现成库
+            <code>react-hook-form</code>。
+          </div>
+        </section>
+
+        <div class="part" id="p2">第二篇：进阶篇（玩转 Hooks）</div>
+
+        <section id="s9">
+          <h2><span class="num">9.</span>State 与 useState</h2>
+          <p>
+            <strong>State</strong> =
+            组件内部的、会变化、变化后<strong>触发重新渲染</strong>的数据。<code
+              >useState</code
+            >
+            是给它赋值的 Hook。
+          </p>
+
+          <div class="analogy">
+            普通变量像「黑板字」，改了 React 不知道；state
+            像「连了屏幕的输入」，一改屏幕自动刷新。
+          </div>
+          <pre><code>import { useState } from 'react'
+
+function Counter() {
+  const [count, setCount] = useState(0)  // 初值 0
+  return &lt;button onClick={() =&gt; setCount(count + 1)}&gt;{count}&lt;/button&gt;
+}</code></pre>
+          <p>
+            <code>useState(0)</code> 返回一个数组：第 0 项是当前值，第 1
+            项是修改函数。我们用解构起名 <code>count / setCount</code>。
+          </p>
+
+          <h3>更新规则：不可变！</h3>
+          <div class="warn">
+            React 的对象/数组 state
+            必须<strong>换一个新对象</strong>才算更新，直接改原对象<strong>不会触发</strong>渲染。
+          </div>
+          <pre><code>// ❌ 错：直接改原对象，React 不感知
+user.age = 20
+setUser(user)
+
+// ✅ 对：拷贝一份再改
+setUser({ ...user, age: 20 })
+
+// ✅ 数组也是
+setList([...list, newItem])          // 加
+setList(list.filter(x =&gt; x.id !== id)) // 删
+setList(list.map(x =&gt; x.id === id ? {...x, done:true} : x)) // 改</code></pre>
+
+          <h3>函数式更新（基于上一次的值）</h3>
+          <div class="why">
+            为什么连续多次
+            <code>setCount(count+1)</code> 可能只加一次？因为同一轮里 count
+            还是旧值。用函数式更新 <code>setCount(c =&gt; c+1)</code>，React
+            保证每次都拿「最新值」。
+          </div>
+          <div class="mnemonic">
+            state 连屏幕，改它就重渲染； 对象数组要换新，函数更新防取旧。
+          </div>
+        </section>
+
+        <section id="s10">
+          <h2><span class="num">10.</span>副作用 useEffect</h2>
+          <p>
+            <strong>副作用</strong> = 那些「不纯」的操作：发请求、操作
+            DOM、设定时器、订阅。组件渲染本身要纯（同样的输入同样的输出），副作用放到
+            <code>useEffect</code> 里。
+          </p>
+
+          <div class="analogy">
+            渲染函数是「拍照」（每次数据变就拍一张快照），useEffect
+            是「拍完之后要做的事」（洗照片、发朋友圈）。
+          </div>
+          <pre><code>import { useState, useEffect } from 'react'
+
+function Profile({ id }) {
+  const [user, setUser] = useState(null)
+
+  useEffect(() =&gt; {
+    fetch('/api/user/' + id).then(r =&gt; r.json()).then(setUser)
+  }, [id])   // 依赖数组：只有 id 变了才重跑
+
+  return &lt;p&gt;{user ? user.name : '加载中...'}&lt;/p&gt;
+}</code></pre>
+
+          <h3>依赖数组的三种情况</h3>
+          <table>
+            <tr>
+              <th>写法</th>
+              <th>执行时机</th>
+              <th>慎用程度</th>
+            </tr>
+            <tr>
+              <td>不传依赖</td>
+              <td>每次渲染后都跑</td>
+              <td>⚠️ 易死循环</td>
+            </tr>
+            <tr>
+              <td>空数组 []</td>
+              <td>只在挂载后跑一次</td>
+              <td>✅ 常用于发初始请求</td>
+            </tr>
+            <tr>
+              <td>[a, b]</td>
+              <td>a 或 b 变了才跑</td>
+              <td>✅ 最常用</td>
+            </tr>
+          </table>
+
+          <h3>清理函数</h3>
+          <p>
+            定时器、订阅等要在卸载时清掉，否则内存泄漏。return 一个清理函数：
+          </p>
+          <pre><code>useEffect(() =&gt; {
+  const timer = setInterval(() =&gt; console.log('tick'), 1000)
+  return () =&gt; clearInterval(timer)  // 卸载时执行
+}, [])</code></pre>
+          <div class="warn">
+            最大的坑：忘了写依赖或依赖写错，导致<strong>无限循环请求</strong>。建议配
+            ESLint 的 <code>exhaustive-deps</code> 规则自动提醒。
+          </div>
+          <div class="mnemonic">
+            副作用放 effect，依赖数组控时机； 空数组跑一次，清理函数防泄漏。
+          </div>
+        </section>
+
+        <section id="s11">
+          <h2><span class="num">11.</span>Hooks 进阶全家桶</h2>
+          <table>
+            <tr>
+              <th>Hook</th>
+              <th>作用</th>
+              <th>口诀</th>
+            </tr>
+            <tr>
+              <td>useRef</td>
+              <td>存「不触发渲染」的值 / 拿 DOM 引用</td>
+              <td>存箱子或抓手</td>
+            </tr>
+            <tr>
+              <td>useMemo</td>
+              <td>缓存计算结果</td>
+              <td>算贵才缓存</td>
+            </tr>
+            <tr>
+              <td>useCallback</td>
+              <td>缓存函数引用</td>
+              <td>函数别重造</td>
+            </tr>
+            <tr>
+              <td>useContext</td>
+              <td>跨层读 Context 数据</td>
+              <td>跨层不用透传</td>
+            </tr>
+          </table>
+
+          <h3>useRef 两种用法</h3>
+          <pre><code>const inputRef = useRef(null)
+useEffect(() =&gt; inputRef.current.focus(), [])  // 1.操作DOM
+&lt;input ref={inputRef} /&gt;
+
+const timer = useRef(null)   // 2.存可变值但不触发渲染
+timer.current = setInterval(...)</code></pre>
+
+          <h3>useMemo / useCallback</h3>
+          <pre><code>// 缓存昂贵计算
+const sorted = useMemo(() =&gt; heavySort(list), [list])
+
+// 缓存函数，避免子组件因新函数引用而重渲染
+const handle = useCallback(() =&gt; {...}, [dep])</code></pre>
+          <div class="why">
+            为什么要缓存？父组件每次渲染都新建函数，传给子组件时 props 引用变了
+            → 子组件无谓重渲染。useCallback 让引用稳定。
+          </div>
+          <div class="warn">
+            别滥用！缓存本身有开销。只在「计算真的很贵」或「传给用了 memo
+            的子组件」时才用，否则更慢。
+          </div>
+        </section>
+
+        <section id="s12">
+          <h2><span class="num">12.</span>自定义 Hook</h2>
+          <p>
+            把<strong>可复用的状态逻辑</strong>抽成一个
+            <code>use</code> 开头的函数。这是 React 复用逻辑的核心方案。
+          </p>
+          <pre><code>// hooks/useFetch.js
+import { useState, useEffect } from 'react'
+export function useFetch(url) {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  useEffect(() =&gt; {
+    setLoading(true)
+    fetch(url).then(r =&gt; r.json()).then(d =&gt; { setData(d); setLoading(false) })
+  }, [url])
+  return { data, loading }
+}
+
+// 用法
+function Page() {
+  const { data, loading } = useFetch('/api/user')
+  return loading ? &lt;p&gt;加载中&lt;/p&gt; : &lt;div&gt;{data.name}&lt;/div&gt;
+}</code></pre>
+          <div class="tip">
+            命名必须 <code>use</code> 开头，这是 React 识别 Hook 的规则（也方便
+            ESLint 校验依赖）。
+          </div>
+        </section>
+
+        <section id="s13">
+          <h2><span class="num">13.</span>组件通信方式</h2>
+          <table>
+            <tr>
+              <th>场景</th>
+              <th>方案</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>父→子</td>
+              <td>props</td>
+              <td>最基础</td>
+            </tr>
+            <tr>
+              <td>子→父</td>
+              <td>父传回调函数，子调用</td>
+              <td>props 传函数</td>
+            </tr>
+            <tr>
+              <td>兄弟间</td>
+              <td>状态提升到共同父</td>
+              <td>把共享数据放父组件</td>
+            </tr>
+            <tr>
+              <td>跨多层</td>
+              <td>Context</td>
+              <td>主题/用户信息等</td>
+            </tr>
+            <tr>
+              <td>全局/复杂</td>
+              <td>状态库（Redux/Zustand）</td>
+              <td>见第 17 节</td>
+            </tr>
+          </table>
+          <pre><code>// 子→父：父传函数
+function Child({ onAdd }) {
+  return &lt;button onClick={() =&gt; onAdd(1)}&gt;加&lt;/button&gt;
+}
+function Parent() {
+  const [n, setN] = useState(0)
+  return &lt;&gt;&lt;Child onAdd={setN} /&gt;&lt;p&gt;{n}&lt;/p&gt;&lt;/&gt;
+}</code></pre>
+          <div class="mnemonic">
+            父子靠 props，兄弟往上提； 跨层用 Context，全局上状态库。
+          </div>
+        </section>
+
+        <section id="s14">
+          <h2><span class="num">14.</span>样式方案</h2>
+          <table>
+            <tr>
+              <th>方案</th>
+              <th>特点</th>
+              <th>适合</th>
+            </tr>
+            <tr>
+              <td>普通 CSS / CSS Modules</td>
+              <td>原生、不冲突（Modules 自动改名）</td>
+              <td>中小项目</td>
+            </tr>
+            <tr>
+              <td>内联 style</td>
+              <td>style={{color:'red'}}，动态值方便</td>
+              <td>少量动态</td>
+            </tr>
+            <tr>
+              <td>styled-components</td>
+              <td>CSS in JS，组件即样式</td>
+              <td>动态主题</td>
+            </tr>
+            <tr>
+              <td>Tailwind CSS</td>
+              <td>原子类，写 className 拼样式</td>
+              <td>快速开发、推荐</td>
+            </tr>
+          </table>
+          <div class="tip">
+            新手推荐先学 <strong>CSS Modules</strong>（Vite 内置支持，文件名
+            <code>xxx.module.css</code>），简单又不冲突；进阶用 Tailwind。
+          </div>
+        </section>
+
+        <section id="s15">
+          <h2><span class="num">15.</span>性能优化</h2>
+          <table>
+            <tr>
+              <th>手段</th>
+              <th>做法</th>
+            </tr>
+            <tr>
+              <td>React.memo</td>
+              <td>包裹组件，props 不变就不重渲染</td>
+            </tr>
+            <tr>
+              <td>useMemo / useCallback</td>
+              <td>缓存值/函数，稳定引用</td>
+            </tr>
+            <tr>
+              <td>列表 key 稳定</td>
+              <td>用 id 不用 index</td>
+            </tr>
+            <tr>
+              <td>虚拟列表</td>
+              <td>大列表用 react-window / react-virtual</td>
+            </tr>
+            <tr>
+              <td>懒加载组件</td>
+              <td>React.lazy + Suspense 分包</td>
+            </tr>
+            <tr>
+              <td>按需渲染</td>
+              <td>条件渲染 + 折叠长内容</td>
+            </tr>
+          </table>
+          <pre><code>// 懒加载
+const About = React.lazy(() =&gt; import('./About'))
+&lt;Suspense fallback={&lt;p&gt;加载中&lt;/p&gt;}&gt;&lt;About/&gt;&lt;/Suspense&gt;
+
+// memo
+const Item = React.memo(function Item({ data }) {
+  return &lt;li&gt;{data.text}&lt;/li&gt;
+})</code></pre>
+          <div class="tip">
+            优化口诀：<strong>先测后优</strong>。用 React DevTools Profiler
+            找到真正慢的地方再下手，别盲目加 memo。
+          </div>
+        </section>
+
+        <div class="part" id="p3">第三篇：精通篇（工程化与原理）</div>
+
+        <section id="s16">
+          <h2><span class="num">16.</span>React Router 路由</h2>
+          <p>
+            React 没有内置路由，官方推荐
+            <strong>React Router</strong>（v6+）。用 Vite 模板可一步到位：<code
+              >npm create vite@latest -- --template react</code
+            >
+            后再 <code>npm i react-router-dom</code>。
+          </p>
+          <pre><code>import { createBrowserRouter, RouterProvider, Link } from 'react-router-dom'
+import Home from './Home'
+import User from './User'
+
+const router = createBrowserRouter([
+  { path: '/', element: &lt;Home /&gt; },
+  { path: '/user/:id', element: &lt;User /&gt; }
+])
+
+function App() {
+  return &lt;RouterProvider router={router} /&gt;
+}</code></pre>
+          <table>
+            <tr>
+              <th>概念</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>Link</td>
+              <td>不刷新页面的跳转 &lt;Link to="/home"&gt;</td>
+            </tr>
+            <tr>
+              <td>动态路由</td>
+              <td>/user/:id，组件用 useParams() 取 id</td>
+            </tr>
+            <tr>
+              <td>useNavigate</td>
+              <td>代码里跳转 navigate('/home')</td>
+            </tr>
+            <tr>
+              <td>嵌套路由</td>
+              <td>children 配置 + &lt;Outlet /&gt; 出口</td>
+            </tr>
+            <tr>
+              <td>懒加载</td>
+              <td>element 用 React.lazy 分包</td>
+            </tr>
+          </table>
+        </section>
+
+        <section id="s17">
+          <h2><span class="num">17.</span>状态管理</h2>
+          <table>
+            <tr>
+              <th>方案</th>
+              <th>特点</th>
+              <th>何时用</th>
+            </tr>
+            <tr>
+              <td>useState + Context</td>
+              <td>内置、无依赖</td>
+              <td>中等量、低频更新（主题/用户）</td>
+            </tr>
+            <tr>
+              <td>Zustand</td>
+              <td>极简、不用 Provider、API 友好</td>
+              <td>✅ 新手首选</td>
+            </tr>
+            <tr>
+              <td>Redux Toolkit</td>
+              <td>规范、生态成熟、DevTools 强</td>
+              <td>大型团队项目</td>
+            </tr>
+          </table>
+
+          <h3>Context 最小示例</h3>
+          <pre><code>const ThemeCtx = createContext('light')
+// 提供
+&lt;ThemeCtx.Provider value="dark"&gt;&lt;App/&gt;&lt;/ThemeCtx.Provider&gt;
+// 消费
+const theme = useContext(ThemeCtx)</code></pre>
+          <div class="warn">
+            Context
+            的值变化会让<strong>所有消费它的组件全部重渲染</strong>，高频变化的数据（如频繁刷新的列表）不适合放
+            Context，用 Zustand 更好。
+          </div>
+
+          <h3>Zustand 最小示例</h3>
+          <pre><code>import { create } from 'zustand'
+const useStore = create((set) =&gt; ({
+  count: 0,
+  inc: () =&gt; set(s =&gt; ({ count: s.count + 1 }))
+}))
+// 组件里
+const count = useStore(s =&gt; s.count)
+const inc = useStore(s =&gt; s.inc)</code></pre>
+          <div class="mnemonic">
+            简单用 Context，复杂上 Zustand； Redux 生态强，但样板代码长。
+          </div>
+        </section>
+
+        <section id="s18">
+          <h2><span class="num">18.</span>数据请求 React Query</h2>
+          <p>
+            请求别只写 useEffect+fetch，<strong
+              >React Query（TanStack Query）</strong
+            >帮你管缓存、loading、重试、自动刷新。
+          </p>
+          <pre><code>import { useQuery } from '@tanstack/react-query'
+function User({ id }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['user', id],
+    queryFn: () =&gt; fetch('/api/user/'+id).then(r =&gt; r.json())
+  })
+  if (isLoading) return &lt;p&gt;加载中&lt;/p&gt;
+  return &lt;p&gt;{data.name}&lt;/p&gt;
+}</code></pre>
+          <div class="tip">
+            同一个 queryKey 再请求会<strong>直接用缓存</strong>，秒开；window
+            重新聚焦还能自动刷新。请求逻辑该放这而不是 useEffect。
+          </div>
+        </section>
+
+        <section id="s19">
+          <h2><span class="num">19.</span>TypeScript 集成</h2>
+          <p>
+            React + TS 是生产标配。Vite 模板：<code>--template react-ts</code>。
+          </p>
+          <pre><code>// 给 props 定义类型
+type Props = { title: string; count?: number }
+function Card({ title, count = 0 }: Props) {
+  return &lt;div&gt;{title} - {count}&lt;/div&gt;
+}
+
+// useState 泛型
+const [user, setUser] = useState&lt;User | null&gt;(null)</code></pre>
+          <table>
+            <tr>
+              <th>类型工具</th>
+              <th>作用</th>
+            </tr>
+            <tr>
+              <td>React.FC（少用）</td>
+              <td>包裹函数组件，社区已不推荐</td>
+            </tr>
+            <tr>
+              <td>React.ReactNode</td>
+              <td>「任意可渲染内容」类型（插槽）</td>
+            </tr>
+            <tr>
+              <td>React.ChangeEvent&lt;HTMLInputElement&gt;</td>
+              <td>事件类型</td>
+            </tr>
+          </table>
+        </section>
+
+        <section id="s20">
+          <h2><span class="num">20.</span>Next.js 与 SSR</h2>
+          <p>
+            <strong>Next.js</strong> 是 React
+            的全栈框架，补齐了路由、SSR/SSG、API 路由等 React 不带的能力。
+          </p>
+          <table>
+            <tr>
+              <th>渲染方式</th>
+              <th>说明</th>
+              <th>适合</th>
+            </tr>
+            <tr>
+              <td>CSR 客户端渲染</td>
+              <td>浏览器请求后再 JS 渲染</td>
+              <td>后台管理系统</td>
+            </tr>
+            <tr>
+              <td>SSR 服务端渲染</td>
+              <td>服务器返回已渲染好的 HTML</td>
+              <td>SEO 重要的内容站</td>
+            </tr>
+            <tr>
+              <td>SSG 静态生成</td>
+              <td>构建时生成静态页</td>
+              <td>博客、文档</td>
+            </tr>
+          </table>
+          <div class="tip">
+            App Router（Next 13+）用 Server
+            Components，能直接在组件里写查数据库的代码，大幅简化全栈开发。
+          </div>
+        </section>
+
+        <section id="s21">
+          <h2><span class="num">21.</span>原理：Fiber 与虚拟 DOM</h2>
+          <p>
+            <strong>虚拟 DOM</strong> = 用 JS 对象描述真实 DOM 的树。数据变 →
+            生成新虚拟树 → 与旧树<strong>Diff 比对</strong> → 只把差异更新到真实
+            DOM。
+          </p>
+          <div class="why">
+            为什么不用真实 DOM？因为直接操作真实 DOM 很慢（涉及布局重排），JS
+            对象比对很便宜。先比对象、最后只改必要的 DOM。
+          </div>
+
+          <h3>Fiber 架构（React 16+）</h3>
+          <ul>
+            <li>
+              把渲染工作拆成<strong>一个个小单元（Fiber）</strong>，可中断、可恢复。
+            </li>
+            <li>
+              好处：渲染大组件树时不会长时间卡死主线程，能优先处理用户输入等高优任务。
+            </li>
+            <li>这是 React 18 并发特性的底座。</li>
+          </ul>
+
+          <h3>Diff 三大策略（启发式）</h3>
+          <table>
+            <tr>
+              <th>策略</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>1. 同层比较</td>
+              <td>只比同一层节点，不跨层</td>
+            </tr>
+            <tr>
+              <td>2. 类型不同直接替换</td>
+              <td>类型变就整个重建子树</td>
+            </tr>
+            <tr>
+              <td>3. key 复用</td>
+              <td>靠 key 判断兄弟节点是否同一个</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            虚拟 DOM 是对象，Diff 同层比差异； Fiber 可中断，key 定复用。
+          </div>
+        </section>
+
+        <section id="s22">
+          <h2><span class="num">22.</span>React 18 并发特性</h2>
+          <table>
+            <tr>
+              <th>特性</th>
+              <th>作用</th>
+              <th>小白理解</th>
+            </tr>
+            <tr>
+              <td>自动批处理</td>
+              <td>多次 setState 合并成一次渲染</td>
+              <td>多步操作只刷一次屏</td>
+            </tr>
+            <tr>
+              <td>并发渲染</td>
+              <td>渲染可中断让路给高优任务</td>
+              <td>打字时不卡顿</td>
+            </tr>
+            <tr>
+              <td>Transition</td>
+              <td>用 useTransition 标记非紧急更新</td>
+              <td>搜索框输入优先、列表更新稍后</td>
+            </tr>
+            <tr>
+              <td>Suspense</td>
+              <td>组件未就绪时显示兜底</td>
+              <td>loading 占位</td>
+            </tr>
+          </table>
+          <pre><code>import { useTransition, useState } from 'react'
+const [isPending, startTransition] = useTransition()
+// 输入实时更新，重列表放 transition 里稍慢
+function onChange(e) {
+  setQuery(e.target.value)
+  startTransition(() =&gt; setResults(filter(e.target.value)))
+}</code></pre>
+        </section>
+
+        <section id="s23">
+          <h2><span class="num">23.</span>面试口诀与速查表</h2>
+          <table>
+            <tr>
+              <th>问题</th>
+              <th>一句话答案</th>
+            </tr>
+            <tr>
+              <td>JSX 是什么</td>
+              <td>JS 里写类 HTML，编译成 createElement</td>
+            </tr>
+            <tr>
+              <td>为什么 key 不能用 index</td>
+              <td>顺序变动会错位、复用错误</td>
+            </tr>
+            <tr>
+              <td>props 和 state 区别</td>
+              <td>props 外来只读，state 内部可变触发渲染</td>
+            </tr>
+            <tr>
+              <td>为什么 state 要不可变更新</td>
+              <td>换新引用 React 才感知变化、也好做时间旅行</td>
+            </tr>
+            <tr>
+              <td>useEffect 依赖空数组</td>
+              <td>只在挂载后跑一次，常发初始请求</td>
+            </tr>
+            <tr>
+              <td>useMemo vs useCallback</td>
+              <td>缓存值 vs 缓存函数</td>
+            </tr>
+            <tr>
+              <td>受控组件</td>
+              <td>表单值由 state 控制</td>
+            </tr>
+            <tr>
+              <td>Fiber 是什么</td>
+              <td>可中断可恢复的渲染单元，并发底座</td>
+            </tr>
+            <tr>
+              <td>虚拟 DOM 优势</td>
+              <td>JS 对象比对便宜，最后才改真实 DOM</td>
+            </tr>
+            <tr>
+              <td>状态管理选型</td>
+              <td>简单 Context，复杂 Zustand，大型 Redux</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            组件是函数，Props 是参数； state 连屏幕，改它要换新； 副作用进
+            effect，依赖定时机； 虚拟 DOM 做 Diff，Fiber 可中断； 数据请求上
+            Query，状态管理看规模。
+          </div>
+        </section>
+
+        <section id="route">
+          <h2>学习路线建议（30 天冲刺）</h2>
+          <div class="route-box">
+            <table>
+              <tr>
+                <th>阶段</th>
+                <th>天数</th>
+                <th>重点任务</th>
+              </tr>
+              <tr>
+                <td>入门</td>
+                <td>1–8</td>
+                <td>
+                  用 Vite 建项目，吃透 JSX + props + 事件，做 5 个静态页面
+                </td>
+              </tr>
+              <tr>
+                <td>进阶</td>
+                <td>9–20</td>
+                <td>
+                  玩转 useState/useEffect/自定义 Hook，做一个 Todo +
+                  一个天气查询
+                </td>
+              </tr>
+              <tr>
+                <td>精通</td>
+                <td>21–30</td>
+                <td>
+                  接入 Router + Zustand + React Query，做一个博客/后台，再读
+                  Fiber 原理
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="tip">
+            小白终极心法：<strong
+              >先抄代码跑起来 → 改一改看变化 → 再自己默写</strong
+            >。能跑的 demo 比看十遍文档管用。
+          </div>
+        </section>
+
+        <footer>
+          React 从入门到精通 · 学习笔记　|　小白友好 · 多比喻 · 多为什么
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      ;(function () {
+        const menuToggle = document.getElementById('menuToggle')
+        const toc = document.getElementById('toc')
+        const tocOverlay = document.getElementById('tocOverlay')
+        function setTocOpen(isOpen) {
+          toc.classList.toggle('open', isOpen)
+          tocOverlay.classList.toggle('open', isOpen)
+          menuToggle.setAttribute('aria-expanded', String(isOpen))
+        }
+        menuToggle.addEventListener('click', () =>
+          setTocOpen(!toc.classList.contains('open')),
+        )
+        tocOverlay.addEventListener('click', () => setTocOpen(false))
+        toc
+          .querySelectorAll('a')
+          .forEach((link) =>
+            link.addEventListener('click', () => setTocOpen(false)),
+          )
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setTocOpen(false)
+        })
+
+        const links = document.querySelectorAll('nav.toc a[href^="#"]')
+        const map = {}
+        links.forEach((a) => {
+          const id = a.getAttribute('href').slice(1)
+          const el = document.getElementById(id)
+          if (el) map[id] = a
+        })
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                links.forEach((a) => a.classList.remove('active'))
+                const id = e.target.id
+                if (map[id]) map[id].classList.add('active')
+              }
+            })
+          },
+          { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+        )
+        Object.keys(map).forEach((id) => {
+          const el = document.getElementById(id)
+          if (el) io.observe(el)
+        })
+      })()
+    </script>
+  </body>
+</html>
