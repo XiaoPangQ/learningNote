@@ -1,6 +1,6 @@
 # 学习笔记
 
-这是一个静态技术学习笔记项目，按专题整理 Linux、Docker 和 Python 等内容，适合系统学习与快速查阅。
+这是一个静态技术学习笔记项目，按专题整理 Linux、Docker、Python 和 Vue 3 等内容，适合系统学习与快速查阅。
 
 ## 笔记目录
 
@@ -8,6 +8,7 @@
 2. [Linux 从入门到精通](learningLinux.html)
 3. [Linux 命令大全](learningLinuxCommand.html)
 4. [Docker 从入门到精通](learningDocker.html)
+5. [Vue 3 从入门到精通](learningVue.html)
 
 也可以从首页进入全部笔记：[技术学习笔记](index.html)
 

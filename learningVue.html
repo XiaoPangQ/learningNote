@@ -1,0 +1,1495 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue 3 从入门到精通 · 学习笔记</title>
+    <style>
+      :root {
+        --vue: #42b883;
+        --vue-dark: #35495e;
+        --bg: #ffffff;
+        --bg-soft: #f6f8fa;
+        --bg-code: #f3f4f6;
+        --text: #1f2329;
+        --text-soft: #5a6270;
+        --border: #e3e6ea;
+        --mnemonic-bg: #fff8e1;
+        --mnemonic-border: #ffd54f;
+        --tip-bg: #e8f5e9;
+        --tip-border: #42b883;
+        --warn-bg: #fdecea;
+        --warn-border: #e57373;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 84px;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+          'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        background: var(--bg-soft);
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 15px;
+      }
+      /* 顶部栏 */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: linear-gradient(90deg, var(--vue-dark), #2c3e50);
+        color: #fff;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+      .topbar .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: var(--vue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 18px;
+        color: #fff;
+      }
+      .topbar h1 {
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .topbar .sub {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-left: auto;
+      }
+
+      /* 布局 */
+      .wrap {
+        display: flex;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .toc-overlay {
+        display: none;
+      }
+      nav.toc {
+        position: sticky;
+        top: 64px;
+        align-self: flex-start;
+        height: calc(100vh - 64px);
+        overflow-y: auto;
+        width: 230px;
+        flex-shrink: 0;
+        padding: 18px 0;
+        font-size: 13px;
+      }
+      nav.toc .grp {
+        font-weight: 700;
+        color: var(--vue-dark);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 14px 6px 6px;
+      }
+      nav.toc .home-link {
+        margin: 0 0 12px;
+        padding: 7px 14px;
+        color: var(--vue);
+        font-weight: 600;
+      }
+      nav.toc .home-link:hover {
+        background: #e6f7ef;
+      }
+      nav.toc a {
+        display: block;
+        padding: 5px 14px;
+        color: var(--text-soft);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.15s;
+        line-height: 1.45;
+      }
+      nav.toc a:hover {
+        background: var(--bg-code);
+        color: var(--vue);
+      }
+      nav.toc a.active {
+        background: #e6f7ef;
+        color: var(--vue);
+        font-weight: 600;
+      }
+      main {
+        flex: 1;
+        min-width: 0;
+        padding: 22px 0 60px 28px;
+        max-width: 920px;
+      }
+      @media (max-width: 880px) {
+        .menu-toggle {
+          display: block;
+          position: fixed;
+          top: 76px;
+          left: 14px;
+          z-index: 110;
+          padding: 9px 13px;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          border-radius: 7px;
+          background: var(--vue-dark);
+          color: #fff;
+          font: inherit;
+          font-size: 13px;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+          cursor: pointer;
+        }
+        .menu-toggle:hover {
+          background: var(--vue);
+        }
+        .toc-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(31, 35, 41, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .toc-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .wrap {
+          padding: 0 14px;
+        }
+        nav.toc {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 100;
+          width: min(300px, 84vw);
+          height: 100vh;
+          overflow-y: auto;
+          background: #fff;
+          border-right: 1px solid var(--border);
+          border-radius: 0;
+          margin: 0;
+          padding: 76px 16px 24px;
+          box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+        }
+        nav.toc.open {
+          transform: translateX(0);
+        }
+        main {
+          padding-left: 0;
+        }
+      }
+
+      /* 标题与章节 */
+      .part {
+        margin: 34px 0 8px;
+        font-size: 21px;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(90deg, var(--vue), #2ec4b6);
+        padding: 10px 16px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      section {
+        margin: 26px 0;
+        padding-top: 6px;
+      }
+      section h2 {
+        font-size: 19px;
+        color: var(--vue-dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 7px;
+        margin-bottom: 12px;
+      }
+      section h2 .num {
+        color: var(--vue);
+        margin-right: 6px;
+      }
+      h3 {
+        font-size: 15px;
+        color: var(--vue-dark);
+        margin: 16px 0 8px;
+      }
+      p {
+        margin: 9px 0;
+      }
+
+      /* 表格 */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        font-size: 14px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      th {
+        background: var(--vue-dark);
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      td {
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfc;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* 代码 */
+      pre {
+        background: var(--bg-code);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--vue);
+        border-radius: 8px;
+        padding: 13px 16px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-size: 13.5px;
+        line-height: 1.6;
+      }
+      code {
+        font-family:
+          'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      }
+      :not(pre) > code {
+        background: var(--bg-code);
+        color: #c0392b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+
+      /* 口诀框 */
+      .mnemonic {
+        background: var(--mnemonic-bg);
+        border: 1px solid var(--mnemonic-border);
+        border-left: 4px solid var(--mnemonic-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0;
+        white-space: pre-line;
+        font-weight: 500;
+      }
+      .mnemonic::before {
+        content: '口诀';
+        display: inline-block;
+        background: var(--mnemonic-border);
+        color: #5d4037;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      .tip {
+        background: var(--tip-bg);
+        border-left: 4px solid var(--tip-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .tip::before {
+        content: '提示';
+        display: inline-block;
+        background: var(--tip-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .warn {
+        background: var(--warn-bg);
+        border-left: 4px solid var(--warn-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .warn::before {
+        content: '注意';
+        display: inline-block;
+        background: var(--warn-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .lead {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        color: var(--text-soft);
+      }
+      .route-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 14px 0;
+      }
+      footer {
+        text-align: center;
+        color: var(--text-soft);
+        font-size: 12px;
+        padding: 26px 0 40px;
+        border-top: 1px solid var(--border);
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-controls="toc"
+      aria-expanded="false">
+      ☰ 目录
+    </button>
+    <div class="toc-overlay" id="tocOverlay"></div>
+
+    <div class="topbar">
+      <div class="logo">V</div>
+      <h1>Vue 3 从入门到精通 · 学习笔记</h1>
+      <span class="sub">表格归纳 · 口诀记忆 · 要点提炼</span>
+    </div>
+
+    <div class="wrap">
+      <nav class="toc" id="toc">
+        <a class="home-link" href="index.html">← 返回首页</a>
+        <div class="grp">入门篇</div>
+        <a href="#s1">1. Vue 是什么</a>
+        <a href="#s2">2. 快速上手</a>
+        <a href="#s3">3. 模板语法</a>
+        <a href="#s4">4. 响应式核心 ref/reactive</a>
+        <a href="#s5">5. 计算属性 computed</a>
+        <a href="#s6">6. 侦听器 watch/watchEffect</a>
+        <a href="#s7">7. 类与样式绑定</a>
+        <a href="#s8">8. 条件与列表渲染</a>
+        <a href="#s9">9. 事件处理</a>
+        <a href="#s10">10. 表单输入绑定</a>
+        <div class="grp">进阶篇</div>
+        <a href="#s11">11. 组件基础与注册</a>
+        <a href="#s12">12. Props 父传子</a>
+        <a href="#s13">13. 自定义事件 emits</a>
+        <a href="#s14">14. 插槽 slots</a>
+        <a href="#s15">15. 生命周期钩子</a>
+        <a href="#s16">16. 依赖注入 provide/inject</a>
+        <a href="#s17">17. 组合式函数 composables</a>
+        <a href="#s18">18. 自定义指令</a>
+        <a href="#s19">19. 过渡与动画</a>
+        <div class="grp">精通篇</div>
+        <a href="#s20">20. Vue Router 路由</a>
+        <a href="#s21">21. Pinia 状态管理</a>
+        <a href="#s22">22. 异步与网络请求</a>
+        <a href="#s23">23. TypeScript 集成</a>
+        <a href="#s24">24. 性能优化清单</a>
+        <a href="#s25">25. 响应式原理与虚拟 DOM</a>
+        <a href="#s26">26. 面试口诀与速查表</a>
+        <a href="#route">学习路线建议</a>
+      </nav>
+
+      <main>
+        <p class="lead">
+          学习风格：表格归纳 + 口诀记忆 + 要点提炼。以
+          <strong>Vue 3（组合式 API）</strong> 为主线，关键处对比 Vue 2。
+          先跑通「入门篇」每个小例子，再啃「进阶篇」组件思想，最后用「精通篇」查漏补缺。
+        </p>
+
+        <div class="part" id="p1">第一篇：入门篇（基础夯实）</div>
+
+        <section id="s1">
+          <h2><span class="num">1.</span>Vue 是什么</h2>
+          <p>
+            <strong>一句话</strong>：Vue 是一套用于构建用户界面的<strong
+              >渐进式 JavaScript 框架</strong
+            >。渐进 = 可以只用核心库，也能逐步引入路由、状态管理等全家桶。
+          </p>
+          <table>
+            <tr>
+              <th>概念</th>
+              <th>含义</th>
+              <th>记忆点</th>
+            </tr>
+            <tr>
+              <td>声明式渲染</td>
+              <td>只描述「数据长什么样」，不手动操作 DOM</td>
+              <td>数据变，视图自动变</td>
+            </tr>
+            <tr>
+              <td>组件化</td>
+              <td>把页面拆成可复用、独立的小块</td>
+              <td>拼乐高</td>
+            </tr>
+            <tr>
+              <td>响应式</td>
+              <td>数据变化自动驱动视图更新</td>
+              <td>自动同步</td>
+            </tr>
+            <tr>
+              <td>单文件组件 SFC</td>
+              <td>.vue 文件把模板/逻辑/样式封装一体</td>
+              <td>&lt;template&gt; + &lt;script&gt; + &lt;style&gt;</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            数据驱动视图，组件拼装页面； 响应式是灵魂，SFC 是容器。
+          </div>
+        </section>
+
+        <section id="s2">
+          <h2><span class="num">2.</span>快速上手</h2>
+          <p><strong>方式一：CDN 试水（无需安装）</strong></p>
+          <pre><code>&lt;script src="https://unpkg.com/vue@3/dist/vue.global.js"&gt;&lt;/script&gt;
+&lt;div id="app"&gt;{{ msg }}&lt;/div&gt;
+&lt;script&gt;
+  Vue.createApp({
+    data() { return { msg: 'Hello Vue 3' } }
+  }).mount('#app')
+&lt;/script&gt;</code></pre>
+          <p><strong>方式二：构建工具（正式开发推荐）</strong></p>
+          <pre><code>npm create vite@latest my-vue-app -- --template vue
+cd my-vue-app
+npm install
+npm run dev</code></pre>
+          <table>
+            <tr>
+              <th>方式</th>
+              <th>适用场景</th>
+              <th>优点</th>
+              <th>缺点</th>
+            </tr>
+            <tr>
+              <td>CDN</td>
+              <td>学语法、做 demo</td>
+              <td>零配置</td>
+              <td>无热更新、难工程化</td>
+            </tr>
+            <tr>
+              <td>Vite</td>
+              <td>真实项目</td>
+              <td>快、热更新、模块化</td>
+              <td>需 Node 环境</td>
+            </tr>
+          </table>
+          <p><strong>组合式 API 的最小骨架</strong></p>
+          <pre><code>&lt;script setup&gt;
+import { ref } from 'vue'
+const count = ref(0)
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;button @click="count++"&gt;点了 {{ count }} 次&lt;/button&gt;
+&lt;/template&gt;</code></pre>
+          <div class="tip">
+            <code>script setup</code> 是 Vue 3
+            推荐写法：顶层变量/函数<strong>自动暴露</strong>给模板，无需
+            return。
+          </div>
+        </section>
+
+        <section id="s3">
+          <h2><span class="num">3.</span>模板语法</h2>
+          <table>
+            <tr>
+              <th>语法</th>
+              <th>写法</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>文本插值</td>
+              <td>{{ msg }}</td>
+              <td>双大括号，内容会被转义</td>
+            </tr>
+            <tr>
+              <td>原始 HTML</td>
+              <td>v-html="raw"</td>
+              <td>渲染 HTML 字符串（慎用，有 XSS 风险）</td>
+            </tr>
+            <tr>
+              <td>属性绑定</td>
+              <td>:id="dynId" 或 v-bind:id</td>
+              <td>动态绑定属性</td>
+            </tr>
+            <tr>
+              <td>表达式</td>
+              <td>{{ count + 1 }}</td>
+              <td>支持 JS 表达式，不支持语句</td>
+            </tr>
+          </table>
+          <div class="warn">
+            插值里只能写<strong>单个表达式</strong>，不能写
+            <code>if</code>、<code>for</code> 等语句。
+          </div>
+        </section>
+
+        <section id="s4">
+          <h2><span class="num">4.</span>响应式核心：ref 与 reactive</h2>
+          <p>这是 Vue 3 与 Vue 2 <code>data()</code> 最大的不同点。</p>
+          <table>
+            <tr>
+              <th>API</th>
+              <th>适用类型</th>
+              <th>访问方式</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>ref</td>
+              <td>基本类型 + 对象都行</td>
+              <td>.value 取值/赋值</td>
+              <td>const n = ref(0); n.value++</td>
+            </tr>
+            <tr>
+              <td>reactive</td>
+              <td>仅对象/数组</td>
+              <td>直接 .key</td>
+              <td>const s = reactive({n:0}); s.n++</td>
+            </tr>
+          </table>
+          <pre><code>import { ref, reactive } from 'vue'
+
+// 基本类型用 ref
+const name = ref('Vue')
+console.log(name.value) // 'Vue'
+name.value = 'Vue 3'
+
+// 对象用 reactive 更自然
+const user = reactive({ age: 18 })
+user.age++ // 18 -> 19</code></pre>
+          <div class="mnemonic">
+            基本类型用 ref，对象数组 reactive； 实在分不清，全用 ref
+            也行（.value 别忘）。
+          </div>
+          <p>
+            <strong>解构陷阱</strong>：<code>reactive</code>
+            对象解构后会<strong>丢失响应式</strong>，要用 <code>toRefs</code>：
+          </p>
+          <pre><code>const state = reactive({ x: 1, y: 2 })
+const { x, y } = toRefs(state) // 保持响应式</code></pre>
+        </section>
+
+        <section id="s5">
+          <h2><span class="num">5.</span>计算属性 computed</h2>
+          <p>
+            基于响应式依赖<strong>缓存</strong>派生值。依赖不变就不重新计算。
+          </p>
+          <pre><code>import { ref, computed } from 'vue'
+const firstName = ref('张')
+const lastName = ref('三')
+const fullName = computed(() =&gt; firstName.value + lastName.value)</code></pre>
+          <table>
+            <tr>
+              <th>对比</th>
+              <th>computed</th>
+              <th>methods</th>
+            </tr>
+            <tr>
+              <td>缓存</td>
+              <td>✅ 依赖不变不重算</td>
+              <td>❌ 每次调用都重算</td>
+            </tr>
+            <tr>
+              <td>写法</td>
+              <td>像属性 {{ fullName }}</td>
+              <td>像函数 {{ getFull() }}</td>
+            </tr>
+          </table>
+          <p><strong>可写计算属性</strong>（少见但有用）：</p>
+          <pre><code>const fullName = computed({
+  get: () =&gt; first.value + last.value,
+  set: (v) =&gt; { [first.value, last.value] = v.split(' ') }
+})</code></pre>
+        </section>
+
+        <section id="s6">
+          <h2><span class="num">6.</span>侦听器 watch / watchEffect</h2>
+          <table>
+            <tr>
+              <th>API</th>
+              <th>触发时机</th>
+              <th>需指定源</th>
+              <th>典型用途</th>
+            </tr>
+            <tr>
+              <td>watch</td>
+              <td>源变化时</td>
+              <td>✅ 要指定监听谁</td>
+              <td>异步请求、特定副作用</td>
+            </tr>
+            <tr>
+              <td>watchEffect</td>
+              <td>立即执行 + 依赖变化时</td>
+              <td>❌ 自动收集依赖</td>
+              <td>初始化即要跑的副作用</td>
+            </tr>
+          </table>
+          <pre><code>import { ref, watch, watchEffect } from 'vue'
+const count = ref(0)
+
+// watch：明确监听 count
+watch(count, (newVal, oldVal) =&gt; {
+  console.log(`从 ${oldVal} 变到 ${newVal}`)
+})
+
+// watchEffect：自动追踪用到的响应式数据
+watchEffect(() =&gt; {
+  console.log('count 现在是', count.value)
+})</code></pre>
+          <p>
+            <strong>watch 监听对象深层属性</strong>：加
+            <code>{ deep: true }</code>；只监听某个字段用 getter：
+          </p>
+          <pre><code>watch(() =&gt; user.age, (v) =&gt; {...})        // 精准
+watch(user, (v) =&gt; {...}, { deep: true })  // 全量深层</code></pre>
+        </section>
+
+        <section id="s7">
+          <h2><span class="num">7.</span>类与样式绑定</h2>
+          <p><strong>动态 class（三种写法）</strong></p>
+          <pre><code>&lt;!-- 对象：键为真则加类 --&gt;
+&lt;div :class="{ active: isActive, 'text-red': hasError }"&gt;&lt;/div&gt;
+&lt;!-- 数组：直接拼多个类 --&gt;
+&lt;div :class="[activeClass, errorClass]"&gt;&lt;/div&gt;
+&lt;!-- 数组里套对象 --&gt;
+&lt;div :class="[{ active: isActive }, errorClass]"&gt;&lt;/div&gt;</code></pre>
+          <p><strong>动态 style</strong></p>
+          <pre><code>&lt;div :style="{ color: activeColor, fontSize: size + 'px' }"&gt;&lt;/div&gt;</code></pre>
+          <table>
+            <tr>
+              <th>场景</th>
+              <th>推荐写法</th>
+            </tr>
+            <tr>
+              <td>单类开关</td>
+              <td>对象语法 :class="{on: flag}"</td>
+            </tr>
+            <tr>
+              <td>多类组合</td>
+              <td>数组语法 :class="[a, b]"</td>
+            </tr>
+          </table>
+        </section>
+
+        <section id="s8">
+          <h2><span class="num">8.</span>条件与列表渲染</h2>
+          <table>
+            <tr>
+              <th>指令</th>
+              <th>用途</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>v-if / v-else-if / v-else</td>
+              <td>真正增删 DOM</td>
+              <td>切换开销大、运行时开销小</td>
+            </tr>
+            <tr>
+              <td>v-show</td>
+              <td>display:none 切换</td>
+              <td>初始开销大、切换便宜</td>
+            </tr>
+            <tr>
+              <td>v-for</td>
+              <td>循环列表</td>
+              <td>必须带 :key</td>
+            </tr>
+          </table>
+          <pre><code>&lt;!-- 条件 --&gt;
+&lt;p v-if="score &gt;= 90"&gt;优秀&lt;/p&gt;
+&lt;p v-else-if="score &gt;= 60"&gt;及格&lt;/p&gt;
+&lt;p v-else&gt;不及格&lt;/p&gt;
+
+&lt;!-- 列表 --&gt;
+&lt;ul&gt;
+  &lt;li v-for="(item, index) in list" :key="item.id"&gt;{{ index }} - {{ item.name }}&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+          <div class="mnemonic">
+            v-if 是删节点，v-show 是藏节点； 频繁切换用 show，一次性判断用 if。
+          </div>
+          <div class="warn">
+            <code>v-for</code> 与 <code>v-if</code>
+            <strong>不要同元素混用</strong>（Vue 3 中 v-if
+            优先级更高，逻辑混乱）。需要过滤时先
+            <code>computed</code> 过滤数组。
+          </div>
+          <p>
+            <code>:key</code> 是 Vue 复用节点的「身份证」，用稳定唯一值（如
+            id），<strong>不要用 index</strong>（增删时会错位出 bug）。
+          </p>
+        </section>
+
+        <section id="s9">
+          <h2><span class="num">9.</span>事件处理</h2>
+          <pre><code>&lt;button @click="count++"&gt;加&lt;/button&gt;
+&lt;button @click="say('hi', $event)"&gt;带参&lt;/button&gt;
+&lt;button @click.stop="doThis"&gt;阻止冒泡&lt;/button&gt;
+&lt;button @submit.prevent="onSubmit"&gt;阻止默认&lt;/button&gt;</code></pre>
+          <table>
+            <tr>
+              <th>修饰符</th>
+              <th>作用</th>
+            </tr>
+            <tr>
+              <td>.stop</td>
+              <td>event.stopPropagation() 阻止冒泡</td>
+            </tr>
+            <tr>
+              <td>.prevent</td>
+              <td>event.preventDefault() 阻止默认行为</td>
+            </tr>
+            <tr>
+              <td>.once</td>
+              <td>只触发一次</td>
+            </tr>
+            <tr>
+              <td>.enter / .esc</td>
+              <td>按键修饰符（监听特定键）</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            冒泡用 .stop，默认用 .prevent； 想只一次 .once，按键写 .enter。
+          </div>
+        </section>
+
+        <section id="s10">
+          <h2><span class="num">10.</span>表单输入绑定</h2>
+          <p>
+            <code>v-model</code> = <code>:value</code> +
+            <code>@input</code> 的语法糖。
+          </p>
+          <table>
+            <tr>
+              <th>表单元素</th>
+              <th>绑定结果</th>
+            </tr>
+            <tr>
+              <td>&lt;input type="text"&gt;</td>
+              <td>字符串</td>
+            </tr>
+            <tr>
+              <td>&lt;input type="checkbox"&gt;</td>
+              <td>单勾布尔 / 多勾数组</td>
+            </tr>
+            <tr>
+              <td>&lt;input type="radio"&gt;</td>
+              <td>选中的 value</td>
+            </tr>
+            <tr>
+              <td>&lt;select&gt;</td>
+              <td>选中项 value</td>
+            </tr>
+            <tr>
+              <td>&lt;textarea&gt;</td>
+              <td>字符串</td>
+            </tr>
+          </table>
+          <pre><code>&lt;input v-model="text" placeholder="输入"/&gt;
+&lt;input type="checkbox" v-model="checked" /&gt; {{ checked }}
+&lt;select v-model="city"&gt;&lt;option value="bj"&gt;北京&lt;/option&gt;&lt;/select&gt;</code></pre>
+          <p>
+            <strong>修饰符</strong>：<code>.lazy</code>（change
+            时更新）、<code>.number</code>（转数字）、<code>.trim</code>（去空格）。
+          </p>
+        </section>
+
+        <div class="part" id="p2">第二篇：进阶篇（组件化）</div>
+        <p class="lead">
+          组件是 Vue 的灵魂。把页面拆成「props 进、events 出」的独立积木。
+        </p>
+
+        <section id="s11">
+          <h2><span class="num">11.</span>组件基础与注册</h2>
+          <pre><code>&lt;!-- Child.vue --&gt;
+&lt;script setup&gt;
+defineProps({ title: String })
+defineEmits(['change'])
+&lt;/script&gt;
+&lt;template&gt;&lt;h2&gt;{{ title }}&lt;/h2&gt;&lt;/template&gt;</code></pre>
+          <table>
+            <tr>
+              <th>注册方式</th>
+              <th>写法</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>局部注册</td>
+              <td>import Child from './Child.vue' 直接用</td>
+              <td>推荐，按需加载</td>
+            </tr>
+            <tr>
+              <td>全局注册</td>
+              <td>app.component('Child', Child)</td>
+              <td>全项目可用，慎用（体积/依赖不清）</td>
+            </tr>
+          </table>
+          <div class="mnemonic">局部优先全局，组件单一职责。</div>
+        </section>
+
+        <section id="s12">
+          <h2><span class="num">12.</span>Props：父传子</h2>
+          <pre><code>&lt;!-- 父 --&gt;
+&lt;Child :user-name="name" :age="18" /&gt;</code></pre>
+          <pre><code>&lt;!-- 子 --&gt;
+&lt;script setup&gt;
+const props = defineProps({
+  userName: { type: String, required: true },
+  age: { type: Number, default: 0 }
+})
+console.log(props.userName)
+&lt;/script&gt;</code></pre>
+          <table>
+            <tr>
+              <th>要点</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>单向数据流</td>
+              <td>子组件<strong>不能</strong>直接改 props（会报警告）</td>
+            </tr>
+            <tr>
+              <td>改名接收</td>
+              <td>defineProps 用 camelCase，模板用 kebab-case 传</td>
+            </tr>
+            <tr>
+              <td>对象/数组默认值</td>
+              <td>必须用工厂函数 default: () =&gt; ({})</td>
+            </tr>
+          </table>
+          <div class="tip">
+            想改父数据？让父传 <code>@update</code> 事件，或传
+            <code>reactive</code> 对象引用（改其属性，不推荐新手用）。
+          </div>
+        </section>
+
+        <section id="s13">
+          <h2><span class="num">13.</span>自定义事件 emits：子传父</h2>
+          <pre><code>&lt;!-- 子 --&gt;
+&lt;script setup&gt;
+const emit = defineEmits(['submit', 'update:modelValue'])
+function onBtn() { emit('submit', { ok: true }) }
+&lt;/script&gt;
+&lt;template&gt;&lt;button @click="onBtn"&gt;提交&lt;/button&gt;&lt;/template&gt;
+
+&lt;!-- 父 --&gt;
+&lt;Child @submit="handleSubmit" /&gt;</code></pre>
+          <p>
+            <strong>v-model 本质</strong>（组件上）：<code>v-model:foo</code> =
+            <code>:foo</code> + <code>@update:foo</code>
+          </p>
+          <pre><code>&lt;Child v-model="text" /&gt;          &lt;!-- 简写，对应 modelValue --&gt;
+&lt;Child v-model:title="t" /&gt;       &lt;!-- 具名 v-model --&gt;</code></pre>
+        </section>
+
+        <section id="s14">
+          <h2><span class="num">14.</span>插槽 slots</h2>
+          <table>
+            <tr>
+              <th>插槽类型</th>
+              <th>用法</th>
+              <th>场景</th>
+            </tr>
+            <tr>
+              <td>默认插槽</td>
+              <td>&lt;slot/&gt;</td>
+              <td>父往子塞一段内容</td>
+            </tr>
+            <tr>
+              <td>具名插槽</td>
+              <td>&lt;slot name="header"/&gt; + &lt;template #header&gt;</td>
+              <td>多区域布局</td>
+            </tr>
+            <tr>
+              <td>作用域插槽</td>
+              <td>&lt;slot :item="row"/&gt;</td>
+              <td>子把数据回传给父，父决定渲染</td>
+            </tr>
+          </table>
+          <pre><code>&lt;!-- 子：Card.vue --&gt;
+&lt;template&gt;
+  &lt;div class="card"&gt;
+    &lt;slot name="header" /&gt;
+    &lt;slot :count="count" /&gt;   &lt;!-- 作用域插槽 --&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;!-- 父 --&gt;
+&lt;Card&gt;
+  &lt;template #header&gt;&lt;h3&gt;标题&lt;/h3&gt;&lt;/template&gt;
+  &lt;template #default="{ count }"&gt;&lt;p&gt;当前 {{ count }}&lt;/p&gt;&lt;/template&gt;
+&lt;/Card&gt;</code></pre>
+          <div class="mnemonic">
+            默认塞内容，具名分区域； 作用域插槽，子把数据递。
+          </div>
+        </section>
+
+        <section id="s15">
+          <h2><span class="num">15.</span>生命周期钩子</h2>
+          <table>
+            <tr>
+              <th>钩子</th>
+              <th>时机</th>
+              <th>能做什么</th>
+            </tr>
+            <tr>
+              <td>onBeforeMount</td>
+              <td>挂载前</td>
+              <td>数据已就绪，DOM 还没</td>
+            </tr>
+            <tr>
+              <td>onMounted</td>
+              <td>挂载完成</td>
+              <td>✅ 发请求、操作 DOM、初始化图表</td>
+            </tr>
+            <tr>
+              <td>onBeforeUpdate</td>
+              <td>更新前</td>
+              <td>拿到更新前状态</td>
+            </tr>
+            <tr>
+              <td>onUpdated</td>
+              <td>更新后</td>
+              <td>DOM 已刷新（少用）</td>
+            </tr>
+            <tr>
+              <td>onBeforeUnmount</td>
+              <td>卸载前</td>
+              <td>✅ 清除定时器、解绑事件</td>
+            </tr>
+            <tr>
+              <td>onUnmounted</td>
+              <td>卸载后</td>
+              <td>清理收尾</td>
+            </tr>
+          </table>
+          <p>组合式 API 中钩子以 <code>onXxx</code> 形式在 setup 内调用：</p>
+          <pre><code>import { onMounted, onUnmounted } from 'vue'
+onMounted(() =&gt; { /* 请求数据 */ })</code></pre>
+          <div class="tip">
+            对比 Vue 2：<code>beforeCreate</code>/<code>created</code> 在 setup
+            阶段已合并，无需再写。
+          </div>
+          <div class="mnemonic">
+            挂载完再请求，卸载前清干净； mounted 取数据，unmounted 解绑定时。
+          </div>
+        </section>
+
+        <section id="s16">
+          <h2><span class="num">16.</span>依赖注入 provide / inject</h2>
+          <p>跨多层组件传值，避免「props 逐层透传（prop drilling）」。</p>
+          <pre><code>&lt;!-- 祖先 --&gt;
+&lt;script setup&gt;
+import { provide, ref } from 'vue'
+const theme = ref('dark')
+provide('theme', theme) // key, value
+&lt;/script&gt;
+
+&lt;!-- 任意后代 --&gt;
+&lt;script setup&gt;
+import { inject } from 'vue'
+const theme = inject('theme', 'light') // 第二个参数是默认值
+&lt;/script&gt;</code></pre>
+          <table>
+            <tr>
+              <th>项目</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>优点</td>
+              <td>跨层传递，无需中间组件接力</td>
+            </tr>
+            <tr>
+              <td>缺点</td>
+              <td>耦合祖先与后代，破坏组件独立性</td>
+            </tr>
+            <tr>
+              <td>建议</td>
+              <td>仅用于「全局配置/主题」类数据，业务数据仍走 props/emit</td>
+            </tr>
+          </table>
+        </section>
+
+        <section id="s17">
+          <h2><span class="num">17.</span>组合式函数 composables</h2>
+          <p>
+            把<strong>可复用的状态逻辑</strong>抽成函数，文件名以
+            <code>use</code> 开头。这是 Vue 3 复用逻辑的终极方案（替代 Vue 2 的
+            mixin）。
+          </p>
+          <pre><code>// composables/useCounter.js
+import { ref } from 'vue'
+export function useCounter() {
+  const count = ref(0)
+  const inc = () =&gt; count.value++
+  return { count, inc }
+}
+
+// 组件中使用
+&lt;script setup&gt;
+import { useCounter } from './composables/useCounter'
+const { count, inc } = useCounter()
+&lt;/script&gt;</code></pre>
+          <div class="tip">
+            对比 mixin 的优点：来源清晰、无命名冲突、可传参。
+          </div>
+        </section>
+
+        <section id="s18">
+          <h2><span class="num">18.</span>自定义指令</h2>
+          <pre><code>// 全局指令：v-focus
+app.directive('focus', {
+  mounted(el) { el.focus() }
+})</code></pre>
+          <pre><code>&lt;input v-focus /&gt;</code></pre>
+          <table>
+            <tr>
+              <th>钩子</th>
+              <th>作用</th>
+            </tr>
+            <tr>
+              <td>mounted</td>
+              <td>元素挂载后</td>
+            </tr>
+            <tr>
+              <td>updated</td>
+              <td>元素更新后</td>
+            </tr>
+            <tr>
+              <td>unmounted</td>
+              <td>卸载后</td>
+            </tr>
+          </table>
+          <div class="tip">
+            日常开发中自定义指令使用频率不高，记住「操作 DOM
+            的复用逻辑」才适合放指令即可。
+          </div>
+        </section>
+
+        <section id="s19">
+          <h2><span class="num">19.</span>过渡与动画</h2>
+          <pre><code>&lt;Transition name="fade"&gt;
+  &lt;p v-if="show"&gt;我会淡入淡出&lt;/p&gt;
+&lt;/Transition&gt;</code></pre>
+          <pre><code>.fade-enter-active, .fade-leave-active { transition: opacity .5s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }</code></pre>
+          <table>
+            <tr>
+              <th>类名阶段</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>*-enter-from</td>
+              <td>进入前状态</td>
+            </tr>
+            <tr>
+              <td>*-enter-active</td>
+              <td>进入过渡中</td>
+            </tr>
+            <tr>
+              <td>*-enter-to</td>
+              <td>进入后状态</td>
+            </tr>
+            <tr>
+              <td>*-leave-*</td>
+              <td>同理用于离开</td>
+            </tr>
+          </table>
+          <p>列表用 <code>&lt;TransitionGroup&gt;</code>（需 key）。</p>
+        </section>
+
+        <div class="part" id="p3">第三篇：精通篇（工程化与原理）</div>
+
+        <section id="s20">
+          <h2><span class="num">20.</span>Vue Router 路由</h2>
+          <pre><code>// router/index.js
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
+
+const routes = [
+  { path: '/', component: Home },
+  { path: '/user/:id', component: () =&gt; import('@/views/User.vue'), meta: { auth: true } }
+]
+const router = createRouter({ history: createWebHistory(), routes })</code></pre>
+          <table>
+            <tr>
+              <th>概念</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>路由模式</td>
+              <td>
+                createWebHistory（无 #）/ createWebHashHistory（带 #，部署简单）
+              </td>
+            </tr>
+            <tr>
+              <td>动态路由</td>
+              <td>/user/:id，组件内用 useRoute().params.id 取</td>
+            </tr>
+            <tr>
+              <td>路由守卫</td>
+              <td>beforeEach 做登录鉴权等全局拦截</td>
+            </tr>
+            <tr>
+              <td>懒加载</td>
+              <td>() =&gt; import() 分包，首屏更快</td>
+            </tr>
+          </table>
+          <pre><code>&lt;script setup&gt;
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()   // 当前路由信息
+const router = useRouter() // 跳转方法
+router.push('/home')
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="s21">
+          <h2><span class="num">21.</span>Pinia 状态管理</h2>
+          <p>Vue 官方推荐的状态库（取代 Vuex，更简洁）。</p>
+          <pre><code>// stores/counter.js
+import { defineStore } from 'pinia'
+export const useCounterStore = defineStore('counter', {
+  state: () =&gt; ({ count: 0 }),
+  getters: { double: (s) =&gt; s.count * 2 },
+  actions: { increment() { this.count++ } }
+})
+
+// 组件
+&lt;script setup&gt;
+import { useCounterStore } from '@/stores/counter'
+const store = useCounterStore()
+store.increment()
+&lt;/script&gt;</code></pre>
+          <p><strong>setup 风格（更贴合组合式）</strong></p>
+          <pre><code>export const useUserStore = defineStore('user', () =&gt; {
+  const name = ref('')
+  const setName = (v) =&gt; (name.value = v)
+  return { name, setName }
+})</code></pre>
+          <table>
+            <tr>
+              <th>对比</th>
+              <th>Pinia</th>
+              <th>Vuex</th>
+            </tr>
+            <tr>
+              <td>写法</td>
+              <td>少样板代码</td>
+              <td>繁琐</td>
+            </tr>
+            <tr>
+              <td>TS 支持</td>
+              <td>原生友好</td>
+              <td>一般</td>
+            </tr>
+            <tr>
+              <td>mutation</td>
+              <td>取消，直接改 state</td>
+              <td>必须 commit</td>
+            </tr>
+          </table>
+          <div class="mnemonic">局部状态用 ref，跨组件共享才用 Pinia。</div>
+        </section>
+
+        <section id="s22">
+          <h2><span class="num">22.</span>异步与网络请求</h2>
+          <pre><code>import { ref, onMounted } from 'vue'
+const list = ref([])
+const loading = ref(false)
+
+async function fetchList() {
+  loading.value = true
+  try {
+    const res = await fetch('/api/list')
+    list.value = await res.json()
+  } finally {
+    loading.value = false
+  }
+}
+onMounted(fetchList)</code></pre>
+          <div class="tip">
+            请求封装成 <code>composables/useRequest.js</code> 复用；或用
+            <code>axios</code> + 拦截器统一处理 token/错误。
+          </div>
+        </section>
+
+        <section id="s23">
+          <h2><span class="num">23.</span>TypeScript 集成</h2>
+          <pre><code>&lt;script setup lang="ts"&gt;
+interface User { id: number; name: string }
+const user = ref&lt;User&gt;({ id: 1, name: 'Vue' })
+defineProps&lt;{ title: string }&gt;()
+&lt;/script&gt;</code></pre>
+          <table>
+            <tr>
+              <th>项目</th>
+              <th>推荐</th>
+            </tr>
+            <tr>
+              <td>类型来源</td>
+              <td>给 props、store、API 返回都加 interface</td>
+            </tr>
+            <tr>
+              <td>工具</td>
+              <td>vue-tsc 做类型检查，Volar 插件提供类型提示</td>
+            </tr>
+            <tr>
+              <td>心智</td>
+              <td>先类型后逻辑，报错即文档</td>
+            </tr>
+          </table>
+        </section>
+
+        <section id="s24">
+          <h2><span class="num">24.</span>性能优化清单</h2>
+          <table>
+            <tr>
+              <th>优化点</th>
+              <th>做法</th>
+            </tr>
+            <tr>
+              <td>路由懒加载</td>
+              <td>() =&gt; import() 分包</td>
+            </tr>
+            <tr>
+              <td>v-for 加 key</td>
+              <td>用稳定 id，别用 index</td>
+            </tr>
+            <tr>
+              <td>计算属性缓存</td>
+              <td>用 computed 替代模板里复杂表达式</td>
+            </tr>
+            <tr>
+              <td>v-show vs v-if</td>
+              <td>频繁切换用 v-show</td>
+            </tr>
+            <tr>
+              <td>大列表虚拟滚动</td>
+              <td>用 vue-virtual-scroller</td>
+            </tr>
+            <tr>
+              <td>组件缓存</td>
+              <td>&lt;KeepAlive&gt; 缓存不常变组件</td>
+            </tr>
+            <tr>
+              <td>图片/资源</td>
+              <td>压缩、懒加载、CDN</td>
+            </tr>
+            <tr>
+              <td>打包</td>
+              <td>代码分割、Tree-shaking、开 gzip/brotli</td>
+            </tr>
+          </table>
+        </section>
+
+        <section id="s25">
+          <h2><span class="num">25.</span>响应式原理与虚拟 DOM</h2>
+          <p><strong>响应式原理（Proxy）</strong></p>
+          <ul style="margin: 9px 0 9px 22px">
+            <li>
+              Vue 3 用
+              <code>Proxy</code>
+              代理对象，读取时<strong>收集依赖（track）</strong>，修改时<strong>触发更新（trigger）</strong>。
+            </li>
+            <li>
+              相比 Vue 2 的
+              <code>Object.defineProperty</code
+              >：能监听新增/删除属性、数组索引变化，无需 <code>$set</code>。
+            </li>
+          </ul>
+          <p><strong>虚拟 DOM 与 Diff</strong></p>
+          <ul style="margin: 9px 0 9px 22px">
+            <li>
+              数据变 → 生成新的<strong>虚拟 DOM（JS 对象描述）</strong> → 与旧
+              vnode <strong>Diff 比对</strong> → 只把差异<strong>patch</strong>
+              到真实 DOM。
+            </li>
+            <li>
+              Diff 策略：<strong>同层比较</strong>，利用
+              <code>key</code> 复用节点，减少真实 DOM 操作（DOM 操作最慢）。
+            </li>
+          </ul>
+          <div class="mnemonic">
+            响应式靠 Proxy，读写拦截双兄弟； 虚拟 DOM 做比对，key 定复用差异
+            patch。
+          </div>
+        </section>
+
+        <section id="s26">
+          <h2><span class="num">26.</span>面试口诀与速查表</h2>
+          <p><strong>高频速查</strong></p>
+          <table>
+            <tr>
+              <th>问题</th>
+              <th>一句话答案</th>
+            </tr>
+            <tr>
+              <td>Vue 2 与 3 响应式区别</td>
+              <td>2 用 defineProperty（需 $set），3 用 Proxy</td>
+            </tr>
+            <tr>
+              <td>computed vs watch</td>
+              <td>要返回值用 computed，要副作用用 watch</td>
+            </tr>
+            <tr>
+              <td>v-if vs v-show</td>
+              <td>删节点 vs 隐藏</td>
+            </tr>
+            <tr>
+              <td>为什么 v-for 要 key</td>
+              <td>稳定标识，精准复用，避免错位</td>
+            </tr>
+            <tr>
+              <td>组件通信方式</td>
+              <td>props/emit、provide/inject、Pinia、事件总线(少用)</td>
+            </tr>
+            <tr>
+              <td>ref vs reactive</td>
+              <td>基本类型 ref，对象 reactive</td>
+            </tr>
+            <tr>
+              <td>路由守卫用途</td>
+              <td>登录鉴权、页面权限</td>
+            </tr>
+            <tr>
+              <td>状态管理选型</td>
+              <td>跨组件共享用 Pinia，局部用 ref</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            数据驱动响应式，组件通信 props/emit；
+            计算缓存侦听副作用，生命周期挂载卸载清； 路由 Pinia 工程化，Proxy
+            虚拟 DOM 是底层； 入门打基础，进阶拆组件，精通读原理。
+          </div>
+        </section>
+
+        <section id="route">
+          <h2>学习路线建议（30 天冲刺）</h2>
+          <div class="route-box">
+            <table>
+              <tr>
+                <th>阶段</th>
+                <th>天数</th>
+                <th>重点任务</th>
+              </tr>
+              <tr>
+                <td>入门</td>
+                <td>1–7</td>
+                <td>跑通 10 个小例子，吃透 ref/reactive/computed/watch</td>
+              </tr>
+              <tr>
+                <td>进阶</td>
+                <td>8–18</td>
+                <td>
+                  手写 5 个组件（表单、列表、弹窗、卡片、Tabs），理解
+                  slots/生命周期
+                </td>
+              </tr>
+              <tr>
+                <td>精通</td>
+                <td>19–30</td>
+                <td>
+                  用 Vite + Router + Pinia 做一个 Todo/博客小项目，再读一遍原理
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="tip">
+            终极心法：<strong>多写、多拆、多读源码注释</strong>。笔记是地图，动手才是到达。
+          </div>
+        </section>
+
+        <footer>
+          Vue 3 从入门到精通 · 学习笔记　|　表格归纳 · 口诀记忆 · 要点提炼
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      // 侧边栏高亮当前章节
+      const menuToggle = document.getElementById('menuToggle')
+      const toc = document.getElementById('toc')
+      const tocOverlay = document.getElementById('tocOverlay')
+      function setTocOpen(isOpen) {
+        toc.classList.toggle('open', isOpen)
+        tocOverlay.classList.toggle('open', isOpen)
+        menuToggle.setAttribute('aria-expanded', String(isOpen))
+      }
+      menuToggle.addEventListener('click', () =>
+        setTocOpen(!toc.classList.contains('open')),
+      )
+      tocOverlay.addEventListener('click', () => setTocOpen(false))
+      toc
+        .querySelectorAll('a')
+        .forEach((link) =>
+          link.addEventListener('click', () => setTocOpen(false)),
+        )
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') setTocOpen(false)
+      })
+
+      const links = document.querySelectorAll('nav.toc a[href^="#"]')
+      const map = {}
+      links.forEach((a) => {
+        const id = a.getAttribute('href').slice(1)
+        const el = document.getElementById(id)
+        if (el) map[id] = a
+      })
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              links.forEach((a) => a.classList.remove('active'))
+              const id = e.target.id
+              if (map[id]) map[id].classList.add('active')
+            }
+          })
+        },
+        { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+      )
+      Object.keys(map).forEach((id) => {
+        const el = document.getElementById(id)
+        if (el) io.observe(el)
+      })
+    </script>
+  </body>
+</html>
