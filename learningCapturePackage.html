@@ -1,0 +1,1454 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>主流抓包工具从入门到精通 · 学习笔记（小白友好版）</title>
+    <style>
+      :root {
+        --pk: #6d5bd0;
+        --pk-dark: #241f3a;
+        --pk-accent: #7c3aed;
+        --bg: #ffffff;
+        --bg-soft: #f6f8fa;
+        --bg-code: #f3f4f6;
+        --text: #1f2329;
+        --text-soft: #5a6270;
+        --border: #e3e6ea;
+        --mnemonic-bg: #fff8e1;
+        --mnemonic-border: #f0a020;
+        --tip-bg: #efeafc;
+        --tip-border: #6d5bd0;
+        --warn-bg: #fdecea;
+        --warn-border: #e57373;
+        --why-bg: #eef5e9;
+        --why-border: #4caf50;
+        --law-bg: #fdeeee;
+        --law-border: #c62828;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 84px;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+          'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        background: var(--bg-soft);
+        color: var(--text);
+        line-height: 1.75;
+        font-size: 15px;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: linear-gradient(90deg, var(--pk-dark), #322a52);
+        color: #fff;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+      .topbar .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--pk), var(--pk-accent));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+        color: #fff;
+      }
+      .topbar h1 {
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .topbar .sub {
+        font-size: 12px;
+        opacity: 0.85;
+        margin-left: auto;
+      }
+      .wrap {
+        display: flex;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .toc-overlay {
+        display: none;
+      }
+      nav.toc {
+        position: sticky;
+        top: 64px;
+        align-self: flex-start;
+        height: calc(100vh - 64px);
+        overflow-y: auto;
+        width: 250px;
+        flex-shrink: 0;
+        padding: 18px 0;
+        font-size: 13px;
+      }
+      nav.toc .grp {
+        font-weight: 700;
+        color: var(--pk-dark);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 14px 6px 6px;
+      }
+      nav.toc .home-link {
+        margin: 0 0 12px;
+        padding: 7px 14px;
+        color: var(--pk);
+        font-weight: 600;
+      }
+      nav.toc .home-link:hover {
+        background: #ece6fb;
+      }
+      nav.toc a {
+        display: block;
+        padding: 5px 14px;
+        color: var(--text-soft);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.15s;
+        line-height: 1.45;
+      }
+      nav.toc a:hover {
+        background: var(--bg-code);
+        color: var(--pk);
+      }
+      nav.toc a.active {
+        background: #ece6fb;
+        color: var(--pk);
+        font-weight: 600;
+      }
+      main {
+        flex: 1;
+        min-width: 0;
+        padding: 22px 0 60px 28px;
+        max-width: 920px;
+      }
+      @media (max-width: 880px) {
+        .menu-toggle {
+          display: block;
+          position: fixed;
+          top: 14px;
+          right: 14px;
+          z-index: 110;
+          padding: 9px 13px;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          border-radius: 7px;
+          background: var(--pk-dark);
+          color: #fff;
+          font: inherit;
+          font-size: 13px;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+          cursor: pointer;
+        }
+        .menu-toggle:hover {
+          background: var(--pk);
+        }
+        .toc-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(36, 31, 58, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .toc-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .wrap {
+          padding: 0 14px;
+        }
+        nav.toc {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 100;
+          width: min(300px, 84vw);
+          height: 100vh;
+          overflow-y: auto;
+          background: #fff;
+          border-right: 1px solid var(--border);
+          border-radius: 0;
+          margin: 0;
+          padding: 76px 16px 24px;
+          box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+        }
+        nav.toc.open {
+          transform: translateX(0);
+        }
+        main {
+          padding-left: 0;
+        }
+      }
+      .part {
+        margin: 34px 0 8px;
+        font-size: 21px;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(90deg, var(--pk), var(--pk-accent));
+        padding: 10px 16px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      section {
+        margin: 26px 0;
+        padding-top: 6px;
+      }
+      section h2 {
+        font-size: 19px;
+        color: var(--pk-dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 7px;
+        margin-bottom: 12px;
+      }
+      section h2 .num {
+        color: var(--pk);
+        margin-right: 6px;
+      }
+      h3 {
+        font-size: 15px;
+        color: var(--pk-dark);
+        margin: 16px 0 8px;
+      }
+      p {
+        margin: 9px 0;
+      }
+      ul,
+      ol {
+        margin: 9px 0 9px 24px;
+      }
+      li {
+        margin: 4px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        font-size: 14px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      th {
+        background: var(--pk-dark);
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      td {
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfc;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      pre {
+        background: var(--bg-code);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--pk);
+        border-radius: 8px;
+        padding: 13px 16px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-size: 13.5px;
+        line-height: 1.6;
+      }
+      code {
+        font-family:
+          'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      }
+      :not(pre) > code {
+        background: var(--bg-code);
+        color: #c0392b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+      .mnemonic {
+        background: var(--mnemonic-bg);
+        border: 1px solid var(--mnemonic-border);
+        border-left: 4px solid var(--mnemonic-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0;
+        white-space: pre-line;
+        font-weight: 500;
+      }
+      .mnemonic::before {
+        content: '口诀';
+        display: inline-block;
+        background: var(--mnemonic-border);
+        color: #5d4037;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      .tip {
+        background: var(--tip-bg);
+        border-left: 4px solid var(--tip-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .tip::before {
+        content: '提示';
+        display: inline-block;
+        background: var(--tip-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .warn {
+        background: var(--warn-bg);
+        border-left: 4px solid var(--warn-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .warn::before {
+        content: '避坑';
+        display: inline-block;
+        background: var(--warn-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .why {
+        background: var(--why-bg);
+        border-left: 4px solid var(--why-border);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .why::before {
+        content: '为什么';
+        display: inline-block;
+        background: var(--why-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .law {
+        background: var(--law-bg);
+        border-left: 4px solid var(--law-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0;
+      }
+      .law::before {
+        content: '安全红线';
+        display: inline-block;
+        background: var(--law-border);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .analogy {
+        background: #fff;
+        border: 1px dashed var(--pk);
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 14px 0;
+      }
+      .analogy::before {
+        content: '打个比方';
+        display: inline-block;
+        background: var(--pk);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .lead {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        color: var(--text-soft);
+      }
+      .route-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 14px 0;
+      }
+      footer {
+        text-align: center;
+        color: var(--text-soft);
+        font-size: 12px;
+        padding: 26px 0 40px;
+        border-top: 1px solid var(--border);
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-controls="toc"
+      aria-expanded="false">
+      ☰ 目录
+    </button>
+    <div class="toc-overlay" id="tocOverlay"></div>
+
+    <div class="topbar">
+      <div class="logo">抓</div>
+      <h1>主流抓包工具从入门到精通 · 学习笔记</h1>
+      <span class="sub">小白友好 · 多比喻 · 讲合规</span>
+    </div>
+
+    <div class="wrap">
+      <nav class="toc" id="toc">
+        <a class="home-link" href="index.html">← 返回首页</a>
+        <div class="grp">入门篇</div>
+        <a href="#s1">1. 抓包是什么</a>
+        <a href="#s2">2. 工具全景与选型</a>
+        <a href="#s3">3. 浏览器 F12 DevTools</a>
+        <a href="#s4">4. Fiddler 入门</a>
+        <a href="#s5">5. Charles 入门</a>
+        <div class="grp">进阶篇</div>
+        <a href="#s6">6. HTTPS 抓包原理</a>
+        <a href="#s7">7. 移动端抓包</a>
+        <a href="#s8">8. 抓包实战</a>
+        <a href="#s9">9. 过滤与搜索</a>
+        <a href="#s10">10. 弱网模拟</a>
+        <div class="grp">精通篇</div>
+        <a href="#s11">11. Wireshark 深度抓包</a>
+        <a href="#s12">12. mitmproxy 脚本化</a>
+        <a href="#s13">13. Burp Suite 安全测试</a>
+        <a href="#s14">14. 抓包配合爬虫</a>
+        <a href="#s15">15. 技巧与常见问题</a>
+        <a href="#s16">16. 安全与合规红线</a>
+        <a href="#s17">17. 面试口诀与速查表</a>
+        <a href="#route">学习路线建议</a>
+      </nav>
+
+      <main>
+        <p class="lead">
+          本笔记面向零基础小白。每个概念先讲<strong>是什么</strong>、再讲<strong>为什么</strong>、最后给<strong>可操作的步骤</strong>。风格：表格归纳
+          + 口诀记忆 +
+          比喻助记。抓包是开发调试、接口分析、爬虫辅助的必备技能，但<strong>要合法合规使用</strong>。
+        </p>
+
+        <div class="part" id="p1">第一篇：入门篇（认识抓包）</div>
+
+        <section id="s1">
+          <h2><span class="num">1.</span>抓包是什么</h2>
+          <p>
+            <strong>一句话</strong>：抓包 =
+            把客户端和服务器之间收发的网络数据包「拦截下来查看」。HTTP
+            抓包就是看它们「聊了什么」。
+          </p>
+
+          <div class="analogy">
+            抓包像在邮局里安插一个「中转站」：每封来往的信件都先经过中转站，工作人员抄录一份再原样转发。你就能看到信件内容、寄件人、收件人、时间。
+          </div>
+
+          <h3>抓包能干什么（四大用途）</h3>
+          <table>
+            <tr>
+              <th>用途</th>
+              <th>说明</th>
+              <th>例子</th>
+            </tr>
+            <tr>
+              <td>接口调试</td>
+              <td>看请求参数、响应结果对不对</td>
+              <td>排查前后端联调 bug</td>
+            </tr>
+            <tr>
+              <td>分析接口</td>
+              <td>搞懂 App/网页调了哪些接口</td>
+              <td>给爬虫找数据来源</td>
+            </tr>
+            <tr>
+              <td>改包重放</td>
+              <td>篡改请求/响应，验证边界</td>
+              <td>测试、调试</td>
+            </tr>
+            <tr>
+              <td>安全分析</td>
+              <td>检查是否有敏感信息泄露</td>
+              <td>渗透测试（需授权）</td>
+            </tr>
+          </table>
+
+          <h3>抓包的基本原理：代理</h3>
+          <p>
+            绝大多数 HTTP
+            抓包工具都是「<strong>代理（Proxy）</strong>」：你让流量先经过工具，工具再转发给服务器，于是工具就能看到全部内容。
+          </p>
+          <pre><code>客户端  ──▶  抓包工具(代理)  ──▶  服务器
+  │              │记录请求/响应          │
+  └──◀──────────◀──────────────────────┘</code></pre>
+          <div class="why">
+            为什么不直接抓网线？因为系统网络很底层、数据多且乱。用代理把流量「引流」到一个工具里，只看你关心的
+            HTTP，清晰可控。
+          </div>
+          <div class="mnemonic">
+            抓包本质是代理，流量中转看全程； 调试接口析数据，改包重放做验证。
+          </div>
+        </section>
+
+        <section id="s2">
+          <h2><span class="num">2.</span>工具全景与选型</h2>
+          <p>
+            市面工具很多，先分清「层次」——有的只抓 HTTP/HTTPS，有的能抓到底层
+            TCP/UDP。
+          </p>
+          <table>
+            <tr>
+              <th>工具</th>
+              <th>层级</th>
+              <th>平台</th>
+              <th>适合</th>
+              <th>一句话定位</th>
+            </tr>
+            <tr>
+              <td>浏览器 F12</td>
+              <td>HTTP/HTTPS</td>
+              <td>全平台</td>
+              <td>网页调试</td>
+              <td>零安装，最常用</td>
+            </tr>
+            <tr>
+              <td>Fiddler</td>
+              <td>HTTP/HTTPS</td>
+              <td>Windows 为主</td>
+              <td>Windows 抓包</td>
+              <td>经典、插件多</td>
+            </tr>
+            <tr>
+              <td>Charles</td>
+              <td>HTTP/HTTPS</td>
+              <td>Win/macOS</td>
+              <td>跨平台、移动端</td>
+              <td>界面友好、易上手</td>
+            </tr>
+            <tr>
+              <td>Wireshark</td>
+              <td>全协议(TCP/UDP)</td>
+              <td>全平台</td>
+              <td>底层网络分析</td>
+              <td>网卡级深抓</td>
+            </tr>
+            <tr>
+              <td>mitmproxy</td>
+              <td>HTTP/HTTPS</td>
+              <td>全平台</td>
+              <td>命令行、脚本化</td>
+              <td>程序员的瑞士军刀</td>
+            </tr>
+            <tr>
+              <td>Burp Suite</td>
+              <td>HTTP/HTTPS</td>
+              <td>全平台</td>
+              <td>安全测试</td>
+              <td>渗透测试标配</td>
+            </tr>
+          </table>
+
+          <h3>新手选型建议</h3>
+          <ul>
+            <li>只调试<strong>网页</strong> → 先用浏览器 F12，够用。</li>
+            <li>
+              要抓<strong>电脑上所有程序/App</strong> → Windows 用 Fiddler，Mac
+              用 Charles。
+            </li>
+            <li>
+              要抓<strong>手机 App</strong> → Charles 或 Fiddler（跨设备代理）。
+            </li>
+            <li>要<strong>命令行批量处理</strong> → mitmproxy。</li>
+            <li>要<strong>安全测试</strong> → Burp Suite（务必有授权）。</li>
+          </ul>
+          <div class="mnemonic">
+            网页抓包 F12，电脑抓包 F 与 C； 手机也靠 C 或 F，底层深挖
+            Wireshark。
+          </div>
+        </section>
+
+        <section id="s3">
+          <h2><span class="num">3.</span>浏览器 F12 DevTools</h2>
+          <p>
+            不用装任何东西，浏览器按 <strong>F12</strong>（或右键→检查），切到
+            <strong>Network（网络）</strong>
+            面板就能抓网页请求。这是最该先掌握的。
+          </p>
+
+          <div class="analogy">
+            F12 的 Network
+            面板像「网站的前台流水账」，每条请求的来龙去脉、花了多久、返回了什么都记在案。
+          </div>
+
+          <h3>使用步骤</h3>
+          <ol>
+            <li>
+              按 <strong>F12</strong> 打开开发者工具，点
+              <strong>Network</strong> 标签。
+            </li>
+            <li>
+              勾选 <strong>Preserve log</strong>（保留日志，跳页不清空）。
+            </li>
+            <li>刷新页面，就能看到一堆请求。</li>
+            <li>
+              点某条请求，右侧看
+              <strong>Headers</strong
+              >（请求头/响应头）、<strong>Payload</strong>（提交的数据）、<strong>Response</strong>（返回内容）。
+            </li>
+          </ol>
+
+          <h3>面板分区速查</h3>
+          <table>
+            <tr>
+              <th>标签</th>
+              <th>看什么</th>
+            </tr>
+            <tr>
+              <td>Headers</td>
+              <td>请求 URL、方法、状态码、请求头/响应头</td>
+            </tr>
+            <tr>
+              <td>Payload / Request</td>
+              <td>POST 提交的参数（表单/JSON）</td>
+            </tr>
+            <tr>
+              <td>Preview / Response</td>
+              <td>返回的数据（可预览 JSON）</td>
+            </tr>
+            <tr>
+              <td>Timing</td>
+              <td>各阶段耗时（定位慢在哪）</td>
+            </tr>
+          </table>
+
+          <h3>过滤请求</h3>
+          <p>
+            顶部 <strong>Filter 输入框</strong>可筛选；点 <strong>XHR</strong> /
+            <strong>Fetch</strong> 只看接口请求（爬虫找接口必用）。
+          </p>
+          <div class="tip">
+            Network 里看到 <code>XHR</code> 类型 + 返回 JSON
+            的，就是「接口」——爬虫/逆向最喜欢这种，见第 14 节。
+          </div>
+        </section>
+
+        <section id="s4">
+          <h2><span class="num">4.</span>Fiddler 入门</h2>
+          <p>
+            <strong>Fiddler</strong> 是 Windows
+            上最经典的抓包工具（免费）。装上后默认就能抓电脑上走系统代理的 HTTP
+            流量。
+          </p>
+
+          <h3>快速上手步骤</h3>
+          <ol>
+            <li>下载安装 Fiddler（官网或 Fiddler Classic）。</li>
+            <li>打开后，左边列表就是抓到的请求。</li>
+            <li>
+              点一条请求，右侧 <strong>Inspectors</strong> 查看请求/响应详情。
+            </li>
+          </ol>
+
+          <h3>界面关键概念</h3>
+          <table>
+            <tr>
+              <th>概念</th>
+              <th>作用</th>
+            </tr>
+            <tr>
+              <td>左侧会话列表</td>
+              <td>所有被抓到的请求</td>
+            </tr>
+            <tr>
+              <td>Inspectors</td>
+              <td>查看请求/响应内容</td>
+            </tr>
+            <tr>
+              <td>Filters</td>
+              <td>按域名/类型过滤</td>
+            </tr>
+            <tr>
+              <td>Composer</td>
+              <td>手动构造、重发请求</td>
+            </tr>
+            <tr>
+              <td>AutoResponder</td>
+              <td>拦截并返回自定义内容（改包）</td>
+            </tr>
+            <tr>
+              <td>HTTPS 解密</td>
+              <td>Tools → Options → HTTPS 勾选 Decrypt</td>
+            </tr>
+          </table>
+
+          <div class="warn">
+            Fiddler 默认只抓 <strong>HTTP</strong>，要抓
+            <strong>HTTPS</strong> 需在设置里开启解密（第 6
+            节细讲），并安装它的根证书。
+          </div>
+          <div class="tip">
+            Fiddler 快捷键：<strong>F12</strong>
+            暂停/恢复抓包（避免抓太多），底部状态栏显示当前捕获数量。
+          </div>
+        </section>
+
+        <section id="s5">
+          <h2><span class="num">5.</span>Charles 入门</h2>
+          <p>
+            <strong>Charles</strong>
+            是跨平台（Win/Mac）的抓包工具，界面友好、对移动端抓包支持好，是 Mac
+            用户的首选。
+          </p>
+
+          <h3>快速上手步骤</h3>
+          <ol>
+            <li>安装 Charles，启动后会自动抓电脑的 HTTP 流量。</li>
+            <li>左侧树形列表按<strong>域名分组</strong>显示请求。</li>
+            <li>点请求，右侧 <strong>Contents / Headers</strong> 查看详情。</li>
+          </ol>
+
+          <h3>Charles 特色功能</h3>
+          <table>
+            <tr>
+              <th>功能</th>
+              <th>入口</th>
+              <th>用途</th>
+            </tr>
+            <tr>
+              <td>SSL 解密</td>
+              <td>Proxy → SSL Proxying Settings</td>
+              <td>抓 HTTPS</td>
+            </tr>
+            <tr>
+              <td>断点改包</td>
+              <td>Proxy → Breakpoints</td>
+              <td>拦截修改请求/响应</td>
+            </tr>
+            <tr>
+              <td>本地映射</td>
+              <td>Tools → Map Local</td>
+              <td>用本地文件替换响应</td>
+            </tr>
+            <tr>
+              <td>弱网模拟</td>
+              <td>Proxy → Throttle Settings</td>
+              <td>模拟慢网络</td>
+            </tr>
+            <tr>
+              <td>重写规则</td>
+              <td>Tools → Rewrite</td>
+              <td>批量改请求/响应</td>
+            </tr>
+          </table>
+
+          <div class="tip">
+            Charles 的
+            <strong>树形分组 + 搜索</strong> 对移动端海量请求特别友好，抓 App
+            接口用它很顺手。
+          </div>
+          <div class="warn">
+            Charles 是付费软件（有试用），Mac 上想免费可用 mitmproxy；Windows
+            上免费可选 Fiddler。
+          </div>
+        </section>
+
+        <div class="part" id="p2">第二篇：进阶篇（抓 HTTPS 与移动端）</div>
+
+        <section id="s6">
+          <h2><span class="num">6.</span>HTTPS 抓包原理</h2>
+          <p>
+            这是抓包进阶的<strong>关键一课</strong>。很多新手抓不到 HTTPS
+            就卡在这。
+          </p>
+
+          <div class="analogy">
+            HTTP 是「明信片」，路上谁都能看；HTTPS
+            是「上锁的快递箱」，只有收发双方有钥匙。抓包工具要「开箱看内容」，就得伪装成收件人——这叫中间人（MITM）。
+          </div>
+
+          <h3>中间人 MITM 原理</h3>
+          <ol>
+            <li>客户端本要连服务器，被代理工具截胡。</li>
+            <li>
+              工具假装自己是服务器，用<strong>自己签发的证书</strong>和客户端建立
+              HTTPS 连接。
+            </li>
+            <li>工具再以真实客户端身份连服务器。</li>
+            <li>
+              于是工具能解密两边的内容，客户端也「以为」自己在连真的服务器。
+            </li>
+          </ol>
+
+          <h3>要让 MITM 成功，必须做两步</h3>
+          <table>
+            <tr>
+              <th>步骤</th>
+              <th>作用</th>
+              <th>Fiddler/Charles 位置</th>
+            </tr>
+            <tr>
+              <td>① 开启 SSL 解密</td>
+              <td>让工具去拦截 HTTPS</td>
+              <td>工具设置里勾选 Decrypt</td>
+            </tr>
+            <tr>
+              <td>② 信任根证书</td>
+              <td>让客户端信任工具的假证书</td>
+              <td>安装并信任 CA 证书</td>
+            </tr>
+          </table>
+
+          <div class="warn">
+            信任了抓包工具的证书后，理论上它能解密你机器上所有 HTTPS
+            流量。用完记得<strong>关闭 SSL 解密、卸载证书</strong
+            >，别在公共电脑随便装。
+          </div>
+          <div class="mnemonic">
+            HTTPS 是上锁箱，中间人来做局； 先开解密再装证，用完记得都清理。
+          </div>
+        </section>
+
+        <section id="s7">
+          <h2><span class="num">7.</span>移动端抓包</h2>
+          <p>
+            抓手机 App 的通用思路：<strong
+              >手机连和电脑同一个 WiFi → 把手机的代理指向电脑 →
+              在手机上装信任证书</strong
+            >。
+          </p>
+
+          <h3>Charles 抓手机步骤</h3>
+          <ol>
+            <li>电脑和手机连<strong>同一个 WiFi</strong>。</li>
+            <li>
+              Charles 里查看电脑 IP：<strong>Help → Local IP Address</strong>。
+            </li>
+            <li>
+              手机 WiFi 设置里，代理设为「手动」，填入电脑 IP 和端口（默认
+              <strong>8888</strong>）。
+            </li>
+            <li>手机浏览器访问 <code>chls.pro/ssl</code> 下载并安装证书。</li>
+            <li>
+              <strong>iOS</strong>
+              还需在「设置→通用→关于本机→证书信任设置」里开启信任。
+            </li>
+            <li>回到 Charles，手机上操作 App，就能看到请求了。</li>
+          </ol>
+
+          <table>
+            <tr>
+              <th>平台</th>
+              <th>证书注意点</th>
+            </tr>
+            <tr>
+              <td>iOS</td>
+              <td>装完证书要<strong>手动开启信任</strong>，否则不生效</td>
+            </tr>
+            <tr>
+              <td>Android 7+</td>
+              <td>默认只信任系统证书，App 可能需 root 或用调试版</td>
+            </tr>
+            <tr>
+              <td>Android 7 以下</td>
+              <td>装用户证书即可</td>
+            </tr>
+          </table>
+
+          <div class="warn">
+            现代很多 App 做了「SSL
+            Pinning」（证书锁定），装了证书也抓不到，这是常见抓包失败原因，见第
+            15 节。
+          </div>
+          <div class="mnemonic">
+            手机抓包三件套：同网代理加证书； iOS 记得开信任，安卓高版本要费劲。
+          </div>
+        </section>
+
+        <section id="s8">
+          <h2><span class="num">8.</span>抓包实战</h2>
+          <h3>实战一：分析一个接口</h3>
+          <ol>
+            <li>打开抓包，操作 App/网页触发某功能。</li>
+            <li>在工具里找到对应请求。</li>
+            <li>看 <strong>URL + 方法</strong>：是 GET 还是 POST。</li>
+            <li>看 <strong>请求参数</strong>：哪些是必须的。</li>
+            <li>看 <strong>响应</strong>：数据长什么样、字段含义。</li>
+          </ol>
+
+          <h3>实战二：断点改包</h3>
+          <p>
+            Charles 中右键请求 →
+            <strong>Breakpoints</strong>，下次该请求会被「暂停」，你改完再放行。
+          </p>
+          <table>
+            <tr>
+              <th>改什么</th>
+              <th>目的</th>
+            </tr>
+            <tr>
+              <td>改请求参数</td>
+              <td>测试不同输入、越权、边界</td>
+            </tr>
+            <tr>
+              <td>改响应内容</td>
+              <td>模拟服务端返回特定数据（如改价格、改状态）</td>
+            </tr>
+          </table>
+
+          <h3>实战三：重放请求（Composer）</h3>
+          <p>
+            把抓到的请求「再发一次」，不用重新操作界面。Fiddler 用
+            <strong>Composer</strong>，Charles 右键 <strong>Repeat</strong>。
+          </p>
+
+          <div class="law">
+            改包、重放、越权测试<strong>只在自己项目或已获授权的系统上做</strong>。对他人系统未授权改包测试属于攻击行为，违法。
+          </div>
+          <div class="mnemonic">
+            先找请求看三样，断点改包验边界； 重放请求免重操作，授权之内才安全。
+          </div>
+        </section>
+
+        <section id="s9">
+          <h2><span class="num">9.</span>过滤与搜索</h2>
+          <p>抓包最大的痛点是「请求太多」。学会过滤和搜索，效率翻倍。</p>
+
+          <h3>通用过滤维度</h3>
+          <table>
+            <tr>
+              <th>维度</th>
+              <th>Fiddler</th>
+              <th>Charles</th>
+            </tr>
+            <tr>
+              <td>按域名</td>
+              <td>Filters → Hosts</td>
+              <td>底部 Filter 输入框</td>
+            </tr>
+            <tr>
+              <td>按类型</td>
+              <td>Filters → Request Headers</td>
+              <td>Structure 树形查看</td>
+            </tr>
+            <tr>
+              <td>关键词搜索</td>
+              <td>Ctrl+F</td>
+              <td>Find（Ctrl+F）</td>
+            </tr>
+            <tr>
+              <td>只看某类</td>
+              <td>按响应大小/状态码</td>
+              <td>按域名分组折叠</td>
+            </tr>
+          </table>
+
+          <div class="tip">
+            Charles 的底部
+            <strong>Filter 输入框</strong>支持直接输域名或关键词；点
+            <strong>🔍</strong> 还能全文搜索请求和响应内容，找接口字段超好用。
+          </div>
+        </section>
+
+        <section id="s10">
+          <h2><span class="num">10.</span>弱网模拟</h2>
+          <p>
+            测试 App
+            在慢网下的表现（转圈、超时、断线重连），抓包工具能「人为把网速调慢」。
+          </p>
+
+          <div class="analogy">
+            弱网模拟像给网络「限流的水龙头」，你想模拟
+            2G、3G、丢包，扭一扭开关就行，不用真的去地下室找信号。
+          </div>
+
+          <h3>Charles 弱网设置</h3>
+          <ol>
+            <li><strong>Proxy → Throttle Settings</strong> 勾选启用。</li>
+            <li>
+              选择预设（如 3G）或自定义<strong>带宽/延迟/丢包率</strong>。
+            </li>
+            <li>再操作 App，观察它在慢网下的表现。</li>
+          </ol>
+
+          <table>
+            <tr>
+              <th>参数</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>Bandwidth 带宽</td>
+              <td>传输速度上限</td>
+            </tr>
+            <tr>
+              <td>Latency 延迟</td>
+              <td>每个包的响应时间</td>
+            </tr>
+            <tr>
+              <td>Packet loss 丢包率</td>
+              <td>模拟网络不稳、丢数据</td>
+            </tr>
+          </table>
+          <div class="tip">
+            弱网测试是移动端质量保障的必修课，配合抓包看「卡顿时刻到底哪个请求慢了」最直观。
+          </div>
+        </section>
+
+        <div class="part" id="p3">第三篇：精通篇（深挖与实战）</div>
+
+        <section id="s11">
+          <h2><span class="num">11.</span>Wireshark 深度抓包</h2>
+          <p>
+            前面工具只抓 HTTP；<strong>Wireshark</strong>
+            抓的是<strong>网卡层面</strong>的所有流量（TCP/UDP/DNS/ARP…），能看清「数据在网络上真实长啥样」。
+          </p>
+
+          <div class="analogy">
+            Fiddler/Charles 是「快递站看包裹面单」，Wireshark
+            是「高速路口看每辆车的车牌、载重、去向」——更底层、更原始。
+          </div>
+
+          <h3>快速上手</h3>
+          <ol>
+            <li>
+              打开 Wireshark，选择要抓的<strong>网卡</strong>（如 WLAN /
+              Ethernet）。
+            </li>
+            <li>点开始，就能看到一个个数据包。</li>
+            <li>
+              顶部绿色过滤框输入表达式过滤，如 <code>http</code>、<code
+                >tcp.port == 80</code
+              >。
+            </li>
+          </ol>
+
+          <h3>必会过滤表达式</h3>
+          <pre><code>http                        # 只看 HTTP
+tcp.port == 443             # 只看 443 端口的 TCP
+ip.addr == 192.168.1.100    # 只看某 IP
+dns                         # 只看 DNS 查询</code></pre>
+
+          <h3>经典场景：TCP 三次握手</h3>
+          <p>
+            过滤 <code>tcp.port == 80</code>，能看到 SYN → SYN+ACK → ACK
+            三个包，理解「建立连接」的过程。
+          </p>
+          <div class="tip">
+            Wireshark 用于<strong>底层网络排查</strong>（连不上、丢包、慢、DNS
+            问题），日常接口调试用 F12/Fiddler/Charles 就够了。
+          </div>
+        </section>
+
+        <section id="s12">
+          <h2><span class="num">12.</span>mitmproxy 脚本化</h2>
+          <p>
+            <strong>mitmproxy</strong> 是命令行抓包工具，最大优势：<strong
+              >能用 Python 脚本自动处理流量</strong
+            >。程序员批量抓包、自动化改包的利器。
+          </p>
+          <p><strong>安装</strong>：<code>pip install mitmproxy</code></p>
+
+          <h3>三个入口</h3>
+          <table>
+            <tr>
+              <th>命令</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>mitmproxy</td>
+              <td>命令行交互界面</td>
+            </tr>
+            <tr>
+              <td>mitmweb</td>
+              <td>浏览器网页界面（可视化）</td>
+            </tr>
+            <tr>
+              <td>mitmdump</td>
+              <td>无界面，配合脚本跑</td>
+            </tr>
+          </table>
+
+          <pre><code># addon.py —— 一个自动改响应的脚本
+from mitmproxy import http
+
+def response(flow: http.HTTPFlow):
+    # 命中某接口时，把返回内容替换掉
+    if "api/price" in flow.request.pretty_url:
+        flow.response.text = '{"price": 0}'</code></pre>
+          <pre><code># 运行：加载脚本抓包
+mitmdump -s addon.py</code></pre>
+          <div class="tip">
+            mitmproxy 能<strong>一键导出 HAR/JSON</strong
+            >、批量拦截、自动加签名，是「把抓包变成自动化」的最佳选择。
+          </div>
+        </section>
+
+        <section id="s13">
+          <h2><span class="num">13.</span>Burp Suite 安全测试</h2>
+          <p>
+            <strong>Burp Suite</strong>
+            是安全测试（渗透测试）领域的事实标准，核心仍是抓包代理，但多了扫描、爆破、重放等安全功能。
+          </p>
+
+          <div class="law">
+            ⚠️ Burp Suite
+            是<strong>安全测试工具</strong>，只能用于<strong>自己拥有或已获书面授权</strong>的系统。未授权对他人网站做扫描/爆破属于违法行为，可能构成「非法侵入计算机信息系统」。
+          </div>
+
+          <h3>核心模块速览</h3>
+          <table>
+            <tr>
+              <th>模块</th>
+              <th>用途</th>
+            </tr>
+            <tr>
+              <td>Proxy</td>
+              <td>抓包、改包、重放（同 Charles）</td>
+            </tr>
+            <tr>
+              <td>Repeater</td>
+              <td>手动反复发送改过的请求</td>
+            </tr>
+            <tr>
+              <td>Intruder</td>
+              <td>批量爆破参数（字典攻击）</td>
+            </tr>
+            <tr>
+              <td>Scanner</td>
+              <td>自动扫描漏洞</td>
+            </tr>
+            <tr>
+              <td>Decoder</td>
+              <td>加解密、编码转换</td>
+            </tr>
+          </table>
+          <div class="tip">
+            普通开发者了解
+            <strong>Proxy + Repeater</strong>
+            就够用了；深入安全测试请走正规学习路径，并牢记授权前提。
+          </div>
+        </section>
+
+        <section id="s14">
+          <h2><span class="num">14.</span>抓包配合爬虫</h2>
+          <p>
+            抓包是<strong>逆向 App/网页接口</strong
+            >的钥匙。很多「爬不到」的数据，靠抓包找到接口后直接调接口就能拿到。
+          </p>
+
+          <h3>通用套路</h3>
+          <ol>
+            <li>打开抓包工具，操作目标 App/网页。</li>
+            <li>
+              在请求里<strong>找到返回数据的那条接口</strong>（XHR / 返回
+              JSON）。
+            </li>
+            <li>分析它的 <strong>URL、方法、参数、请求头</strong>。</li>
+            <li>用代码（Python requests）<strong>模拟这个请求</strong>。</li>
+            <li>
+              处理 <strong>签名/加密参数</strong>（进阶，可能需逆向 JS/App）。
+            </li>
+          </ol>
+
+          <pre><code>import requests
+
+# 抓包得到的接口信息，用代码复现
+url = 'https://api.example.com/list'
+headers = {
+    'User-Agent': '...',        # 从抓包复制
+    'Authorization': 'Bearer ...',  # 从抓包复制 token
+    'sign': '...',              # 签名参数（抓包看规律）
+}
+resp = requests.get(url, headers=headers, params={'page': 1})
+print(resp.json())</code></pre>
+
+          <div class="warn">
+            接口通常有<strong>签名（sign）、时间戳、token</strong>等反爬参数。这些参数靠「抓包看规律」能猜出简单的；复杂的需要逆向
+            JS/App
+            算法，这已属于进阶逆向领域，且<strong>务必遵守法律红线</strong>。
+          </div>
+          <div class="mnemonic">
+            抓包找接口，代码来模拟； 参数带签名，逆向看规律。
+          </div>
+        </section>
+
+        <section id="s15">
+          <h2><span class="num">15.</span>技巧与常见问题</h2>
+          <table>
+            <tr>
+              <th>问题</th>
+              <th>原因</th>
+              <th>解决</th>
+            </tr>
+            <tr>
+              <td>抓不到 HTTPS</td>
+              <td>没开 SSL 解密</td>
+              <td>开启 Decrypt + 装证书</td>
+            </tr>
+            <tr>
+              <td>装证书也抓不到</td>
+              <td>App 做了 SSL Pinning</td>
+              <td>需处理证书锁定（进阶）</td>
+            </tr>
+            <tr>
+              <td>手机抓不到</td>
+              <td>代理没设对/不同网</td>
+              <td>确认同 WiFi、IP、端口</td>
+            </tr>
+            <tr>
+              <td>请求太多看不过来</td>
+              <td>没过滤</td>
+              <td>用域名过滤 + 搜索</td>
+            </tr>
+            <tr>
+              <td>本地 localhost 抓不到</td>
+              <td>本地流量不走代理</td>
+              <td>改 hosts 或工具配置</td>
+            </tr>
+            <tr>
+              <td>抓完流量变卡/断网</td>
+              <td>代理未关闭/证书残留</td>
+              <td>关代理、卸证书</td>
+            </tr>
+          </table>
+
+          <h3>进阶小技巧</h3>
+          <ul>
+            <li><strong>先过滤再抓</strong>：设置好域名过滤，避免垃圾流量。</li>
+            <li>
+              <strong>导出 HAR</strong>：抓包结果存成 .har，方便分享/分析。
+            </li>
+            <li>
+              <strong>抓完必清理</strong>：关闭 SSL
+              解密、移除证书、关代理，避免影响日常上网。
+            </li>
+          </ul>
+        </section>
+
+        <section id="s16">
+          <h2><span class="num">16.</span>安全与合规红线</h2>
+          <div class="law">
+            <strong>三条铁律（务必遵守）</strong>：①
+            只抓<strong>自己</strong>的流量或<strong>已获授权</strong>的系统；②
+            不抓取、不存储<strong>他人隐私数据</strong>（账号、密码、身份证等）；③
+            不用抓包能力对他人系统做<strong>攻击、越权、爆破</strong>。抓包本身是中性技术，用在哪决定了对错。
+          </div>
+
+          <h3>使用抓包工具的良好习惯</h3>
+          <table>
+            <tr>
+              <th>习惯</th>
+              <th>为什么</th>
+            </tr>
+            <tr>
+              <td>用完关代理</td>
+              <td>防止流量持续被拦截、影响上网</td>
+            </tr>
+            <tr>
+              <td>用完卸证书</td>
+              <td>防止机器上所有 HTTPS 被解密</td>
+            </tr>
+            <tr>
+              <td>公共电脑不装证书</td>
+              <td>避免别人窃取你的加密流量</td>
+            </tr>
+            <tr>
+              <td>授权内测试</td>
+              <td>合法合规的底线</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            抓包技术本中立，授权之内才可为； 用完关闭卸证书，隐私安全记心间。
+          </div>
+        </section>
+
+        <section id="s17">
+          <h2><span class="num">17.</span>面试口诀与速查表</h2>
+          <table>
+            <tr>
+              <th>问题</th>
+              <th>一句话答案</th>
+            </tr>
+            <tr>
+              <td>抓包原理</td>
+              <td>代理转发，工具在中间记录流量</td>
+            </tr>
+            <tr>
+              <td>HTTPS 怎么抓</td>
+              <td>中间人 MITM + 装工具根证书</td>
+            </tr>
+            <tr>
+              <td>Fiddler vs Charles</td>
+              <td>Fiddler 偏 Windows，Charles 跨平台移动端友好</td>
+            </tr>
+            <tr>
+              <td>Wireshark 用在哪</td>
+              <td>底层 TCP/UDP 网络分析</td>
+            </tr>
+            <tr>
+              <td>mitmproxy 优势</td>
+              <td>命令行 + Python 脚本自动化</td>
+            </tr>
+            <tr>
+              <td>抓不到 HTTPS 的原因</td>
+              <td>没开解密 / SSL Pinning</td>
+            </tr>
+            <tr>
+              <td>移动端抓包三要素</td>
+              <td>同网 + 代理 + 证书</td>
+            </tr>
+            <tr>
+              <td>改包重放用途</td>
+              <td>测试边界、调试（需授权）</td>
+            </tr>
+          </table>
+          <div class="mnemonic">
+            抓包本质是代理，HTTPS 要中间人； 网页用 F12，电脑 F 与 C；
+            手机同网加证书，底层深挖 Wireshark； 脚本化 mitmproxy，安全测试
+            Burp； 授权之内才动手，合规底线不能破。
+          </div>
+        </section>
+
+        <section id="route">
+          <h2>学习路线建议（15 天实战）</h2>
+          <div class="route-box">
+            <table>
+              <tr>
+                <th>阶段</th>
+                <th>天数</th>
+                <th>重点任务</th>
+              </tr>
+              <tr>
+                <td>入门</td>
+                <td>1–4</td>
+                <td>用 F12 抓 3 个网页接口；装 Fiddler/Charles 抓电脑流量</td>
+              </tr>
+              <tr>
+                <td>进阶</td>
+                <td>5–10</td>
+                <td>搞定 HTTPS 解密、手机 App 抓包、断点改包、弱网模拟</td>
+              </tr>
+              <tr>
+                <td>精通</td>
+                <td>11–15</td>
+                <td>
+                  学 mitmproxy 脚本化、Wireshark
+                  底层分析，做一个「抓包找接口」小项目
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="tip">
+            终极心法：<strong>先抓通 → 再过滤 → 再改包 → 再脚本化</strong
+            >。每次只攻一个工具、一个场景，抓包靠的是「动手折腾」而不是死记。记住：<strong>合法合规，授权之内</strong>。
+          </div>
+        </section>
+
+        <footer>
+          主流抓包工具从入门到精通 · 学习笔记　|　小白友好 · 多比喻 · 讲合规
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      ;(function () {
+        const menuToggle = document.getElementById('menuToggle')
+        const toc = document.getElementById('toc')
+        const tocOverlay = document.getElementById('tocOverlay')
+        function setTocOpen(isOpen) {
+          toc.classList.toggle('open', isOpen)
+          tocOverlay.classList.toggle('open', isOpen)
+          menuToggle.setAttribute('aria-expanded', String(isOpen))
+        }
+        menuToggle.addEventListener('click', () =>
+          setTocOpen(!toc.classList.contains('open')),
+        )
+        tocOverlay.addEventListener('click', () => setTocOpen(false))
+        toc
+          .querySelectorAll('a')
+          .forEach((link) =>
+            link.addEventListener('click', () => setTocOpen(false)),
+          )
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setTocOpen(false)
+        })
+
+        const links = document.querySelectorAll('nav.toc a[href^="#"]')
+        const map = {}
+        links.forEach((a) => {
+          const id = a.getAttribute('href').slice(1)
+          const el = document.getElementById(id)
+          if (el) map[id] = a
+        })
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                links.forEach((a) => a.classList.remove('active'))
+                const id = e.target.id
+                if (map[id]) map[id].classList.add('active')
+              }
+            })
+          },
+          { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+        )
+        Object.keys(map).forEach((id) => {
+          const el = document.getElementById(id)
+          if (el) io.observe(el)
+        })
+      })()
+    </script>
+  </body>
+</html>

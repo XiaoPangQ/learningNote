@@ -11,6 +11,7 @@
 5. [Docker 从入门到精通](learningDocker.html)
 6. [Vue 3 从入门到精通](learningVue.html)
 7. [React 从入门到精通](learningReact.html)
+8. [主流抓包工具从入门到精通](learningCapturePackage.html)
 
 也可以从首页进入全部笔记：[技术学习笔记](index.html)
 
