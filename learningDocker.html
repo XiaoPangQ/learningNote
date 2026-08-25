@@ -1,0 +1,3306 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docker 从入门到精通 · 学习笔记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #2496ed;
+        --accent-soft: rgba(36, 150, 237, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #2496ed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🐳</span> Docker 学习笔记</h2>
+        <p>从入门到精通 · 完整路径</p>
+      </div>
+      <a class="home-link" href="index.html">← 返回首页</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. Docker 简介与核心概念</a></li>
+        <li><a href="#ch02">2. 安装与环境配置</a></li>
+        <li><a href="#ch03">3. 镜像基础操作</a></li>
+        <li><a href="#ch04">4. 容器基础操作</a></li>
+        <li><a href="#ch05">5. Dockerfile 详解</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch06">6. 数据持久化</a></li>
+        <li><a href="#ch07">7. 网络管理</a></li>
+        <li><a href="#ch08">8. Docker Compose</a></li>
+        <li><a href="#ch09">9. 镜像仓库与分发</a></li>
+        <li><a href="#ch10">10. 日志、监控与排障</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch11">11. 底层原理与存储驱动</a></li>
+        <li><a href="#ch12">12. 资源限制与 cgroups</a></li>
+        <li><a href="#ch13">13. 容器安全</a></li>
+        <li><a href="#ch14">14. 镜像优化与多阶段构建</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch15">15. 网络原理深入</a></li>
+        <li><a href="#ch16">16. 容器编排与 Kubernetes</a></li>
+        <li><a href="#ch17">17. CI/CD 与生产实践</a></li>
+        <li><a href="#ch18">18. 学习路线与资源</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">📦 完整学习手册</span>
+        <h1>Docker 从入门到精通</h1>
+        <p>
+          一份系统化的 Docker
+          学习笔记，覆盖容器基础、Dockerfile、网络存储、Compose、安全加固、镜像优化到容器编排与生产实践。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>150+ 命令示例</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> Docker 简介与核心概念</h2>
+
+        <h3>什么是 Docker</h3>
+        <p>
+          Docker
+          是一个开源的容器化平台，让开发者可以将应用及其依赖打包到一个轻量级、可移植的容器中，然后发布到任何支持
+          Docker 的机器上运行。容器之间相互隔离，共享宿主机内核。
+        </p>
+
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          Docker =
+          "构建、运送、运行任何应用"的开放平台。它解决了"在我机器上能跑"的经典问题。
+        </div>
+
+        <h3>为什么需要 Docker</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>一致性</h4>
+            <p>开发、测试、生产环境完全一致，消除环境差异。</p>
+          </div>
+          <div class="card">
+            <h4>快速部署</h4>
+            <p>秒级启动容器，镜像分层缓存让构建和分发极快。</p>
+          </div>
+          <div class="card">
+            <h4>资源高效</h4>
+            <p>共享内核，比虚拟机轻量得多，单机可运行数百容器。</p>
+          </div>
+          <div class="card">
+            <h4>微服务友好</h4>
+            <p>每个服务独立容器，便于扩展、更新和回滚。</p>
+          </div>
+        </div>
+
+        <h3>容器 vs 虚拟机</h3>
+        <div class="diagram">
+          <pre>
+  虚拟机架构                          容器架构
+┌─────────────────────┐          ┌─────────────────────┐
+│   App   │   App     │          │   App   │   App     │
+│  Bins/Libs Bins/Libs│          │  容器A  │  容器B     │
+├─────────┴───────────┤          ├─────────┴───────────┤
+│      Guest OS       │          │      Docker         │
+├─────────────────────┤          ├─────────────────────┤
+│      Hypervisor     │          │    Host OS Kernel   │
+├─────────────────────┤          ├─────────────────────┤
+│   Host OS Kernel    │          │    Infrastructure   │
+├─────────────────────┤          └─────────────────────┘
+│   Infrastructure    │
+└─────────────────────┘
+  ↑ GB级，分钟级启动                  ↑ MB级，秒级启动
+</pre
+          >
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>虚拟机</th>
+                <th>容器</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>隔离级别</td>
+                <td>硬件级（完整 OS）</td>
+                <td>进程级（共享内核）</td>
+              </tr>
+              <tr>
+                <td>启动速度</td>
+                <td>分钟级</td>
+                <td>秒级/毫秒级</td>
+              </tr>
+              <tr>
+                <td>资源占用</td>
+                <td>GB 级</td>
+                <td>MB 级</td>
+              </tr>
+              <tr>
+                <td>性能损耗</td>
+                <td>较大（Hypervisor 层）</td>
+                <td>极小（接近原生）</td>
+              </tr>
+              <tr>
+                <td>操作系统</td>
+                <td>可运行不同内核 OS</td>
+                <td>必须与宿主机同内核</td>
+              </tr>
+              <tr>
+                <td>隔离强度</td>
+                <td>更强</td>
+                <td>较弱（但有安全加固手段）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>核心概念</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>概念</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>镜像 (Image)</strong></td>
+                <td>
+                  只读模板，包含运行应用所需的代码、运行时、库、配置。分层构建，不可变。
+                </td>
+              </tr>
+              <tr>
+                <td><strong>容器 (Container)</strong></td>
+                <td>镜像的运行实例，可读写。一个镜像可以启动多个容器。</td>
+              </tr>
+              <tr>
+                <td><strong>仓库 (Registry)</strong></td>
+                <td>存储和分发镜像的服务，如 Docker Hub、GHCR、Harbor。</td>
+              </tr>
+              <tr>
+                <td><strong>Dockerfile</strong></td>
+                <td>文本文件，包含构建镜像的指令序列。</td>
+              </tr>
+              <tr>
+                <td><strong>Volume</strong></td>
+                <td>持久化数据的机制，独立于容器生命周期。</td>
+              </tr>
+              <tr>
+                <td><strong>Network</strong></td>
+                <td>容器间及容器与外部通信的虚拟网络。</td>
+              </tr>
+              <tr>
+                <td><strong>Docker Engine</strong></td>
+                <td>核心运行时，包含 dockerd 守护进程和 containerd。</td>
+              </tr>
+              <tr>
+                <td><strong>Docker Compose</strong></td>
+                <td>定义和运行多容器应用的工具。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Docker 架构</h3>
+        <div class="diagram">
+          <pre>
+┌──────────────┐     CLI      ┌──────────────────┐
+│  docker CLI  │ ──────────▶  │   dockerd        │
+│  (客户端)     │              │  (守护进程)       │
+└──────────────┘              └────────┬─────────┘
+                                      │
+                          ┌───────────┼───────────┐
+                          ▼           ▼           ▼
+                    ┌──────────┐ ┌──────────┐ ┌──────────┐
+                    │ containerd│ │  网络驱动  │ │ 存储驱动  │
+                    └─────┬────┘ └──────────┘ └──────────┘
+                          │
+                    ┌─────┴────┐
+                    │  runc    │  (OCI 运行时)
+                    └─────┬────┘
+                          ▼
+                    ┌──────────┐
+                    │  容器进程 │
+                    └──────────┘
+</pre
+          >
+        </div>
+
+        <h3>Docker 发展简史</h3>
+        <ol class="steps">
+          <li>
+            <strong>2008</strong> — Linux 容器（LXC）出现，基于 cgroups 和
+            namespace
+          </li>
+          <li>
+            <strong>2013</strong> — DotCloud 公司开源 Docker， Solomon Hykes
+            发布，迅速引爆
+          </li>
+          <li>
+            <strong>2014</strong> — Docker 1.0 发布；Kubernetes 由 Google 开源
+          </li>
+          <li>
+            <strong>2015</strong> — OCI（开放容器倡议）成立，runc 捐赠给 OCI
+          </li>
+          <li>
+            <strong>2017</strong> — Docker 企业版/社区版拆分；containerd
+            成为独立项目（CNCF）
+          </li>
+          <li>
+            <strong>2019</strong> — Docker Desktop 商业化；K8s 弃用 Dockershim
+          </li>
+          <li>
+            <strong>2021</strong> — Dockershim 正式从 Kubernetes
+            移除；containerd 成为主流运行时
+          </li>
+          <li>
+            <strong>2023+</strong> — Docker 持续演进，BuildKit、Docker Scout、
+            WASM 支持等
+          </li>
+        </ol>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 安装与环境配置</h2>
+
+        <h3>Linux 安装（推荐方式）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 官方一键脚本（最简单）</span>
+<span class="cmd">curl</span> <span class="flag">-fsSL</span> https://get.docker.com | <span class="cmd">sh</span>
+
+<span class="comment"># 启动并设置开机自启</span>
+<span class="cmd">sudo</span> systemctl enable <span class="flag">--now</span> docker
+
+<span class="comment"># 将当前用户加入 docker 组（免 sudo）</span>
+<span class="cmd">sudo</span> usermod <span class="flag">-aG</span> docker $USER
+<span class="comment"># 重新登录后生效</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h4>Ubuntu/Debian 手动安装</h4>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 卸载旧版本</span>
+<span class="cmd">sudo</span> apt remove docker docker.io containerd runc
+
+<span class="comment"># 安装依赖</span>
+<span class="cmd">sudo</span> apt update
+<span class="cmd">sudo</span> apt install ca-certificates curl gnupg lsb-release
+
+<span class="comment"># 添加 Docker 官方 GPG 密钥</span>
+<span class="cmd">sudo</span> install <span class="flag">-m</span> 0755 <span class="flag">-d</span> /etc/apt/keyrings
+<span class="cmd">curl</span> <span class="flag">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | \
+  <span class="cmd">sudo</span> gpg <span class="flag">--dearmor</span> <span class="flag">-o</span> /etc/apt/keyrings/docker.gpg
+
+<span class="comment"># 添加仓库</span>
+<span class="cmd">echo</span> <span class="str">"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"</span> | \
+  <span class="cmd">sudo</span> tee /etc/apt/sources.list.d/docker.list
+
+<span class="comment"># 安装</span>
+<span class="cmd">sudo</span> apt update
+<span class="cmd">sudo</span> apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>国内镜像加速</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># /etc/docker/daemon.json</span>
+{
+  "registry-mirrors": [
+    "https://docker.1ms.run",
+    "https://docker.xuanyuan.me"
+  ],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+
+<span class="cmd">sudo</span> systemctl daemon-reload
+<span class="cmd">sudo</span> systemctl restart docker</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>macOS / Windows</h3>
+        <p>
+          Mac 和 Windows 用户下载安装
+          <strong>Docker Desktop</strong> 即可，它内置了一个轻量 Linux
+          虚拟机来运行 Docker Engine。
+        </p>
+        <ul>
+          <li>
+            <strong>Mac</strong>：支持 Intel 和 Apple Silicon，使用
+            Hypervisor.framework
+          </li>
+          <li><strong>Windows</strong>：使用 WSL2 后端（推荐）或 Hyper-V</li>
+          <li>
+            下载地址：<a
+              href="https://www.docker.com/products/docker-desktop"
+              target="_blank"
+              rel="noopener noreferrer"
+              >docker.com/products/docker-desktop</a
+            >
+          </li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ Windows 用户注意</div>
+          Docker Desktop on Windows 需要 WSL2，建议先在 PowerShell 中执行
+          <code>wsl --install</code>，再安装 Docker Desktop。
+        </div>
+
+        <h3>验证安装</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> version
+<span class="cmd">docker</span> info
+<span class="cmd">docker</span> run hello-world</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>配置 Docker 开机自启</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># Linux</span>
+<span class="cmd">sudo</span> systemctl enable docker
+<span class="cmd">sudo</span> systemctl enable containerd
+
+<span class="comment"># 查看状态</span>
+<span class="cmd">sudo</span> systemctl status docker</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 镜像基础操作</h2>
+
+        <h3>3.1 获取镜像</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 拉取镜像（默认 latest 标签）</span>
+<span class="cmd">docker</span> pull nginx
+
+<span class="comment"># 指定版本</span>
+<span class="cmd">docker</span> pull nginx:1.25
+<span class="cmd">docker</span> pull ubuntu:22.04
+<span class="cmd">docker</span> pull python:3.12-slim
+
+<span class="comment"># 指定平台（Apple Silicon 拉取 amd64 镜像）</span>
+<span class="cmd">docker</span> pull <span class="flag">--platform</span> linux/amd64 nginx</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>3.2 查看镜像</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> images                  <span class="comment"># 列出本地镜像</span>
+<span class="cmd">docker</span> image ls                <span class="comment"># 同上（新语法）</span>
+<span class="cmd">docker</span> images <span class="flag">-a</span>               <span class="comment"># 包含中间层镜像</span>
+<span class="cmd">docker</span> images <span class="flag">-q</span>               <span class="comment"># 只显示镜像 ID</span>
+<span class="cmd">docker</span> images <span class="flag">--filter</span> <span class="str">"dangling=true"</span>  <span class="comment"># 悬空镜像</span>
+
+<span class="comment"># 查看镜像详细信息</span>
+<span class="cmd">docker</span> inspect nginx:1.25
+<span class="cmd">docker</span> history nginx:1.25       <span class="comment"># 查看镜像分层历史</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>3.3 镜像命名与标签</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 镜像命名规则</span>
+[registry/] [namespace/] repository [:tag]
+<span class="comment"># 示例</span>
+docker.io/library/nginx:1.25
+ghcr.io/owner/repo:v1.0
+myregistry.local:5000/myapp:latest
+
+<span class="comment"># 打标签（不复制镜像，只添加引用）</span>
+<span class="cmd">docker</span> tag nginx:1.25 mynginx:v1
+<span class="cmd">docker</span> tag nginx:1.25 myregistry.local:5000/nginx:1.25</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>3.4 删除镜像</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> rmi nginx:1.25
+<span class="cmd">docker</span> image rm nginx:1.25
+
+<span class="comment"># 强制删除（有容器在使用时）</span>
+<span class="cmd">docker</span> rmi <span class="flag">-f</span> nginx:1.25
+
+<span class="comment"># 批量清理悬空镜像</span>
+<span class="cmd">docker</span> image prune
+
+<span class="comment"># 清理所有未被容器使用的镜像</span>
+<span class="cmd">docker</span> image prune <span class="flag">-a</span>
+
+<span class="comment"># 批量删除所有镜像（慎用）</span>
+<span class="cmd">docker</span> rmi <span class="flag">-f</span> $(docker images <span class="flag">-q</span>)</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>3.5 导出与导入</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 保存镜像为 tar 文件</span>
+<span class="cmd">docker</span> save <span class="flag">-o</span> nginx.tar nginx:1.25
+<span class="cmd">docker</span> save nginx:1.25 | <span class="cmd">gzip</span> > nginx.tar.gz
+
+<span class="comment"># 从 tar 文件加载镜像</span>
+<span class="cmd">docker</span> load <span class="flag">-i</span> nginx.tar
+<span class="cmd">docker</span> load < nginx.tar.gz</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>3.6 镜像分层原理</h3>
+        <p>
+          Docker 镜像由多个只读层组成，每一层对应 Dockerfile
+          中的一条指令。层被缓存和复用，这是 Docker 镜像轻量和快速构建的关键。
+        </p>
+        <div class="diagram">
+          <pre>
+┌─────────────────────────┐
+│  可写容器层 (临时)        │  ← 容器运行时创建
+├─────────────────────────┤
+│  CMD ["nginx", "..."]   │  ← 镜像层 4 (只读)
+├─────────────────────────┤
+│  COPY . /usr/share/...  │  ← 镜像层 3 (只读)
+├─────────────────────────┤
+│  RUN apt-get install    │  ← 镜像层 2 (只读)
+├─────────────────────────┤
+│  FROM ubuntu:22.04      │  ← 基础镜像层 1 (只读)
+└─────────────────────────┘
+</pre
+          >
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 容器基础操作</h2>
+
+        <h3>4.1 启动容器</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 基本启动（后台运行）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--name</span> web nginx
+
+<span class="comment"># 端口映射：宿主机端口:容器端口</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--name</span> web <span class="flag">-p</span> 8080:80 nginx
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-p</span> 8080:80 <span class="flag">-p</span> 8443:443 nginx
+
+<span class="comment"># 前台交互式运行</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--name</span> myshell ubuntu:22.04 /bin/bash
+<span class="comment"># -i 保持 STDIN 打开，-t 分配伪终端</span>
+
+<span class="comment"># 容器退出后自动删除</span>
+<span class="cmd">docker</span> run <span class="flag">--rm</span> <span class="flag">-it</span> python:3.12 python
+
+<span class="comment"># 环境变量</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-e</span> MYSQL_ROOT_PASSWORD=secret mysql:8
+
+<span class="comment"># 从文件加载环境变量</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--env-file</span> .env myapp
+
+<span class="comment"># 设置容器重启策略</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--restart</span> always nginx
+<span class="comment"># no | always | unless-stopped | on-failure[:max-retries]</span>
+
+<span class="comment"># 设置主机名</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--hostname</span> web1 nginx</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>4.2 查看容器</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> ps                    <span class="comment"># 运行中的容器</span>
+<span class="cmd">docker</span> ps <span class="flag">-a</span>                 <span class="comment"># 所有容器（含已停止）</span>
+<span class="cmd">docker</span> ps <span class="flag">-q</span>                 <span class="comment"># 只显示容器 ID</span>
+<span class="cmd">docker</span> ps <span class="flag">-a</span> <span class="flag">--size</span>         <span class="comment"># 显示文件大小</span>
+
+<span class="comment"># 查看容器详情</span>
+<span class="cmd">docker</span> inspect web
+<span class="cmd">docker</span> inspect <span class="flag">--format</span> <span class="str">'{{.NetworkSettings.IPAddress}}'</span> web
+
+<span class="comment"># 查看容器内进程</span>
+<span class="cmd">docker</span> top web</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>4.3 容器生命周期</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> start web             <span class="comment"># 启动已停止的容器</span>
+<span class="cmd">docker</span> stop web              <span class="comment"># 优雅停止（SIGTERM，10秒后 SIGKILL）</span>
+<span class="cmd">docker</span> stop <span class="flag">-t</span> 30 web        <span class="comment"># 等待 30 秒</span>
+<span class="cmd">docker</span> restart web           <span class="comment"># 重启</span>
+<span class="cmd">docker</span> kill web              <span class="comment"># 强制杀死（SIGKILL）</span>
+<span class="cmd">docker</span> pause web             <span class="comment"># 暂停（冻结进程）</span>
+<span class="cmd">docker</span> unpause web           <span class="comment"># 恢复</span>
+<span class="cmd">docker</span> rename web newweb     <span class="comment"># 重命名</span>
+
+<span class="comment"># 删除容器</span>
+<span class="cmd">docker</span> rm web
+<span class="cmd">docker</span> rm <span class="flag">-f</span> web            <span class="comment"># 强制删除运行中的容器</span>
+<span class="cmd">docker</span> container prune       <span class="comment"># 清理所有已停止的容器</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>4.4 进入容器</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># docker exec: 在运行中的容器中执行命令（推荐）</span>
+<span class="cmd">docker</span> exec <span class="flag">-it</span> web /bin/bash
+<span class="cmd">docker</span> exec web cat /etc/os-release
+<span class="cmd">docker</span> exec <span class="flag">-u</span> root web apt update
+
+<span class="comment"># docker attach: 附加到容器主进程（不推荐，退出会停止容器）</span>
+<span class="cmd">docker</span> attach web
+<span class="comment"># Ctrl+P, Ctrl+Q 可以安全 detach</span>
+
+<span class="comment"># docker cp: 在容器和宿主机之间复制文件</span>
+<span class="cmd">docker</span> cp ./localfile web:/tmp/
+<span class="cmd">docker</span> cp web:/etc/nginx/nginx.conf ./backup/</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>4.5 查看日志</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> logs web              <span class="comment"># 查看日志</span>
+<span class="cmd">docker</span> logs <span class="flag">-f</span> web          <span class="comment"># 实时跟踪</span>
+<span class="cmd">docker</span> logs <span class="flag">--tail</span> 100 web   <span class="comment"># 最后 100 行</span>
+<span class="cmd">docker</span> logs <span class="flag">--since</span> 1h web   <span class="comment"># 最近 1 小时</span>
+<span class="cmd">docker</span> logs <span class="flag">-t</span> web          <span class="comment"># 显示时间戳</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>4.6 查看资源占用</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> stats                 <span class="comment"># 实时资源监控（CPU/内存/网络/IO）</span>
+<span class="cmd">docker</span> stats web db          <span class="comment"># 指定容器</span>
+<span class="cmd">docker</span> stats <span class="flag">--no-stream</span>    <span class="comment"># 只输出一次结果</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>4.7 容器提交（慎用）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 将容器的可写层提交为新镜像</span>
+<span class="cmd">docker</span> commit <span class="flag">-m</span> <span class="str">"添加了 curl"</span> <span class="flag">-a</span> <span class="str">"author"</span> web mynginx:v1
+
+<span class="comment"># 注意：这不是推荐做法！应该用 Dockerfile 构建可复现的镜像</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> Dockerfile 详解</h2>
+
+        <h3>Dockerfile 基本结构</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 语法版本（BuildKit 特性）</span>
+<span class="kw"># syntax=docker/dockerfile:1</span>
+
+<span class="comment"># 基础镜像</span>
+<span class="kw">FROM</span> node:20-alpine
+
+<span class="comment"># 设置工作目录（不存在会自动创建）</span>
+<span class="kw">WORKDIR</span> /app
+
+<span class="comment"># 复制依赖清单（利用缓存）</span>
+<span class="kw">COPY</span> package.json package-lock.json ./
+
+<span class="comment"># 安装依赖</span>
+<span class="kw">RUN</span> npm ci --only=production
+
+<span class="comment"># 复制源代码</span>
+<span class="kw">COPY</span> . .
+
+<span class="comment"># 构建参数（构建时可传入）</span>
+<span class="kw">ARG</span> APP_VERSION=1.0.0
+<span class="kw">ENV</span> APP_VERSION=$APP_VERSION
+
+<span class="comment"># 环境变量（运行时可用）</span>
+<span class="kw">ENV</span> NODE_ENV=production
+<span class="kw">ENV</span> PORT=3000
+
+<span class="comment"># 暴露端口（仅文档作用，实际需要 -p）</span>
+<span class="kw">EXPOSE</span> 3000
+
+<span class="comment"># 数据卷声明</span>
+<span class="kw">VOLUME</span> ["/app/data"]
+
+<span class="comment"># 容器健康检查</span>
+<span class="kw">HEALTHCHECK</span> <span class="flag">--interval</span>=30s <span class="flag">--timeout</span>=3s <span class="flag">--retries</span>=3 \
+  <span class="kw">CMD</span> wget -q --spider http://localhost:3000/health || exit 1
+
+<span class="comment"># 容器启动命令（shell 形式）</span>
+<span class="kw">CMD</span> ["node", "server.js"]</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>指令详解</h3>
+
+        <h4>FROM — 基础镜像</h4>
+        <div class="code-wrap">
+          <pre><code><span class="kw">FROM</span> ubuntu:22.04
+<span class="kw">FROM</span> node:20-alpine          <span class="comment"># alpine 更小</span>
+<span class="kw">FROM</span> scratch                <span class="comment"># 空镜像（用于静态二进制）</span>
+<span class="kw">FROM</span> --platform=$BUILDPLATFORM golang:1.22 AS builder</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h4>RUN — 执行命令</h4>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># shell 形式（通过 /bin/sh -c 执行）</span>
+<span class="kw">RUN</span> apt-get update && apt-get install -y curl
+
+<span class="comment"># exec 形式（不经过 shell，信号处理更好）</span>
+<span class="kw">RUN</span> ["apt-get", "install", "-y", "curl"]
+
+<span class="comment"># 最佳实践：合并命令、清理缓存，减少层数和体积</span>
+<span class="kw">RUN</span> apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h4>COPY vs ADD</h4>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># COPY: 推荐，简单复制文件/目录</span>
+<span class="kw">COPY</span> . /app
+<span class="kw">COPY</span> --chown=node:node . /app
+<span class="kw">COPY</span> --from=builder /app/server .
+
+<span class="comment"># ADD: 有额外功能（自动解压 tar、支持 URL），但不推荐日常使用</span>
+<span class="kw">ADD</span> app.tar.gz /app/
+<span class="kw">ADD</span> https://example.com/file /tmp/</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 优先用 COPY</div>
+          <code>ADD</code> 的自动解压和 URL
+          下载功能增加了不可预测性。除非确实需要自动解压 tar 文件，否则一律用
+          <code>COPY</code>。
+        </div>
+
+        <h4>ENV vs ARG</h4>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>ARG</th>
+                <th>ENV</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>可用阶段</td>
+                <td>仅构建时</td>
+                <td>构建时 + 运行时</td>
+              </tr>
+              <tr>
+                <td>容器中可见</td>
+                <td>否</td>
+                <td>是</td>
+              </tr>
+              <tr>
+                <td>可被覆盖</td>
+                <td><code>--build-arg</code></td>
+                <td><code>-e</code> 或 docker-compose</td>
+              </tr>
+              <tr>
+                <td>典型用途</td>
+                <td>版本号、平台标识</td>
+                <td>配置、环境标识</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>CMD vs ENTRYPOINT</h4>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># CMD: 容器启动时的默认命令（可被 docker run 参数覆盖）</span>
+<span class="kw">CMD</span> ["nginx", "-g", "daemon off;"]
+
+<span class="comment"># ENTRYPOINT: 容器的入口程序（不会被覆盖，参数追加）</span>
+<span class="kw">ENTRYPOINT</span> ["docker-entrypoint.sh"]
+<span class="kw">CMD</span> ["nginx", "-g", "daemon off;"]
+
+<span class="comment"># 组合使用：ENTRYPOINT 固定程序，CMD 提供默认参数</span>
+<span class="comment"># docker run myimage → docker-entrypoint.sh nginx -g "daemon off;"</span>
+<span class="comment"># docker run myimage bash → docker-entrypoint.sh bash</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>构建镜像</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 基本构建（-t 指定标签，. 是构建上下文）</span>
+<span class="cmd">docker</span> build <span class="flag">-t</span> myapp:1.0 .
+
+<span class="comment"># 多标签构建</span>
+<span class="cmd">docker</span> build <span class="flag">-t</span> myapp:1.0 <span class="flag">-t</span> myapp:latest .
+
+<span class="comment"># 指定 Dockerfile</span>
+<span class="cmd">docker</span> build <span class="flag">-f</span> Dockerfile.prod <span class="flag">-t</span> myapp:prod .
+
+<span class="comment"># 传递构建参数</span>
+<span class="cmd">docker</span> build <span class="flag">--build-arg</span> APP_VERSION=2.0 <span class="flag">-t</span> myapp:2.0 .
+
+<span class="comment"># 不使用缓存</span>
+<span class="cmd">docker</span> build <span class="flag">--no-cache</span> <span class="flag">-t</span> myapp .
+
+<span class="comment"># 使用 BuildKit（更快、更强大）</span>
+DOCKER_BUILDKIT=1 <span class="cmd">docker</span> build <span class="flag">-t</span> myapp .
+
+<span class="comment"># 查看构建过程详细输出</span>
+<span class="cmd">docker</span> build <span class="flag">--progress</span>=plain <span class="flag">-t</span> myapp .</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>.dockerignore</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># .dockerignore — 排除不需要的文件，减小构建上下文</span>
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+Dockerfile
+docker-compose*.yml
+README.md
+*.md
+.vscode
+.idea
+coverage
+dist
+build
+*.log</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>常见语言 Dockerfile 示例</h3>
+
+        <h4>Python</h4>
+        <div class="code-wrap">
+          <pre><code><span class="kw">FROM</span> python:3.12-slim
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> requirements.txt .
+<span class="kw">RUN</span> pip install --no-cache-dir <span class="flag">-r</span> requirements.txt
+<span class="kw">COPY</span> . .
+<span class="kw">EXPOSE</span> 8000
+<span class="kw">CMD</span> ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h4>Go（多阶段构建）</h4>
+        <div class="code-wrap">
+          <pre><code><span class="kw">FROM</span> golang:1.22-alpine AS builder
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> go.mod go.sum ./
+<span class="kw">RUN</span> go mod download
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> CGO_ENABLED=0 go build -ldflags=<span class="str">"-s -w"</span> -o server .
+
+<span class="kw">FROM</span> alpine:3.19
+<span class="kw">RUN</span> apk add --no-cache ca-certificates tzdata
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> --from=builder /app/server .
+<span class="kw">EXPOSE</span> 8080
+<span class="kw">CMD</span> ["./server"]</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h4>Java (Spring Boot)</h4>
+        <div class="code-wrap">
+          <pre><code><span class="kw">FROM</span> eclipse-temurin:21-jre-alpine
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> target/app.jar app.jar
+<span class="kw">EXPOSE</span> 8080
+<span class="kw">ENTRYPOINT</span> ["java", "-jar", "app.jar"]</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 数据持久化</h2>
+
+        <h3>容器数据问题</h3>
+        <p>
+          容器的可写层在容器删除后数据丢失，且性能较差（需要存储驱动）。Docker
+          提供三种数据挂载方式：
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方式</th>
+                <th>存储位置</th>
+                <th>生命周期</th>
+                <th>性能</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Volume</strong></td>
+                <td>/var/lib/docker/volumes/</td>
+                <td>独立于容器</td>
+                <td>好（原生）</td>
+                <td>数据库、持久化数据（推荐）</td>
+              </tr>
+              <tr>
+                <td><strong>Bind Mount</strong></td>
+                <td>宿主机任意路径</td>
+                <td>跟随宿主机</td>
+                <td>好（直接映射）</td>
+                <td>开发时热重载、配置文件</td>
+              </tr>
+              <tr>
+                <td><strong>tmpfs</strong></td>
+                <td>宿主机内存</td>
+                <td>容器停止即消失</td>
+                <td>最好</td>
+                <td>敏感临时数据</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>6.1 Volume（数据卷）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 创建数据卷</span>
+<span class="cmd">docker</span> volume create mydata
+
+<span class="comment"># 列出数据卷</span>
+<span class="cmd">docker</span> volume ls
+
+<span class="comment"># 查看详情</span>
+<span class="cmd">docker</span> volume inspect mydata
+
+<span class="comment"># 使用数据卷启动容器</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-v</span> mydata:/var/lib/mysql mysql:8
+
+<span class="comment"># 使用 --mount（更明确的语法，推荐）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--mount</span> source=mydata,target=/var/lib/mysql \
+  mysql:8
+
+<span class="comment"># 匿名卷（不指定名称，Docker 自动生成）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-v</span> /var/lib/mysql mysql:8
+
+<span class="comment"># 删除数据卷</span>
+<span class="cmd">docker</span> volume rm mydata
+<span class="cmd">docker</span> volume prune</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>6.2 Bind Mount（绑定挂载）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 将宿主机目录挂载到容器</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-v</span> /host/path:/container/path nginx
+
+<span class="comment"># 只读挂载</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-v</span> /host/config:/etc/nginx:ro nginx
+
+<span class="comment"># 使用 --mount 语法</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--mount</span> type=bind,source=$(pwd),target=/app \
+  myapp
+
+<span class="comment"># 开发场景：挂载源码实现热重载</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">-v</span> $(pwd):/app \
+  <span class="flag">-v</span> /app/node_modules \
+  <span class="flag">-p</span> 3000:3000 \
+  mynodeapp npm run dev</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ Mac/Windows 性能注意</div>
+          Bind Mount 在 Mac/Windows 上通过虚拟机文件共享，I/O
+          性能较差。大型项目开发时，把
+          <code>node_modules</code>
+          等用匿名卷覆盖（如上例）可以避免反向挂载拖慢速度。
+        </div>
+
+        <h3>6.3 tmpfs</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--tmpfs</span> /tmp:rw,noexec,nosuid,size=100m \
+  myapp
+
+<span class="comment"># 或使用 --mount</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--mount</span> type=tmpfs,destination=/tmp,tmpfs-size=104857600 \
+  myapp</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>6.4 数据卷容器与共享</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 创建数据卷容器</span>
+<span class="cmd">docker</span> create <span class="flag">-v</span> /data <span class="flag">--name</span> datastore busybox
+
+<span class="comment"># 其他容器共享数据卷（--volumes-from 已不推荐，建议用命名卷）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--volumes-from</span> datastore myapp
+
+<span class="comment"># 多个容器共享同一个命名卷</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-v</span> shared:/data <span class="flag">--name</span> app1 myapp
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-v</span> shared:/data <span class="flag">--name</span> app2 myapp</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>6.5 数据备份与迁移</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 备份数据卷到 tar 文件</span>
+<span class="cmd">docker</span> run <span class="flag">--rm</span> \
+  <span class="flag">-v</span> mydata:/source \
+  <span class="flag">-v</span> $(pwd):/backup \
+  busybox tar czf /backup/mydata_backup.tar.gz <span class="flag">-C</span> /source .
+
+<span class="comment"># 恢复数据卷</span>
+<span class="cmd">docker</span> run <span class="flag">--rm</span> \
+  <span class="flag">-v</span> newdata:/target \
+  <span class="flag">-v</span> $(pwd):/backup \
+  busybox tar xzf /backup/mydata_backup.tar.gz <span class="flag">-C</span> /target</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 网络管理</h2>
+
+        <h3>7.1 默认网络模式</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>模式</th>
+                <th>说明</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>bridge</code></td>
+                <td>默认模式，容器通过虚拟网桥通信，NAT 访问外网</td>
+                <td>单机容器通信（默认）</td>
+              </tr>
+              <tr>
+                <td><code>host</code></td>
+                <td>容器直接使用宿主机网络栈，无隔离</td>
+                <td>高性能需求、不推荐生产</td>
+              </tr>
+              <tr>
+                <td><code>none</code></td>
+                <td>无网络，只有 lo 回环</td>
+                <td>安全隔离、不需要网络</td>
+              </tr>
+              <tr>
+                <td><code>container:</code></td>
+                <td>共享另一个容器的网络命名空间</td>
+                <td>Sidecar、调试</td>
+              </tr>
+              <tr>
+                <td><code>overlay</code></td>
+                <td>跨主机容器网络（需要 Swarm/K8s）</td>
+                <td>多机集群</td>
+              </tr>
+              <tr>
+                <td><code>macvlan</code></td>
+                <td>容器获得物理网络中的 MAC 地址</td>
+                <td>需要直连物理网络</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>7.2 网络基本操作</h3>
+        <div class="code-wrap">
+          <pre><code><span class="cmd">docker</span> network ls                 <span class="comment"># 列出网络</span>
+<span class="cmd">docker</span> network inspect bridge     <span class="comment"># 查看网络详情</span>
+<span class="cmd">docker</span> network create mynet       <span class="comment"># 创建自定义网络</span>
+<span class="cmd">docker</span> network rm mynet           <span class="comment"># 删除网络</span>
+<span class="cmd">docker</span> network prune              <span class="comment"># 清理未使用网络</span>
+
+<span class="comment"># 创建指定驱动的网络</span>
+<span class="cmd">docker</span> network create <span class="flag">-d</span> bridge <span class="flag">--subnet</span> 172.20.0.0/16 mynet
+
+<span class="comment"># 连接/断开容器到网络</span>
+<span class="cmd">docker</span> network connect mynet web
+<span class="cmd">docker</span> network disconnect mynet web</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>7.3 容器间通信</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 创建自定义网络（默认 bridge 不支持容器名解析）</span>
+<span class="cmd">docker</span> network create app-net
+
+<span class="comment"># 容器加入同一网络后可用容器名互相访问</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--name</span> db <span class="flag">--network</span> app-net <span class="flag">-e</span> MYSQL_ROOT_PASSWORD=secret mysql:8
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--name</span> web <span class="flag">--network</span> app-net <span class="flag">-p</span> 8080:80 myapp
+
+<span class="comment"># 在 web 容器中可以直接用 db:3306 连接数据库</span>
+<span class="cmd">docker</span> exec web ping db</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 自定义 bridge 网络的优势</div>
+          相比默认 bridge，自定义网络提供：① 自动 DNS 解析（容器名互通）；②
+          更好的隔离；③ 动态连接/断开；④ 可配置 MTU、子网等。
+        </div>
+
+        <h3>7.4 发布端口</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># -p 宿主机IP:宿主机端口:容器端口/协议</span>
+<span class="cmd">docker</span> run <span class="flag">-p</span> 8080:80 nginx              <span class="comment"># 所有网卡</span>
+<span class="cmd">docker</span> run <span class="flag">-p</span> 127.0.0.1:8080:80 nginx    <span class="comment"># 仅本机访问</span>
+<span class="cmd">docker</span> run <span class="flag">-p</span> 8080:80/tcp <span class="flag">-p</span> 8080:80/udp nginx
+<span class="cmd">docker</span> run <span class="flag">-P</span> nginx                      <span class="comment"># 随机映射所有 EXPOSE 端口</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>7.5 host 网络模式</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 容器直接使用宿主机网络（无端口映射）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--network</span> host nginx
+<span class="comment"># 注意：host 模式在 Mac/Windows Docker Desktop 上效果有限</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> Docker Compose</h2>
+
+        <h3>什么是 Docker Compose</h3>
+        <p>
+          Compose 是定义和运行多容器 Docker 应用的工具。通过一个 YAML
+          文件配置所有服务，一条命令即可创建和启动全部服务。适合开发环境、测试环境和单机生产部署。
+        </p>
+
+        <h3>安装</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># Docker Desktop 已内置。Linux 单独安装：</span>
+<span class="cmd">sudo</span> apt install docker-compose-plugin
+
+<span class="comment"># 验证</span>
+<span class="cmd">docker</span> compose version</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>docker-compose.yml 完整示例</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># docker-compose.yml</span>
+<span class="kw">services:</span>
+  <span class="kw">web:</span>
+    <span class="kw">build:</span>
+      <span class="kw">context:</span> ./web
+      <span class="kw">dockerfile:</span> Dockerfile
+      <span class="kw">args:</span>
+        <span class="kw">APP_VERSION:</span> 2.0
+    <span class="kw">image:</span> myapp-web:2.0
+    <span class="kw">ports:</span>
+      - <span class="str">"8080:80"</span>
+      - <span class="str">"443:443"</span>
+    <span class="kw">environment:</span>
+      <span class="kw">DB_HOST:</span> db
+      <span class="kw">DB_PORT:</span> 5432
+      <span class="kw">REDIS_HOST:</span> redis
+    <span class="kw">env_file:</span>
+      - .env
+    <span class="kw">volumes:</span>
+      - ./web/src:/var/www/html
+      - web-logs:/var/log
+    <span class="kw">networks:</span>
+      - app-net
+    <span class="kw">depends_on:</span>
+      db:
+        <span class="kw">condition:</span> service_healthy
+      redis:
+        <span class="kw">condition:</span> service_started
+    <span class="kw">restart:</span> unless-stopped
+    <span class="kw">deploy:</span>
+      <span class="kw">resources:</span>
+        <span class="kw">limits:</span>
+          <span class="kw">cpus:</span> <span class="str">"0.5"</span>
+          <span class="kw">memory:</span> 512M
+
+  <span class="kw">db:</span>
+    <span class="kw">image:</span> postgres:16-alpine
+    <span class="kw">ports:</span>
+      - <span class="str">"5432:5432"</span>
+    <span class="kw">environment:</span>
+      <span class="kw">POSTGRES_DB:</span> mydb
+      <span class="kw">POSTGRES_USER:</span> admin
+      <span class="kw">POSTGRES_PASSWORD:</span> ${DB_PASSWORD}
+    <span class="kw">volumes:</span>
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    <span class="kw">networks:</span>
+      - app-net
+    <span class="kw">healthcheck:</span>
+      <span class="kw">test:</span> ["CMD-SHELL", "pg_isready -U admin"]
+      <span class="kw">interval:</span> 10s
+      <span class="kw">timeout:</span> 5s
+      <span class="kw">retries:</span> 5
+    <span class="kw">restart:</span> always
+
+  <span class="kw">redis:</span>
+    <span class="kw">image:</span> redis:7-alpine
+    <span class="kw">command:</span> redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    <span class="kw">volumes:</span>
+      - redis-data:/data
+    <span class="kw">networks:</span>
+      - app-net
+    <span class="kw">restart:</span> unless-stopped
+
+<span class="kw">volumes:</span>
+  <span class="kw">pgdata:</span>
+  <span class="kw">redis-data:</span>
+  <span class="kw">web-logs:</span>
+
+<span class="kw">networks:</span>
+  <span class="kw">app-net:</span>
+    <span class="kw">driver:</span> bridge</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>常用命令</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 启动所有服务（后台）</span>
+<span class="cmd">docker</span> compose up <span class="flag">-d</span>
+
+<span class="comment"># 重新构建并启动</span>
+<span class="cmd">docker</span> compose up <span class="flag">-d</span> <span class="flag">--build</span>
+
+<span class="comment"># 查看服务状态</span>
+<span class="cmd">docker</span> compose ps
+
+<span class="comment"># 查看日志</span>
+<span class="cmd">docker</span> compose logs <span class="flag">-f</span>
+<span class="cmd">docker</span> compose logs <span class="flag">-f</span> web
+
+<span class="comment"># 执行命令</span>
+<span class="cmd">docker</span> compose exec web bash
+<span class="cmd">docker</span> compose exec db psql <span class="flag">-U</span> admin mydb
+
+<span class="comment"># 停止和删除</span>
+<span class="cmd">docker</span> compose stop              <span class="comment"># 停止（保留容器）</span>
+<span class="cmd">docker</span> compose down              <span class="comment"># 停止并删除容器/网络</span>
+<span class="cmd">docker</span> compose down <span class="flag">-v</span>           <span class="comment"># 同时删除数据卷（慎用！）</span>
+<span class="cmd">docker</span> compose down <span class="flag">--rmi</span> all     <span class="comment"># 同时删除镜像</span>
+
+<span class="comment"># 扩缩容</span>
+<span class="cmd">docker</span> compose up <span class="flag">-d</span> <span class="flag">--scale</span> web=3
+
+<span class="comment"># 查看配置（验证 YAML）</span>
+<span class="cmd">docker</span> compose config
+
+<span class="comment"># 暂停/恢复</span>
+<span class="cmd">docker</span> compose pause
+<span class="cmd">docker</span> compose unpause</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>环境变量与多环境</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># .env 文件（自动加载）</span>
+DB_PASSWORD=secret123
+REDIS_PASSWORD=redis_secret
+APP_ENV=production
+
+<span class="comment"># 使用多环境配置文件</span>
+<span class="comment"># docker-compose.yml        基础配置</span>
+<span class="comment"># docker-compose.override.yml  开发覆盖（默认自动加载）</span>
+<span class="comment"># docker-compose.prod.yml    生产配置</span>
+
+<span class="cmd">docker</span> compose <span class="flag">-f</span> docker-compose.yml <span class="flag">-f</span> docker-compose.prod.yml up <span class="flag">-d</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>profile 按需启动服务</h3>
+        <div class="code-wrap">
+          <pre><code><span class="kw">services:</span>
+  <span class="kw">web:</span>
+    <span class="kw">image:</span> nginx
+    <span class="kw">profiles:</span> ["frontend"]
+
+  <span class="kw">debug:</span>
+    <span class="kw">image:</span> busybox
+    <span class="kw">profiles:</span> ["debug"]
+
+<span class="comment"># 只启动带 frontend profile 的服务</span>
+<span class="cmd">docker</span> compose <span class="flag">--profile</span> frontend up <span class="flag">-d</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 镜像仓库与分发</h2>
+
+        <h3>9.1 Docker Hub</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 登录 Docker Hub</span>
+<span class="cmd">docker</span> login
+<span class="cmd">docker</span> login <span class="flag">-u</span> username
+
+<span class="comment"># 推送镜像（需要先 tag 为用户名/仓库名）</span>
+<span class="cmd">docker</span> tag myapp:1.0 username/myapp:1.0
+<span class="cmd">docker</span> push username/myapp:1.0
+<span class="cmd">docker</span> push username/myapp:latest
+
+<span class="comment"># 搜索镜像</span>
+<span class="cmd">docker</span> search nginx
+<span class="cmd">docker</span> search <span class="flag">--filter</span> <span class="str">"stars=1000"</span> nginx
+
+<span class="comment"># 登出</span>
+<span class="cmd">docker</span> logout</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>9.2 其他公共仓库</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>GHCR</h4>
+            <p>
+              GitHub Container Registry，与 GitHub Actions 深度集成。<code
+                >ghcr.io/owner/repo</code
+              >
+            </p>
+          </div>
+          <div class="card">
+            <h4>Quay.io</h4>
+            <p>Red Hat 运营，安全扫描能力强。<code>quay.io/owner/repo</code></p>
+          </div>
+          <div class="card">
+            <h4>AWS ECR / GCR / ACR</h4>
+            <p>云厂商提供，与各自云服务深度集成。</p>
+          </div>
+        </div>
+
+        <h3>9.3 搭建私有仓库</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 启动官方 Registry</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">-p</span> 5000:5000 \
+  <span class="flag">--name</span> registry \
+  <span class="flag">--restart</span> always \
+  <span class="flag">-v</span> registry-data:/var/lib/registry \
+  registry:2
+
+<span class="comment"># 标记并推送</span>
+<span class="cmd">docker</span> tag myapp:1.0 localhost:5000/myapp:1.0
+<span class="cmd">docker</span> push localhost:5000/myapp:1.0
+
+<span class="comment"># 拉取</span>
+<span class="cmd">docker</span> pull localhost:5000/myapp:1.0
+
+<span class="comment"># 查看仓库中的镜像</span>
+<span class="cmd">curl</span> http://localhost:5000/v2/_catalog</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>9.4 Harbor</h3>
+        <p>
+          Harbor 是 CNCF 毕业项目，企业级私有镜像仓库，提供：RBAC
+          权限、镜像扫描、签名、复制、Web UI 等功能。适合企业内部使用。
+        </p>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># Harbor 需要 HTTPS，快速安装（测试）</span>
+<span class="comment"># 下载离线安装包</span>
+wget https://github.com/goharbor/harbor/releases/download/v2.10.0/harbor-offline-installer-v2.10.0.tgz
+tar xzf harbor-offline-installer-*.tgz
+cd harbor
+
+<span class="comment"># 配置 harbor.yml，然后执行</span>
+./install.sh</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 日志、监控与排障</h2>
+
+        <h3>10.1 日志管理</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 查看容器日志（已在第4章介绍）</span>
+<span class="cmd">docker</span> logs <span class="flag">-f</span> <span class="flag">--tail</span> 200 mycontainer
+
+<span class="comment"># Docker 日志驱动（daemon.json 全局配置）</span>
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+
+<span class="comment"># 单个容器指定日志驱动</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--log-driver</span> json-file \
+  <span class="flag">--log-opt</span> max-size=50m \
+  <span class="flag">--log-opt</span> max-file=5 \
+  nginx
+
+<span class="comment"># 其他日志驱动</span>
+<span class="comment"># none       — 不输出日志</span>
+<span class="comment"># syslog     — 发送到 syslog</span>
+<span class="comment"># journald   — 发送到 systemd journal</span>
+<span class="comment"># fluentd    — 发送到 Fluentd</span>
+<span class="comment"># awslogs    — 发送到 Amazon CloudWatch</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>10.2 容器排障常用命令</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 查看容器详情（IP、挂载、环境变量等）</span>
+<span class="cmd">docker</span> inspect mycontainer
+
+<span class="comment"># 查看容器内进程</span>
+<span class="cmd">docker</span> top mycontainer
+
+<span class="comment"># 查看资源使用</span>
+<span class="cmd">docker</span> stats
+
+<span class="comment"># 查看容器文件变更（哪些文件被修改）</span>
+<span class="cmd">docker</span> diff mycontainer
+
+<span class="comment"># 查看端口映射</span>
+<span class="cmd">docker</span> port mycontainer
+
+<span class="comment"># 查看容器内文件系统事件（需要 inotify-tools）</span>
+
+<span class="comment"># 容器无法启动时，用 --entrypoint 覆盖排查</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--entrypoint</span> sh myimage
+
+<span class="comment"># 从停止的容器中复制文件</span>
+<span class="cmd">docker</span> cp stopped-container:/app/logs/error.log ./</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>10.3 调试技巧</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 用临时调试容器加入同一网络</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--rm</span> <span class="flag">--network</span> container:web nicolaka/netshoot
+
+<span class="comment"># netshoot 包含：curl, dig, nslookup, tcpdump, iperf, strace 等</span>
+
+<span class="comment"># 进入容器的网络命名空间</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--rm</span> <span class="flag">--pid</span> container:web nicolaka/netshoot bash
+
+<span class="comment"># 在容器命名空间抓包</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--rm</span> \
+  <span class="flag">--net</span> container:web \
+  nicolaka/netshoot tcpdump <span class="flag">-i</span> any port 80</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>10.4 事件与系统信息</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 实时监听 Docker 事件</span>
+<span class="cmd">docker</span> events
+<span class="cmd">docker</span> events <span class="flag">--filter</span> <span class="str">"type=container"</span> <span class="flag">--since</span> 1h
+
+<span class="comment"># 系统磁盘使用</span>
+<span class="cmd">docker</span> system df
+<span class="cmd">docker</span> system df <span class="flag">-v</span>
+
+<span class="comment"># 全面清理（停止的容器、无用网络、悬空镜像、构建缓存）</span>
+<span class="cmd">docker</span> system prune
+<span class="cmd">docker</span> system prune <span class="flag">-a</span> <span class="flag">--volumes</span>   <span class="comment"># 更激进（慎用）</span>
+
+<span class="comment"># Docker 系统信息</span>
+<span class="cmd">docker</span> info
+<span class="cmd">docker</span> version</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>10.5 常见问题排查</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>可能原因</th>
+                <th>排查方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>容器立即退出</td>
+                <td>主进程结束、命令错误、配置问题</td>
+                <td>
+                  <code>docker logs</code> 查看退出日志；检查 CMD/ENTRYPOINT
+                </td>
+              </tr>
+              <tr>
+                <td>端口无法访问</td>
+                <td>端口未映射、服务监听 127.0.0.1、防火墙</td>
+                <td><code>docker port</code>；容器内监听 0.0.0.0</td>
+              </tr>
+              <tr>
+                <td>容器间无法通信</td>
+                <td>不在同一网络、用了默认 bridge</td>
+                <td>创建自定义网络，用容器名访问</td>
+              </tr>
+              <tr>
+                <td>磁盘满</td>
+                <td>日志、镜像层、数据卷堆积</td>
+                <td>
+                  <code>docker system df</code>；<code
+                    >docker system prune</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>OOM 被杀死</td>
+                <td>内存不足、未设限制</td>
+                <td><code>dmesg | grep oom</code>；设置内存限制</td>
+              </tr>
+              <tr>
+                <td>镜像拉取慢</td>
+                <td>网络问题、Docker Hub 被墙</td>
+                <td>配置国内镜像加速器</td>
+              </tr>
+              <tr>
+                <td>构建缓存失效</td>
+                <td>COPY 层在 RUN 之前、指令顺序</td>
+                <td>调整 Dockerfile 指令顺序</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 底层原理与存储驱动</h2>
+
+        <h3>11.1 容器底层技术</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>技术</th>
+                <th>作用</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Linux Namespace</strong></td>
+                <td>资源隔离</td>
+                <td>CLONE_NEWPID/NET/MNT/UTS/IPC/USER/CGROUP</td>
+              </tr>
+              <tr>
+                <td><strong>Cgroups</strong></td>
+                <td>资源限制</td>
+                <td>限制 CPU、内存、IO、PID 数量</td>
+              </tr>
+              <tr>
+                <td><strong>UnionFS</strong></td>
+                <td>分层文件系统</td>
+                <td>Overlay2 为当前主流存储驱动</td>
+              </tr>
+              <tr>
+                <td><strong>Linux Capabilities</strong></td>
+                <td>权限细分</td>
+                <td>将 root 权限拆分为独立能力</td>
+              </tr>
+              <tr>
+                <td><strong>Seccomp</strong></td>
+                <td>系统调用过滤</td>
+                <td>限制容器可调用的 syscall</td>
+              </tr>
+              <tr>
+                <td><strong>AppArmor/SELinux</strong></td>
+                <td>强制访问控制</td>
+                <td>MAC 安全模块</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>11.2 七大 Namespace</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Namespace</th>
+                <th>隔离内容</th>
+                <th>内核版本</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PID</td>
+                <td>进程 ID（容器内进程从 1 开始）</td>
+                <td>2.6.24</td>
+              </tr>
+              <tr>
+                <td>NET</td>
+                <td>网络栈（网卡、IP、路由、端口）</td>
+                <td>2.6.29</td>
+              </tr>
+              <tr>
+                <td>MNT</td>
+                <td>文件系统挂载点</td>
+                <td>2.4.19</td>
+              </tr>
+              <tr>
+                <td>UTS</td>
+                <td>主机名和域名</td>
+                <td>2.6.19</td>
+              </tr>
+              <tr>
+                <td>IPC</td>
+                <td>进程间通信（信号量、消息队列）</td>
+                <td>2.6.19</td>
+              </tr>
+              <tr>
+                <td>USER</td>
+                <td>用户和组 ID 映射</td>
+                <td>3.8</td>
+              </tr>
+              <tr>
+                <td>CGROUP</td>
+                <td>cgroup 根目录视图</td>
+                <td>4.6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>11.3 runc 与 containerd</h3>
+        <div class="diagram">
+          <pre>
+┌─────────────────────────────────────────────┐
+│              docker (CLI)                    │
+├─────────────────────────────────────────────┤
+│              dockerd (API)                   │
+├─────────────────────────────────────────────┤
+│           containerd (gRPC)                  │
+│         容器生命周期管理                       │
+├──────────┬──────────┬───────────────────────┤
+│  runc    │  runc    │  runc  ...             │
+│ (OCI     │ (OCI     │ (OCI                   │
+│  runtime)│  runtime)│  runtime)              │
+├──────────┴──────────┴───────────────────────┤
+│           Linux Kernel                       │
+│  (namespaces, cgroups, overlayfs, netfilter) │
+└─────────────────────────────────────────────┘
+</pre
+          >
+        </div>
+
+        <h3>11.4 存储驱动对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>驱动</th>
+                <th>内核要求</th>
+                <th>特点</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>overlay2</strong></td>
+                <td>4.0+</td>
+                <td>当前推荐，性能好，稳定</td>
+                <td>✅ 默认</td>
+              </tr>
+              <tr>
+                <td>fuse-overlayfs</td>
+                <td>无（用户态）</td>
+                <td>无根容器场景</td>
+                <td>可用</td>
+              </tr>
+              <tr>
+                <td>btrfs/zfs</td>
+                <td>对应文件系统</td>
+                <td>高级特性但有限制</td>
+                <td>可选</td>
+              </tr>
+              <tr>
+                <td>aufs</td>
+                <td>旧内核</td>
+                <td>已弃用</td>
+                <td>❌ 弃用</td>
+              </tr>
+              <tr>
+                <td>devicemapper</td>
+                <td>-</td>
+                <td>已弃用</td>
+                <td>❌ 弃用</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>11.5 OverlayFS 工作原理</h3>
+        <div class="diagram">
+          <pre>
+           Overlay Mount Point
+          ┌─────────────────────┐
+          │   合并视图            │
+          └──────────┬──────────┘
+                     │
+          ┌──────────┴──────────┐
+          ▼                     ▼
+   ┌─────────────┐      ┌─────────────┐
+   │  Upper Dir   │      │  Lower Dir   │
+   │  (可写层)     │      │  (只读层)     │
+   │  容器修改     │      │  镜像层       │
+   └─────────────┘      └─────────────┘
+
+  读文件：先在 Upper 找，找不到再去 Lower
+  写文件：Copy-Up — 从 Lower 复制到 Upper 再修改
+  删除文件：在 Upper 创建 whiteout 标记
+</pre
+          >
+        </div>
+
+        <h3>11.6 BuildKit</h3>
+        <p>BuildKit 是 Docker 的下一代构建引擎，相比旧版构建器：</p>
+        <ul>
+          <li>并行构建独立阶段，大幅提升速度</li>
+          <li>更好的缓存管理（内联缓存、注册表缓存）</li>
+          <li>支持 secrets 和 SSH 挂载（不留在镜像层）</li>
+          <li>跨平台构建（buildx）</li>
+          <li>更精简的构建输出</li>
+        </ul>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 使用 BuildKit 构建</span>
+DOCKER_BUILDKIT=1 <span class="cmd">docker</span> build <span class="flag">-t</span> myapp .
+
+<span class="comment"># Dockerfile 中使用新语法</span>
+<span class="kw"># syntax=docker/dockerfile:1</span>
+
+<span class="comment"># 挂载缓存（不写入镜像层）</span>
+<span class="kw">RUN</span> <span class="flag">--mount</span>=type=cache,target=/var/cache/apt \
+    apt-get update && apt-get install <span class="flag">-y</span> gcc
+
+<span class="comment"># 挂载 secret（不会出现在镜像历史中）</span>
+<span class="kw">RUN</span> <span class="flag">--mount</span>=type=secret,id=npm_token \
+    NPM_TOKEN=$(cat /run/secrets/npm_token) npm install</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 资源限制与 cgroups</h2>
+
+        <h3>12.1 内存限制</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 限制内存 512MB（硬限制）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--memory</span>=512m nginx
+
+<span class="comment"># 内存+交换空间总限制</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--memory</span>=512m <span class="flag">--memory-swap</span>=1g nginx
+<span class="comment"># memory-swap = memory + swap。设为与 memory 相同表示禁用 swap</span>
+
+<span class="comment"># 软限制（内存充足时不强制）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--memory-reservation</span>=256m <span class="flag">--memory</span>=512m nginx
+
+<span class="comment"># OOM 优先级（-1000 到 1000，越低越不容易被 OOM kill）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--oom-score-adj</span>=-500 nginx</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">⚠️ OOM Killer</div>
+          容器超出内存限制会被内核 OOM killer 直接杀死，进程退出码通常为
+          137。通过 <code>docker inspect</code> 查看 OOMKilled 状态确认。
+        </div>
+
+        <h3>12.2 CPU 限制</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 限制最多使用 1.5 个 CPU 核</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--cpus</span>=1.5 nginx
+
+<span class="comment"># 绑定到特定 CPU 核心（0 和 1）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--cpuset-cpus</span>=0,1 nginx
+
+<span class="comment"># CPU 权重（相对权重，默认 1024，越高越优先）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--cpu-shares</span>=512 nginx
+
+<span class="comment"># Compose 中配置</span>
+<span class="kw">deploy:</span>
+  <span class="kw">resources:</span>
+    <span class="kw">limits:</span>
+      <span class="kw">cpus:</span> <span class="str">"0.5"</span>
+      <span class="kw">memory:</span> 256M</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>12.3 GPU 支持</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># NVIDIA GPU（需要 nvidia-container-toolkit）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--gpus</span> all \
+  <span class="flag">--name</span> gpu-training \
+  pytorch/pytorch:latest
+
+<span class="comment"># 指定 GPU</span>
+<span class="cmd">docker</span> run <span class="flag">--gpus</span> <span class="str">"device=0,1"</span> mymlapp</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>12.4 磁盘 I/O 限制</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 限制读带宽（需要 CFQ 调度器，部分系统已不支持）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--device-read-bps</span> /dev/sda:10mb \
+  <span class="flag">--device-write-bps</span> /dev/sda:10mb \
+  myapp
+
+<span class="comment"># PID 数量限制（防 fork bomb）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--pids-limit</span>=100 myapp</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 容器安全</h2>
+
+        <h3>13.1 以非 root 用户运行</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># Dockerfile 中创建并切换用户</span>
+<span class="kw">FROM</span> node:20-alpine
+<span class="kw">WORKDIR</span> /app
+
+<span class="comment"># 创建非 root 用户</span>
+<span class="kw">RUN</span> addgroup -S appgroup && adduser -S appuser -G appgroup
+
+<span class="kw">COPY</span> --chown=appuser:appgroup . .
+<span class="kw">USER</span> appuser
+
+<span class="kw">CMD</span> ["node", "server.js"]</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>13.2 Linux Capabilities</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 默认容器拥有一组受限 capabilities。最小权限原则：只添加需要的</span>
+
+<span class="comment"># 丢弃所有 capabilities，再按需添加</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--cap-drop</span> all \
+  <span class="flag">--cap-add</span> NET_BIND_SERVICE \
+  nginx
+
+<span class="comment"># 常见 capabilities</span>
+<span class="comment"># NET_BIND_SERVICE  — 绑定 <1024 端口</span>
+<span class="comment"># NET_RAW           — 原始套接字（ping 等）</span>
+<span class="comment"># SYS_TIME          — 修改系统时间</span>
+<span class="comment"># CHOWN             — 修改文件所有者（默认有）</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>13.3 只读根文件系统</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 容器根文件系统只读（需要写入的目录挂载 tmpfs 或 volume）</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--read-only</span> \
+  <span class="flag">--tmpfs</span> /tmp \
+  <span class="flag">--tmpfs</span> /run \
+  <span class="flag">-v</span> app-data:/var/lib/app \
+  myapp</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>13.4 Seccomp 与 AppArmor</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 使用自定义 seccomp profile</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> \
+  <span class="flag">--security-opt</span> seccomp=seccomp-profile.json \
+  myapp
+
+<span class="comment"># 禁用 seccomp（不推荐）</span>
+<span class="cmd">docker</span> run <span class="flag">--security-opt</span> seccomp=unconfined myapp
+
+<span class="comment"># 使用 AppArmor profile</span>
+<span class="cmd">docker</span> run <span class="flag">--security-opt</span> apparmor=docker-default myapp
+
+<span class="comment"># 禁止提权</span>
+<span class="cmd">docker</span> run <span class="flag">--security-opt</span> no-new-privileges myapp</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>13.5 安全扫描</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># Docker Scout（Docker 内置）</span>
+<span class="cmd">docker</span> scout cves myapp:1.0
+<span class="cmd">docker</span> scout recommendations myapp:1.0
+
+<span class="comment"># Trivy（开源，推荐）</span>
+<span class="cmd">trivy</span> image myapp:1.0
+<span class="cmd">trivy</span> image <span class="flag">--severity</span> HIGH,CRITICAL myapp:1.0
+<span class="cmd">trivy</span> fs .                        <span class="comment"># 扫描文件系统</span>
+
+<span class="comment"># Grype</span>
+<span class="cmd">grype</span> myapp:1.0</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>13.6 安全检查清单</h3>
+        <ul>
+          <li>
+            ✅ 使用官方或可信基础镜像，固定版本标签（不用 <code>latest</code>）
+          </li>
+          <li>✅ 以非 root 用户运行</li>
+          <li>✅ <code>--cap-drop all</code> 后按需添加</li>
+          <li>✅ 使用只读根文件系统</li>
+          <li>✅ <code>no-new-privileges</code> 禁止提权</li>
+          <li>✅ 定期扫描镜像漏洞，及时更新基础镜像</li>
+          <li>
+            ✅ 不在镜像中硬编码密钥/密码（用 BuildKit secrets 或运行时环境变量）
+          </li>
+          <li>✅ 限制容器资源（CPU/内存/PID）</li>
+          <li>✅ 使用多阶段构建减小攻击面</li>
+          <li>✅ 生产环境不要暴露 Docker daemon TCP 端口</li>
+        </ul>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 镜像优化与多阶段构建</h2>
+
+        <h3>14.1 为什么要优化</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>更快构建</h4>
+            <p>合理利用缓存，减少重复构建时间。</p>
+          </div>
+          <div class="card">
+            <h4>更小体积</h4>
+            <p>减少拉取时间、存储成本和攻击面。</p>
+          </div>
+          <div class="card">
+            <h4>更安全</h4>
+            <p>最小化镜像 = 更少组件 = 更少漏洞。</p>
+          </div>
+        </div>
+
+        <h3>14.2 多阶段构建</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ========== 阶段1: 构建 ==========</span>
+<span class="kw">FROM</span> golang:1.22-alpine AS builder
+
+<span class="kw">WORKDIR</span> /app
+
+<span class="comment"># 先复制依赖清单，利用缓存</span>
+<span class="kw">COPY</span> go.mod go.sum ./
+<span class="kw">RUN</span> go mod download
+
+<span class="comment"># 复制源码并构建</span>
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> CGO_ENABLED=0 GOOS=linux go build \
+    -ldflags=<span class="str">"-s -w -X main.version=1.0"</span> \
+    -o /app/server .
+
+<span class="comment"># ========== 阶段2: 运行 ==========</span>
+<span class="kw">FROM</span> gcr.io/distroless/static-debian12
+
+<span class="kw">WORKDIR</span> /app
+
+<span class="comment"># 只从构建阶段复制最终二进制</span>
+<span class="kw">COPY</span> --from=builder /app/server .
+
+<span class="kw">EXPOSE</span> 8080
+<span class="kw">USER</span> nonroot
+
+<span class="kw">CMD</span> ["./server"]</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>14.3 选择小基础镜像</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>镜像</th>
+                <th>大小（解压后）</th>
+                <th>包管理器</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ubuntu:22.04</code></td>
+                <td>~77 MB</td>
+                <td>apt</td>
+                <td>需要完整环境</td>
+              </tr>
+              <tr>
+                <td><code>debian:bookworm-slim</code></td>
+                <td>~74 MB</td>
+                <td>apt</td>
+                <td>Debian 精简版</td>
+              </tr>
+              <tr>
+                <td><code>alpine:3.19</code></td>
+                <td>~7 MB</td>
+                <td>apk</td>
+                <td>极小（musl libc）</td>
+              </tr>
+              <tr>
+                <td><code>distroless/static</code></td>
+                <td>~2 MB</td>
+                <td>无</td>
+                <td>静态编译二进制</td>
+              </tr>
+              <tr>
+                <td><code>scratch</code></td>
+                <td>0 MB</td>
+                <td>无</td>
+                <td>完全自包含二进制</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>14.4 层缓存最佳实践</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ❌ 不好：每次代码变动都重新安装依赖</span>
+<span class="kw">FROM</span> node:20-alpine
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> npm install
+
+<span class="comment"># ✅ 好：先复制依赖清单，依赖不变就用缓存</span>
+<span class="kw">FROM</span> node:20-alpine
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> package.json package-lock.json ./
+<span class="kw">RUN</span> npm ci
+<span class="kw">COPY</span> . .</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>14.5 其他优化技巧</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 1. 合并 RUN 指令，清理包管理器缓存</span>
+<span class="kw">RUN</span> apt-get update && \
+    apt-get install <span class="flag">-y</span> --no-install-recommends \
+        curl ca-certificates && \
+    rm <span class="flag">-rf</span> /var/lib/apt/lists/*
+
+<span class="comment"># 2. 使用 BuildKit 缓存挂载</span>
+<span class="kw">RUN</span> <span class="flag">--mount</span>=type=cache,target=/var/cache/apt \
+    apt-get update && apt-get install <span class="flag">-y</span> gcc
+
+<span class="comment"># 3. 编译时去除调试信息</span>
+<span class="comment"># Go: -ldflags="-s -w"</span>
+<span class="comment"># C/C++: strip binary</span>
+<span class="kw">RUN</span> strip /app/server
+
+<span class="comment"># 4. 使用 .dockerignore 排除无关文件</span>
+
+<span class="comment"># 5. 固定基础镜像版本（避免不可重复构建）</span>
+<span class="kw">FROM</span> node:20.11.1-alpine3.19
+
+<span class="comment"># 6. 合并多个标签</span>
+<span class="cmd">docker</span> build <span class="flag">-t</span> myapp:1.0.0 <span class="flag">-t</span> myapp:1.0 <span class="flag">-t</span> myapp:latest .</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>14.6 镜像分析工具</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># dive: 分析每层内容和占用</span>
+<span class="cmd">dive</span> myapp:1.0
+
+<span class="comment"># docker history: 查看各层大小</span>
+<span class="cmd">docker</span> history myapp:1.0
+
+<span class="comment"># docker scout: 查看层详情</span>
+<span class="cmd">docker</span> scout sbom myapp:1.0</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 网络原理深入</h2>
+
+        <h3>15.1 Bridge 网络原理</h3>
+        <div class="diagram">
+          <pre>
+  宿主机                         容器A (vethA)        容器B (vethB)
+┌──────────────┐               ┌──────────┐        ┌──────────┐
+│  docker0     │◄── veth pair ─►│ eth0     │        │ eth0     │
+│  172.17.0.1  │               │172.17.0.2│        │172.17.0.3│
+│  (网桥)       │               └──────────┘        └──────────┘
+│              │                    │                   │
+│  iptables    │◄──────── NAT (MASQUERADE) ──────────►│
+│  (DNAT/SNAT) │
+│              │
+│  eth0        │◄──── 外网
+└──────────────┘
+</pre
+          >
+        </div>
+
+        <p>当创建一个 bridge 网络时，Docker 会：</p>
+        <ol class="steps">
+          <li>创建一个 Linux 网桥（如 <code>br-xxxx</code>）</li>
+          <li>
+            为每个容器创建一对 veth pair，一端接入网桥，一端放入容器命名空间
+          </li>
+          <li>通过 iptables NAT 规则让容器可以访问外网</li>
+          <li>通过 DNAT 规则实现端口映射（<code>-p</code>）</li>
+        </ol>
+
+        <h3>15.2 容器访问外部网络</h3>
+        <p>
+          容器访问外网通过 SNAT（源地址转换）：数据包从容器发出后，Docker 在
+          iptables 的 POSTROUTING 链将源 IP 改为宿主机 IP，回程数据包再改回来。
+        </p>
+
+        <h3>15.3 外部访问容器（端口映射）</h3>
+        <p>
+          <code>-p 8080:80</code> 在 iptables 的 PREROUTING/OUTPUT 链添加 DNAT
+          规则，将宿主机 8080 端口的流量转发到容器 IP 的 80 端口。
+        </p>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 查看 NAT 规则</span>
+<span class="cmd">sudo</span> iptables <span class="flag">-t</span> nat <span class="flag">-L</span> <span class="flag">-n</span> <span class="flag">-v</span>
+
+<span class="comment"># 查看 Docker 创建的规则</span>
+<span class="cmd">sudo</span> iptables <span class="flag">-t</span> nat <span class="flag">-L</span> DOCKER</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>15.4 DNS 解析</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># Docker 内置 DNS（127.0.0.11）用于自定义网络中的容器名解析</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--rm</span> <span class="flag">--network</span> mynet busybox nslookup web
+
+<span class="comment"># 自定义 DNS 服务器</span>
+<span class="cmd">docker</span> run <span class="flag">-d</span> <span class="flag">--dns</span> 8.8.8.8 <span class="flag">--dns</span> 114.114.114.114 nginx
+
+<span class="comment"># 在 daemon.json 中全局配置</span>
+{
+  "dns": ["8.8.8.8", "114.114.114.114"]
+}</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>15.5 Overlay 网络</h3>
+        <p>
+          Overlay 网络用于跨主机容器通信，基于 VXLAN 隧道技术。Docker Swarm
+          模式下自动管理，Kubernetes 中通常使用 Calico/Flannel/Cilium 等 CNI
+          插件。
+        </p>
+
+        <h3>15.6 网络调试</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 进入容器网络命名空间调试</span>
+<span class="cmd">docker</span> run <span class="flag">-it</span> <span class="flag">--rm</span> \
+  <span class="flag">--network</span> container:web \
+  nicolaka/netshoot
+
+<span class="comment"># 常用工具</span>
+ip addr           <span class="comment"># 查看网络接口</span>
+ip route          <span class="comment"># 查看路由表</span>
+ss -tlnp          <span class="comment"># 查看监听端口</span>
+dig web           <span class="comment"># DNS 查询</span>
+curl -v http://db:3306  <span class="comment"># 测试连接</span>
+tcpdump <span class="flag">-i</span> any    <span class="comment"># 抓包</span>
+nmap <span class="flag">-sT</span> db        <span class="comment"># 端口扫描</span></code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 容器编排与 Kubernetes</h2>
+
+        <h3>16.1 为什么需要编排</h3>
+        <p>
+          当容器数量增长到几十上百个，需要考虑：服务发现、负载均衡、滚动更新、自动扩缩容、故障自愈、配置管理、密钥管理……这些单靠
+          Docker 和 Compose 无法满足。
+        </p>
+
+        <h3>16.2 Docker Swarm（入门）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 初始化 Swarm 集群</span>
+<span class="cmd">docker</span> swarm init
+
+<span class="comment"># 工作节点加入（命令由 init 输出）</span>
+<span class="cmd">docker</span> swarm join <span class="flag">--token</span> SWMTKN-xxx 192.168.1.10:2377
+
+<span class="comment"># 部署服务</span>
+<span class="cmd">docker</span> service create <span class="flag">--name</span> web <span class="flag">--replicas</span> 3 <span class="flag">-p</span> 8080:80 nginx
+
+<span class="comment"># 扩缩容</span>
+<span class="cmd">docker</span> service scale web=5
+
+<span class="comment"># 滚动更新</span>
+<span class="cmd">docker</span> service update <span class="flag">--image</span> nginx:1.26 web
+
+<span class="comment"># 查看节点和服务</span>
+<span class="cmd">docker</span> node ls
+<span class="cmd">docker</span> service ls</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>16.3 Kubernetes 核心概念</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>概念</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Pod</strong></td>
+                <td>最小调度单元，包含一个或多个共享网络/存储的容器</td>
+              </tr>
+              <tr>
+                <td><strong>Deployment</strong></td>
+                <td>管理 Pod 的副本数、滚动更新和回滚</td>
+              </tr>
+              <tr>
+                <td><strong>Service</strong></td>
+                <td>为一组 Pod 提供稳定的网络访问入口（负载均衡）</td>
+              </tr>
+              <tr>
+                <td><strong>Ingress</strong></td>
+                <td>HTTP/HTTPS 层路由，将外部流量路由到 Service</td>
+              </tr>
+              <tr>
+                <td><strong>ConfigMap</strong></td>
+                <td>非敏感配置管理</td>
+              </tr>
+              <tr>
+                <td><strong>Secret</strong></td>
+                <td>敏感信息管理（密码、密钥）</td>
+              </tr>
+              <tr>
+                <td><strong>Namespace</strong></td>
+                <td>资源隔离和配额</td>
+              </tr>
+              <tr>
+                <td><strong>Node</strong></td>
+                <td>工作节点（物理机/虚拟机）</td>
+              </tr>
+              <tr>
+                <td><strong>Volume</strong></td>
+                <td>Pod 内存储（临时/持久）</td>
+              </tr>
+              <tr>
+                <td><strong>StatefulSet</strong></td>
+                <td>有状态应用管理（数据库等）</td>
+              </tr>
+              <tr>
+                <td><strong>DaemonSet</strong></td>
+                <td>每个 Node 运行一个 Pod（日志、监控代理）</td>
+              </tr>
+              <tr>
+                <td><strong>Job/CronJob</strong></td>
+                <td>一次性任务/定时任务</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>16.4 第一个 K8s Deployment</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># nginx-deployment.yaml</span>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <div class="code-wrap">
+          <pre><code><span class="cmd">kubectl</span> apply <span class="flag">-f</span> nginx-deployment.yaml
+<span class="cmd">kubectl</span> get pods
+<span class="cmd">kubectl</span> get deployments
+<span class="cmd">kubectl</span> get svc
+<span class="cmd">kubectl</span> scale deployment nginx <span class="flag">--replicas</span>=5
+<span class="cmd">kubectl</span> set image deployment/nginx nginx=nginx:1.26</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>16.5 本地 K8s 环境</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>minikube</h4>
+            <p>单机 K8s，适合学习和开发。</p>
+          </div>
+          <div class="card">
+            <h4>kind</h4>
+            <p>Kubernetes IN Docker，用容器运行 K8s，适合 CI 测试。</p>
+          </div>
+          <div class="card">
+            <h4>k3s</h4>
+            <p>Rancher 出品的轻量 K8s，适合边缘和资源受限环境。</p>
+          </div>
+          <div class="card">
+            <h4>Docker Desktop</h4>
+            <p>内置 K8s，一键启用，最省事。</p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 学习建议</div>
+          Docker 是基础，Kubernetes 是编排。先熟练掌握 Docker 和 Compose，再学
+          K8s。推荐用 Docker Desktop 内置 K8s 或 minikube 在本地练习。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> CI/CD 与生产实践</h2>
+
+        <h3>17.1 镜像标签策略</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>标签类型</th>
+                <th>示例</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>语义版本</td>
+                <td><code>myapp:1.2.3</code></td>
+                <td>生产发布（推荐）</td>
+              </tr>
+              <tr>
+                <td>Git SHA</td>
+                <td><code>myapp:a1b2c3d</code></td>
+                <td>CI/CD 精确追溯</td>
+              </tr>
+              <tr>
+                <td>分支名</td>
+                <td><code>myapp:feature-login</code></td>
+                <td>开发测试</td>
+              </tr>
+              <tr>
+                <td><code>latest</code></td>
+                <td><code>myapp:latest</code></td>
+                <td>仅本地开发，生产禁用</td>
+              </tr>
+              <tr>
+                <td>日期</td>
+                <td><code>myapp:2024.01.15</code></td>
+                <td>定期构建</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>17.2 GitHub Actions 构建推送</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># .github/workflows/build.yml</span>
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+
+        <h3>17.3 生产环境最佳实践</h3>
+
+        <h4>镜像管理</h4>
+        <ul>
+          <li>使用固定版本标签，禁止生产使用 <code>latest</code></li>
+          <li>多阶段构建，最小化运行时镜像</li>
+          <li>定期更新基础镜像，扫描漏洞</li>
+          <li>使用镜像签名（Docker Content Trust / Cosign）</li>
+          <li>设置镜像拉取策略为 <code>IfNotPresent</code></li>
+        </ul>
+
+        <h4>运行时</h4>
+        <ul>
+          <li>资源限制（requests + limits）防止资源争抢</li>
+          <li>健康检查（livenessProbe + readinessProbe）</li>
+          <li>优雅关闭：捕获 SIGTERM，设置合理 terminationGracePeriod</li>
+          <li>日志输出到 stdout/stderr，由日志收集器统一处理</li>
+          <li>
+            使用 <code>restart: unless-stopped</code> / <code>always</code>
+          </li>
+          <li>配置和密钥通过环境变量/Secret 注入，不打包进镜像</li>
+        </ul>
+
+        <h4>安全</h4>
+        <ul>
+          <li>非 root 运行，只读根文件系统</li>
+          <li>最小 Capabilities，Seccomp/AppArmor</li>
+          <li>镜像漏洞扫描门禁（阻断高危漏洞）</li>
+          <li>网络策略限制容器间通信</li>
+          <li>不在环境变量中传递密钥（用 Secret 挂载文件）</li>
+        </ul>
+
+        <h4>高可用</h4>
+        <ul>
+          <li>多副本部署，跨节点分布（pod anti-affinity）</li>
+          <li>滚动更新 + 自动回滚</li>
+          <li>配置 PodDisruptionBudget 保证最少可用副本</li>
+          <li>使用 HPA 自动扩缩容</li>
+        </ul>
+
+        <h3>17.4 优雅关闭示例</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment">#!/bin/bash
+# docker-entrypoint.sh — 优雅关闭</span>
+
+<span class="cmd">term_handler</span>() {
+  echo <span class="str">"收到 SIGTERM，开始优雅关闭..."</span>
+  <span class="comment"># 停止接收新请求，完成存量请求</span>
+  kill -TERM "$child" 2>/dev/null
+}
+
+<span class="cmd">trap</span> term_handler SIGTERM SIGINT
+
+<span class="comment"># 启动主进程</span>
+node server.js &amp;
+child=$!
+wait "$child"</code></pre>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 学习路线与资源</h2>
+
+        <h3>学习阶段</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>阶段</th>
+                <th>目标</th>
+                <th>重点内容</th>
+                <th>建议时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>入门</strong></td>
+                <td>理解容器概念，能运行和管理容器</td>
+                <td>镜像/容器操作、Dockerfile 基础、数据卷、网络</td>
+                <td>1-2 周</td>
+              </tr>
+              <tr>
+                <td><strong>进阶</strong></td>
+                <td>能构建多服务应用并优化镜像</td>
+                <td>多阶段构建、Compose、仓库、排障</td>
+                <td>2-4 周</td>
+              </tr>
+              <tr>
+                <td><strong>高级</strong></td>
+                <td>理解原理，能做安全加固和性能调优</td>
+                <td>Namespace/Cgroups、存储驱动、安全、资源限制</td>
+                <td>1-2 月</td>
+              </tr>
+              <tr>
+                <td><strong>精通</strong></td>
+                <td>生产实践和容器编排</td>
+                <td>K8s、CI/CD、网络原理、高可用架构</td>
+                <td>持续</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>推荐书籍</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>《Docker 技术入门与实战》</h4>
+            <p>杨保华等著，中文入门经典，全面覆盖基础。</p>
+          </div>
+          <div class="card">
+            <h4>《Docker 容器与容器云》</h4>
+            <p>孙宏亮著，从 Docker 到 K8s 的进阶路线。</p>
+          </div>
+          <div class="card">
+            <h4>《Kubernetes in Action》</h4>
+            <p>Marko Lukša 著，K8s 学习圣经。</p>
+          </div>
+          <div class="card">
+            <h4>《Docker Deep Dive》</h4>
+            <p>Nigel Poulton 著，深入浅出的 Docker 全书。</p>
+          </div>
+          <div class="card">
+            <h4>《容器与容器云》</h4>
+            <p>浙江大学 SEL 实验室，深入底层原理。</p>
+          </div>
+          <div class="card">
+            <h4>《Production-Ready Microservices》</h4>
+            <p>Susan Fowler，生产级微服务最佳实践。</p>
+          </div>
+        </div>
+
+        <h3>在线资源</h3>
+        <ul>
+          <li>
+            <a
+              href="https://docs.docker.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Docker 官方文档</a
+            >
+            — 最权威的参考
+          </li>
+          <li>
+            <a
+              href="https://docs.docker.com/get-started/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Docker Get Started</a
+            >
+            — 官方入门教程
+          </li>
+          <li>
+            <a
+              href="https://github.com/wsargent/docker-cheat-sheet"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Docker Cheat Sheet</a
+            >
+            — 命令速查表
+          </li>
+          <li>
+            <a
+              href="https://github.com/veggiemonk/awesome-docker"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Awesome Docker</a
+            >
+            — Docker 资源合集
+          </li>
+          <li>
+            <a
+              href="https://play-with-docker.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Play with Docker</a
+            >
+            — 在线免费练习环境
+          </li>
+          <li>
+            <a
+              href="https://kubernetes.io/docs/tutorials/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >K8s 官方教程</a
+            >
+            — Kubernetes Basics
+          </li>
+          <li>
+            <a
+              href="https://labs.iximiuz.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >iximiuz labs</a
+            >
+            — 交互式容器/网络实验
+          </li>
+        </ul>
+
+        <h3>实践项目建议</h3>
+        <ol class="steps">
+          <li>
+            <strong>容器化一个现有应用</strong> — 把你的项目写成 Dockerfile，用
+            Compose 跑起来
+          </li>
+          <li>
+            <strong>多服务应用</strong> — Web + Database + Cache，用 Compose
+            编排，配置数据持久化
+          </li>
+          <li>
+            <strong>CI/CD 流水线</strong> — GitHub Actions
+            自动构建镜像并推送到仓库
+          </li>
+          <li>
+            <strong>搭建私有仓库</strong> — Harbor 或 Registry，配置认证和 HTTPS
+          </li>
+          <li>
+            <strong>本地 K8s</strong> — minikube/kind 部署应用，体验
+            Service、Ingress、HPA
+          </li>
+          <li>
+            <strong>贡献开源</strong> — 给开源项目写 Dockerfile
+            或修复容器相关问题
+          </li>
+        </ol>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 核心心法</div>
+          Docker
+          的学习关键是<strong>理解"一个容器一个进程"和"不可变基础设施"的理念</strong>。不要把容器当虚拟机用（不要在容器里装一堆服务），保持容器的单一职责和无状态性。动手实践
+          > 看文档，边做边查最快。
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>Docker 从入门到精通 · 学习笔记 | 持续更新</p>
+        <p style="margin-top: 8px; font-size: 0.8rem">
+          Build, Ship, Run Anywhere. 🐳
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>

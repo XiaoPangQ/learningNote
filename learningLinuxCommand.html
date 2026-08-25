@@ -1,0 +1,3851 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linux 命令大全 · 全称速记版</title>
+    <style>
+      :root {
+        --bg: #f7f8fa;
+        --panel: #ffffff;
+        --ink: #1f2330;
+        --ink-soft: #5b6472;
+        --ink-faint: #8a93a3;
+        --line: #e4e8ee;
+        --line-soft: #eef1f5;
+        --brand: #2b6cb0;
+        --brand-soft: #eaf1fa;
+        --accent: #0f766e;
+        --warn: #b45309;
+        --code-bg: #f2f4f7;
+        --code-ink: #c7254e;
+        --tag-bg: #eef5ff;
+        --tag-ink: #1a56a8;
+        --shadow:
+          0 1px 3px rgba(20, 30, 50, 0.06), 0 4px 16px rgba(20, 30, 50, 0.05);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+          'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.6;
+        font-size: 15px;
+      }
+      a {
+        color: var(--brand);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .layout {
+        display: flex;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .toc-overlay {
+        display: none;
+      }
+      .toc {
+        width: 240px;
+        flex: 0 0 240px;
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 24px 16px 24px 0;
+        font-size: 13.5px;
+        border-right: 1px solid var(--line);
+      }
+      .home-link {
+        display: block;
+        margin: 0 0 16px;
+        padding: 8px 10px;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--brand);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .home-link:hover {
+        background: var(--brand-soft);
+        border-color: var(--line);
+        text-decoration: none;
+      }
+      .toc h4 {
+        margin: 0;
+        color: var(--ink-faint);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .toc ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .toc-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--ink-faint);
+        padding: 16px 10px 6px;
+        text-transform: uppercase;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 10px;
+        border-left: 2px solid transparent;
+        border-radius: 6px;
+        color: var(--ink-soft);
+        text-decoration: none;
+        line-height: 1.4;
+      }
+      .toc li a:hover {
+        background: var(--brand-soft);
+        color: var(--brand);
+        text-decoration: none;
+      }
+      .toc li a.active {
+        background: var(--brand-soft);
+        border-left-color: var(--brand);
+        color: var(--brand);
+      }
+      .content {
+        flex: 1;
+        min-width: 0;
+        padding: 28px 0 80px 32px;
+        max-width: 920px;
+      }
+      .hero {
+        background: linear-gradient(
+          135deg,
+          #1e3a5f 0%,
+          #2b6cb0 60%,
+          #0f766e 130%
+        );
+        color: #fff;
+        border-radius: 14px;
+        padding: 32px 36px;
+        margin-bottom: 28px;
+        box-shadow: var(--shadow);
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: 26px;
+        letter-spacing: 0.5px;
+      }
+      .hero p {
+        margin: 0 0 16px;
+        opacity: 0.92;
+        font-size: 14.5px;
+        max-width: 680px;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 13px;
+      }
+      .legend span {
+        background: rgba(255, 255, 255, 0.14);
+        padding: 5px 12px;
+        border-radius: 30px;
+      }
+      .legend b {
+        color: #ffe08a;
+      }
+      section {
+        margin-bottom: 38px;
+        scroll-margin-top: 20px;
+      }
+      .sec-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 14px;
+      }
+      .sec-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: var(--brand);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        flex: 0 0 30px;
+      }
+      .sec-head h2 {
+        margin: 0;
+        font-size: 19px;
+        color: var(--ink);
+      }
+      .sec-head .en {
+        color: var(--ink-faint);
+        font-size: 13px;
+        font-weight: 400;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      thead th {
+        background: #f3f6fa;
+        text-align: left;
+        padding: 11px 14px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        border-bottom: 1px solid var(--line);
+        font-size: 12.5px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      tbody td {
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--line-soft);
+        vertical-align: top;
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      tbody tr:hover {
+        background: #fafcfe;
+      }
+      td.cmd {
+        white-space: nowrap;
+        font-family: 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 13.5px;
+      }
+      td.cmd code {
+        background: var(--code-bg);
+        color: var(--code-ink);
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      td.full {
+        font-family: 'SF Mono', Menlo, Consolas, monospace;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      td.full .small {
+        color: var(--ink-faint);
+        font-weight: 400;
+        font-size: 12px;
+        display: block;
+        margin-top: 2px;
+        font-family:
+          -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      td.desc {
+        color: var(--ink-soft);
+        width: 42%;
+      }
+      td.tag {
+        white-space: nowrap;
+        text-align: center;
+      }
+      .chip {
+        display: inline-block;
+        font-size: 11px;
+        padding: 1px 8px;
+        border-radius: 10px;
+        background: var(--tag-bg);
+        color: var(--tag-ink);
+        font-weight: 600;
+      }
+      .chip.high {
+        background: #fef3e8;
+        color: #a05a00;
+      }
+      .chip.mid {
+        background: #eef5ff;
+        color: #1a56a8;
+      }
+      .chip.low {
+        background: #eef7f4;
+        color: #0f766e;
+      }
+      .note {
+        background: #fff8e8;
+        border: 1px solid #f3e2b8;
+        border-left: 4px solid var(--warn);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 14px 0 0;
+        font-size: 13.5px;
+        color: #6b4f1a;
+      }
+      .note b {
+        color: #8a3d00;
+      }
+      .mnemonic-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 14px;
+        margin-top: 6px;
+      }
+      .mn-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+      }
+      .mn-card .k {
+        font-family: 'SF Mono', Menlo, Consolas, monospace;
+        color: var(--code-ink);
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .mn-card .v {
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 13px;
+        margin-top: 4px;
+      }
+      .mn-card .x {
+        color: var(--ink-soft);
+        font-size: 13px;
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+      footer {
+        margin-top: 60px;
+        padding: 24px 0 0;
+        border-top: 1px solid var(--line);
+        color: var(--ink-faint);
+        font-size: 12.5px;
+      }
+      @media (max-width: 880px) {
+        .menu-toggle {
+          display: block;
+          position: fixed;
+          top: 14px;
+          left: 14px;
+          z-index: 110;
+          padding: 9px 13px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel);
+          color: var(--brand);
+          font: inherit;
+          font-size: 13px;
+          font-weight: 600;
+          box-shadow: var(--shadow);
+          cursor: pointer;
+        }
+        .menu-toggle:hover {
+          background: var(--brand-soft);
+        }
+        .toc-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(31, 35, 48, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .toc-overlay.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .layout {
+          padding: 0 14px;
+        }
+        .toc {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 100;
+          width: min(300px, 84vw);
+          height: 100vh;
+          padding: 64px 16px 24px;
+          border-right: 1px solid var(--line);
+          border-bottom: 0;
+          background: var(--panel);
+          box-shadow: 8px 0 24px rgba(20, 30, 50, 0.12);
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+        }
+        .toc.open {
+          transform: translateX(0);
+        }
+        .content {
+          padding: 20px 0 60px 0;
+        }
+        td.desc {
+          width: auto;
+        }
+      }
+      @media print {
+        .toc {
+          display: none;
+        }
+        body {
+          background: #fff;
+          font-size: 12px;
+        }
+        .hero {
+          background: #1e3a5f !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .card {
+          box-shadow: none;
+        }
+        section {
+          page-break-inside: avoid;
+          margin-bottom: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-controls="toc"
+      aria-expanded="false">
+      ☰ 目录
+    </button>
+    <div class="toc-overlay" id="tocOverlay"></div>
+    <div class="layout">
+      <nav class="toc" id="toc">
+        <a class="home-link" href="index.html">← 返回首页</a>
+        <h4>目录 · Contents</h4>
+        <ul>
+          <li class="toc-section-title">入门篇</li>
+          <li><a href="#sec-01">1. 文件与目录操作</a></li>
+          <li><a href="#sec-02">2. 文件内容查看</a></li>
+          <li><a href="#sec-03">3. 文件查找与定位</a></li>
+          <li><a href="#sec-04">4. 文本处理三剑客</a></li>
+          <li><a href="#sec-05">5. 文本处理其它</a></li>
+          <li class="toc-section-title">进阶篇</li>
+          <li><a href="#sec-06">6. 文件权限管理</a></li>
+          <li><a href="#sec-07">7. 用户与组管理</a></li>
+          <li><a href="#sec-08">8. 进程与作业管理</a></li>
+          <li><a href="#sec-09">9. 系统信息查询</a></li>
+          <li><a href="#sec-10">10. 磁盘与存储</a></li>
+          <li><a href="#sec-11">11. 网络命令</a></li>
+          <li class="toc-section-title">高级篇</li>
+          <li><a href="#sec-12">12. 压缩与归档</a></li>
+          <li><a href="#sec-13">13. 软件包管理</a></li>
+          <li><a href="#sec-14">14. I/O 重定向与管道</a></li>
+          <li><a href="#sec-15">15. Shell 内置命令</a></li>
+          <li><a href="#sec-16">16. 系统控制与服务</a></li>
+          <li class="toc-section-title">精通篇</li>
+          <li><a href="#sec-17">17. 文件系统操作</a></li>
+          <li><a href="#sec-18">18. 编辑器</a></li>
+          <li><a href="#sec-19">19. 实用小工具</a></li>
+          <li><a href="#sec-20">20. 特殊符号速记</a></li>
+          <li><a href="#sec-21">21. 易混命令记忆口诀</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <header class="hero">
+          <h1>Linux 命令大全 · 全称速记版</h1>
+          <p>
+            每条命令右侧标注其英文全称（Full
+            Name），帮助理解缩写由来、强化记忆。共 21 个分类、300+ 条命令。带 ★
+            的是高频必会命令；部分命令的全称学界有争议，已在备注中说明。
+          </p>
+          <div class="legend">
+            <span>★ 高频必会</span>
+            <span><b>全称</b> = 命令缩写的英文展开</span>
+            <span>说明 = 用途一句话</span>
+          </div>
+        </header>
+
+        <section id="sec-01">
+          <div class="sec-head">
+            <div class="sec-num">01</div>
+            <h2>
+              文件与目录操作
+              <span class="en">File &amp; Directory Operations</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>ls</code> ★</td>
+                  <td class="full">
+                    LiSt<span class="small">列出目录内容</span>
+                  </td>
+                  <td class="desc">
+                    列出目录下文件；-l 长格式、-a 含隐藏、-h 人类可读大小
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>cd</code> ★</td>
+                  <td class="full">
+                    Change Directory<span class="small">切换目录</span>
+                  </td>
+                  <td class="desc">
+                    进入指定目录；cd ~ 回家、cd - 回上次目录、cd .. 上一级
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pwd</code> ★</td>
+                  <td class="full">
+                    Print Working Directory<span class="small"
+                      >打印工作目录</span
+                    >
+                  </td>
+                  <td class="desc">显示当前所在目录的绝对路径</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mkdir</code> ★</td>
+                  <td class="full">
+                    MaKe DIRectory<span class="small">创建目录</span>
+                  </td>
+                  <td class="desc">创建目录；-p 递归创建父目录、-m 设置权限</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rmdir</code></td>
+                  <td class="full">
+                    ReMove DIRectory<span class="small">删除空目录</span>
+                  </td>
+                  <td class="desc">只能删除空目录；非空目录请用 rm -r</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rm</code> ★</td>
+                  <td class="full">ReMove<span class="small">删除</span></td>
+                  <td class="desc">
+                    删除文件/目录；-r 递归、-f 强制、-i 确认。危险命令！
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>cp</code> ★</td>
+                  <td class="full">CoPy<span class="small">复制</span></td>
+                  <td class="desc">
+                    复制文件或目录；-r 递归复制目录、-p 保留属性、-i 确认
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mv</code> ★</td>
+                  <td class="full">
+                    MoVe<span class="small">移动/重命名</span>
+                  </td>
+                  <td class="desc">
+                    移动文件或重命名；同分区 mv 不复制数据，仅改目录项
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>touch</code></td>
+                  <td class="full">
+                    touch<span class="small">（非缩写）触碰</span>
+                  </td>
+                  <td class="desc">更新文件时间戳；文件不存在则创建空文件</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ln</code></td>
+                  <td class="full">LiNk<span class="small">链接</span></td>
+                  <td class="desc">
+                    创建链接；-s 软链接（符号链接），默认硬链接
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rename</code></td>
+                  <td class="full">
+                    rename<span class="small">（非缩写）重命名</span>
+                  </td>
+                  <td class="desc">批量重命名文件，支持正则表达式</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>basename</code></td>
+                  <td class="full">
+                    BASE NAME<span class="small">取基本名</span>
+                  </td>
+                  <td class="desc">去掉路径和后缀，只留文件名</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dirname</code></td>
+                  <td class="full">
+                    DIRectory NAME<span class="small">取目录名</span>
+                  </td>
+                  <td class="desc">去掉文件名，只留路径部分</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>realpath</code></td>
+                  <td class="full">
+                    REAL PATH<span class="small">真实路径</span>
+                  </td>
+                  <td class="desc">输出文件的绝对路径，解析符号链接</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>readlink</code></td>
+                  <td class="full">
+                    read LINK<span class="small">读取链接</span>
+                  </td>
+                  <td class="desc">读取符号链接指向的目标；-f 一路解析到底</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>stat</code></td>
+                  <td class="full">
+                    STATus / STATistic<span class="small">状态/统计</span>
+                  </td>
+                  <td class="desc">
+                    显示文件的 inode、大小、三个时间等详细信息
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>file</code> ★</td>
+                  <td class="full">
+                    file<span class="small">（非缩写）文件类型</span>
+                  </td>
+                  <td class="desc">探测文件真实类型（文本/二进制/压缩包等）</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tree</code></td>
+                  <td class="full">
+                    tree<span class="small">（非缩写）树状</span>
+                  </td>
+                  <td class="desc">以树形结构显示目录；-L n 控制深度</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pushd / popd</code></td>
+                  <td class="full">
+                    push/pop Directory<span class="small">压入/弹出目录栈</span>
+                  </td>
+                  <td class="desc">目录栈操作，方便在多个目录间快速切换</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-02">
+          <div class="sec-head">
+            <div class="sec-num">02</div>
+            <h2>文件内容查看 <span class="en">File Content Viewing</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>cat</code> ★</td>
+                  <td class="full">
+                    conCATenate<span class="small">拼接/连接</span>
+                  </td>
+                  <td class="desc">
+                    查看/拼接文件内容；-n 显示行号、-A 显示特殊字符
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tac</code></td>
+                  <td class="full">
+                    TAC<span class="small">cat 的逆序（首字母反转）</span>
+                  </td>
+                  <td class="desc">倒序输出文件内容（最后一行最先显示）</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>more</code></td>
+                  <td class="full">
+                    more<span class="small">（非缩写）更多</span>
+                  </td>
+                  <td class="desc">分页查看，只能向下翻页；空格翻页、q 退出</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>less</code> ★</td>
+                  <td class="full">
+                    less<span class="small">more 升级版，"less is more"</span>
+                  </td>
+                  <td class="desc">分页查看，可上下翻页、搜索；比 more 强大</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>head</code> ★</td>
+                  <td class="full">
+                    head<span class="small">（非缩写）头部</span>
+                  </td>
+                  <td class="desc">查看文件开头；-n 20 看前 20 行</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tail</code> ★</td>
+                  <td class="full">
+                    tail<span class="small">（非缩写）尾部</span>
+                  </td>
+                  <td class="desc">
+                    查看文件结尾；-f 实时追踪日志、-n 20 看后 20 行
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nl</code></td>
+                  <td class="full">
+                    Number Lines<span class="small">行号</span>
+                  </td>
+                  <td class="desc">类似 cat -n，对文件内容加行号输出</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rev</code></td>
+                  <td class="full">REVerse<span class="small">反转</span></td>
+                  <td class="desc">将每行字符顺序反转（如 abc → cba）</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>od</code></td>
+                  <td class="full">
+                    Octal Dump<span class="small">八进制转储</span>
+                  </td>
+                  <td class="desc">以八进制/十六进制查看二进制文件</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>hexdump</code></td>
+                  <td class="full">
+                    hex DUMP<span class="small">十六进制转储</span>
+                  </td>
+                  <td class="desc">十六进制查看文件内容，-C 经典显示</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>xxd</code></td>
+                  <td class="full">
+                    xxd<span class="small">vi 作者出品，hex 对照查看</span>
+                  </td>
+                  <td class="desc">十六进制与 ASCII 对照查看/编辑</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>strings</code></td>
+                  <td class="full">
+                    strings<span class="small">（非缩写）字符串</span>
+                  </td>
+                  <td class="desc">从二进制文件中提取可打印字符串</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>cat</b> 原意是「拼接」（concatenate）而不是「猫」；<b
+              >less</b
+            >
+            名字是对 more 的调侃，口号 "less is more"（少即是多）。
+          </div>
+        </section>
+
+        <section id="sec-03">
+          <div class="sec-head">
+            <div class="sec-num">03</div>
+            <h2>
+              文件查找与定位 <span class="en">File Search &amp; Location</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>find</code> ★</td>
+                  <td class="full">
+                    find<span class="small">（非缩写）查找</span>
+                  </td>
+                  <td class="desc">
+                    按条件查找文件；-name/-type/-size/-mtime，可对结果 -exec
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>locate</code></td>
+                  <td class="full">
+                    locate<span class="small">（非缩写）定位</span>
+                  </td>
+                  <td class="desc">
+                    基于预建数据库快速查找，比 find 快但非实时
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>updatedb</code></td>
+                  <td class="full">
+                    UPDATE Data Base<span class="small">更新数据库</span>
+                  </td>
+                  <td class="desc">更新 locate 使用的文件名数据库</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>which</code> ★</td>
+                  <td class="full">
+                    which<span class="small">（非缩写）哪一个</span>
+                  </td>
+                  <td class="desc">在 PATH 中查找可执行命令的位置</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>whereis</code></td>
+                  <td class="full">
+                    where IS<span class="small">在哪里</span>
+                  </td>
+                  <td class="desc">查找命令的二进制、源码、man 路径</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>type</code></td>
+                  <td class="full">
+                    type<span class="small">（非缩写）类型</span>
+                  </td>
+                  <td class="desc">Shell 内置，显示命令是别名/内置/外部文件</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-04">
+          <div class="sec-head">
+            <div class="sec-num">04</div>
+            <h2>文本处理三剑客 <span class="en">grep / sed / awk</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>grep</code> ★</td>
+                  <td class="full">
+                    Global Regular Expression Print<span class="small"
+                      >源自 ed 命令 g/re/p</span
+                    >
+                  </td>
+                  <td class="desc">
+                    按正则搜索文本行；-i 忽略大小写、-v 反向、-n 行号、-r 递归
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>egrep</code></td>
+                  <td class="full">
+                    Extended GREP<span class="small">扩展 grep</span>
+                  </td>
+                  <td class="desc">
+                    支持扩展正则（+、?、|、()）；现推荐 grep -E
+                  </td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fgrep</code></td>
+                  <td class="full">
+                    Fixed-string GREP<span class="small">固定串 grep</span>
+                  </td>
+                  <td class="desc">
+                    不支持正则，按字面搜索更快；现推荐 grep -F
+                  </td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sed</code> ★</td>
+                  <td class="full">
+                    Stream EDitor<span class="small">流编辑器</span>
+                  </td>
+                  <td class="desc">
+                    流式文本编辑；-n 安静、-i 直接改文件、s/old/new/ 替换
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>awk</code> ★</td>
+                  <td class="full">
+                    Aho · Weinberger · Kernighan<span class="small"
+                      >三位作者姓氏首字母</span
+                    >
+                  </td>
+                  <td class="desc">
+                    按行按列处理文本；擅长字段切割、统计、报表
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>gawk</code></td>
+                  <td class="full">
+                    GNU AWK<span class="small">GNU 版 awk</span>
+                  </td>
+                  <td class="desc">awk 的 GNU 实现，扩展功能最全</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>grep</b> 不是英文单词，而是 ed 编辑器命令
+            <b>g/re/p</b>（global /正则/ print）的缩写；<b>awk</b>
+            是三位发明者姓氏首字母，并非鸟叫。
+          </div>
+        </section>
+
+        <section id="sec-05">
+          <div class="sec-head">
+            <div class="sec-num">05</div>
+            <h2>
+              文本处理其它工具 <span class="en">Text Processing Utilities</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>cut</code> ★</td>
+                  <td class="full">
+                    cut<span class="small">（非缩写）切割</span>
+                  </td>
+                  <td class="desc">
+                    按列/字符/字段截取；-d 分隔符、-f 字段、-c 字符范围
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>paste</code></td>
+                  <td class="full">
+                    paste<span class="small">（非缩写）粘贴</span>
+                  </td>
+                  <td class="desc">将多个文件按行横向合并，-d 指定分隔符</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>join</code></td>
+                  <td class="full">
+                    join<span class="small">（非缩写）连接</span>
+                  </td>
+                  <td class="desc">按公共字段连接两个文件，类似 SQL JOIN</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sort</code> ★</td>
+                  <td class="full">
+                    sort<span class="small">（非缩写）排序</span>
+                  </td>
+                  <td class="desc">
+                    排序行；-n 数字序、-r 逆序、-k 按列、-u 去重
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>uniq</code> ★</td>
+                  <td class="full">UNIQue<span class="small">唯一</span></td>
+                  <td class="desc">
+                    去重相邻重复行；-c 计数、-d 只显重复。常配 sort 用
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>comm</code></td>
+                  <td class="full">common<span class="small">公共</span></td>
+                  <td class="desc">比较两个已排序文件的行，输出三列差异</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>diff</code> ★</td>
+                  <td class="full">
+                    DIFFerence<span class="small">差异</span>
+                  </td>
+                  <td class="desc">
+                    逐行比较两个文件差异；patch 补丁源自 diff 输出
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>cmp</code></td>
+                  <td class="full">CoMPare<span class="small">比较</span></td>
+                  <td class="desc">字节级比较两个文件，显示第一处不同</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>wc</code> ★</td>
+                  <td class="full">
+                    Word Count<span class="small">字数统计</span>
+                  </td>
+                  <td class="desc">
+                    统计行/单词/字节数；-l 行、-w 词、-c 字节
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tr</code> ★</td>
+                  <td class="full">
+                    TRanslate / TRansliterate<span class="small"
+                      >翻译/转写</span
+                    >
+                  </td>
+                  <td class="desc">
+                    字符替换/删除/压缩；如 tr 'a-z' 'A-Z' 转大写
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tee</code> ★</td>
+                  <td class="full">
+                    tee<span class="small">T 形水管接头（非缩写）</span>
+                  </td>
+                  <td class="desc">数据流分叉：既写到文件又显示到屏幕</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>xargs</code> ★</td>
+                  <td class="full">
+                    eXtended ARGuments<span class="small">扩展参数</span>
+                  </td>
+                  <td class="desc">
+                    把 stdin 当参数传给后接命令；-I 指定占位符
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fmt</code></td>
+                  <td class="full">ForMat<span class="small">格式化</span></td>
+                  <td class="desc">把文本按指定宽度重新排版换行</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fold</code></td>
+                  <td class="full">
+                    fold<span class="small">（非缩写）折叠</span>
+                  </td>
+                  <td class="desc">按列宽强制换行，不区分单词边界</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>expand</code></td>
+                  <td class="full">
+                    expand<span class="small">（非缩写）展开</span>
+                  </td>
+                  <td class="desc">把 Tab 转成空格</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>unexpand</code></td>
+                  <td class="full">
+                    unexpand<span class="small">（非缩写）反展开</span>
+                  </td>
+                  <td class="desc">把空格转回 Tab</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>col</code></td>
+                  <td class="full">COLumn<span class="small">列</span></td>
+                  <td class="desc">过滤控制字符，man 转纯文本常用</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>column</code></td>
+                  <td class="full">
+                    column<span class="small">（非缩写）列</span>
+                  </td>
+                  <td class="desc">把文本格式化成对齐表格，-t 制表</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>seq</code></td>
+                  <td class="full">SEQuence<span class="small">序列</span></td>
+                  <td class="desc">打印数字序列；seq 1 10 → 1 到 10</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>split</code></td>
+                  <td class="full">
+                    split<span class="small">（非缩写）拆分</span>
+                  </td>
+                  <td class="desc">把大文件按行/字节切分成小文件</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>csplit</code></td>
+                  <td class="full">
+                    context split<span class="small">按内容拆分</span>
+                  </td>
+                  <td class="desc">按正则模式把文件切成多段</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>shuf</code></td>
+                  <td class="full">
+                    SHUFfle<span class="small">随机打乱</span>
+                  </td>
+                  <td class="desc">随机打乱输入行顺序</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-06">
+          <div class="sec-head">
+            <div class="sec-num">06</div>
+            <h2>
+              文件权限管理 <span class="en">File Permission Management</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>chmod</code> ★</td>
+                  <td class="full">
+                    CHange MODe<span class="small">改变模式</span>
+                  </td>
+                  <td class="desc">
+                    修改权限位；chmod 755 file 或 chmod u+x file
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chown</code> ★</td>
+                  <td class="full">
+                    CHange OWNer<span class="small">改变属主</span>
+                  </td>
+                  <td class="desc">
+                    修改文件所有者；-R 递归，user:group 同时改组
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chgrp</code></td>
+                  <td class="full">
+                    CHange GRouP<span class="small">改变属组</span>
+                  </td>
+                  <td class="desc">修改文件所属组，chown 的子集功能</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>umask</code> ★</td>
+                  <td class="full">
+                    User file-creation MASK<span class="small"
+                      >用户创建掩码</span
+                    >
+                  </td>
+                  <td class="desc">
+                    设置新建文件默认权限掩码；0022 → 目录755/文件644
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chattr</code></td>
+                  <td class="full">
+                    CHange ATTRibute<span class="small">改变属性</span>
+                  </td>
+                  <td class="desc">设置扩展属性；+i 不可改、+a 只追加</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lsattr</code></td>
+                  <td class="full">
+                    LiSt ATTRibute<span class="small">列出属性</span>
+                  </td>
+                  <td class="desc">列出文件扩展属性</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>setfacl</code></td>
+                  <td class="full">
+                    SET File ACL<span class="small">设置 ACL</span>
+                  </td>
+                  <td class="desc">设置访问控制列表，比 chmod 更细粒度</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>getfacl</code></td>
+                  <td class="full">
+                    GET File ACL<span class="small">查看 ACL</span>
+                  </td>
+                  <td class="desc">查看访问控制列表</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>setuid / setgid</code></td>
+                  <td class="full">
+                    SET User/Group ID<span class="small">设用户/组 ID 位</span>
+                  </td>
+                  <td class="desc">
+                    权限位 4xxx/2xxx，运行时以属主/属组身份执行
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sticky</code></td>
+                  <td class="full">
+                    sticky bit<span class="small">粘滞位</span>
+                  </td>
+                  <td class="desc">
+                    权限位 1xxx，目录下文件仅属主可删（/tmp）
+                  </td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            权限口诀：<b>r=4 w=2 x=1</b>，三组分别对应
+            <b>属主 u · 属组 g · 其他 o</b>；特殊位
+            <b>setuid=4 setgid=2 sticky=1</b> 写在最前。
+          </div>
+        </section>
+
+        <section id="sec-07">
+          <div class="sec-head">
+            <div class="sec-num">07</div>
+            <h2>
+              用户与组管理 <span class="en">User &amp; Group Management</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>useradd</code></td>
+                  <td class="full">
+                    USER ADD<span class="small">添加用户</span>
+                  </td>
+                  <td class="desc">
+                    创建新用户；-m 建家目录、-s 指定 shell、-G 附加组
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>adduser</code></td>
+                  <td class="full">
+                    ADD USER<span class="small">添加用户</span>
+                  </td>
+                  <td class="desc">Debian 系交互式创建用户，更友好</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>usermod</code></td>
+                  <td class="full">
+                    USER MODify<span class="small">修改用户</span>
+                  </td>
+                  <td class="desc">修改用户属性；-aG 追加附加组、-L 锁定</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>userdel</code></td>
+                  <td class="full">
+                    USER DELete<span class="small">删除用户</span>
+                  </td>
+                  <td class="desc">删除用户；-r 一并删除家目录</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>groupadd</code></td>
+                  <td class="full">
+                    GROUP ADD<span class="small">添加组</span>
+                  </td>
+                  <td class="desc">创建新用户组</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>groupmod</code></td>
+                  <td class="full">
+                    GROUP MODify<span class="small">修改组</span>
+                  </td>
+                  <td class="desc">修改组属性，如 GID 或组名</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>groupdel</code></td>
+                  <td class="full">
+                    GROUP DELete<span class="small">删除组</span>
+                  </td>
+                  <td class="desc">删除用户组</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>gpasswd</code></td>
+                  <td class="full">
+                    Group PASSWorD<span class="small">组密码</span>
+                  </td>
+                  <td class="desc">管理组管理员与组密码；-a 加成员、-d 移除</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>passwd</code> ★</td>
+                  <td class="full">PASSWorD<span class="small">密码</span></td>
+                  <td class="desc">
+                    修改用户密码；-l 锁定、-d 删除密码、-S 状态
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chage</code></td>
+                  <td class="full">
+                    CHANGE<span class="small">改变（密码时效）</span>
+                  </td>
+                  <td class="desc">修改密码过期策略；-l 查看、-M 最长天数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chsh</code></td>
+                  <td class="full">
+                    Change SHell<span class="small">改 shell</span>
+                  </td>
+                  <td class="desc">修改用户的登录 shell</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chfn</code></td>
+                  <td class="full">
+                    Change Finger Name<span class="small">改 finger 信息</span>
+                  </td>
+                  <td class="desc">修改用户全名、电话等 finger 信息</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>id</code> ★</td>
+                  <td class="full">IDentity<span class="small">身份</span></td>
+                  <td class="desc">显示用户的 uid/gid 及所属组</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>who</code></td>
+                  <td class="full">
+                    who<span class="small">（非缩写）谁</span>
+                  </td>
+                  <td class="desc">列出当前所有登录用户</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>whoami</code> ★</td>
+                  <td class="full">
+                    WHO AM I<span class="small">我是谁</span>
+                  </td>
+                  <td class="desc">显示当前用户的用户名</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>w</code></td>
+                  <td class="full">
+                    Who<span class="small">（who 的简写）</span>
+                  </td>
+                  <td class="desc">显示登录用户及其正在做的事</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>last</code></td>
+                  <td class="full">
+                    last<span class="small">（非缩写）最近</span>
+                  </td>
+                  <td class="desc">显示用户最近登录记录，读 /var/log/wtmp</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lastlog</code></td>
+                  <td class="full">
+                    last LOG<span class="small">最近登录</span>
+                  </td>
+                  <td class="desc">查看每个用户最后一次登录时间</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>su</code> ★</td>
+                  <td class="full">
+                    Substitute User<span class="small"
+                      >替换用户（官方说法）</span
+                    >
+                  </td>
+                  <td class="desc">切换用户；su - 完整切换环境变量</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sudo</code> ★</td>
+                  <td class="full">
+                    Super User DO<span class="small">以超级用户执行</span>
+                  </td>
+                  <td class="desc">
+                    以其他用户身份执行命令；-u 指定、-i 登录 shell
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>visudo</code></td>
+                  <td class="full">
+                    VI SUDO<span class="small">vi 编辑 sudoers</span>
+                  </td>
+                  <td class="desc">安全编辑 /etc/sudoers，自带语法检查</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>newgrp</code></td>
+                  <td class="full">
+                    NEW GRouP<span class="small">切换主组</span>
+                  </td>
+                  <td class="desc">临时切换当前会话的主组</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>su</b> 官方手册是 Substitute
+            User（替换用户），并非坊间流传的 "Switch User"；<b>sudo</b> = Super
+            User DO，"用 root 身份去做"。
+          </div>
+        </section>
+
+        <section id="sec-08">
+          <div class="sec-head">
+            <div class="sec-num">08</div>
+            <h2>
+              进程与作业管理
+              <span class="en">Process &amp; Job Management</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>ps</code> ★</td>
+                  <td class="full">
+                    Process Status<span class="small">进程状态</span>
+                  </td>
+                  <td class="desc">查看进程快照；aux 或 -ef 看全部进程</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>top</code> ★</td>
+                  <td class="full">
+                    top<span class="small">（非缩写）顶部</span>
+                  </td>
+                  <td class="desc">实时动态查看系统资源与进程排名</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>htop</code></td>
+                  <td class="full">
+                    Hisham's top<span class="small">top 的增强版</span>
+                  </td>
+                  <td class="desc">交互更友好的进程查看器，彩色+鼠标</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>kill</code> ★</td>
+                  <td class="full">
+                    kill<span class="small">（非缩写）杀</span>
+                  </td>
+                  <td class="desc">
+                    向进程发信号；-9 SIGKILL 强杀、-15 默认终止
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>killall</code></td>
+                  <td class="full">
+                    KILL ALL<span class="small">杀全部同名</span>
+                  </td>
+                  <td class="desc">按进程名杀掉所有匹配进程</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pkill</code></td>
+                  <td class="full">
+                    Process KILL<span class="small">按名杀进程</span>
+                  </td>
+                  <td class="desc">按名称/属性匹配发信号，更灵活</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pstree</code></td>
+                  <td class="full">
+                    Process Status TREE<span class="small">进程树</span>
+                  </td>
+                  <td class="desc">树状显示进程父子关系</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pidof</code></td>
+                  <td class="full">PID OF<span class="small">…的 PID</span></td>
+                  <td class="desc">根据进程名查 PID</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pgrep</code></td>
+                  <td class="full">
+                    Process GREP<span class="small">进程 grep</span>
+                  </td>
+                  <td class="desc">按条件查 PID，类似 ps|grep 但更简洁</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>jobs</code></td>
+                  <td class="full">
+                    jobs<span class="small">（非缩写）作业</span>
+                  </td>
+                  <td class="desc">查看当前 Shell 的后台作业</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>bg</code></td>
+                  <td class="full">
+                    BackGround<span class="small">后台</span>
+                  </td>
+                  <td class="desc">将挂起作业放到后台继续运行</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fg</code></td>
+                  <td class="full">
+                    ForeGround<span class="small">前台</span>
+                  </td>
+                  <td class="desc">将后台作业拉到前台运行</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nohup</code> ★</td>
+                  <td class="full">
+                    NO HangUP<span class="small">不挂断</span>
+                  </td>
+                  <td class="desc">让命令在退出终端后继续运行</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>disown</code></td>
+                  <td class="full">
+                    disown<span class="small">（非缩写）脱离</span>
+                  </td>
+                  <td class="desc">将作业从 Shell 作业表移除，避免被 SIGHUP</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nice</code></td>
+                  <td class="full">
+                    nice<span class="small">（非缩写）优先级</span>
+                  </td>
+                  <td class="desc">启动进程时指定优先级，-20 最高、19 最低</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>renice</code></td>
+                  <td class="full">
+                    re-NICE<span class="small">重设优先级</span>
+                  </td>
+                  <td class="desc">修改已运行进程的优先级</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>at</code></td>
+                  <td class="full">
+                    at<span class="small">（非缩写）在…时</span>
+                  </td>
+                  <td class="desc">一次性定时执行任务</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>crontab</code> ★</td>
+                  <td class="full">
+                    CRON TABle<span class="small">cron 表</span>
+                  </td>
+                  <td class="desc">
+                    编辑定时任务表；-l 查看、-e 编辑、-r 删除
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>watch</code></td>
+                  <td class="full">
+                    watch<span class="small">（非缩写）监视</span>
+                  </td>
+                  <td class="desc">周期性执行某命令并刷新显示，-n 秒数</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>time</code></td>
+                  <td class="full">
+                    time<span class="small">（非缩写）计时</span>
+                  </td>
+                  <td class="desc">统计命令的耗时</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>strace</code></td>
+                  <td class="full">
+                    System TRACE<span class="small">系统调用追踪</span>
+                  </td>
+                  <td class="desc">追踪进程的系统调用与信号</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ltrace</code></td>
+                  <td class="full">
+                    Library TRACE<span class="small">库调用追踪</span>
+                  </td>
+                  <td class="desc">追踪进程调用的动态库函数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lsof</code> ★</td>
+                  <td class="full">
+                    LiSt Open Files<span class="small">列出打开的文件</span>
+                  </td>
+                  <td class="desc">查看进程打开的文件/套接字/端口，排障神器</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>nohup</b> = No HangUP，HangUP（挂断）指终端关闭时发出的
+            SIGHUP 信号；<b>crontab</b> 的 cron 来自希腊语
+            <b>chronos</b>（时间）。
+          </div>
+        </section>
+
+        <section id="sec-09">
+          <div class="sec-head">
+            <div class="sec-num">09</div>
+            <h2>系统信息查询 <span class="en">System Information</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>uname</code> ★</td>
+                  <td class="full">
+                    UNIX NAME<span class="small">系统名</span>
+                  </td>
+                  <td class="desc">显示系统信息；-a 全部、-r 内核版本</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>hostname</code> ★</td>
+                  <td class="full">
+                    HOST NAME<span class="small">主机名</span>
+                  </td>
+                  <td class="desc">查看/设置主机名；-I 显示 IP</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>hostnamectl</code></td>
+                  <td class="full">
+                    HOST NAME ConTroL<span class="small">主机名控制</span>
+                  </td>
+                  <td class="desc">systemd 下设置主机名等系统信息</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>uptime</code> ★</td>
+                  <td class="full">
+                    up time<span class="small">运行时长</span>
+                  </td>
+                  <td class="desc">查看系统已运行时长与平均负载</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>date</code> ★</td>
+                  <td class="full">
+                    date<span class="small">（非缩写）日期</span>
+                  </td>
+                  <td class="desc">查看/设置系统时间；-s 设置、+%F 格式化</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>cal</code></td>
+                  <td class="full">CALendar<span class="small">日历</span></td>
+                  <td class="desc">显示日历；cal -3 显示前后三月</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>timedatectl</code></td>
+                  <td class="full">
+                    TIME DATE ConTroL<span class="small">时间控制</span>
+                  </td>
+                  <td class="desc">systemd 下管理时区/时间同步</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>free</code> ★</td>
+                  <td class="full">
+                    free<span class="small">（非缩写）空闲</span>
+                  </td>
+                  <td class="desc">查看内存使用；-h 人类可读、-m/-g 单位</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>vmstat</code></td>
+                  <td class="full">
+                    Virtual Memory STATistics<span class="small"
+                      >虚拟内存统计</span
+                    >
+                  </td>
+                  <td class="desc">查看 CPU/内存/IO 综合状态</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>iostat</code></td>
+                  <td class="full">
+                    Input/Output STATistics<span class="small">IO 统计</span>
+                  </td>
+                  <td class="desc">查看磁盘 IO 性能，sysstat 包</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mpstat</code></td>
+                  <td class="full">
+                    Multi Processor STATistics<span class="small"
+                      >多 CPU 统计</span
+                    >
+                  </td>
+                  <td class="desc">按 CPU 核查看使用率</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sar</code></td>
+                  <td class="full">
+                    System Activity Report<span class="small"
+                      >系统活动报告</span
+                    >
+                  </td>
+                  <td class="desc">查看历史系统性能数据</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dmesg</code> ★</td>
+                  <td class="full">
+                    Display MESsaGe<span class="small">显示消息</span>
+                  </td>
+                  <td class="desc">查看内核启动日志/硬件信息</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lscpu</code></td>
+                  <td class="full">
+                    LiSt CPU<span class="small">列出 CPU</span>
+                  </td>
+                  <td class="desc">查看 CPU 架构信息</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lspci</code></td>
+                  <td class="full">
+                    LiSt PCI<span class="small">列出 PCI 设备</span>
+                  </td>
+                  <td class="desc">列出 PCI 总线上的设备</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lsusb</code></td>
+                  <td class="full">
+                    LiSt USB<span class="small">列出 USB 设备</span>
+                  </td>
+                  <td class="desc">列出 USB 总线上的设备</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lsblk</code> ★</td>
+                  <td class="full">
+                    LiSt BLocK<span class="small">列出块设备</span>
+                  </td>
+                  <td class="desc">以树形列出磁盘与分区</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lsmod</code></td>
+                  <td class="full">
+                    LiSt MODules<span class="small">列出模块</span>
+                  </td>
+                  <td class="desc">查看已加载的内核模块</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>modprobe</code></td>
+                  <td class="full">
+                    MODule PROBE<span class="small">模块探测</span>
+                  </td>
+                  <td class="desc">加载/卸载内核模块，自动处理依赖</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>insmod</code></td>
+                  <td class="full">
+                    INSert MODule<span class="small">插入模块</span>
+                  </td>
+                  <td class="desc">手动插入内核模块，不处理依赖</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rmmod</code></td>
+                  <td class="full">
+                    ReMove MODule<span class="small">移除模块</span>
+                  </td>
+                  <td class="desc">从内核移除模块</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>modinfo</code></td>
+                  <td class="full">
+                    MODule INFO<span class="small">模块信息</span>
+                  </td>
+                  <td class="desc">查看模块的描述、作者、参数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>arch</code></td>
+                  <td class="full">
+                    ARCHitecture<span class="small">架构</span>
+                  </td>
+                  <td class="desc">显示机器架构，等同 uname -m</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nproc</code></td>
+                  <td class="full">
+                    Number of PROCessors<span class="small">CPU 数</span>
+                  </td>
+                  <td class="desc">输出可用的逻辑 CPU 核数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-10">
+          <div class="sec-head">
+            <div class="sec-num">10</div>
+            <h2>磁盘与存储 <span class="en">Disk &amp; Storage</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>df</code> ★</td>
+                  <td class="full">
+                    Disk Free<span class="small">磁盘空闲</span>
+                  </td>
+                  <td class="desc">查看文件系统使用率；-h 人类可读、-T 类型</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>du</code> ★</td>
+                  <td class="full">
+                    Disk Usage<span class="small">磁盘占用</span>
+                  </td>
+                  <td class="desc">统计目录/文件占用空间；-sh 汇总</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ncdu</code></td>
+                  <td class="full">
+                    NCurses Disk Usage<span class="small">交互式 du</span>
+                  </td>
+                  <td class="desc">彩色的磁盘占用查看器，可深入/删除</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mount</code> ★</td>
+                  <td class="full">
+                    mount<span class="small">（非缩写）挂载</span>
+                  </td>
+                  <td class="desc">
+                    挂载文件系统；-t 类型、-o 选项（ro/loop 等）
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>umount</code> ★</td>
+                  <td class="full">UN-mount<span class="small">卸载</span></td>
+                  <td class="desc">
+                    卸载文件系统（注意拼写是 umount 不是 unmount）
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>findmnt</code></td>
+                  <td class="full">
+                    find MNT<span class="small">查找挂载</span>
+                  </td>
+                  <td class="desc">以树形列出当前挂载情况</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fdisk</code></td>
+                  <td class="full">
+                    Format DISK<span class="small">分区表编辑</span>
+                  </td>
+                  <td class="desc">查看/编辑 MBR 分区表；-l 列出</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>cfdisk</code></td>
+                  <td class="full">
+                    Curses FDISK<span class="small">curses 版</span>
+                  </td>
+                  <td class="desc">图形化的分区工具，比 fdisk 友好</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>parted</code></td>
+                  <td class="full">
+                    PARTition EDitor<span class="small">分区编辑</span>
+                  </td>
+                  <td class="desc">支持 GPT 的分区工具</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>partprobe</code></td>
+                  <td class="full">
+                    PARTition PROBE<span class="small">分区探测</span>
+                  </td>
+                  <td class="desc">通知内核重新读取分区表</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mkfs</code> ★</td>
+                  <td class="full">
+                    MaKe File System<span class="small">创建文件系统</span>
+                  </td>
+                  <td class="desc">
+                    格式化分区；mkfs.ext4 / mkfs.xfs 等子命令
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mke2fs</code></td>
+                  <td class="full">
+                    MaKe Extended 2 FS<span class="small">建 ext 文件系统</span>
+                  </td>
+                  <td class="desc">创建 ext2/3/4 文件系统</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mkswap</code></td>
+                  <td class="full">
+                    MaKe SWAP<span class="small">建交换分区</span>
+                  </td>
+                  <td class="desc">把分区格式化为交换空间</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>swapon / swapoff</code></td>
+                  <td class="full">
+                    SWAP ON/OFF<span class="small">开/关交换</span>
+                  </td>
+                  <td class="desc">启用/关闭交换分区或文件</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fsck</code> ★</td>
+                  <td class="full">
+                    File System ChecK<span class="small">文件系统检查</span>
+                  </td>
+                  <td class="desc">检查并修复文件系统；-y 自动修复</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>e2fsck</code></td>
+                  <td class="full">
+                    Extended 2 FSCK<span class="small">ext 检查</span>
+                  </td>
+                  <td class="desc">检查 ext2/3/4 文件系统</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>xfs_repair</code></td>
+                  <td class="full">
+                    XFS REPAIR<span class="small">XFS 修复</span>
+                  </td>
+                  <td class="desc">检查并修复 XFS 文件系统</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dumpe2fs</code></td>
+                  <td class="full">
+                    DUMP Extended 2 FS<span class="small">导出 ext 信息</span>
+                  </td>
+                  <td class="desc">导出超级块/块组信息</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tune2fs</code></td>
+                  <td class="full">
+                    TUNE Extended 2 FS<span class="small">调整 ext</span>
+                  </td>
+                  <td class="desc">调整 ext 文件系统参数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>resize2fs</code></td>
+                  <td class="full">
+                    RESIZE Extended 2 FS<span class="small">调整 ext 大小</span>
+                  </td>
+                  <td class="desc">在线调整 ext 文件系统大小</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>blkid</code></td>
+                  <td class="full">
+                    BLocK ID<span class="small">块设备 ID</span>
+                  </td>
+                  <td class="desc">查看块设备的 UUID/类型/标签</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dd</code> ★</td>
+                  <td class="full">
+                    Data Definition<span class="small"
+                      >IBM JCL 由来（非官方）</span
+                    >
+                  </td>
+                  <td class="desc">按块复制文件/设备；制作启动盘、备份分区</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>hdparm</code></td>
+                  <td class="full">
+                    HD PARaM<span class="small">硬盘参数</span>
+                  </td>
+                  <td class="desc">查看/设置硬盘参数，测速、休眠</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>smartctl</code></td>
+                  <td class="full">
+                    SMART ConTroL<span class="small">SMART 控制</span>
+                  </td>
+                  <td class="desc">查看硬盘 SMART 健康状态</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>df</b> = Disk Free（看「还剩多少」），<b>du</b> = Disk
+            Usage（看「占了多少」），二者刚好互补。<b>dd</b>
+            名称并无官方含义，常见说法来自 IBM JCL 的 "Data Definition"。
+          </div>
+        </section>
+
+        <section id="sec-11">
+          <div class="sec-head">
+            <div class="sec-num">11</div>
+            <h2>网络命令 <span class="en">Network Commands</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>ping</code> ★</td>
+                  <td class="full">
+                    ping<span class="small">声纳"叮"（非缩写）</span>
+                  </td>
+                  <td class="desc">测试主机连通性；-c 次数、-i 间隔</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ifconfig</code></td>
+                  <td class="full">
+                    InterFace CONFIGuration<span class="small">接口配置</span>
+                  </td>
+                  <td class="desc">查看/配置网卡，已逐渐被 ip 取代</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ip</code> ★</td>
+                  <td class="full">
+                    Internet Protocol<span class="small">网络协议</span>
+                  </td>
+                  <td class="desc">
+                    现代网络工具；ip addr / ip route / ip link
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>netstat</code> ★</td>
+                  <td class="full">
+                    NETwork STATistics<span class="small">网络统计</span>
+                  </td>
+                  <td class="desc">查看连接/端口/路由表；-t、-l、-n</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ss</code> ★</td>
+                  <td class="full">
+                    Socket Statistics<span class="small">套接字统计</span>
+                  </td>
+                  <td class="desc">netstat 的现代替代品，更快</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>route</code></td>
+                  <td class="full">
+                    route<span class="small">（非缩写）路由</span>
+                  </td>
+                  <td class="desc">查看/管理路由表，现多用 ip route</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>arp</code></td>
+                  <td class="full">
+                    Address Resolution Protocol<span class="small"
+                      >地址解析协议</span
+                    >
+                  </td>
+                  <td class="desc">查看/管理 ARP 缓存</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>traceroute</code></td>
+                  <td class="full">
+                    TRACE ROUTE<span class="small">追踪路由</span>
+                  </td>
+                  <td class="desc">追踪数据包到目的地的逐跳路径</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tracepath</code></td>
+                  <td class="full">
+                    TRACE PATH<span class="small">追踪路径</span>
+                  </td>
+                  <td class="desc">类似 traceroute，不需 root，能发现 MTU</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mtr</code></td>
+                  <td class="full">
+                    My TraceRoute<span class="small">我的追踪</span>
+                  </td>
+                  <td class="desc">traceroute + ping 的实时交互式组合</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>curl</code> ★</td>
+                  <td class="full">
+                    Client URL<span class="small">客户端 URL</span>
+                  </td>
+                  <td class="desc">命令行传输数据；-O 下载、-X 方法、-H 头</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>wget</code> ★</td>
+                  <td class="full">
+                    Web GET<span class="small">从 Web 获取</span>
+                  </td>
+                  <td class="desc">下载文件，支持递归镜像网站</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ssh</code> ★</td>
+                  <td class="full">
+                    Secure SHell<span class="small">安全 shell</span>
+                  </td>
+                  <td class="desc">远程加密登录；-p 端口、-i 私钥</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>scp</code> ★</td>
+                  <td class="full">
+                    Secure CoPy<span class="small">安全复制</span>
+                  </td>
+                  <td class="desc">基于 SSH 远程复制文件</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sftp</code></td>
+                  <td class="full">
+                    Secure FTP<span class="small">安全文件传输</span>
+                  </td>
+                  <td class="desc">基于 SSH 的交互式文件传输</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rsync</code> ★</td>
+                  <td class="full">
+                    Remote SYNC<span class="small">远程同步</span>
+                  </td>
+                  <td class="desc">高效增量同步文件/目录；-a 归档、-z 压缩</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nc / netcat</code></td>
+                  <td class="full">
+                    Network CAT<span class="small">网络"拼接"</span>
+                  </td>
+                  <td class="desc">网络瑞士军刀：端口扫描/连接/传输</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>telnet</code></td>
+                  <td class="full">
+                    TELetype NETwork<span class="small">电传网络</span>
+                  </td>
+                  <td class="desc">明文远程登录，现多用于测端口</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nslookup</code></td>
+                  <td class="full">
+                    Name Server LOOKUP<span class="small">域名查询</span>
+                  </td>
+                  <td class="desc">DNS 查询，现多用 dig / host</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dig</code> ★</td>
+                  <td class="full">
+                    Domain Information Groper<span class="small"
+                      >域名信息探测</span
+                    >
+                  </td>
+                  <td class="desc">强大的 DNS 查询工具</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>host</code></td>
+                  <td class="full">
+                    host<span class="small">（非缩写）主机</span>
+                  </td>
+                  <td class="desc">简单的正反向 DNS 查询</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tcpdump</code> ★</td>
+                  <td class="full">
+                    TCP DUMP<span class="small">TCP 抓包</span>
+                  </td>
+                  <td class="desc">抓取网络数据包；-i 接口、-n 不解析</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>iptables</code></td>
+                  <td class="full">
+                    IP Tables<span class="small">IP 表</span>
+                  </td>
+                  <td class="desc">配置防火墙规则（netfilter）</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>firewall-cmd</code></td>
+                  <td class="full">
+                    FIREWALL CoMmanD<span class="small">防火墙命令</span>
+                  </td>
+                  <td class="desc">firewalld 的命令行接口</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ifup / ifdown</code></td>
+                  <td class="full">
+                    InterFace UP/DOWN<span class="small">启停接口</span>
+                  </td>
+                  <td class="desc">启用/关闭指定网卡</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>curl</b> = Client URL（作者称可读作 "see URL"）；<b
+              >dig</b
+            >
+            = Domain Information Groper（域名信息探测器）；<b>nc</b> =
+            netcat，网络版的 cat。
+          </div>
+        </section>
+
+        <section id="sec-12">
+          <div class="sec-head">
+            <div class="sec-num">12</div>
+            <h2>
+              压缩与归档 <span class="en">Compression &amp; Archive</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>tar</code> ★</td>
+                  <td class="full">
+                    Tape ARchive<span class="small">磁带归档</span>
+                  </td>
+                  <td class="desc">
+                    打包工具；-c 建、-x 解、-t 列、-z gzip、-j bzip2
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>gzip</code> ★</td>
+                  <td class="full">
+                    GNU ZIP<span class="small">GNU 压缩</span>
+                  </td>
+                  <td class="desc">
+                    单文件压缩，生成 .gz；-d 解压、-k 保留原文件
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>gunzip</code></td>
+                  <td class="full">
+                    GNU UNZIP<span class="small">GNU 解压</span>
+                  </td>
+                  <td class="desc">解压 .gz 文件，等同 gzip -d</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>zcat</code></td>
+                  <td class="full">
+                    gzip CAT<span class="small">查看压缩</span>
+                  </td>
+                  <td class="desc">不解压直接查看 .gz 文本内容</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>bzip2</code></td>
+                  <td class="full">
+                    BWT ZIP v2<span class="small">Burrows-Wheeler 压缩</span>
+                  </td>
+                  <td class="desc">压缩率高于 gzip，速度较慢；.bz2</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>bunzip2</code></td>
+                  <td class="full">
+                    BWT UNZIP v2<span class="small">bzip2 解压</span>
+                  </td>
+                  <td class="desc">解压 .bz2</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>bzcat</code></td>
+                  <td class="full">
+                    BZip CAT<span class="small">查看 bz2</span>
+                  </td>
+                  <td class="desc">直接查看 .bz2 内容</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>xz</code></td>
+                  <td class="full">
+                    xz<span class="small">（格式名，LZMA 算法）</span>
+                  </td>
+                  <td class="desc">压缩率最高；.xz，常配合 tar -J</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>unxz</code></td>
+                  <td class="full">un-xz<span class="small">解压 xz</span></td>
+                  <td class="desc">解压 .xz，等同 xz -d</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>zip / unzip</code></td>
+                  <td class="full">
+                    zip / unzip<span class="small">PKWARE 格式名</span>
+                  </td>
+                  <td class="desc">跨平台通用压缩格式</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>zstd</code></td>
+                  <td class="full">
+                    Zstandard<span class="small">Z 标准</span>
+                  </td>
+                  <td class="desc">Facebook 出品，速度快压缩比好，.zst</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>7z</code></td>
+                  <td class="full">
+                    7-Zip<span class="small">7-Zip 工具</span>
+                  </td>
+                  <td class="desc">高压缩率工具，支持多种格式</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rar / unrar</code></td>
+                  <td class="full">
+                    Roshal ARchive<span class="small">Roshal（作者姓）</span>
+                  </td>
+                  <td class="desc">商业压缩格式</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ar</code></td>
+                  <td class="full">ARchive<span class="small">归档</span></td>
+                  <td class="desc">创建静态库 .a、deb 包等</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>cpio</code></td>
+                  <td class="full">
+                    CoPy In/Out<span class="small">复制入/出</span>
+                  </td>
+                  <td class="desc">老牌归档工具，initramfs 仍在用</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>tar</b> 来自磁带机时代，全称 Tape
+            ARchive；压缩命名规律：<b>g</b>zip/<b>g</b>unzip、<b>b</b>zip2/<b>b</b>unzip2、<b>x</b>z/un<b>x</b>z——解压统一加
+            un- 前缀。
+          </div>
+        </section>
+
+        <section id="sec-13">
+          <div class="sec-head">
+            <div class="sec-num">13</div>
+            <h2>软件包管理 <span class="en">Package Management</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>apt</code> ★</td>
+                  <td class="full">
+                    Advanced Package Tool<span class="small">高级包工具</span>
+                  </td>
+                  <td class="desc">Debian/Ubuntu 现代包管理前端</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>apt-get</code></td>
+                  <td class="full">
+                    apt GET<span class="small">apt 获取</span>
+                  </td>
+                  <td class="desc">老牌 apt 后端；install/update/remove</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>apt-cache</code></td>
+                  <td class="full">
+                    apt CACHE<span class="small">apt 缓存</span>
+                  </td>
+                  <td class="desc">查询包信息；search / show / policy</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dpkg</code> ★</td>
+                  <td class="full">
+                    Debian PacKaGe<span class="small">Debian 包</span>
+                  </td>
+                  <td class="desc">Debian 底层包管理；-i 安装、-l 列出</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>yum</code></td>
+                  <td class="full">
+                    Yellowdog Updater Modified<span class="small"
+                      >Yellowdog 更新器改良版</span
+                    >
+                  </td>
+                  <td class="desc">RHEL/CentOS 老牌包管理</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dnf</code></td>
+                  <td class="full">
+                    DaNdiFied yum<span class="small">"花哨的" yum</span>
+                  </td>
+                  <td class="desc">yum 的现代继任者（Fedora/RHEL8+）</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rpm</code> ★</td>
+                  <td class="full">
+                    RPM Package Manager<span class="small">（递归缩写）</span>
+                  </td>
+                  <td class="desc">Red Hat 系底层包管理；-q 查询、-i 安装</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>rpm2cpio</code></td>
+                  <td class="full">
+                    RPM to CPIO<span class="small">rpm 转 cpio</span>
+                  </td>
+                  <td class="desc">把 rpm 包转成 cpio 流以提取文件</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pacman</code></td>
+                  <td class="full">
+                    pacman<span class="small">（致敬吃豆人游戏）</span>
+                  </td>
+                  <td class="desc">Arch Linux 包管理器</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>zypper</code></td>
+                  <td class="full">
+                    zypper<span class="small">（openSUSE 工具名）</span>
+                  </td>
+                  <td class="desc">openSUSE 的包管理前端</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>snap</code></td>
+                  <td class="full">
+                    snap<span class="small">（非缩写）snap 包</span>
+                  </td>
+                  <td class="desc">Ubuntu 推出的容器化包格式</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>flatpak</code></td>
+                  <td class="full">
+                    flatpak<span class="small">（非缩写）</span>
+                  </td>
+                  <td class="desc">跨发行版的容器化应用分发</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>pip</code> ★</td>
+                  <td class="full">
+                    Pip Installs Packages<span class="small">（递归缩写）</span>
+                  </td>
+                  <td class="desc">Python 包管理；install / list / freeze</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>npm</code></td>
+                  <td class="full">
+                    Node Package Manager<span class="small">Node 包管理</span>
+                  </td>
+                  <td class="desc">Node.js 包管理器</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>rpm</b> 是「递归缩写」——RPM Package Manager
+            的首字母缩写又是 RPM 本身；<b>pip</b> 也是递归缩写 "Pip Installs
+            Packages"；<b>dnf</b> = Dandified（"花哨的"）yum。
+          </div>
+        </section>
+
+        <section id="sec-14">
+          <div class="sec-head">
+            <div class="sec-num">14</div>
+            <h2>
+              I/O 重定向与管道
+              <span class="en">I/O Redirection &amp; Pipe</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">符号</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>&gt;</code> ★</td>
+                  <td class="full">
+                    Redirect stdout<span class="small">重定向标准输出</span>
+                  </td>
+                  <td class="desc">把命令输出写入文件（覆盖）</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&gt;&gt;</code> ★</td>
+                  <td class="full">
+                    Append stdout<span class="small">追加输出</span>
+                  </td>
+                  <td class="desc">把输出追加到文件末尾</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&lt;</code></td>
+                  <td class="full">
+                    Redirect stdin<span class="small">重定向标准输入</span>
+                  </td>
+                  <td class="desc">从文件读取作为命令的标准输入</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&lt;&lt;</code></td>
+                  <td class="full">
+                    Here Document<span class="small">此处文档</span>
+                  </td>
+                  <td class="desc">多行文本作为输入；&lt;&lt; EOF ... EOF</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&lt;&lt;&lt;</code></td>
+                  <td class="full">
+                    Here String<span class="small">此处字符串</span>
+                  </td>
+                  <td class="desc">单行字符串作为输入</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>2&gt;</code></td>
+                  <td class="full">
+                    Redirect stderr<span class="small">重定向标准错误</span>
+                  </td>
+                  <td class="desc">
+                    把错误输出到文件；2&gt;&amp;1 合并到 stdout
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&amp;&gt;</code></td>
+                  <td class="full">
+                    Redirect both<span class="small">合并重定向</span>
+                  </td>
+                  <td class="desc">同时重定向 stdout 和 stderr</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>|</code> ★</td>
+                  <td class="full">
+                    Pipe<span class="small">（非缩写）管道</span>
+                  </td>
+                  <td class="desc">把前命令的 stdout 作为后命令的 stdin</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>|&amp;</code></td>
+                  <td class="full">
+                    Pipe both<span class="small">合并管道</span>
+                  </td>
+                  <td class="desc">把 stdout+stderr 都管道给后命令</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&amp;</code></td>
+                  <td class="full">
+                    Background<span class="small">后台运行</span>
+                  </td>
+                  <td class="desc">命令末尾加 &amp;，放到后台执行</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>&amp;&amp;</code></td>
+                  <td class="full">AND<span class="small">逻辑与</span></td>
+                  <td class="desc">前命令成功才执行后命令</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>||</code></td>
+                  <td class="full">OR<span class="small">逻辑或</span></td>
+                  <td class="desc">前命令失败才执行后命令</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>;</code></td>
+                  <td class="full">
+                    Sequential<span class="small">顺序执行</span>
+                  </td>
+                  <td class="desc">无论成败都依次执行</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$()</code></td>
+                  <td class="full">
+                    Command Substitution<span class="small">命令替换</span>
+                  </td>
+                  <td class="desc">执行括号内命令，输出替换回原位置</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>` `</code></td>
+                  <td class="full">
+                    Backtick substitution<span class="small">反引号替换</span>
+                  </td>
+                  <td class="desc">旧式命令替换，现已推荐用 $()</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>/dev/null</code></td>
+                  <td class="full">
+                    Device NULL<span class="small">空设备</span>
+                  </td>
+                  <td class="desc">
+                    黑洞设备，写入即丢弃；2&gt;/dev/null 屏蔽错误
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            三个标准流：<b>0 = stdin</b>（标准输入）、<b>1 = stdout</b
+            >（标准输出）、<b>2 = stderr</b>（标准错误）。<b>2&gt;&amp;1</b>
+            意思是「把 2 重定向到 1 当前指向的地方」，&amp;
+            在此表示文件描述符引用。
+          </div>
+        </section>
+
+        <section id="sec-15">
+          <div class="sec-head">
+            <div class="sec-num">15</div>
+            <h2>Shell 内置命令 <span class="en">Shell Builtins</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>alias</code></td>
+                  <td class="full">
+                    alias<span class="small">（非缩写）别名</span>
+                  </td>
+                  <td class="desc">设置命令别名；alias ll='ls -lh'</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>unalias</code></td>
+                  <td class="full">
+                    un-alias<span class="small">取消别名</span>
+                  </td>
+                  <td class="desc">删除已设置的别名</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>export</code> ★</td>
+                  <td class="full">
+                    export<span class="small">（非缩写）导出</span>
+                  </td>
+                  <td class="desc">将变量导出为环境变量，子进程可见</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>source / .</code> ★</td>
+                  <td class="full">
+                    source<span class="small">（非缩写）源</span>
+                  </td>
+                  <td class="desc">在当前 Shell 中执行脚本，不启子进程</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>env</code></td>
+                  <td class="full">
+                    ENVironment<span class="small">环境</span>
+                  </td>
+                  <td class="desc">查看/修改环境变量执行命令</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>set</code></td>
+                  <td class="full">
+                    set<span class="small">（非缩写）设置</span>
+                  </td>
+                  <td class="desc">查看/设置 Shell 变量与选项</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>unset</code></td>
+                  <td class="full">
+                    un-set<span class="small">取消设置</span>
+                  </td>
+                  <td class="desc">删除变量或函数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>declare</code></td>
+                  <td class="full">
+                    declare<span class="small">（非缩写）声明</span>
+                  </td>
+                  <td class="desc">声明变量属性；-r 只读、-i 整数、-a 数组</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>local</code></td>
+                  <td class="full">
+                    local<span class="small">（非缩写）局部</span>
+                  </td>
+                  <td class="desc">在函数内声明局部变量</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>readonly</code></td>
+                  <td class="full">read-only<span class="small">只读</span></td>
+                  <td class="desc">声明只读变量，不可再修改</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>history</code></td>
+                  <td class="full">
+                    history<span class="small">（非缩写）历史</span>
+                  </td>
+                  <td class="desc">查看命令历史；!n 执行第 n 条、!! 上一条</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>echo</code> ★</td>
+                  <td class="full">
+                    echo<span class="small">（非缩写）回显</span>
+                  </td>
+                  <td class="desc">输出一行文本；-n 不换行、-e 解析转义</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>printf</code></td>
+                  <td class="full">
+                    PRINT Formatted<span class="small">格式化打印</span>
+                  </td>
+                  <td class="desc">C 风格格式化输出，比 echo 更强</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>read</code></td>
+                  <td class="full">
+                    read<span class="small">（非缩写）读取</span>
+                  </td>
+                  <td class="desc">从 stdin 读入变量；-p 提示、-s 静默</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>test / [ ]</code></td>
+                  <td class="full">
+                    test<span class="small">（非缩写）测试</span>
+                  </td>
+                  <td class="desc">
+                    条件判断，返回 0/1；-e 存在、-d 目录、-z 空
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>[[ ]]</code></td>
+                  <td class="full">
+                    extended test<span class="small">扩展测试</span>
+                  </td>
+                  <td class="desc">
+                    Bash 增强版 test，支持 &amp;&amp; || 通配
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>true / false</code></td>
+                  <td class="full">
+                    true / false<span class="small">（非缩写）</span>
+                  </td>
+                  <td class="desc">返回成功/失败退出码，常做循环条件</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>eval</code></td>
+                  <td class="full">EVALuate<span class="small">求值</span></td>
+                  <td class="desc">把参数作为命令解析执行</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>exec</code></td>
+                  <td class="full">EXECute<span class="small">执行</span></td>
+                  <td class="desc">替换当前进程映像，执行后不返回</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>trap</code></td>
+                  <td class="full">
+                    trap<span class="small">（非缩写）捕获</span>
+                  </td>
+                  <td class="desc">捕获信号并执行自定义动作</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ulimit</code></td>
+                  <td class="full">
+                    User LIMIT<span class="small">用户限制</span>
+                  </td>
+                  <td class="desc">查看/设置资源上限（文件数、内存等）</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-16">
+          <div class="sec-head">
+            <div class="sec-num">16</div>
+            <h2>
+              系统控制与服务
+              <span class="en">System Control &amp; Services</span>
+            </h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>shutdown</code> ★</td>
+                  <td class="full">
+                    shutdown<span class="small">（非缩写）关机</span>
+                  </td>
+                  <td class="desc">
+                    安全关机/重启；-h 关机、-r 重启、now 立即
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>reboot</code> ★</td>
+                  <td class="full">
+                    reboot<span class="small">（非缩写）重启</span>
+                  </td>
+                  <td class="desc">重启系统</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>poweroff</code></td>
+                  <td class="full">
+                    power off<span class="small">断电关机</span>
+                  </td>
+                  <td class="desc">关机并切断电源</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>halt</code></td>
+                  <td class="full">
+                    halt<span class="small">（非缩写）停止</span>
+                  </td>
+                  <td class="desc">停止 CPU，不切电源</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>init</code></td>
+                  <td class="full">
+                    INITialize<span class="small">初始化</span>
+                  </td>
+                  <td class="desc">切换运行级别；init 0 关机、init 6 重启</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>runlevel</code></td>
+                  <td class="full">
+                    run level<span class="small">运行级别</span>
+                  </td>
+                  <td class="desc">查看当前与上一个运行级别</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>systemctl</code> ★</td>
+                  <td class="full">
+                    SYStem ConTroL<span class="small">系统控制</span>
+                  </td>
+                  <td class="desc">
+                    systemd 服务管理；start/stop/enable/status
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>journalctl</code> ★</td>
+                  <td class="full">
+                    JOURNAL ConTroL<span class="small">日志控制</span>
+                  </td>
+                  <td class="desc">
+                    查看 systemd 日志；-u 单元、-f 跟踪、-k 内核
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>service</code></td>
+                  <td class="full">
+                    service<span class="small">（非缩写）服务</span>
+                  </td>
+                  <td class="desc">SysV 风格服务管理，现多用 systemctl</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chkconfig</code></td>
+                  <td class="full">
+                    CHecK CONFIG<span class="small">检查配置</span>
+                  </td>
+                  <td class="desc">管理 SysV 服务开机自启</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>login</code></td>
+                  <td class="full">
+                    login<span class="small">（非缩写）登录</span>
+                  </td>
+                  <td class="desc">登录会话程序</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>logout</code></td>
+                  <td class="full">
+                    log out<span class="small">退出登录</span>
+                  </td>
+                  <td class="desc">退出当前登录会话</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>exit</code> ★</td>
+                  <td class="full">
+                    exit<span class="small">（非缩写）退出</span>
+                  </td>
+                  <td class="desc">退出当前 Shell/脚本</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chroot</code></td>
+                  <td class="full">
+                    Change ROOT<span class="small">改变根</span>
+                  </td>
+                  <td class="desc">改变进程看到的根目录</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>loginctl</code></td>
+                  <td class="full">
+                    LOGIN ConTroL<span class="small">登录控制</span>
+                  </td>
+                  <td class="desc">systemd 下管理会话与用户</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-17">
+          <div class="sec-head">
+            <div class="sec-num">17</div>
+            <h2>文件系统操作 <span class="en">Filesystem Operations</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>mount / umount</code> ★</td>
+                  <td class="full">
+                    mount / UN-mount<span class="small">挂载/卸载</span>
+                  </td>
+                  <td class="desc">挂载/卸载文件系统到目录树</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>df</code></td>
+                  <td class="full">
+                    Disk Free<span class="small">磁盘空闲</span>
+                  </td>
+                  <td class="desc">查看挂载点使用率</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>stat</code></td>
+                  <td class="full">STATus<span class="small">状态</span></td>
+                  <td class="desc">查看 inode 与时间戳</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ln</code></td>
+                  <td class="full">LiNk<span class="small">链接</span></td>
+                  <td class="desc">创建硬链接/软链接</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fuser</code></td>
+                  <td class="full">
+                    File USER<span class="small">文件使用者</span>
+                  </td>
+                  <td class="desc">查看哪些进程在使用某文件/目录</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>lsof</code></td>
+                  <td class="full">
+                    LiSt Open Files<span class="small">列出打开文件</span>
+                  </td>
+                  <td class="desc">查看进程打开的文件</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>mkfs</code></td>
+                  <td class="full">
+                    MaKe File System<span class="small">建文件系统</span>
+                  </td>
+                  <td class="desc">格式化分区</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>fsck</code></td>
+                  <td class="full">
+                    File System ChecK<span class="small">检查修复</span>
+                  </td>
+                  <td class="desc">检查并修复文件系统</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>xfs_growfs</code></td>
+                  <td class="full">
+                    XFS GROW FS<span class="small">扩展 XFS</span>
+                  </td>
+                  <td class="desc">在线扩展 XFS 文件系统</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>quota</code></td>
+                  <td class="full">
+                    quota<span class="small">（非缩写）配额</span>
+                  </td>
+                  <td class="desc">磁盘配额相关工具集</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-18">
+          <div class="sec-head">
+            <div class="sec-num">18</div>
+            <h2>编辑器 <span class="en">Editors</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>vi</code> ★</td>
+                  <td class="full">
+                    VIsual<span class="small">可视化（编辑器）</span>
+                  </td>
+                  <td class="desc">经典可视化编辑器，所有 Unix 必装</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>vim</code> ★</td>
+                  <td class="full">
+                    Vi IMproved<span class="small">vi 改进版</span>
+                  </td>
+                  <td class="desc">vi 的现代增强版，支持语法高亮/插件</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>vimtutor</code></td>
+                  <td class="full">
+                    VIM TUTOR<span class="small">vim 教程</span>
+                  </td>
+                  <td class="desc">vim 入门交互教程</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ex</code></td>
+                  <td class="full">
+                    EXtended<span class="small">扩展（行编辑器）</span>
+                  </td>
+                  <td class="desc">vi 的行模式祖先，ed 的扩展版</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>ed</code></td>
+                  <td class="full">EDitor<span class="small">编辑器</span></td>
+                  <td class="desc">最古老的行编辑器，grep/sed 的祖先</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>nano</code></td>
+                  <td class="full">
+                    GNU nano<span class="small">（意为"纳米"，小巧）</span>
+                  </td>
+                  <td class="desc">简单友好的小编辑器，新手福音</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>emacs</code></td>
+                  <td class="full">
+                    Editor MACroS<span class="small">编辑器宏</span>
+                  </td>
+                  <td class="desc">"伪装成编辑器的操作系统"，强大但庞大</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>gedit</code></td>
+                  <td class="full">
+                    GNOME EDITor<span class="small">GNOME 编辑器</span>
+                  </td>
+                  <td class="desc">GNOME 桌面的文本编辑器</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            记忆点：<b>vi</b> = VIsual（可视化编辑器），是行编辑器 ex
+            之后的"所见即所得"突破；<b>vim</b> = Vi IMproved；<b>emacs</b> =
+            Editor MACroS（编辑器宏）。
+          </div>
+        </section>
+
+        <section id="sec-19">
+          <div class="sec-head">
+            <div class="sec-num">19</div>
+            <h2>实用小工具 <span class="en">Utility Tools</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">命令</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>man</code> ★</td>
+                  <td class="full">MANual<span class="small">手册</span></td>
+                  <td class="desc">查看命令手册；man 5 passwd 看文件格式</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>info</code></td>
+                  <td class="full">
+                    info<span class="small">（非缩写）信息</span>
+                  </td>
+                  <td class="desc">GNU 的超文本式手册</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>help</code> ★</td>
+                  <td class="full">
+                    help<span class="small">（非缩写）帮助</span>
+                  </td>
+                  <td class="desc">查看 Shell 内置命令的简明帮助</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tldr</code></td>
+                  <td class="full">
+                    Too Long Didn't Read<span class="small">太长不看</span>
+                  </td>
+                  <td class="desc">社区维护的命令速查示例，非常友好</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>clear</code> ★</td>
+                  <td class="full">
+                    clear<span class="small">（非缩写）清屏</span>
+                  </td>
+                  <td class="desc">清空当前终端屏幕</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>reset</code></td>
+                  <td class="full">
+                    reset<span class="small">（非缩写）重置</span>
+                  </td>
+                  <td class="desc">完全重置终端状态，比 clear 更彻底</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tput</code></td>
+                  <td class="full">
+                    Terminal PUT<span class="small">终端输出</span>
+                  </td>
+                  <td class="desc">使用 terminfo 控制终端颜色/光标</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>stty</code></td>
+                  <td class="full">
+                    Set TeleTYpe<span class="small">设置终端</span>
+                  </td>
+                  <td class="desc">查看/设置终端按键与特性</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>tty</code></td>
+                  <td class="full">
+                    TeleTYpe<span class="small">电传打字机</span>
+                  </td>
+                  <td class="desc">显示当前终端设备名</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>yes</code></td>
+                  <td class="full">
+                    yes<span class="small">（非缩写）是</span>
+                  </td>
+                  <td class="desc">不停输出 y，用于自动确认</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sleep</code></td>
+                  <td class="full">
+                    sleep<span class="small">（非缩写）睡眠</span>
+                  </td>
+                  <td class="desc">延时指定秒数</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>bc</code></td>
+                  <td class="full">
+                    Basic Calculator<span class="small">基础计算器</span>
+                  </td>
+                  <td class="desc">任意精度计算器；echo '1+2' | bc</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>dc</code></td>
+                  <td class="full">
+                    Desk Calculator<span class="small">桌面计算器</span>
+                  </td>
+                  <td class="desc">逆波兰式栈式计算器</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>expr</code></td>
+                  <td class="full">
+                    EXPRession<span class="small">表达式</span>
+                  </td>
+                  <td class="desc">整数运算与字符串处理</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>factor</code></td>
+                  <td class="full">
+                    factor<span class="small">（非缩写）因数</span>
+                  </td>
+                  <td class="desc">分解质因数</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>banner</code></td>
+                  <td class="full">
+                    banner<span class="small">（非缩写）横幅</span>
+                  </td>
+                  <td class="desc">用 # 打印大字符横幅</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>chvt</code></td>
+                  <td class="full">
+                    Change Virtual Terminal<span class="small">切虚拟终端</span>
+                  </td>
+                  <td class="desc">切换虚拟终端（Ctrl+Alt+F1~F6）</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>sudo !!</code></td>
+                  <td class="full">
+                    sudo + last command<span class="small">补 sudo 重跑</span>
+                  </td>
+                  <td class="desc">以 root 重新执行上一条命令</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-20">
+          <div class="sec-head">
+            <div class="sec-num">20</div>
+            <h2>特殊符号速记 <span class="en">Special Symbols</span></h2>
+          </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 18%">符号</th>
+                  <th style="width: 30%">全称</th>
+                  <th>说明</th>
+                  <th style="width: 8%">频次</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cmd"><code>~</code></td>
+                  <td class="full">
+                    tilde / home<span class="small">波浪号 → 家目录</span>
+                  </td>
+                  <td class="desc">代表当前用户的家目录</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>.</code></td>
+                  <td class="full">
+                    dot<span class="small">点 → 当前目录</span>
+                  </td>
+                  <td class="desc">
+                    当前目录；开头的文件为隐藏文件；source 的别名
+                  </td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>..</code></td>
+                  <td class="full">
+                    dot dot<span class="small">点点 → 父目录</span>
+                  </td>
+                  <td class="desc">上一级目录</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>-</code></td>
+                  <td class="full">
+                    dash<span class="small">短横 → 上次目录</span>
+                  </td>
+                  <td class="desc">cd - 回上一次所在目录；也常代表 stdin</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>*</code></td>
+                  <td class="full">
+                    asterisk / wildcard<span class="small">星号 → 通配</span>
+                  </td>
+                  <td class="desc">匹配任意长度任意字符（glob 通配）</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>?</code></td>
+                  <td class="full">
+                    question mark<span class="small">问号 → 单字通配</span>
+                  </td>
+                  <td class="desc">匹配单个任意字符</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>[]</code></td>
+                  <td class="full">
+                    bracket<span class="small">方括号 → 字符集</span>
+                  </td>
+                  <td class="desc">匹配括号内任一字符，支持 a-z 范围</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>{}</code></td>
+                  <td class="full">
+                    brace expansion<span class="small">花括号展开</span>
+                  </td>
+                  <td class="desc">展开为多词；cp f.txt{,.bak} 快速备份</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$</code></td>
+                  <td class="full">
+                    dollar / variable<span class="small">美元 → 变量</span>
+                  </td>
+                  <td class="desc">变量引用前缀；$PATH、$HOME、$?</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>#</code></td>
+                  <td class="full">
+                    hash / comment<span class="small">井号 → 注释</span>
+                  </td>
+                  <td class="desc">行首为注释；$# 是参数个数</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>!</code></td>
+                  <td class="full">bang<span class="small">感叹号</span></td>
+                  <td class="desc">
+                    历史展开 !! 上一条、!$ 上条最后参数、!= 非
+                  </td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>\</code></td>
+                  <td class="full">
+                    backslash / escape<span class="small">反斜杠 → 转义</span>
+                  </td>
+                  <td class="desc">转义特殊字符；行尾续行</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>' '</code></td>
+                  <td class="full">
+                    single quotes<span class="small">单引号 → 原样</span>
+                  </td>
+                  <td class="desc">内容完全原样，不做任何解释</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>" "</code></td>
+                  <td class="full">
+                    double quotes<span class="small">双引号 → 部分解释</span>
+                  </td>
+                  <td class="desc">保留 $ ` \ 的解释能力</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$?</code></td>
+                  <td class="full">
+                    exit status<span class="small">退出码</span>
+                  </td>
+                  <td class="desc">上一条命令的返回值，0 成功</td>
+                  <td class="tag"><span class="chip high">高</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$#</code></td>
+                  <td class="full">
+                    number of args<span class="small">参数个数</span>
+                  </td>
+                  <td class="desc">脚本位置参数个数</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$@ / $*</code></td>
+                  <td class="full">
+                    all arguments<span class="small">所有参数</span>
+                  </td>
+                  <td class="desc">$@ 每个参数独立、$* 合成一个串</td>
+                  <td class="tag"><span class="chip mid">中</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$$</code></td>
+                  <td class="full">
+                    process ID<span class="small">进程号</span>
+                  </td>
+                  <td class="desc">当前 Shell 的 PID</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+                <tr>
+                  <td class="cmd"><code>$!</code></td>
+                  <td class="full">
+                    last background PID<span class="small">后台进程号</span>
+                  </td>
+                  <td class="desc">最近一个后台进程的 PID</td>
+                  <td class="tag"><span class="chip low">低</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="sec-21">
+          <div class="sec-head">
+            <div class="sec-num">21</div>
+            <h2>易混命令记忆口诀 <span class="en">Mnemonics</span></h2>
+          </div>
+          <p style="color: #5b6472; font-size: 14px; margin: 0 0 14px">
+            把最容易记混的命令做成对照卡，配合上面的全称使用。
+          </p>
+          <div class="mnemonic-grid">
+            <div class="mn-card">
+              <div class="k">df vs du</div>
+              <div class="v">Disk Free / Disk Usage</div>
+              <div class="x">
+                df 看文件系统「还剩多少」（横向），du
+                看目录「实际占了多少」（纵向）。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">more vs less</div>
+              <div class="v">非缩写 / "less is more"</div>
+              <div class="x">
+                more 只能往下翻；less 上下都能翻、还能搜索。记：少即是多，less
+                更强。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">cat vs tac</div>
+              <div class="v">conCATenate / TAC（反转）</div>
+              <div class="x">
+                cat 正序输出，tac 倒序输出——tac 就是 cat 反着写。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">su vs sudo</div>
+              <div class="v">Substitute User / Super User DO</div>
+              <div class="x">
+                su 整体切换成别人（输对方密码）；sudo 临时借 root
+                权限（输自己密码）。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">chmod vs chown vs chgrp</div>
+              <div class="v">CHange MODe / OWNer / GRouP</div>
+              <div class="x">
+                mode 改权限位、owner 改属主、group 改属组。核心动词都是 CHange。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">grep / egrep / fgrep</div>
+              <div class="v">Global RE Print / Extended / Fixed</div>
+              <div class="x">
+                grep 基础正则，egrep 扩展正则（= grep -E），fgrep 固定字符串（=
+                grep -F）。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">kill / killall / pkill</div>
+              <div class="v">按 PID / 按名字全杀 / 按模式杀</div>
+              <div class="x">
+                kill 认号（PID），killall 认名全杀，pkill
+                认模式（可按用户、终端过滤）。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">useradd / usermod / userdel</div>
+              <div class="v">USER ADD / MODify / DELete</div>
+              <div class="x">
+                加用户、改用户、删用户。后缀 add/mod/del 三兄弟，group
+                系列同理。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">yum vs dnf</div>
+              <div class="v">Yellowdog Updater Modified / DaNdiFied yum</div>
+              <div class="x">
+                dnf 就是"更潮的 yum"，RHEL8+ 已默认用 dnf，用法几乎一样。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">tar 参数四件套</div>
+              <div class="v">-c / -x / -t / -v</div>
+              <div class="x">
+                c=create 建，x=extract 抽出，t=list（table of
+                contents）列，v=verbose 啰嗦。口诀：建抽列啰。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">shutdown 三种方式</div>
+              <div class="v">-h / -r / now</div>
+              <div class="x">
+                h=halt 停机，r=reboot 重启，now=立刻。例：shutdown -h now
+                立即关机。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">find 三大件</div>
+              <div class="v">-name / -type / -size</div>
+              <div class="x">
+                按名找（支持通配）、按类型找（f 文件 d 目录）、按大小找（+100M
+                大于 100MB）。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">netstat / ss 四件套</div>
+              <div class="v">-t / -u / -l / -n</div>
+              <div class="x">
+                t=TCP，u=UDP，l=listening 监听，n=numeric 数字显示。组合 -tuln
+                查端口。
+              </div>
+            </div>
+            <div class="mn-card">
+              <div class="k">grep vs find</div>
+              <div class="v">找内容 / 找文件</div>
+              <div class="x">
+                grep 在文件里"找内容"（按正则），find
+                在磁盘上"找文件"（按属性）。
+              </div>
+            </div>
+          </div>
+
+          <footer>
+            <p>
+              <b>使用建议</b>：先记高频必会（★ 标记，约 60
+              条），再按分类扩展；每学一条新命令，先看一眼它的全称，理解了缩写由来，基本就不用死记了。
+            </p>
+            <p style="margin-top: 8px">
+              部分全称说明：su 官方为 Substitute User（非 Switch User）；dd
+              无官方全称，Data Definition 是常见说法；grep 源自 ed 的
+              g/re/p；awk 为三位作者姓氏首字母。
+            </p>
+          </footer>
+        </section>
+      </main>
+    </div>
+    <script>
+      const menuToggle = document.getElementById('menuToggle')
+      const toc = document.getElementById('toc')
+      const tocOverlay = document.getElementById('tocOverlay')
+
+      function setTocOpen(isOpen) {
+        toc.classList.toggle('open', isOpen)
+        tocOverlay.classList.toggle('open', isOpen)
+        menuToggle.setAttribute('aria-expanded', String(isOpen))
+      }
+
+      menuToggle.addEventListener('click', () => {
+        setTocOpen(!toc.classList.contains('open'))
+      })
+      tocOverlay.addEventListener('click', () => setTocOpen(false))
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', () => setTocOpen(false))
+      })
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') setTocOpen(false)
+      })
+    </script>
+  </body>
+</html>
