@@ -6,7 +6,7 @@
     <meta
       name="description"
       content="记录技术学习、面试准备与工程实践的个人博客。" />
-    <title>林墨的技术手记</title>
+    <title>Zinx 的技术手记</title>
     <style>
       :root {
         --ink: #17211b;
@@ -73,18 +73,40 @@
         place-items: center;
         width: 44px;
         height: 44px;
-        border: 2px solid var(--ink);
+        border: 2px solid var(--green);
         border-radius: 50%;
         color: var(--surface);
         background: var(--green);
         font-family: var(--serif);
         font-size: 1.25rem;
         font-weight: 700;
+        object-fit: cover;
+        transition:
+          transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 180ms ease;
       }
       .identity strong {
         display: block;
         font-family: var(--serif);
         font-size: 1.05rem;
+        color: var(--green);
+        transition:
+          color 180ms ease,
+          letter-spacing 180ms ease,
+          text-shadow 180ms ease,
+          transform 180ms ease;
+      }
+      .identity:hover .avatar,
+      .identity:focus-visible .avatar {
+        border-color: var(--orange);
+        transform: rotate(360deg) scale(1.08);
+      }
+      .identity:hover strong,
+      .identity:focus-visible strong {
+        color: var(--orange);
+        letter-spacing: 0.06em;
+        text-shadow: 2px 2px 0 var(--yellow);
+        transform: translateY(-2px);
       }
       .identity small {
         display: block;
@@ -92,12 +114,59 @@
         font-size: 0.75rem;
       }
       .top-link {
+        display: inline-flex;
+        align-items: center;
         color: var(--green);
         font-size: 0.86rem;
         text-decoration: none;
+        transition:
+          color 180ms ease,
+          transform 180ms ease;
       }
       .top-link::after {
-        content: '  ↗';
+        content: '↗';
+        margin-left: 6px;
+        transition: transform 180ms ease;
+      }
+      .top-link:hover,
+      .top-link:focus-visible {
+        color: var(--orange);
+        outline: none;
+        transform: translateY(-2px);
+      }
+      .top-link:hover::after,
+      .top-link:focus-visible::after {
+        transform: translate(2px, -2px);
+      }
+      .wallpaper-trigger {
+        margin-left: auto;
+        margin-right: 22px;
+        padding: 0;
+        border: 0;
+        color: var(--green);
+        background: transparent;
+        font: inherit;
+        font-size: 0.86rem;
+        cursor: pointer;
+        transition:
+          color 180ms ease,
+          transform 180ms ease;
+      }
+      .wallpaper-trigger::after {
+        content: '↗';
+        display: inline-block;
+        margin-left: 3px;
+        transition: transform 180ms ease;
+      }
+      .wallpaper-trigger:hover,
+      .wallpaper-trigger:focus-visible {
+        color: var(--orange);
+        outline: none;
+        transform: translateY(-2px);
+      }
+      .wallpaper-trigger:hover::after,
+      .wallpaper-trigger:focus-visible::after {
+        transform: translate(2px, -2px);
       }
       .intro {
         display: grid;
@@ -228,6 +297,105 @@
         color: var(--muted);
         font-size: 0.78rem;
       }
+      .wallpaper-modal[hidden] {
+        display: none;
+      }
+      .wallpaper-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: rgba(23, 33, 27, 0.76);
+      }
+      .wallpaper-dialog {
+        position: relative;
+        width: min(940px, 100%);
+        max-height: calc(100vh - 48px);
+        overflow: auto;
+        padding: 18px;
+        background: var(--surface);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      }
+      .wallpaper-dialog h2 {
+        margin-bottom: 12px;
+        color: var(--green-dark);
+        font-family: var(--serif);
+        font-size: 1.35rem;
+        font-weight: 500;
+      }
+      .wallpaper-image-wrap {
+        min-height: 220px;
+        display: grid;
+        place-items: center;
+        background: #e8ebe4;
+      }
+      .wallpaper-image {
+        display: block;
+        width: 100%;
+        max-height: 62vh;
+        object-fit: contain;
+      }
+      .wallpaper-status {
+        padding: 28px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .wallpaper-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+      .wallpaper-controls label {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .wallpaper-controls input {
+        min-width: 150px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: var(--paper);
+        font: inherit;
+        font-size: 0.82rem;
+      }
+      .wallpaper-controls button {
+        padding: 8px 12px;
+        border: 1px solid var(--green);
+        color: var(--green-dark);
+        background: transparent;
+        font: inherit;
+        font-size: 0.82rem;
+        cursor: pointer;
+      }
+      .wallpaper-controls button:hover,
+      .wallpaper-controls button:focus-visible {
+        color: var(--surface);
+        background: var(--green);
+        outline: none;
+      }
+      .wallpaper-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: var(--surface);
+        font-size: 1.25rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .wallpaper-close:hover,
+      .wallpaper-close:focus-visible {
+        color: var(--surface);
+        background: var(--orange);
+        outline: none;
+      }
       @media (max-width: 760px) {
         .shell {
           padding: 20px 18px 48px;
@@ -255,6 +423,15 @@
           display: block;
           margin-top: 5px;
         }
+        .topbar {
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+        .wallpaper-trigger {
+          order: 3;
+          width: 100%;
+          margin: 16px 0 0;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         *,
@@ -270,13 +447,18 @@
   <body>
     <main class="shell">
       <header class="topbar">
-        <a class="identity" href="resume.html" aria-label="进入林墨的个人简历"
-          ><span class="avatar" aria-hidden="true">林</span
-          ><span
-            ><strong>林墨 · Lin Mo</strong
+        <a class="identity" href="resume.html" aria-label="进入 Zinx 的个人简历"
+          ><img
+            class="avatar"
+            src="images/avatar.jpeg"
+            alt="Zinx 的头像" /><span
+            ><strong>Zinx</strong
             ><small>记录学习，也记录问题是怎样被解决的</small></span
           ></a
         >
+        <button class="wallpaper-trigger" type="button">
+          休息一下，看看美景
+        </button>
         <a class="top-link" href="resume.html">关于博主</a>
       </header>
       <section class="intro">
@@ -371,5 +553,98 @@
         ><span>最后更新：2026 / 08</span>
       </footer>
     </main>
+    <div class="wallpaper-modal" hidden>
+      <section
+        class="wallpaper-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="wallpaper-title">
+        <button class="wallpaper-close" type="button" aria-label="关闭壁纸弹窗">
+          ×
+        </button>
+        <h2 id="wallpaper-title">Bing 每日壁纸</h2>
+        <div class="wallpaper-image-wrap">
+          <img class="wallpaper-image" alt="Bing 壁纸" hidden />
+          <p class="wallpaper-status">正在加载壁纸...</p>
+        </div>
+        <div class="wallpaper-controls">
+          <button class="wallpaper-random" type="button">换一张</button>
+          <label for="wallpaper-date">按日期查看</label>
+          <input
+            id="wallpaper-date"
+            type="text"
+            inputmode="numeric"
+            placeholder="YYYY-MM-DD"
+            pattern="\d{4}-\d{2}-\d{2}" />
+          <button class="wallpaper-date-submit" type="button">查看日期</button>
+        </div>
+      </section>
+    </div>
+    <script>
+      const wallpaperApi = 'https://uapis.cn/api/v1/image/bing-daily'
+      const wallpaperModal = document.querySelector('.wallpaper-modal')
+      const wallpaperImage = document.querySelector('.wallpaper-image')
+      const wallpaperStatus = document.querySelector('.wallpaper-status')
+      const wallpaperDate = document.querySelector('#wallpaper-date')
+
+      function showWallpaper(options = {}) {
+        wallpaperModal.hidden = false
+        wallpaperImage.hidden = true
+        wallpaperStatus.hidden = false
+        wallpaperStatus.textContent = '正在加载壁纸...'
+        const params = new URLSearchParams({
+          format: 'image',
+          ...options,
+          t: Date.now().toString(),
+        })
+        wallpaperImage.src = `${wallpaperApi}?${params.toString()}`
+      }
+
+      function closeWallpaper() {
+        wallpaperModal.hidden = true
+        wallpaperImage.removeAttribute('src')
+      }
+
+      document
+        .querySelector('.wallpaper-trigger')
+        .addEventListener('click', () => {
+          showWallpaper()
+        })
+      document
+        .querySelector('.wallpaper-close')
+        .addEventListener('click', closeWallpaper)
+      document
+        .querySelector('.wallpaper-random')
+        .addEventListener('click', () => {
+          showWallpaper({ random: 'true' })
+        })
+      document
+        .querySelector('.wallpaper-date-submit')
+        .addEventListener('click', () => {
+          const date = wallpaperDate.value.trim()
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            wallpaperStatus.hidden = false
+            wallpaperStatus.textContent = '请输入 YYYY-MM-DD 格式的日期。'
+            wallpaperImage.hidden = true
+            return
+          }
+          showWallpaper({ date })
+        })
+      wallpaperImage.addEventListener('load', () => {
+        wallpaperStatus.hidden = true
+        wallpaperImage.hidden = false
+      })
+      wallpaperImage.addEventListener('error', () => {
+        wallpaperImage.hidden = true
+        wallpaperStatus.hidden = false
+        wallpaperStatus.textContent = '壁纸加载失败，请稍后重试。'
+      })
+      wallpaperModal.addEventListener('click', (event) => {
+        if (event.target === wallpaperModal) closeWallpaper()
+      })
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !wallpaperModal.hidden) closeWallpaper()
+      })
+    </script>
   </body>
 </html>
