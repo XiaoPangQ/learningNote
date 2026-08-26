@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>学习笔记 · 技术成长路线</title>
+    <style>
+      /* ========== CSS Variables ========== */
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --radius: 12px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      /* ========== Reset & Base ========== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ========== Background Ambient ========== */
+      body::before {
+        content: '';
+        position: fixed;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        height: 600px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(98, 246, 168, 0.05) 0%,
+          rgba(36, 150, 237, 0.03) 40%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      /* ========== Layout ========== */
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 64px 32px 80px;
+      }
+
+      /* ========== Hero ========== */
+      .hero {
+        text-align: center;
+        margin-bottom: 56px;
+      }
+      .blog-home-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 24px;
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-secondary);
+        background: rgba(14, 26, 45, 0.72);
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+      .blog-home-link:hover {
+        border-color: #62f6a8;
+        color: #62f6a8;
+        background: rgba(98, 246, 168, 0.08);
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        background: rgba(98, 246, 168, 0.08);
+        border: 1px solid rgba(98, 246, 168, 0.15);
+        color: #62f6a8;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+        font-family: var(--font-mono);
+      }
+      .hero-badge .pulse {
+        width: 6px;
+        height: 6px;
+        background: #62f6a8;
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.3);
+        }
+      }
+      .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 16px;
+        background: linear-gradient(
+          135deg,
+          #e6edf7 0%,
+          #62f6a8 50%,
+          #2496ed 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 32px;
+        flex-wrap: wrap;
+      }
+      .hero-stats .stat {
+        text-align: center;
+      }
+      .hero-stats .stat-num {
+        font-size: 1.6rem;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        color: var(--text);
+      }
+      .hero-stats .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-top: 2px;
+      }
+
+      /* ========== Section Title ========== */
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.85rem;
+      }
+      .section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ========== Card Grid ========== */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+        margin-bottom: 48px;
+      }
+
+      /* ========== Note Card ========== */
+      .card {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease,
+          box-shadow 0.25s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.5s ease forwards;
+      }
+      .card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .card:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .card:nth-child(3) {
+        animation-delay: 0.25s;
+      }
+      .card:nth-child(4) {
+        animation-delay: 0.35s;
+      }
+      .card:nth-child(5) {
+        animation-delay: 0.45s;
+      }
+      .card:nth-child(6) {
+        animation-delay: 0.55s;
+      }
+      .card:nth-child(7) {
+        animation-delay: 0.65s;
+      }
+      .card:nth-child(8) {
+        animation-delay: 0.75s;
+      }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--card-accent);
+        opacity: 0.8;
+      }
+      .card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at top right,
+          var(--card-glow),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--card-accent);
+        box-shadow:
+          0 12px 40px rgba(0, 0, 0, 0.3),
+          0 0 0 1px var(--card-accent);
+      }
+      .card:hover::after {
+        opacity: 1;
+      }
+      .card:hover .card-arrow {
+        transform: translateX(4px);
+      }
+      .card:hover .card-icon {
+        transform: scale(1.08);
+      }
+
+      .card-icon {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--card-accent-soft);
+        border-radius: 10px;
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        transition: transform 0.25s ease;
+      }
+      .card-tag {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 12px;
+        background: var(--card-accent-soft);
+        color: var(--card-accent);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .card-desc {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        flex: 1;
+      }
+      .card-meta {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+      .card-meta span {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .card-meta .dot {
+        width: 5px;
+        height: 5px;
+        background: var(--card-accent);
+        border-radius: 50%;
+      }
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .card-footer .chapters {
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+      }
+      .card-footer .chapters strong {
+        color: var(--card-accent);
+        font-family: var(--font-mono);
+        font-weight: 700;
+      }
+      .card-arrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--card-accent);
+        transition: transform 0.2s ease;
+      }
+
+      /* ========== Coming Soon Card ========== */
+      .card.placeholder {
+        border-style: dashed;
+        background: transparent;
+        cursor: default;
+        opacity: 0;
+        animation: fadeUp 0.5s ease 0.35s forwards;
+      }
+      .card.placeholder::before {
+        display: none;
+      }
+      .card.placeholder::after {
+        display: none;
+      }
+      .card.placeholder:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .card.placeholder .card-icon {
+        background: rgba(142, 160, 184, 0.08);
+        color: var(--text-secondary);
+      }
+      .card.placeholder h3 {
+        color: var(--text-secondary);
+      }
+      .card.placeholder .card-arrow {
+        color: var(--text-secondary);
+      }
+
+      /* ========== Footer ========== */
+      .footer {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+      }
+      .footer a {
+        color: #7ab7ff;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 640px) {
+        .page {
+          padding: 40px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 2rem;
+        }
+        .hero p {
+          font-size: 0.98rem;
+        }
+        .hero-stats {
+          gap: 24px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .card {
+          padding: 22px;
+        }
+      }
+
+      /* ========== Focus & Motion ========== */
+      :focus-visible {
+        outline: 2px solid #62f6a8;
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ========== Print ========== */
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        body::before {
+          display: none;
+        }
+        .card {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+          box-shadow: none !important;
+        }
+        .hero-badge .pulse {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <!-- Hero -->
+      <header class="hero">
+        <a class="blog-home-link" href="index.html" aria-label="返回博客首页"
+          >← 返回博客首页</a
+        >
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          持续更新中
+        </div>
+        <h1>技术学习笔记</h1>
+        <p>
+          从入门到精通，系统化的技术成长路线。每份笔记覆盖完整知识体系，配有代码示例与实战经验。
+        </p>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">8</div>
+            <div class="stat-label">笔记专题</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">163</div>
+            <div class="stat-label">章节总数</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">持续学习</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Notes Grid -->
+      <h2 class="section-title">全部笔记</h2>
+      <div class="grid">
+        <!-- Python Card -->
+        <a
+          href="learningPython.html"
+          class="card"
+          style="
+            --card-accent: #3776ab;
+            --card-accent-soft: rgba(55, 118, 171, 0.12);
+            --card-glow: rgba(55, 118, 171, 0.06);
+          ">
+          <div class="card-icon">🐍</div>
+          <div class="card-tag">编程语言</div>
+          <h3>Python 从入门到精通</h3>
+          <p class="card-desc">
+            从变量、数据结构与面向对象出发，掌握装饰器、迭代器、并发编程，再到
+            Web 开发、数据分析与底层性能优化。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>18 章</span>
+            <span><span class="dot"></span>语法 · OOP · 数据 · Web</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>18</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Web Scraping Card -->
+        <a
+          href="learningWebScraping.html"
+          class="card"
+          style="
+            --card-accent: #e67e22;
+            --card-accent-soft: rgba(230, 126, 34, 0.1);
+            --card-glow: rgba(230, 126, 34, 0.06);
+          ">
+          <div class="card-icon">🕷</div>
+          <div class="card-tag">数据采集</div>
+          <h3>Python 爬虫从入门到精通</h3>
+          <p class="card-desc">
+            从 HTTP 请求与网页解析出发，掌握 XPath、CSS
+            选择器、反爬处理、并发抓取、数据存储与 Scrapy 工程实践。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>22 章</span>
+            <span><span class="dot"></span>请求 · 解析 · Scrapy</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>22</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Linux Card -->
+        <a
+          href="learningLinux.html"
+          class="card"
+          style="
+            --card-accent: #62f6a8;
+            --card-accent-soft: rgba(98, 246, 168, 0.1);
+            --card-glow: rgba(98, 246, 168, 0.06);
+          ">
+          <div class="card-icon">🐧</div>
+          <div class="card-tag">系统基础</div>
+          <h3>Linux 从入门到精通</h3>
+          <p class="card-desc">
+            从文件系统与基础命令出发，深入 Shell
+            脚本、权限管理、网络配置、进程监控，直至内核原理与自动化运维。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>18 章</span>
+            <span><span class="dot"></span>命令 · 脚本 · 内核</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>18</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Linux Commands Card -->
+        <a
+          href="learningLinuxCommand.html"
+          class="card"
+          style="
+            --card-accent: #f59e0b;
+            --card-accent-soft: rgba(245, 158, 11, 0.1);
+            --card-glow: rgba(245, 158, 11, 0.06);
+          ">
+          <div class="card-icon">⌘</div>
+          <div class="card-tag">命令速记</div>
+          <h3>Linux 命令大全</h3>
+          <p class="card-desc">
+            汇总文件、文本、进程、网络、权限与系统管理等常用命令，标注英文全称与使用场景，帮助快速查阅和强化记忆。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>21 类</span>
+            <span><span class="dot"></span>300+ 条命令</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>21</strong> 个分类</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Docker Card -->
+        <a
+          href="learningDocker.html"
+          class="card"
+          style="
+            --card-accent: #2496ed;
+            --card-accent-soft: rgba(36, 150, 237, 0.1);
+            --card-glow: rgba(36, 150, 237, 0.06);
+          ">
+          <div class="card-icon">🐳</div>
+          <div class="card-tag">容器化</div>
+          <h3>Docker 从入门到精通</h3>
+          <p class="card-desc">
+            掌握镜像与容器操作、Dockerfile 最佳实践、数据卷与网络、Compose
+            编排，深入底层原理至 K8s 与 CI/CD 生产实践。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>18 章</span>
+            <span><span class="dot"></span>容器 · 编排 · 云原生</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>18</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Vue Card -->
+        <a
+          href="learningVue.html"
+          class="card"
+          style="
+            --card-accent: #42b883;
+            --card-accent-soft: rgba(66, 184, 131, 0.1);
+            --card-glow: rgba(66, 184, 131, 0.06);
+          ">
+          <div class="card-icon">💚</div>
+          <div class="card-tag">前端框架</div>
+          <h3>Vue 3 从入门到精通</h3>
+          <p class="card-desc">
+            从模板语法与响应式核心出发，掌握组件、路由、状态管理、TypeScript
+            集成与性能优化，构建完整 Vue 3 应用。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>26 章</span>
+            <span><span class="dot"></span>组件 · 路由 · Pinia</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>26</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- React Card -->
+        <a
+          href="learningReact.html"
+          class="card"
+          style="
+            --card-accent: #61dafb;
+            --card-accent-soft: rgba(97, 218, 251, 0.1);
+            --card-glow: rgba(97, 218, 251, 0.06);
+          ">
+          <div class="card-icon">⚛</div>
+          <div class="card-tag">前端框架</div>
+          <h3>React 从入门到精通</h3>
+          <p class="card-desc">
+            从 JSX、组件与状态管理出发，掌握
+            Hooks、路由、异步请求、性能优化与工程化实践，构建现代 React 应用。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>23 章</span>
+            <span><span class="dot"></span>组件 · Hooks · 工程化</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>23</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Capture Package Card -->
+        <a
+          href="learningCapturePackage.html"
+          class="card"
+          style="
+            --card-accent: #8e44ad;
+            --card-accent-soft: rgba(142, 68, 173, 0.1);
+            --card-glow: rgba(142, 68, 173, 0.06);
+          ">
+          <div class="card-icon">🔍</div>
+          <div class="card-tag">网络工具</div>
+          <h3>主流抓包工具从入门到精通</h3>
+          <p class="card-desc">
+            学习 Wireshark、Fiddler、Charles、mitmproxy
+            等主流抓包工具，掌握流量分析、HTTPS 调试、过滤与问题排查方法。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>17 章</span>
+            <span><span class="dot"></span>抓包 · 分析 · 调试</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters"><strong>17</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <!-- Placeholder -->
+        <div class="card placeholder">
+          <div class="card-icon">＋</div>
+          <h3>更多笔记</h3>
+          <p class="card-desc">新的技术专题正在整理中，敬请期待。</p>
+          <div class="card-footer">
+            <span class="chapters">即将推出</span>
+            <span class="card-arrow">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>📚 学习笔记 · 技术成长路线 &nbsp;|&nbsp; 点击卡片进入对应笔记</p>
+      </footer>
+    </main>
+  </body>
+</html>

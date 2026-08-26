@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>随手记 · 林墨的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --text: #e6edf7;
+        --muted: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #d7a84b;
+        --soft: rgba(215, 168, 75, 0.12);
+        --font: 'Inter', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        line-height: 1.7;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at 50% -10%,
+          rgba(215, 168, 75, 0.08),
+          transparent 55%
+        );
+      }
+      .page {
+        position: relative;
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 64px 32px 80px;
+      }
+      .hero {
+        text-align: center;
+        margin-bottom: 56px;
+      }
+      .home-link,
+      .card {
+        color: inherit;
+        text-decoration: none;
+      }
+      .home-link {
+        display: inline-block;
+        margin-bottom: 24px;
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .home-link:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .badge {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 6px 16px;
+        border: 1px solid rgba(215, 168, 75, 0.2);
+        border-radius: 20px;
+        color: var(--accent);
+        background: var(--soft);
+        font: 600 0.8rem var(--mono);
+      }
+      .badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        line-height: 1.15;
+      }
+      .hero p {
+        max-width: 580px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 44px;
+        margin-top: 32px;
+        flex-wrap: wrap;
+      }
+      .stat {
+        text-align: center;
+      }
+      .stat strong {
+        display: block;
+        font: 800 1.6rem var(--mono);
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 28px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+      }
+      .card {
+        position: relative;
+        display: flex;
+        min-height: 260px;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 28px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--panel);
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .card::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        height: 3px;
+        background: var(--accent);
+      }
+      .card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        transform: translateY(-4px);
+      }
+      .card-icon {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background: var(--soft);
+        font-size: 1.6rem;
+      }
+      .card-tag {
+        margin-bottom: 12px;
+        color: var(--accent);
+        font: 0.7rem var(--mono);
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+      }
+      .card p {
+        flex: 1;
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .card-arrow {
+        color: var(--accent);
+      }
+      .placeholder {
+        border-style: dashed;
+        background: transparent;
+      }
+      .placeholder::before {
+        display: none;
+      }
+      footer {
+        margin-top: 48px;
+        padding-top: 40px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.82rem;
+      }
+      @media (max-width: 640px) {
+        .page {
+          padding: 40px 20px 60px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .card {
+          min-height: 240px;
+          padding: 22px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <a class="home-link" href="index.html">← 返回博客首页</a>
+        <div class="badge">持续记录中</div>
+        <h1>随手记</h1>
+        <p>
+          短小的观察、工具发现，以及写给未来自己的备忘。先记下来，再慢慢整理成可以复用的内容。
+        </p>
+        <div class="stats">
+          <div class="stat"><strong>4</strong><span>记录分类</span></div>
+          <div class="stat"><strong>0</strong><span>已整理记录</span></div>
+          <div class="stat"><strong>∞</strong><span>持续记录</span></div>
+        </div>
+      </header>
+      <h2 class="section-title">随手记录目录</h2>
+      <div class="grid">
+        <div class="card placeholder">
+          <div class="card-icon">✎</div>
+          <div class="card-tag">灵感片段</div>
+          <h2>短笔记</h2>
+          <p>收集读书、学习和工作中突然想到的概念、判断与小结。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+        <div class="card placeholder">
+          <div class="card-icon">⌘</div>
+          <div class="card-tag">工具发现</div>
+          <h2>工具与资源</h2>
+          <p>记录好用的命令、软件、网站和提高日常效率的小工具。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+        <div class="card placeholder">
+          <div class="card-icon">◌</div>
+          <div class="card-tag">学习复盘</div>
+          <h2>阶段性总结</h2>
+          <p>把某一阶段的学习进度、疑问和下一步计划留下来，方便回看。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+        <div class="card placeholder">
+          <div class="card-icon">＋</div>
+          <div class="card-tag">持续扩展</div>
+          <h2>更多记录</h2>
+          <p>这里为未来的新主题预留位置，内容成熟后再独立成篇。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+      </div>
+      <footer>随手记 · 保留好奇，也保留过程</footer>
+    </main>
+  </body>
+</html>

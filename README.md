@@ -1,8 +1,19 @@
-# 学习笔记
+# 林墨的技术手记
 
-这是一个静态技术学习笔记项目，按专题整理 Linux、Docker、Python 和 Vue 3 等内容，适合系统学习与快速查阅。
+这是一个以技术成长为主题的静态博客网站，记录系统学习、面试准备、项目实践和日常思考。网站按内容栏目组织文章，既适合沿着专题系统阅读，也适合通过索引快速查找具体内容。
 
-## 笔记目录
+## 内容栏目
+
+网站首页：[林墨的技术手记](index.html)
+
+1. [技术学习笔记](indexLearning.html)：系统整理 Python、Linux、Docker、Vue、React 以及抓包工具等专题。
+2. [面试题总结](indexInterview.html)：整理高频面试问题、解题思路和技术表达。
+3. [实战问题](indexProblemSolution.html)：记录调试现场、故障排查和工程实践中的问题。
+4. [教程 / 实操指南](indexCourse.html)：提供面向结果的操作步骤和可复现实践。
+5. [岗位要求 / 学习路线](indexJobRequirements.html)：从岗位描述出发梳理技能地图和学习计划。
+6. [随手记](indexRandomNotes.html)：记录短小观察、工具发现、学习复盘和临时备忘。
+
+## 学习笔记
 
 1. [Python 从入门到精通](learningPython.html)
 2. [Python 爬虫从入门到精通](learningWebScraping.html)
@@ -13,10 +24,17 @@
 7. [React 从入门到精通](learningReact.html)
 8. [主流抓包工具从入门到精通](learningCapturePackage.html)
 
-也可以从首页进入全部笔记：[技术学习笔记](index.html)
+也可以查看[博主简历](resume.html)。
+
+## 项目结构
+
+- `index.html`：博客首页和内容总索引
+- `index*.html`：各内容栏目的索引页
+- `learning*.html`：具体学习笔记页面
+- `resume.html`：博主简历
 
 ## 使用方式
 
 直接在浏览器中打开 [index.html](index.html)，或使用 VS Code 的 Live Server 等静态文件服务器查看。
 
-所有笔记均为独立 HTML 文件，无需安装依赖即可阅读。
+这是一个纯静态网站，所有页面均为独立 HTML 文件，无需安装依赖或运行构建命令即可阅读和部署。

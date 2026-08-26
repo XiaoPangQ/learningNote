@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>岗位要求与学习路线 · 林墨的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --text: #e6edf7;
+        --muted: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #7ab7ff;
+        --soft: rgba(122, 183, 255, 0.12);
+        --font: 'Inter', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        line-height: 1.7;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at 50% -10%,
+          rgba(122, 183, 255, 0.08),
+          transparent 55%
+        );
+      }
+      .page {
+        position: relative;
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 64px 32px 80px;
+      }
+      .hero {
+        text-align: center;
+        margin-bottom: 56px;
+      }
+      .home-link,
+      .card {
+        color: inherit;
+        text-decoration: none;
+      }
+      .home-link {
+        display: inline-block;
+        margin-bottom: 24px;
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .home-link:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .badge {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 6px 16px;
+        border: 1px solid rgba(122, 183, 255, 0.2);
+        border-radius: 20px;
+        color: var(--accent);
+        background: var(--soft);
+        font: 600 0.8rem var(--mono);
+      }
+      .badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        line-height: 1.15;
+      }
+      .hero p {
+        max-width: 580px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 44px;
+        margin-top: 32px;
+        flex-wrap: wrap;
+      }
+      .stat {
+        text-align: center;
+      }
+      .stat strong {
+        display: block;
+        font: 800 1.6rem var(--mono);
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 28px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+      }
+      .card {
+        position: relative;
+        display: flex;
+        min-height: 260px;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 28px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--panel);
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .card::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        height: 3px;
+        background: var(--accent);
+      }
+      .card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        transform: translateY(-4px);
+      }
+      .card-icon {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background: var(--soft);
+        font-size: 1.6rem;
+      }
+      .card-tag {
+        margin-bottom: 12px;
+        color: var(--accent);
+        font: 0.7rem var(--mono);
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+      }
+      .card p {
+        flex: 1;
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .card-arrow {
+        color: var(--accent);
+      }
+      .placeholder {
+        border-style: dashed;
+        background: transparent;
+      }
+      .placeholder::before {
+        display: none;
+      }
+      footer {
+        margin-top: 48px;
+        padding-top: 40px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.82rem;
+      }
+      @media (max-width: 640px) {
+        .page {
+          padding: 40px 20px 60px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .card {
+          min-height: 240px;
+          padding: 22px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <a class="home-link" href="index.html">← 返回博客首页</a>
+        <div class="badge">持续更新中</div>
+        <h1>岗位要求 / 学习路线</h1>
+        <p>
+          从岗位描述出发，整理技能地图和阶段性学习计划，让学习目标与实际工作要求保持连接。
+        </p>
+        <div class="stats">
+          <div class="stat"><strong>4</strong><span>路线分类</span></div>
+          <div class="stat"><strong>0</strong><span>已整理岗位</span></div>
+          <div class="stat"><strong>∞</strong><span>持续更新</span></div>
+        </div>
+      </header>
+      <h2 class="section-title">技能路线目录</h2>
+      <div class="grid">
+        <a class="card" href="indexLearning.html"
+          ><div class="card-icon">▦</div>
+          <div class="card-tag">通用基础</div>
+          <h2>技术基础路线</h2>
+          <p>从 Python、Linux、网络与容器基础出发，建立持续学习的技术底座。</p>
+          <div class="card-footer">
+            <span>已有专题</span><span class="card-arrow">查看路线 →</span>
+          </div></a
+        >
+        <div class="card placeholder">
+          <div class="card-icon">⌁</div>
+          <div class="card-tag">后端方向</div>
+          <h2>Python 后端开发</h2>
+          <p>整理 Web 框架、数据库、接口设计、测试和部署等岗位能力要求。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+        <div class="card placeholder">
+          <div class="card-icon">◈</div>
+          <div class="card-tag">前端方向</div>
+          <h2>前端开发</h2>
+          <p>围绕 JavaScript、Vue、React、工程化与浏览器能力建立学习阶段。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+        <div class="card placeholder">
+          <div class="card-icon">↗</div>
+          <div class="card-tag">求职准备</div>
+          <h2>岗位分析与作品集</h2>
+          <p>记录岗位拆解、项目包装、简历准备和面试前的阶段性检查清单。</p>
+          <div class="card-footer">
+            <span>待补充</span><span class="card-arrow">即将推出</span>
+          </div>
+        </div>
+      </div>
+      <footer>岗位要求 / 学习路线 · 从目标出发安排学习</footer>
+    </main>
+  </body>
+</html>
