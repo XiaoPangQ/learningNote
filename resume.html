@@ -12,7 +12,10 @@
         --surface: #fffdf8;
         --line: #deddd3;
         --green: #2f6f54;
+        --green-dark: #214d3b;
+        --green-soft: #e5efe7;
         --orange: #c86b3c;
+        --yellow: #f0c96a;
         --serif: Georgia, 'Noto Serif SC', 'Songti SC', serif;
         --sans: 'Avenir Next', 'PingFang SC', 'Microsoft YaHei', sans-serif;
       }
@@ -26,27 +29,58 @@
         background: var(--paper);
         font-family: var(--sans);
         line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.3;
+        background-image: radial-gradient(#c5c9bc 0.7px, transparent 0.7px);
+        background-size: 18px 18px;
+        mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
       .page {
+        position: relative;
         max-width: 920px;
         margin: 0 auto;
         padding: 32px;
       }
       .back {
+        display: inline-flex;
+        align-items: center;
         color: var(--green);
         font-size: 0.85rem;
         text-decoration: none;
+        transition:
+          color 180ms ease,
+          transform 180ms ease;
       }
       .back::before {
         content: '←  ';
       }
+      .back:hover {
+        color: var(--orange);
+        transform: translateX(-3px);
+      }
       header {
+        position: relative;
         display: flex;
         align-items: end;
         justify-content: space-between;
         gap: 24px;
         padding: 82px 0 44px;
         border-bottom: 1px solid var(--line);
+      }
+      header::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 110px;
+        height: 4px;
+        background: var(--orange);
       }
       .avatar {
         display: grid;
@@ -75,6 +109,8 @@
         color: var(--muted);
       }
       .contact {
+        padding: 14px 0 0 20px;
+        border-left: 2px solid var(--yellow);
         color: var(--muted);
         font-size: 0.85rem;
         text-align: right;
@@ -95,6 +131,19 @@
       }
       .about {
         color: var(--muted);
+      }
+      section h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      section h2::before {
+        content: '';
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        background: var(--orange);
+        transform: rotate(45deg);
       }
       .project {
         padding: 18px 0;
@@ -129,6 +178,53 @@
         color: var(--muted);
         font-size: 0.88rem;
       }
+      .site-nav {
+        display: grid;
+        gap: 9px;
+        list-style: none;
+      }
+      .site-nav a {
+        display: grid;
+        grid-template-columns: 30px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: rgba(255, 253, 248, 0.76);
+        text-decoration: none;
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          background 180ms ease;
+      }
+      .site-nav a:hover,
+      .site-nav a:focus-visible {
+        border-color: var(--green);
+        background: var(--green-soft);
+        outline: none;
+        transform: translateX(4px);
+      }
+      .site-nav-index {
+        color: var(--orange);
+        font: 0.72rem var(--sans);
+      }
+      .site-nav-copy strong {
+        display: block;
+        font-family: var(--serif);
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+      .site-nav-copy small {
+        display: block;
+        color: var(--muted);
+        font-size: 0.7rem;
+        line-height: 1.35;
+      }
+      .site-nav-arrow {
+        color: var(--green);
+        font-size: 1rem;
+      }
       footer {
         padding-top: 20px;
         border-top: 1px solid var(--line);
@@ -145,11 +241,16 @@
         }
         .contact {
           margin-top: 24px;
+          padding-left: 0;
+          border-left: 0;
           text-align: left;
         }
         main {
           display: block;
           padding-top: 36px;
+        }
+        .site-nav a {
+          grid-template-columns: 26px 1fr auto;
         }
       }
     </style>
@@ -214,7 +315,70 @@
           </section>
           <section>
             <h2>站内入口</h2>
-            <p class="about"><a href="indexLearning.html">技术学习笔记 →</a></p>
+            <nav aria-label="博客内容栏目">
+              <ul class="site-nav">
+                <li>
+                  <a href="indexLearning.html">
+                    <span class="site-nav-index">01</span>
+                    <span class="site-nav-copy"
+                      ><strong>技术学习笔记</strong
+                      ><small>系统学习与专题知识库</small></span
+                    >
+                    <span class="site-nav-arrow">↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="indexInterview.html">
+                    <span class="site-nav-index">02</span>
+                    <span class="site-nav-copy"
+                      ><strong>面试题总结</strong
+                      ><small>原理、思路与回答表达</small></span
+                    >
+                    <span class="site-nav-arrow">↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="indexProblemSolution.html">
+                    <span class="site-nav-index">03</span>
+                    <span class="site-nav-copy"
+                      ><strong>实战问题</strong
+                      ><small>调试现场与故障排查</small></span
+                    >
+                    <span class="site-nav-arrow">↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="indexCourse.html">
+                    <span class="site-nav-index">04</span>
+                    <span class="site-nav-copy"
+                      ><strong>教程 / 实操指南</strong
+                      ><small>可复现的操作步骤</small></span
+                    >
+                    <span class="site-nav-arrow">↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="indexJobRequirements.html">
+                    <span class="site-nav-index">05</span>
+                    <span class="site-nav-copy"
+                      ><strong>岗位要求 / 学习路线</strong
+                      ><small>技能地图与阶段计划</small></span
+                    >
+                    <span class="site-nav-arrow">↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="indexRandomNotes.html">
+                    <span class="site-nav-index">06</span>
+                    <span class="site-nav-copy"
+                      ><strong>随手记</strong
+                      ><small>观察、工具与学习复盘</small></span
+                    >
+                    <span class="site-nav-arrow">↗</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </section>
         </aside>
       </main>
