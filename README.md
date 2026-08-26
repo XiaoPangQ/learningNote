@@ -6,7 +6,7 @@
 
 网站首页：[林墨的技术手记](index.html)
 
-1. [技术学习笔记](indexLearning.html)：系统整理 Python、Linux、Docker、Vue、React 以及抓包工具等专题。
+1. [技术学习笔记](indexLearning.html)：系统整理 Python、Linux、Docker、Vue、React、AI Agent 以及抓包工具等专题。
 2. [面试题总结](indexInterview.html)：整理高频面试问题、解题思路和技术表达。
 3. [实战问题](indexProblemSolution.html)：记录调试现场、故障排查和工程实践中的问题。
 4. [教程 / 实操指南](indexCourse.html)：提供面向结果的操作步骤和可复现实践。
@@ -23,6 +23,7 @@
 6. [Vue 3 从入门到精通](learningVue.html)
 7. [React 从入门到精通](learningReact.html)
 8. [主流抓包工具从入门到精通](learningCapturePackage.html)
+9. [AI Agent 智能体开发](learningAgentDevelopment.html)
 
 也可以查看[博主简历](resume.html)。
 
