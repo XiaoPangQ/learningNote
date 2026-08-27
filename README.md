@@ -1,10 +1,10 @@
-# 林墨的技术手记
+# Zinx的知识库
 
 这是一个以技术成长为主题的静态博客网站，记录系统学习、面试准备、项目实践和日常思考。网站按内容栏目组织文章，既适合沿着专题系统阅读，也适合通过索引快速查找具体内容。
 
 ## 内容栏目
 
-网站首页：[林墨的技术手记](index.html)
+网站首页：[Zinx的知识库](index.html)
 
 1. [技术学习笔记](indexLearning.html)：系统整理 Python、Linux、Docker、Vue、React、AI Agent 以及抓包工具等专题。
 2. [面试题总结](indexInterview.html)：整理高频面试问题、解题思路和技术表达。
