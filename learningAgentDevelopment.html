@@ -3631,6 +3631,18 @@ computer_use_tools = [
           }
         })
       })
+
+      document.addEventListener('pointerdown', function (e) {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !menuToggle.contains(e.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
     </script>
   </body>
 </html>

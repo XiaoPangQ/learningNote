@@ -424,13 +424,28 @@
           margin-top: 5px;
         }
         .topbar {
-          align-items: flex-start;
-          flex-wrap: wrap;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          column-gap: 16px;
+        }
+        .identity {
+          grid-column: 1 / -1;
+          min-width: 0;
         }
         .wallpaper-trigger {
-          order: 3;
-          width: 100%;
+          grid-column: 1;
+          grid-row: 2;
+          width: auto;
           margin: 16px 0 0;
+          white-space: nowrap;
+          font-size: 0.8rem;
+        }
+        .top-link {
+          grid-column: 2;
+          grid-row: 2;
+          margin-top: 16px;
+          white-space: nowrap;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -453,7 +468,7 @@
             src="images/avatar.jpeg"
             alt="Zinx 的头像" /><span
             ><strong>Zinx</strong
-            ><small>记录学习，也记录问题是怎样被解决的</small></span
+            ><small>记录学习，也记录问题的解决方法与过程</small></span
           ></a
         >
         <button class="wallpaper-trigger" type="button">
@@ -474,7 +489,7 @@
       <section aria-labelledby="topics-title">
         <div class="section-head">
           <h2 id="topics-title">我的知识库</h2>
-          <span>持续整理中 · 08 个专题</span>
+          <span>持续整理中 · 06 个专题</span>
         </div>
         <div class="grid">
           <a class="card wide" href="indexLearning.html"
@@ -549,7 +564,7 @@
         </div>
       </section>
       <footer>
-        <span>© 2026 Lin Mo · Keep learning, keep building.</span
+        <span>© 2026 Zinx Pang · Keep learning, keep building.</span
         ><span>最后更新：2026 / 08</span>
       </footer>
     </main>

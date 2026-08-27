@@ -1,0 +1,3211 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>软件测试 · 从入门到精通学习笔记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #f472b6;
+        --accent-soft: rgba(244, 114, 182, 0.12);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #f472b6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn,
+      .danger,
+      .info {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+      .danger::before {
+        content: '🚫 ';
+      }
+      .info::before {
+        content: '📌 ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 16px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th,
+      td {
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .section {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🧪</span> 软件测试笔记</h2>
+        <p>测试开发 · 18 章完整版</p>
+      </div>
+      <ul class="toc">
+        <li><a href="indexLearning.html">← 返回首页</a></li>
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch1">1. 软件测试基础与质量观</a></li>
+        <li><a href="#ch2">2. 测试流程与文档</a></li>
+        <li><a href="#ch3">3. 测试用例设计方法</a></li>
+        <li><a href="#ch4">4. 测试环境与工具链</a></li>
+        <li><a href="#ch5">5. 第一个测试项目实战</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch6">6. 功能测试与兼容性测试</a></li>
+        <li><a href="#ch7">7. 接口测试</a></li>
+        <li><a href="#ch8">8. 自动化测试（Selenium）</a></li>
+        <li><a href="#ch9">9. 单元测试与代码质量</a></li>
+        <li><a href="#ch10">10. 数据库测试与 SQL</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch11">11. 性能测试</a></li>
+        <li><a href="#ch12">12. 移动端与专项测试</a></li>
+        <li><a href="#ch13">13. 安全测试基础</a></li>
+        <li><a href="#ch14">14. 持续集成与测试平台</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch15">15. 测试架构与分层策略</a></li>
+        <li><a href="#ch16">16. 测试数据管理</a></li>
+        <li><a href="#ch17">17. 测试度量与效能</a></li>
+        <li><a href="#ch18">18. 前沿趋势与 AI 测试</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">软件测试 · 完整学习路径</span>
+        <h1>软件测试从入门到精通</h1>
+        <p>
+          从测试基础、用例设计、接口与自动化测试，到性能、安全、持续集成与 AI
+          测试，系统掌握软件测试与测试开发的核心技能。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>50+ 代码与用例示例</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ==================== 第1章 ==================== -->
+      <section class="section" id="ch1">
+        <h2><span class="num">01</span> 软件测试基础与质量观</h2>
+
+        <h3>1.1 什么是软件测试</h3>
+        <p>
+          软件测试是通过<strong>人工或自动化</strong>手段，验证软件是否满足需求、发现缺陷并评估质量的过程。它不是"随便点点"，而是有<strong>目标、有计划、可度量</strong>的工程活动。
+        </p>
+        <div class="info">
+          <strong>简单理解：</strong
+          >测试就像"质检员"——生产线上每件产品出厂前都要过检。软件也一样，上线前必须经过多道"质检关卡"，避免带病上线。
+        </div>
+
+        <h3>1.2 为什么要做测试</h3>
+        <ul>
+          <li><strong>发现缺陷</strong>：尽早发现 bug，修复成本最低</li>
+          <li><strong>验证需求</strong>：确认软件确实实现了预期的功能和性能</li>
+          <li><strong>建立信心</strong>：为发布决策提供依据，让团队敢上线</li>
+          <li><strong>降低成本</strong>：缺陷越晚发现，修复成本指数上升</li>
+        </ul>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>发现阶段</th>
+              <th>相对修复成本</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>需求/设计阶段</td>
+              <td>1x</td>
+              <td>改文档即可，最便宜</td>
+            </tr>
+            <tr>
+              <td>编码阶段</td>
+              <td>6.5x</td>
+              <td>改代码 + 重新编译</td>
+            </tr>
+            <tr>
+              <td>测试阶段</td>
+              <td>15x</td>
+              <td>定位 + 修复 + 回归</td>
+            </tr>
+            <tr>
+              <td>生产环境</td>
+              <td>60–100x</td>
+              <td>用户投诉、数据修复、舆情风险</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>为什么越早越好？</strong
+          >缺陷成本随阶段指数增长，所以行业强调"测试左移"——把测试活动提前到需求、设计阶段。
+        </div>
+
+        <h3>1.3 测试七大原则</h3>
+        <ul>
+          <li>
+            <strong>测试显示缺陷的存在</strong>：测试只能证明有 bug，不能证明没
+            bug
+          </li>
+          <li><strong>穷尽测试不可能</strong>：输入组合无穷，必须用抽样策略</li>
+          <li><strong>尽早测试</strong>：测试活动越早介入，效果越好成本越低</li>
+          <li>
+            <strong>缺陷集群性</strong>：少量模块集中了大部分缺陷（80/20 法则）
+          </li>
+          <li>
+            <strong>杀虫剂悖论</strong>：重复执行同样的用例，缺陷发现能力会下降
+          </li>
+          <li>
+            <strong>测试依赖于上下文</strong>：电商和银行 App 的测试重点完全不同
+          </li>
+          <li>
+            <strong>无缺陷谬误</strong>：没 bug 不等于好用，还要满足用户期望
+          </li>
+        </ul>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>显穷早集杀上无</strong>」——显示缺陷、穷尽不可能、尽早测试、缺陷集群、杀虫剂悖论、上下文依赖、无缺陷谬误。
+        </div>
+
+        <h3>1.4 软件质量模型（ISO/IEC 25010）</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>质量特性</th>
+              <th>含义</th>
+              <th>测试关注点</th>
+            </tr>
+            <tr>
+              <td>功能性</td>
+              <td>功能是否正确完整</td>
+              <td>功能测试、接口测试</td>
+            </tr>
+            <tr>
+              <td>可靠性</td>
+              <td>持续稳定运行不崩溃</td>
+              <td>稳定性测试、异常恢复</td>
+            </tr>
+            <tr>
+              <td>易用性</td>
+              <td>用户容易理解和使用</td>
+              <td>UI/UX 测试、可用性测试</td>
+            </tr>
+            <tr>
+              <td>效率</td>
+              <td>响应快、资源占用低</td>
+              <td>性能测试、专项测试</td>
+            </tr>
+            <tr>
+              <td>可维护性</td>
+              <td>代码易修改、易扩展</td>
+              <td>代码评审、单元测试</td>
+            </tr>
+            <tr>
+              <td>可移植性</td>
+              <td>跨环境运行的能力</td>
+              <td>兼容性测试</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>1.5 错误、缺陷与故障的关系</h3>
+        <p>
+          测试中常说的 bug
+          其实包含三个层次：<strong>错误（Error）</strong>是程序员写错代码；<strong>缺陷（Defect）</strong>是代码中的错误导致的功能问题；<strong>故障（Failure）</strong>是缺陷被触发后表现出的失败现象。
+        </p>
+        <div class="info">
+          <strong>传播链：</strong>人为错误 Error → 引入缺陷 Defect → 运行触发 →
+          故障 Failure。测试的价值就是在"故障"到达用户之前，拦截住"缺陷"。
+        </div>
+
+        <h3>1.6 核心测试术语速查</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>术语</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>验证（Verification）</td>
+              <td>做的东西对不对（是否符合规格）</td>
+            </tr>
+            <tr>
+              <td>确认（Validation）</td>
+              <td>做的东西是不是用户要的（是否满足需求）</td>
+            </tr>
+            <tr>
+              <td>冒烟测试（Smoke）</td>
+              <td>主干功能快速过一遍，判断能否继续测</td>
+            </tr>
+            <tr>
+              <td>回归测试（Regression）</td>
+              <td>改动后验证旧功能没被破坏</td>
+            </tr>
+            <tr>
+              <td>健全性测试（Sanity）</td>
+              <td>针对本次改动的重点快速验证</td>
+            </tr>
+            <tr>
+              <td>探索性测试（Exploratory）</td>
+              <td>边学边测，凭经验和直觉找漏洞</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==================== 第2章 ==================== -->
+      <section class="section" id="ch2">
+        <h2><span class="num">02</span> 测试流程与文档</h2>
+
+        <h3>2.1 标准测试流程</h3>
+        <ol>
+          <li><strong>需求分析</strong>：理解需求，明确测试范围与重点</li>
+          <li><strong>测试计划</strong>：制定策略、排期、资源与风险</li>
+          <li><strong>用例设计</strong>：设计并评审测试用例</li>
+          <li><strong>用例执行</strong>：按优先级执行，记录结果</li>
+          <li><strong>缺陷跟踪</strong>：提交 bug、跟踪修复、回归验证</li>
+          <li><strong>测试报告</strong>：汇总质量数据，给出上线结论</li>
+          <li><strong>上线验证</strong>：生产环境冒烟回归</li>
+        </ol>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>需计用执缺报验</strong>」——需求、计划、用例、执行、缺陷、报告、验收。走完一轮就是一次完整测试迭代。
+        </div>
+
+        <h3>2.2 测试计划包含什么</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>要素</th>
+              <th>要回答的问题</th>
+            </tr>
+            <tr>
+              <td>测试范围</td>
+              <td>测什么？不测什么（明确排除项）？</td>
+            </tr>
+            <tr>
+              <td>测试策略</td>
+              <td>用什么方法、工具、层级覆盖？</td>
+            </tr>
+            <tr>
+              <td>资源安排</td>
+              <td>谁负责？需要什么环境与数据？</td>
+            </tr>
+            <tr>
+              <td>进度计划</td>
+              <td>各阶段什么时候开始、结束？</td>
+            </tr>
+            <tr>
+              <td>风险与对策</td>
+              <td>哪些风险可能影响交付？如何应对？</td>
+            </tr>
+            <tr>
+              <td>准入准出</td>
+              <td>什么条件下开始测、什么条件算测完？</td>
+            </tr>
+          </table>
+        </div>
+        <div class="warn">
+          <strong>避坑：</strong
+          >测试计划不是写给别人看的文档，而是团队执行的"作战地图"。范围、准入准出条件写不清楚，后期一定会扯皮。
+        </div>
+
+        <h3>2.3 测试用例八大要素</h3>
+        <ul>
+          <li><strong>用例编号</strong>：如 TC-LOGIN-001，便于追溯管理</li>
+          <li><strong>用例标题</strong>：一句话说明验证什么</li>
+          <li><strong>前置条件</strong>：执行前的环境与数据准备</li>
+          <li><strong>测试步骤</strong>：具体操作步骤</li>
+          <li><strong>测试数据</strong>：输入的数据（常与步骤合并）</li>
+          <li><strong>预期结果</strong>：符合需求的期望输出（最关键）</li>
+          <li><strong>优先级</strong>：P0/P1/P2，决定执行顺序</li>
+          <li><strong>用例类型</strong>：功能/接口/性能/安全等</li>
+        </ul>
+        <div class="info">
+          <strong>为什么预期结果最关键？</strong
+          >没有预期结果，执行者无法判断对错，用例就退化成"随手点点"，无法复用、无法自动化。
+        </div>
+
+        <h3>2.4 缺陷生命周期</h3>
+        <p>
+          一个 bug 从被发现到关闭，通常经过：<strong
+            >新建 → 指派 → 修复 → 验证 → 关闭</strong
+          >，中间可能经历<strong>重新打开、拒绝、延期</strong>等状态。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>状态</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>New 新建</td>
+              <td>测试人员提交缺陷</td>
+            </tr>
+            <tr>
+              <td>Assigned 指派</td>
+              <td>分配给对应开发人员</td>
+            </tr>
+            <tr>
+              <td>Open / In Progress</td>
+              <td>开发开始处理</td>
+            </tr>
+            <tr>
+              <td>Fixed 已修复</td>
+              <td>开发修改完成，等待验证</td>
+            </tr>
+            <tr>
+              <td>Reopen 重新打开</td>
+              <td>验证不通过，打回重改</td>
+            </tr>
+            <tr>
+              <td>Closed 关闭</td>
+              <td>验证通过，缺陷关闭</td>
+            </tr>
+            <tr>
+              <td>Rejected / Won't Fix</td>
+              <td>无效缺陷或暂不处理</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>新指派修验关</strong>」——新建、指派、修复、验证、关闭，五步闭环。
+        </div>
+
+        <h3>2.5 缺陷报告怎么写</h3>
+        <p>
+          一条高质量缺陷应包含：<strong>标题（一句话说清问题）</strong>、复现步骤、实际结果、预期结果、环境信息（版本/系统/浏览器）、<strong>严重程度与优先级</strong>、截图或日志。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>严重程度 Severity</th>
+              <th>优先级 Priority</th>
+            </tr>
+            <tr>
+              <td>致命：崩溃、数据丢失、核心流程不可用</td>
+              <td>P0：立即修复，阻断发布</td>
+            </tr>
+            <tr>
+              <td>严重：主功能错误、无可用替代方案</td>
+              <td>P1：本版本内必须修复</td>
+            </tr>
+            <tr>
+              <td>一般：功能异常但有绕过方案</td>
+              <td>P2：本版本尽量修复</td>
+            </tr>
+            <tr>
+              <td>轻微：文案、样式、体验问题</td>
+              <td>P3：可下版本处理</td>
+            </tr>
+          </table>
+        </div>
+        <div class="danger">
+          <strong>常见误区：</strong
+          >严重程度和优先级不是一回事——"致命但不常见"和"轻微但影响面大"很常见。例如登录按钮文案写错（轻微）会造成全网投诉（P1）。
+        </div>
+
+        <h3>2.6 测试报告</h3>
+        <p>
+          测试报告回答三个问题：<strong>测了什么、结果如何、能不能上线</strong>。核心内容：测试概述、用例执行统计（总数/通过/失败/阻塞）、缺陷统计与分析、遗留风险、上线结论。
+        </p>
+        <div class="info">
+          <strong>报告的灵魂是结论，不是流水账：</strong
+          >领导只关心一件事——"能上线吗？风险是什么？"用数据支撑结论，别堆过程。
+        </div>
+      </section>
+
+      <!-- ==================== 第3章 ==================== -->
+      <section class="section" id="ch3">
+        <h2><span class="num">03</span> 测试用例设计方法</h2>
+
+        <h3>3.1 等价类划分</h3>
+        <p>
+          把输入数据按"是否等价"分组：<strong>有效等价类</strong>（符合需求的数据）与<strong>无效等价类</strong>（不符合需求的数据）。每组取一个代表值测试即可，避免穷举。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>需求（年龄输入）</th>
+              <th>有效等价类</th>
+              <th>无效等价类</th>
+            </tr>
+            <tr>
+              <td>18–60 岁可注册</td>
+              <td>18、30、60</td>
+              <td>17、61、-1、0、abc、空</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>有效一例，无效分型</strong>」——有效等价类取一个代表即可；无效等价类每种错误类型都要单独测（整数越界、负数、非数字、为空是四种情况）。
+        </div>
+
+        <h3>3.2 边界值分析</h3>
+        <p>
+          缺陷最容易发生在<strong>边界附近</strong>（大于、小于、等于、临界）。边界值分析是等价类的补充：取<strong>上点</strong>（边界值本身）、<strong>内点</strong>（边界内最近点）、<strong>离点</strong>（边界外最近点）测试。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>区间 [18, 60]</th>
+              <th>取值</th>
+            </tr>
+            <tr>
+              <td>上点（边界本身）</td>
+              <td>18、60</td>
+            </tr>
+            <tr>
+              <td>内点（边界内侧最近）</td>
+              <td>19、59</td>
+            </tr>
+            <tr>
+              <td>离点（边界外侧最近）</td>
+              <td>17、61</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>上内离</strong>」——上点、内点、离点，边界值全测齐。
+        </div>
+
+        <h3>3.3 判定表与因果图</h3>
+        <p>
+          <strong>判定表</strong
+          >适合"多个条件组合决定多个动作"的场景：列出<strong>条件桩</strong>（所有输入条件）和<strong>动作桩</strong>（所有输出动作），穷举条件组合覆盖。因果图是判定表的前置工具，用于梳理条件与结果的因果关系。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>条件</th>
+              <th>组合1</th>
+              <th>组合2</th>
+              <th>组合3</th>
+              <th>组合4</th>
+            </tr>
+            <tr>
+              <td>已登录</td>
+              <td>是</td>
+              <td>是</td>
+              <td>否</td>
+              <td>否</td>
+            </tr>
+            <tr>
+              <td>购物车非空</td>
+              <td>是</td>
+              <td>否</td>
+              <td>是</td>
+              <td>否</td>
+            </tr>
+            <tr>
+              <td>可下单</td>
+              <td>✅</td>
+              <td>❌ 提示加购</td>
+              <td>❌ 跳登录</td>
+              <td>❌ 双提示</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>3.4 场景法</h3>
+        <p>
+          从用户角度用<strong>基本流</strong>（主流程）+
+          <strong>备选流</strong
+          >（分支、异常）描述业务场景，每个场景就是一条用例。最适合业务流程类测试（下单、支付、退款）。
+        </p>
+        <ul>
+          <li><strong>基本流</strong>：登录 → 选商品 → 下单 → 支付 → 完成</li>
+          <li><strong>备选流1</strong>：登录时密码错误（重试）</li>
+          <li><strong>备选流2</strong>：库存不足（提示并返回）</li>
+          <li><strong>备选流3</strong>：支付超时（订单状态处理）</li>
+        </ul>
+
+        <h3>3.5 正交实验法</h3>
+        <p>
+          条件多、组合爆炸时，用正交表选取<strong>代表性的组合</strong>，用最少的用例覆盖两两组合。适合配置兼容性测试（浏览器
+          × 系统 × 分辨率）。
+        </p>
+        <div class="info">
+          <strong>为什么用正交？</strong>3 个条件各 4 个取值全组合要 4×4×4=64
+          条用例；用正交表 L16 只需 16 条，就能覆盖所有"两两组合"，性价比极高。
+        </div>
+
+        <h3>3.6 错误推测法</h3>
+        <p>
+          凭经验猜"哪里最容易出错"：除零、空值、超长、重复提交、并发点击、断网、时间边界（23:59:59）、金额为
+          0/负数、权限边界……直接针对性设计用例。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方法</th>
+              <th>适用场景</th>
+              <th>特点</th>
+            </tr>
+            <tr>
+              <td>等价类</td>
+              <td>输入框、数据范围</td>
+              <td>最基础，必用</td>
+            </tr>
+            <tr>
+              <td>边界值</td>
+              <td>有边界的数据</td>
+              <td>缺陷高发区</td>
+            </tr>
+            <tr>
+              <td>判定表</td>
+              <td>条件组合逻辑</td>
+              <td>覆盖全、用例多</td>
+            </tr>
+            <tr>
+              <td>场景法</td>
+              <td>业务流程</td>
+              <td>贴近用户</td>
+            </tr>
+            <tr>
+              <td>正交实验</td>
+              <td>配置组合爆炸</td>
+              <td>少量用例覆盖广</td>
+            </tr>
+            <tr>
+              <td>错误推测</td>
+              <td>经验补充</td>
+              <td>依赖个人经验</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>综合策略：</strong
+          >先用<strong>场景法</strong>搭业务流程骨架，再用<strong
+            >等价类 + 边界值</strong
+          >填数据细节，用<strong>判定表</strong>补组合逻辑，最后用<strong>错误推测</strong>查漏。
+        </div>
+      </section>
+
+      <!-- ==================== 第4章 ==================== -->
+      <section class="section" id="ch4">
+        <h2><span class="num">04</span> 测试环境与工具链</h2>
+
+        <h3>4.1 测试环境的组成</h3>
+        <p>
+          一个可用的测试环境 =
+          <strong>硬件 + 软件 + 网络 + 数据 + 配置</strong> 五要素齐备。
+        </p>
+        <ul>
+          <li><strong>硬件</strong>：服务器、真机、模拟器</li>
+          <li>
+            <strong>软件</strong>：被测系统、中间件（DB/Redis/MQ）、依赖服务
+          </li>
+          <li><strong>网络</strong>：内网/外网、代理、弱网模拟</li>
+          <li><strong>数据</strong>：测试库数据、造数脚本、备份恢复</li>
+          <li><strong>配置</strong>：环境变量、域名映射、开关配置</li>
+        </ul>
+
+        <h3>4.2 环境分类与隔离</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>环境</th>
+              <th>用途</th>
+              <th>特点</th>
+            </tr>
+            <tr>
+              <td>开发环境 Dev</td>
+              <td>开发自测</td>
+              <td>可随意折腾</td>
+            </tr>
+            <tr>
+              <td>测试环境 Test</td>
+              <td>功能/接口测试</td>
+              <td>需稳定，数据可控</td>
+            </tr>
+            <tr>
+              <td>预发布环境 Staging</td>
+              <td>上线前全流程演练</td>
+              <td>与生产一致，数据脱敏</td>
+            </tr>
+            <tr>
+              <td>生产环境 Prod</td>
+              <td>线上运行</td>
+              <td>只读验证，严禁乱动</td>
+            </tr>
+          </table>
+        </div>
+        <div class="warn">
+          <strong>避坑：</strong
+          >多环境必须<strong>物理或逻辑隔离</strong>。测试数据写入生产库、测试环境与预发共用一套
+          Redis 导致缓存串数据，是测试事故的高发原因。
+        </div>
+
+        <h3>4.3 Git 基础命令</h3>
+        <p>
+          测试人员也要会
+          Git：拉代码、切分支、提交缺陷相关验证代码、管理测试脚本。
+        </p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 常用 Git 命令
+git clone https://xxx/repo.git   # 拉取代码
+git checkout -b test/dev-001     # 新建并切换分支
+git add .                        # 暂存
+git commit -m "add test script"  # 提交
+git push origin test/dev-001     # 推送
+git pull                         # 拉取最新
+git log --oneline -5             # 查看最近提交
+git stash                        # 暂存未提交的修改
+git merge main                   # 合并主分支</code></pre>
+
+        <h3>4.4 缺陷管理工具</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>工具</th>
+              <th>特点</th>
+              <th>适用场景</th>
+            </tr>
+            <tr>
+              <td>禅道</td>
+              <td>国产、开源、需求/用例/bug 一体</td>
+              <td>国内中小团队</td>
+            </tr>
+            <tr>
+              <td>Jira</td>
+              <td>生态丰富，可深度定制工作流</td>
+              <td>大中型团队、敏捷</td>
+            </tr>
+            <tr>
+              <td>TAPD / PingCode</td>
+              <td>腾讯系敏捷协作，研发一体化</td>
+              <td>腾讯生态、敏捷团队</td>
+            </tr>
+            <tr>
+              <td>GitHub Issues</td>
+              <td>轻量、与代码仓库打通</td>
+              <td>开源项目</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>4.5 测试常用工具全景</h3>
+        <ul>
+          <li><strong>接口测试</strong>：Postman、Apifox、JMeter、requests</li>
+          <li><strong>UI 自动化</strong>：Selenium、Playwright、Appium</li>
+          <li>
+            <strong>抓包调试</strong>：Chrome
+            DevTools、Fiddler、Charles、mitmproxy
+          </li>
+          <li>
+            <strong>性能测试</strong>：JMeter、LoadRunner、Grafana + Prometheus
+          </li>
+          <li><strong>安全测试</strong>：Burp Suite、AppScan、AWVS</li>
+          <li><strong>单元测试</strong>：pytest、JUnit、Go test、Jest</li>
+        </ul>
+        <div class="tip">
+          <strong>为什么工具越用越少？</strong
+          >一个优秀的测试工程师不是"工具越多越好"，而是每类问题有一套熟练的主工具，能快速上手新工具。
+        </div>
+      </section>
+
+      <!-- ==================== 第5章 ==================== -->
+      <section class="section" id="ch5">
+        <h2><span class="num">05</span> 第一个测试项目实战</h2>
+
+        <h3>5.1 项目背景与测试范围</h3>
+        <p>
+          以电商网站的<strong>登录 + 下单</strong
+          >两个模块为例，走一遍完整测试流程：需求分析 → 测试计划 → 用例设计 →
+          执行 → 缺陷跟踪 → 测试报告。
+        </p>
+        <div class="info">
+          <strong>需求要点：</strong>① 手机号 + 密码登录，密码错误 5 次锁定 30
+          分钟；② 下单需购物车有商品、库存充足、余额充足；③
+          支付成功后库存扣减、订单状态为"待发货"。
+        </div>
+
+        <h3>5.2 需求分析与测试点提取</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>需求</th>
+              <th>测试点</th>
+              <th>用例方法</th>
+            </tr>
+            <tr>
+              <td>手机号 + 密码登录</td>
+              <td>格式校验、密码正确/错误、空值</td>
+              <td>等价类 + 边界值</td>
+            </tr>
+            <tr>
+              <td>5 次错误锁定 30 分钟</td>
+              <td>第 4/5/6 次、锁定倒计时、解锁</td>
+              <td>边界值 + 场景法</td>
+            </tr>
+            <tr>
+              <td>下单校验库存</td>
+              <td>库存充足/不足/为 0、并发扣减</td>
+              <td>场景法 + 并发</td>
+            </tr>
+            <tr>
+              <td>支付成功扣库存</td>
+              <td>扣减正确性、超卖、重复支付</td>
+              <td>场景法 + 错误推测</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>5.3 测试用例示例（登录模块）</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>编号</th>
+              <th>标题</th>
+              <th>步骤</th>
+              <th>预期</th>
+              <th>优先级</th>
+            </tr>
+            <tr>
+              <td>TC-LOGIN-001</td>
+              <td>正确账号密码登录</td>
+              <td>输入正确手机号+密码，点登录</td>
+              <td>登录成功，跳转首页</td>
+              <td>P0</td>
+            </tr>
+            <tr>
+              <td>TC-LOGIN-002</td>
+              <td>密码错误提示</td>
+              <td>输入错误密码登录</td>
+              <td>提示"密码错误"</td>
+              <td>P0</td>
+            </tr>
+            <tr>
+              <td>TC-LOGIN-003</td>
+              <td>手机号格式校验</td>
+              <td>输入 11 位非手机号数字</td>
+              <td>提示格式错误</td>
+              <td>P1</td>
+            </tr>
+            <tr>
+              <td>TC-LOGIN-004</td>
+              <td>连续 5 次错误锁定</td>
+              <td>连续输错 5 次</td>
+              <td>提示账号锁定 30 分钟</td>
+              <td>P0</td>
+            </tr>
+            <tr>
+              <td>TC-LOGIN-005</td>
+              <td>锁定期间登录</td>
+              <td>锁定后立即尝试正确密码</td>
+              <td>仍提示锁定，不可登录</td>
+              <td>P1</td>
+            </tr>
+            <tr>
+              <td>TC-LOGIN-006</td>
+              <td>30 分钟后自动解锁</td>
+              <td>等待 30 分钟后登录</td>
+              <td>可正常登录</td>
+              <td>P1</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>5.4 执行与缺陷提交</h3>
+        <p>按 P0 → P1 → P2 顺序执行。发现缺陷后按标准模板提交：</p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【标题】连续输错 5 次后，提示文案显示"锁定 30 分钟"，实际 10 分钟即可登录
+【环境】Chrome 130 / Windows 11 / 版本 2.3.1-test
+【步骤】
+1. 打开登录页
+2. 连续输入错误密码 5 次
+3. 等待 10 分钟后再试
+【实际结果】可以正常登录（锁定时间不足 30 分钟）
+【预期结果】锁定满 30 分钟才可登录
+【严重程度】严重
+【优先级】P1
+【附件】screen-recording.mp4</code></pre>
+
+        <h3>5.5 回归与测试报告</h3>
+        <p>
+          开发修复后，<strong>重新执行原用例 + 关联用例</strong
+          >（回归）。最后汇总：本次共设计用例 68 条，执行 68 条，通过 62
+          条，失败 6 条，缺陷 8 个（已关闭 7 个，遗留 1 个低优）。
+        </p>
+        <div class="warn">
+          <strong>避坑：</strong>修复一个 bug 常引入新
+          bug。回归测试必须跑<strong>关联模块</strong>（如改了登录，订单模块的登录态相关用例也要回归），不能只验证"这个
+          bug 好了没"。
+        </div>
+      </section>
+
+      <!-- ==================== 第6章 ==================== -->
+      <section class="section" id="ch6">
+        <h2><span class="num">06</span> 功能测试与兼容性测试</h2>
+
+        <h3>6.1 功能测试要点</h3>
+        <ul>
+          <li><strong>正向流程</strong>：主流程必须通，数据流转正确</li>
+          <li><strong>反向流程</strong>：错误输入、非法操作有正确提示</li>
+          <li><strong>异常流程</strong>：断网、超时、崩溃后状态可恢复</li>
+          <li>
+            <strong>数据一致性</strong>：界面展示、数据库记录、接口返回三方一致
+          </li>
+          <li>
+            <strong>状态机验证</strong>：订单各状态流转合法，非法跳转被拦截
+          </li>
+        </ul>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>正反异常一致性</strong>」——正向、反向、异常三条路径 +
+          数据一致性，功能测试就不会漏大方向。
+        </div>
+
+        <h3>6.2 UI 与易用性测试</h3>
+        <p>
+          UI
+          测试关注<strong>样式还原</strong>（设计稿对比）、文案准确、交互反馈；易用性测试关注用户能否<strong>快速学会、高效使用、少犯错</strong>。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>易用性维度</th>
+              <th>检查点</th>
+            </tr>
+            <tr>
+              <td>可学习性</td>
+              <td>新手能否不培训直接上手？</td>
+            </tr>
+            <tr>
+              <td>效率</td>
+              <td>常用操作几步完成？有快捷键吗？</td>
+            </tr>
+            <tr>
+              <td>可记忆性</td>
+              <td>隔一段时间回来还记得怎么用吗？</td>
+            </tr>
+            <tr>
+              <td>容错性</td>
+              <td>误操作有确认/撤销/恢复吗？</td>
+            </tr>
+            <tr>
+              <td>满意度</td>
+              <td>整体体验是否愉悦？</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>6.3 兼容性测试</h3>
+        <p>
+          验证软件在不同<strong>浏览器、操作系统、设备、分辨率</strong>下的表现。核心是建立<strong>兼容性矩阵</strong>，按用户占比排优先级。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>维度</th>
+              <th>组合示例</th>
+            </tr>
+            <tr>
+              <td>浏览器</td>
+              <td>Chrome / Edge / Safari / Firefox / 微信内置浏览器</td>
+            </tr>
+            <tr>
+              <td>操作系统</td>
+              <td>Windows / macOS / iOS / Android / HarmonyOS</td>
+            </tr>
+            <tr>
+              <td>屏幕尺寸</td>
+              <td>375px / 414px / 768px / 1024px / 1440px</td>
+            </tr>
+            <tr>
+              <td>网络环境</td>
+              <td>Wi-Fi / 4G / 5G / 弱网（高延迟低带宽）</td>
+            </tr>
+          </table>
+        </div>
+        <div class="info">
+          <strong>为什么不能全组合测试？</strong
+          >组合爆炸。用正交实验法挑代表组合，或用云测平台（BrowserStack、Testin、阿里云移动测试）并行跑真机矩阵，效率翻倍。
+        </div>
+
+        <h3>6.4 兼容性问题常见类型</h3>
+        <ul>
+          <li>
+            <strong>CSS 渲染差异</strong>：flex/grid 兼容性、字体渲染、圆角阴影
+          </li>
+          <li>
+            <strong>JS 兼容性</strong>：ES6+ 语法、API 缺失（老内核浏览器）
+          </li>
+          <li>
+            <strong>安全策略差异</strong>：Cookie 限制、第三方 Cookie、HTTPS
+            混用
+          </li>
+          <li><strong>字体与编码</strong>：中文乱码、emoji 渲染</li>
+          <li><strong>分辨率适配</strong>：布局错乱、元素溢出、安全区适配</li>
+        </ul>
+        <div class="warn">
+          <strong>避坑：</strong>只测 Chrome
+          就上线是兼容性事故的高发原因。微信内置浏览器（X5 内核）和 iOS Safari
+          是国内 Web 项目绕不开的两个"隐藏环境"。
+        </div>
+      </section>
+
+      <!-- ==================== 第7章 ==================== -->
+      <section class="section" id="ch7">
+        <h2><span class="num">07</span> 接口测试</h2>
+
+        <h3>7.1 为什么接口测试这么重要</h3>
+        <ul>
+          <li><strong>更早介入</strong>：前后端联调前就能测，提前暴露问题</li>
+          <li><strong>成本更低</strong>：不依赖 UI，执行快、易自动化</li>
+          <li>
+            <strong>覆盖更深</strong>：能测 UI
+            测不到的场景（异常参数、并发、鉴权）
+          </li>
+          <li>
+            <strong>定位更准</strong
+            >：问题直接定位到接口层，不扯皮"前端还是后端"
+          </li>
+        </ul>
+        <div class="tip">
+          <strong>类比：</strong>UI
+          测试像"看门面"，接口测试像"查内部管道"——管道堵了门面再漂亮也没用。
+        </div>
+
+        <h3>7.2 HTTP 基础回顾</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方法</th>
+              <th>用途</th>
+              <th>幂等</th>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>查询资源</td>
+              <td>是</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>创建资源/提交操作</td>
+              <td>否</td>
+            </tr>
+            <tr>
+              <td>PUT</td>
+              <td>整体更新</td>
+              <td>是</td>
+            </tr>
+            <tr>
+              <td>PATCH</td>
+              <td>部分更新</td>
+              <td>否</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td>删除资源</td>
+              <td>是</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>状态码</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>2xx</td>
+              <td>成功（200 OK、201 创建、204 无内容）</td>
+            </tr>
+            <tr>
+              <td>3xx</td>
+              <td>重定向（301 永久、302 临时、304 缓存）</td>
+            </tr>
+            <tr>
+              <td>4xx</td>
+              <td>
+                客户端错误（400 参数错、401 未认证、403 无权限、404 不存在）
+              </td>
+            </tr>
+            <tr>
+              <td>5xx</td>
+              <td>服务端错误（500 内部、502 网关、503 不可用、504 超时）</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>7.3 接口用例怎么设计</h3>
+        <ul>
+          <li><strong>正常场景</strong>：合法参数，验证返回正确</li>
+          <li><strong>参数异常</strong>：必填缺失、类型错误、超长、格式错误</li>
+          <li>
+            <strong>边界值</strong>：分页 pageSize=0/1/最大值、金额
+            0/负数/小数位
+          </li>
+          <li>
+            <strong>鉴权异常</strong>：无 token、token 过期、伪造
+            token、越权访问
+          </li>
+          <li>
+            <strong>业务异常</strong>：库存不足、余额不足、重复提交、状态不合法
+          </li>
+          <li>
+            <strong>幂等与并发</strong>：重复请求不重复扣款、并发下单不超卖
+          </li>
+        </ul>
+        <div class="info">
+          <strong>一个接口最少 6 类用例：</strong>正常 1 条 + 参数异常若干 +
+          边界若干 + 鉴权 3 条 + 业务异常若干 + 并发/幂等 2 条。
+        </div>
+
+        <h3>7.4 Postman 实战</h3>
+        <p>
+          核心用法：<strong>Collection</strong> 管理用例、<strong
+            >Environment</strong
+          >
+          管理环境变量、<strong>Tests</strong> 写断言、<strong>Runner</strong>
+          批量执行。
+        </p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// Postman Tests 断言示例
+pm.test('状态码为 200', function () {
+  pm.response.to.have.status(200)
+})
+
+const data = pm.response.json()
+pm.test('业务码为 0', function () {
+  pm.expect(data.code).to.eql(0)
+})
+pm.test('返回用户 id 与登录人一致', function () {
+  pm.expect(data.data.id).to.eql(pm.variables.get('userId'))
+})
+
+// 从响应提取 token 存为环境变量
+pm.test('保存 token', function () {
+  pm.environment.set('token', data.data.token)
+})</code></pre>
+
+        <h3>7.5 鉴权方式对比</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方式</th>
+              <th>原理</th>
+              <th>特点</th>
+            </tr>
+            <tr>
+              <td>Cookie/Session</td>
+              <td>服务端存会话，客户端存 Cookie</td>
+              <td>有状态，分布式需共享 Session</td>
+            </tr>
+            <tr>
+              <td>JWT Token</td>
+              <td>服务端签名，客户端持有</td>
+              <td>无状态，可跨域，注意过期与撤销</td>
+            </tr>
+            <tr>
+              <td>OAuth2.0</td>
+              <td>授权码/令牌，第三方授权</td>
+              <td>开放平台标准</td>
+            </tr>
+            <tr>
+              <td>签名验签</td>
+              <td>参数 + 密钥生成签名，服务端校验</td>
+              <td>防篡改，常用于开放 API</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>7.6 接口断言体系</h3>
+        <p>
+          好的接口断言分层校验：<strong
+            >HTTP 状态码 → 业务码 → 核心数据 → Schema/类型</strong
+          >。只用 status=200 断言等于没测。
+        </p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># requests + pytest 接口测试示例
+import requests
+import pytest
+
+BASE = 'https://api.example.com'
+
+def test_login_success():
+    r = requests.post(f'{BASE}/login',
+                      json={'phone': '13800138000', 'pwd': 'abc123'})
+    assert r.status_code == 200          # ① 状态码
+    body = r.json()
+    assert body['code'] == 0             # ② 业务码
+    assert body['data']['token']         # ③ 关键字段存在
+    assert isinstance(body['data']['token'], str)  # ④ 类型校验
+
+@pytest.mark.parametrize('payload', [
+    {'phone': '', 'pwd': 'abc123'},      # 手机号为空
+    {'phone': '123', 'pwd': 'abc123'},   # 手机号格式错
+    {'phone': '13800138000', 'pwd': ''}, # 密码为空
+])
+def test_login_invalid(payload):
+    r = requests.post(f'{BASE}/login', json=payload)
+    assert r.status_code == 400 or r.json()['code'] != 0</code></pre>
+      </section>
+
+      <!-- ==================== 第8章 ==================== -->
+      <section class="section" id="ch8">
+        <h2><span class="num">08</span> 自动化测试（Selenium）</h2>
+
+        <h3>8.1 什么该自动化、什么不该</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>适合自动化</th>
+              <th>不适合自动化</th>
+            </tr>
+            <tr>
+              <td>回归频繁的稳定功能</td>
+              <td>一次性探索性测试</td>
+            </tr>
+            <tr>
+              <td>大量数据的参数化验证</td>
+              <td>UI 频繁改动的冒烟前期</td>
+            </tr>
+            <tr>
+              <td>跨系统集成流程</td>
+              <td>视觉/音效等主观体验</td>
+            </tr>
+            <tr>
+              <td>CI 中的冒烟与回归</td>
+              <td>短期需求的一次性验证</td>
+            </tr>
+          </table>
+        </div>
+        <div class="warn">
+          <strong>避坑：</strong>自动化不是"越多越好"。UI
+          自动化维护成本高（元素一改全挂），稳定业务才值得自动化；接口自动化性价比通常更高。
+        </div>
+
+        <h3>8.2 Selenium 原理</h3>
+        <p>
+          Selenium WebDriver 基于
+          <strong>WebDriver 协议</strong>：测试脚本（Python/Java）通过 HTTP
+          把命令发给浏览器驱动（chromedriver/geckodriver），驱动再调用浏览器原生接口执行操作。
+        </p>
+        <div class="info">
+          <strong>一句话：</strong>脚本 → WebDriver 协议 → 浏览器驱动 →
+          真实浏览器。所以脚本语言可以任选，行为一致。
+        </div>
+
+        <h3>8.3 元素定位八法</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>定位方式</th>
+              <th>示例</th>
+              <th>优先级</th>
+            </tr>
+            <tr>
+              <td>id</td>
+              <td>By.ID, 'username'</td>
+              <td>首选，唯一稳定</td>
+            </tr>
+            <tr>
+              <td>name</td>
+              <td>By.NAME, 'username'</td>
+              <td>次选</td>
+            </tr>
+            <tr>
+              <td>class</td>
+              <td>By.CLASS_NAME, 'btn-primary'</td>
+              <td>注意同 class 多个元素</td>
+            </tr>
+            <tr>
+              <td>tag</td>
+              <td>By.TAG_NAME, 'input'</td>
+              <td>极不推荐，太泛</td>
+            </tr>
+            <tr>
+              <td>link_text</td>
+              <td>By.LINK_TEXT, '登录'</td>
+              <td>仅精确文本链接</td>
+            </tr>
+            <tr>
+              <td>partial_link</td>
+              <td>By.PARTIAL_LINK_TEXT, '登'</td>
+              <td>部分文本链接</td>
+            </tr>
+            <tr>
+              <td>css_selector</td>
+              <td>By.CSS_SELECTOR, '#login input[type=password]'</td>
+              <td>推荐，快且灵活</td>
+            </tr>
+            <tr>
+              <td>xpath</td>
+              <td>By.XPATH, "//input[@id='username']"</td>
+              <td>兜底，最慢</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>8.4 三种等待</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>等待</th>
+              <th>写法</th>
+              <th>特点</th>
+            </tr>
+            <tr>
+              <td>强制等待</td>
+              <td>time.sleep(2)</td>
+              <td>固定死等，不稳定，少用</td>
+            </tr>
+            <tr>
+              <td>隐式等待</td>
+              <td>driver.implicitly_wait(10)</td>
+              <td>全局兜底，每次查找轮询，太"钝"</td>
+            </tr>
+            <tr>
+              <td>显式等待</td>
+              <td>WebDriverWait + expected_conditions</td>
+              <td>针对元素等条件，精确高效</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong>「<strong
+            >能显式不隐式，sleep 是最后手段</strong
+          >」。显式等待最稳定：等元素可点、可见、出现指定文本，条件满足立即继续。
+        </div>
+
+        <h3>8.5 PO 模式（Page Object）</h3>
+        <p>
+          把每个页面封装成类，元素定位与操作都收进页面类里，测试用例只负责"业务流程编排"。页面改了只改一处，用例不碎一地。
+        </p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># PO 模式：页面对象 + 用例分离
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+class LoginPage:
+    """登录页面对象：元素与操作都封装在这里"""
+    url = 'https://example.com/login'
+
+    def __init__(self, driver):
+        self.driver = driver
+
+    def open(self):
+        self.driver.get(self.url)
+
+    def login(self, phone, pwd):
+        # 显式等待元素可操作
+        phone_input = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'phone')))
+        phone_input.send_keys(phone)
+        self.driver.find_element(By.ID, 'pwd').send_keys(pwd)
+        self.driver.find_element(By.CSS_SELECTOR, '.btn-login').click()
+
+    def get_error_text(self):
+        return self.driver.find_element(By.CLASS_NAME, 'err-msg').text
+
+
+# ---------- 测试用例：只关心业务 ----------
+def test_login_ok(driver):
+    page = LoginPage(driver)
+    page.open()
+    page.login('13800138000', 'abc123')
+    assert '登录成功' in page.get_error_text() or 'home' in driver.current_url</code></pre>
+
+        <h3>8.6 数据驱动与关键字驱动</h3>
+        <ul>
+          <li>
+            <strong>数据驱动</strong
+            >：测试步骤固定，数据从外部（Excel/JSON/CSV）读取，一份脚本跑多组数据
+          </li>
+          <li>
+            <strong>关键字驱动</strong
+            >：把"打开页面/输入/点击/断言"封装成关键字，用表格编排用例，非技术人员也能维护
+          </li>
+        </ul>
+        <div class="tip">
+          <strong>演进路径：</strong>线性脚本 → 模块化 → 数据驱动 → 关键字驱动 →
+          测试平台化。团队成熟度不同，别一步跨到最复杂。
+        </div>
+      </section>
+
+      <!-- ==================== 第9章 ==================== -->
+      <section class="section" id="ch9">
+        <h2><span class="num">09</span> 单元测试与代码质量</h2>
+
+        <h3>9.1 单元测试是什么</h3>
+        <p>
+          单元测试是对<strong>最小代码单元（函数/方法/类）</strong>的自动化验证，在开发阶段由开发者（或测试开发）编写，追求<strong>快速、隔离、可重复</strong>。
+        </p>
+        <ul>
+          <li><strong>最快反馈</strong>：秒级运行，改完即测</li>
+          <li><strong>精准定位</strong>：失败直接指向具体函数</li>
+          <li><strong>重构保险</strong>：敢改代码不怕改坏</li>
+          <li><strong>活的文档</strong>：用例即用法示例</li>
+        </ul>
+
+        <h3>9.2 pytest 核心用法</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 安装：pip install pytest
+import pytest
+
+
+# 断言用原生 assert，失败信息友好
+def add(a, b):
+    return a + b
+
+
+def test_add():
+    assert add(1, 2) == 3
+    assert add(-1, 1) == 0
+
+
+# 参数化：一份逻辑跑多组数据
+@pytest.mark.parametrize('a,b,expected', [
+    (1, 2, 3),
+    (0, 0, 0),
+    (-1, -1, -2),
+])
+def test_add_param(a, b, expected):
+    assert add(a, b) == expected
+
+
+# fixture：共享前置/后置
+@pytest.fixture
+def user():
+    u = create_user('tester')   # 前置准备
+    yield u
+    delete_user(u.id)           # 后置清理</code></pre>
+
+        <h3>9.3 Mock 与 Stub</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>概念</th>
+              <th>作用</th>
+              <th>区别</th>
+            </tr>
+            <tr>
+              <td>Stub 桩</td>
+              <td>替身：固定返回预设结果</td>
+              <td>只"给数据"，不验证调用</td>
+            </tr>
+            <tr>
+              <td>Mock 模拟</td>
+              <td>替身 + 记录调用行为</td>
+              <td>可断言"被调用了几次、传了什么参数"</td>
+            </tr>
+          </table>
+        </div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 用 mock 隔离外部依赖（如支付接口）
+from unittest.mock import patch
+
+def pay(order):
+    # 调用外部支付 SDK（测试时不希望真的发起）
+    return sdk_pay(order.amount, order.user_id)
+
+
+def test_pay_uses_correct_amount():
+    order = Order(amount=99.9, user_id=7)
+    with patch('module.sdk_pay', return_value={'ok': True}) as mocked:
+        result = pay(order)
+    assert result['ok'] is True
+    # 断言 mock 被正确调用
+    mocked.assert_called_once_with(99.9, 7)</code></pre>
+
+        <h3>9.4 代码覆盖率</h3>
+        <p>
+          覆盖率度量被测试代码的执行比例，常见四种：<strong>行覆盖、函数覆盖、分支覆盖、语句覆盖</strong>。工具：pytest-cov、JaCoCo（Java）、Istanbul（JS）。
+        </p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 运行并统计覆盖率
+pytest --cov=myapp --cov-report=html --cov-fail-under=80</code></pre>
+        <div class="warn">
+          <strong>避坑：</strong>覆盖率 100% ≠
+          质量好——没断言的用例也能拉高覆盖率。关注"关键分支是否被断言覆盖"，而不是数字游戏。
+        </div>
+
+        <h3>9.5 TDD / BDD / ATDD</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方法论</th>
+              <th>核心思想</th>
+              <th>流程</th>
+            </tr>
+            <tr>
+              <td>TDD 测试驱动开发</td>
+              <td>先写测试，再写实现</td>
+              <td>红（失败）→ 绿（通过）→ 重构</td>
+            </tr>
+            <tr>
+              <td>BDD 行为驱动</td>
+              <td>用自然语言描述行为</td>
+              <td>Given…When…Then…（如 Cucumber）</td>
+            </tr>
+            <tr>
+              <td>ATDD 验收测试驱动</td>
+              <td>先定验收标准再开发</td>
+              <td>需求讨论 → 验收用例 → 实现</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong>TDD 治"怎么写"，BDD 治"写什么"，ATDD
+          治"什么时候算完"。
+        </div>
+
+        <h3>9.6 代码质量工具</h3>
+        <ul>
+          <li>
+            <strong>SonarQube</strong
+            >：静态扫描，检查坏味道、重复代码、圈复杂度、安全漏洞
+          </li>
+          <li>
+            <strong>圈复杂度</strong
+            >：衡量代码分支复杂度，越高越难测，建议控制在 10 以内
+          </li>
+          <li><strong>Code Review</strong>：人工审查，配合静态扫描互补</li>
+          <li>
+            <strong>规范检查</strong
+            >：ESLint（JS）、flake8/ruff（Python）、Checkstyle（Java）
+          </li>
+        </ul>
+      </section>
+
+      <!-- ==================== 第10章 ==================== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 数据库测试与 SQL</h2>
+
+        <h3>10.1 为什么测试要会 SQL</h3>
+        <ul>
+          <li><strong>准备数据</strong>：造数、修改订单状态、模拟历史数据</li>
+          <li><strong>验证结果</strong>：断言界面操作是否真的写对了库</li>
+          <li><strong>清理数据</strong>：测试后恢复现场，避免数据污染</li>
+          <li><strong>定位问题</strong>：区分"前端没展示"还是"库没写入"</li>
+        </ul>
+        <div class="info">
+          <strong>核心心法：</strong>界面是表象，数据库是真相。测试时"界面 +
+          接口 + 数据库"三方对照，才能确认数据一致性。
+        </div>
+
+        <h3>10.2 SQL 必备语法</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>-- 查询
+SELECT id, name, amount FROM orders WHERE user_id = 7;
+
+-- 分组统计：每个用户的订单数与总额
+SELECT user_id, COUNT(*) AS cnt, SUM(amount) AS total
+FROM orders
+WHERE status = 'PAID'
+GROUP BY user_id
+HAVING cnt > 1          -- HAVING 过滤分组结果
+ORDER BY total DESC
+LIMIT 10;
+
+-- 多表连接
+SELECT o.id, u.name FROM orders o
+JOIN users u ON o.user_id = u.id;
+
+-- 更新/删除（测试中慎用，记得 where 精确）
+UPDATE orders SET status = 'PAID' WHERE id = 123;
+DELETE FROM orders WHERE id = 456;</code></pre>
+
+        <h3>10.3 事务与 ACID</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>特性</th>
+              <th>含义</th>
+            </tr>
+            <tr>
+              <td>原子性 Atomicity</td>
+              <td>要么全成功，要么全回滚</td>
+            </tr>
+            <tr>
+              <td>一致性 Consistency</td>
+              <td>事务前后数据都符合约束</td>
+            </tr>
+            <tr>
+              <td>隔离性 Isolation</td>
+              <td>并发事务互不干扰</td>
+            </tr>
+            <tr>
+              <td>持久性 Durability</td>
+              <td>提交后数据永久保存</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>原一持隔</strong>」——原子性、一致性、持久性、隔离性。
+        </div>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>隔离级别</th>
+              <th>脏读</th>
+              <th>不可重复读</th>
+              <th>幻读</th>
+            </tr>
+            <tr>
+              <td>读未提交</td>
+              <td>可能</td>
+              <td>可能</td>
+              <td>可能</td>
+            </tr>
+            <tr>
+              <td>读已提交</td>
+              <td>避免</td>
+              <td>可能</td>
+              <td>可能</td>
+            </tr>
+            <tr>
+              <td>可重复读（MySQL 默认）</td>
+              <td>避免</td>
+              <td>避免</td>
+              <td>基本避免</td>
+            </tr>
+            <tr>
+              <td>串行化</td>
+              <td>避免</td>
+              <td>避免</td>
+              <td>避免</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>10.4 索引与失效场景</h3>
+        <p>
+          <strong>索引为什么快：</strong>B+
+          树把全表扫描变成对数级查找。但索引不是万能的，这些场景会导致<strong>索引失效</strong>：
+        </p>
+        <ul>
+          <li>
+            对索引列做<strong>函数运算</strong>：WHERE YEAR(create_time)=2024
+          </li>
+          <li>
+            <strong>隐式类型转换</strong>：phone 是 varchar，WHERE
+            phone=138…（数字）
+          </li>
+          <li>模糊匹配<strong>前置通配符</strong>：LIKE '%abc'</li>
+          <li>联合索引<strong>不满足最左前缀</strong></li>
+          <li><strong>OR 连接</strong>非索引列</li>
+          <li>数据量太小，优化器<strong>放弃索引</strong>走全表</li>
+        </ul>
+        <div class="warn">
+          <strong>测试关注：</strong
+          >查询接口慢的时候，先看执行计划（EXPLAIN），确认是否走了索引、扫描了多少行——这往往是"接口慢"的真相。
+        </div>
+
+        <h3>10.5 测试中的 SQL 实践</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 测试脚本中的数据库操作（pymysql 示例）
+import pymysql
+
+conn = pymysql.connect(host='127.0.0.1', user='test',
+                       password='test', database='shop')
+
+
+def prepare_order(user_id, amount):
+    """造数：直接插入一条待支付订单"""
+    with conn.cursor() as cur:
+        cur.execute(
+            'INSERT INTO orders (user_id, amount, status) VALUES (%s,%s,%s)',
+            (user_id, amount, 'PENDING'))
+    conn.commit()
+    return cur.lastrowid
+
+
+def assert_order_paid(order_id):
+    """断言：支付后订单状态应为 PAID"""
+    with conn.cursor() as cur:
+        cur.execute('SELECT status FROM orders WHERE id=%s', (order_id,))
+        row = cur.fetchone()
+    assert row[0] == 'PAID', f'订单 {order_id} 状态异常: {row}'</code></pre>
+        <div class="danger">
+          <strong>红线：</strong>严禁在生产库执行 DELETE/UPDATE
+          造数或清理！测试数据操作一律限定在测试库，且 SQL 必须带精确 WHERE。
+        </div>
+
+        <h3>10.6 高频 SQL 面试/笔试场景</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>-- ① 分组 TopN：每个部门工资前三
+SELECT * FROM (
+  SELECT e.*, ROW_NUMBER() OVER (
+    PARTITION BY dept_id ORDER BY salary DESC) rn
+  FROM emp e) t
+WHERE t.rn &lt;= 3;
+
+-- ② 去重保留最小 id
+DELETE FROM users WHERE id NOT IN (
+  SELECT MIN(id) FROM users GROUP BY phone);
+
+-- ③ 连续登录（lag 窗口函数）
+SELECT DISTINCT user_id FROM (
+  SELECT user_id, login_date,
+         LAG(login_date, 2) OVER (
+           PARTITION BY user_id ORDER BY login_date) d2
+  FROM user_login) t
+WHERE DATEDIFF(login_date, d2) = 2;</code></pre>
+      </section>
+
+      <!-- ==================== 第11章 ==================== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 性能测试</h2>
+
+        <h3>11.1 性能测试类型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>目的</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>负载测试</td>
+              <td>验证正常负载下表现</td>
+              <td>1000 并发跑 30 分钟</td>
+            </tr>
+            <tr>
+              <td>压力测试</td>
+              <td>找到系统崩溃的临界点</td>
+              <td>逐渐加压到 5000 并发</td>
+            </tr>
+            <tr>
+              <td>并发测试</td>
+              <td>验证并发正确性（超卖/死锁）</td>
+              <td>100 线程同时下单</td>
+            </tr>
+            <tr>
+              <td>稳定性测试</td>
+              <td>长时间运行是否泄漏/劣化</td>
+              <td>7×24 小时小压力运行</td>
+            </tr>
+            <tr>
+              <td>容量测试</td>
+              <td>规划扩容依据</td>
+              <td>估算支撑 100 万用户需多少机器</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>11.2 核心指标</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>指标</th>
+              <th>含义</th>
+              <th>健康参考</th>
+            </tr>
+            <tr>
+              <td>TPS</td>
+              <td>每秒完成的事务数</td>
+              <td>越高越好，看业务目标</td>
+            </tr>
+            <tr>
+              <td>QPS</td>
+              <td>每秒查询/请求数</td>
+              <td>与 TPS 常混用，关注口径</td>
+            </tr>
+            <tr>
+              <td>RT / ART</td>
+              <td>响应时间 / 平均响应时间</td>
+              <td>接口一般 &lt;200ms 优，&lt;1s 可接受</td>
+            </tr>
+            <tr>
+              <td>P95 / P99</td>
+              <td>95%/99% 请求在多少时间内完成</td>
+              <td>P99 才反映长尾体验</td>
+            </tr>
+            <tr>
+              <td>错误率</td>
+              <td>失败请求占比</td>
+              <td>一般要求 &lt;0.1%</td>
+            </tr>
+            <tr>
+              <td>资源利用率</td>
+              <td>CPU/内存/IO/网络</td>
+              <td>CPU 70–80% 需警惕，100% 打满</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>量、时、错、源</strong>」——吞吐量、响应时间、错误率、资源利用率，性能报告四件套。
+        </div>
+
+        <h3>11.3 JMeter 实战流程</h3>
+        <ol>
+          <li><strong>线程组</strong>：设置并发数、Ramp-Up、循环次数</li>
+          <li>
+            <strong>HTTP 请求 Sampler</strong>：配置协议、域名、路径、参数
+          </li>
+          <li><strong>断言</strong>：响应断言（状态码、关键字）</li>
+          <li><strong>监听器</strong>：聚合报告、响应时间图、TPS 图</li>
+          <li><strong>运行</strong>：GUI 小规模调试，命令行大规模压测</li>
+        </ol>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># JMeter 命令行压测（GUI 只用于调试）
+jmeter -n -t test.jmx -l result.jtl \
+       -e -o report_html \
+       -Jusers=1000 -Jduration=600
+
+# 生成的结果：result.jtl（原始数据）+ report_html（HTML 报告）</code></pre>
+
+        <h3>11.4 性能瓶颈定位思路</h3>
+        <p>从<strong>现象</strong>倒推<strong>原因</strong>，逐层排查：</p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>现象</th>
+              <th>排查方向</th>
+            </tr>
+            <tr>
+              <td>CPU 打满</td>
+              <td>死循环、GC 频繁、正则/加密计算、日志过多</td>
+            </tr>
+            <tr>
+              <td>内存上涨</td>
+              <td>内存泄漏、大对象、缓存无上限</td>
+            </tr>
+            <tr>
+              <td>RT 高但机器空闲</td>
+              <td>慢 SQL、锁等待、远程调用超时、网络</td>
+            </tr>
+            <tr>
+              <td>TPS 上不去</td>
+              <td>连接池打满、队列堆积、单点串行</td>
+            </tr>
+            <tr>
+              <td>错误率升高</td>
+              <td>超时、限流触发、线程池拒绝</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>11.5 常见调优手段</h3>
+        <ul>
+          <li>
+            <strong>数据库</strong>：加索引、分库分表、慢 SQL 优化、读写分离
+          </li>
+          <li><strong>缓存</strong>：热点数据上 Redis，降低 DB 压力</li>
+          <li><strong>异步化</strong>：非核心逻辑进 MQ，削峰填谷</li>
+          <li><strong>应用层</strong>：连接池调优、JVM 参数、限流熔断</li>
+          <li><strong>架构层</strong>：水平扩容、负载均衡、CDN 静态化</li>
+        </ul>
+        <div class="warn">
+          <strong>避坑：</strong>压测必须<strong>隔离环境 + 真实数据规模</strong
+          >。拿 1000 条数据的库压测没意义——生产 1 亿条数据，索引失效直接打崩。
+        </div>
+      </section>
+
+      <!-- ==================== 第12章 ==================== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 移动端与专项测试</h2>
+
+        <h3>12.1 App 测试全景</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>维度</th>
+              <th>测试内容</th>
+            </tr>
+            <tr>
+              <td>功能测试</td>
+              <td>页面、交互、业务流程与 Web 端一致</td>
+            </tr>
+            <tr>
+              <td>兼容性</td>
+              <td>iOS/Android 版本、厂商 ROM、屏幕尺寸</td>
+            </tr>
+            <tr>
+              <td>性能专项</td>
+              <td>启动时间、内存、CPU、流量、耗电、发热</td>
+            </tr>
+            <tr>
+              <td>中断测试</td>
+              <td>来电、短信、切后台、锁屏、闹钟、通知</td>
+            </tr>
+            <tr>
+              <td>弱网测试</td>
+              <td>3G/4G/5G、高延迟、丢包、弱信号</td>
+            </tr>
+            <tr>
+              <td>安全测试</td>
+              <td>数据加密、本地存储、权限、抓包、越权</td>
+            </tr>
+            <tr>
+              <td>升级测试</td>
+              <td>覆盖安装、增量更新、数据迁移、版本回退</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>12.2 adb 常用命令</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>adb devices                     # 查看连接的设备
+adb install -r app.apk          # 覆盖安装
+adb shell am start -n 包名/Activity  # 启动 App
+adb shell am force-stop 包名     # 强制停止
+adb logcat -c                   # 清空日志
+adb logcat | grep -i error      # 过滤错误日志
+adb shell dumpsys meminfo 包名   # 查看内存占用
+adb shell screencap /sdcard/a.png  # 截图
+adb pull /sdcard/a.png          # 拉取文件</code></pre>
+
+        <h3>12.3 弱网测试怎么做</h3>
+        <ul>
+          <li>
+            <strong>工具模拟</strong>：Charles/Fiddler
+            限速（设置上传下载带宽、延迟、丢包率）
+          </li>
+          <li>
+            <strong>场景覆盖</strong
+            >：弱网加载超时提示、重试机制、断点续传、请求失败恢复
+          </li>
+          <li>
+            <strong>重点验证</strong
+            >：加载中状态、超时文案、失败重试、数据不丢不重
+          </li>
+        </ul>
+        <div class="info">
+          <strong>为什么弱网必测？</strong
+          >弱网是最真实的用户环境（地铁、电梯、隧道）。很多"线上偶现
+          bug"就是弱网下超时/重试逻辑不完善导致的。
+        </div>
+
+        <h3>12.4 专项性能测试</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>专项</th>
+              <th>关注点</th>
+            </tr>
+            <tr>
+              <td>启动时间</td>
+              <td>冷启动/热启动，首屏时间</td>
+            </tr>
+            <tr>
+              <td>内存</td>
+              <td>内存泄漏（反复进出页面内存不回）、OOM</td>
+            </tr>
+            <tr>
+              <td>CPU</td>
+              <td>后台耗 CPU、动画卡顿、掉帧</td>
+            </tr>
+            <tr>
+              <td>流量</td>
+              <td>首页流量过大、图片未压缩、轮询频繁</td>
+            </tr>
+            <tr>
+              <td>耗电</td>
+              <td>后台持续唤醒、定位常开、推送频繁</td>
+            </tr>
+            <tr>
+              <td>流畅度</td>
+              <td>FPS、卡顿率、ANR（Android 无响应）</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>12.5 iOS 与 Android 差异</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>维度</th>
+              <th>iOS</th>
+              <th>Android</th>
+            </tr>
+            <tr>
+              <td>机型碎片化</td>
+              <td>少量机型，统一度高</td>
+              <td>厂商/ROM 众多，兼容性复杂</td>
+            </tr>
+            <tr>
+              <td>后台机制</td>
+              <td>严格限制，后台挂起</td>
+              <td>允许后台任务，需按厂商白名单适配</td>
+            </tr>
+            <tr>
+              <td>权限管理</td>
+              <td>逐项授权，体验统一</td>
+              <td>版本差异大，厂商定制多</td>
+            </tr>
+            <tr>
+              <td>推送</td>
+              <td>APNs 统一通道</td>
+              <td>厂商通道（小米/华为/OPPO/vivo）</td>
+            </tr>
+            <tr>
+              <td>安全</td>
+              <td>封闭生态，难逆向</td>
+              <td>开放生态，需防反编译/外挂</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>测试结论建议：</strong>Android 优先覆盖 Top 机型（厂商 ROM ×
+          版本矩阵），iOS 全量覆盖；核心功能两端都测，差异点单独列专项。
+        </div>
+      </section>
+
+      <!-- ==================== 第13章 ==================== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 安全测试基础</h2>
+
+        <h3>13.1 OWASP Top 10 概览</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>风险</th>
+              <th>一句话理解</th>
+            </tr>
+            <tr>
+              <td>失效的访问控制</td>
+              <td>越权访问他人数据/功能</td>
+            </tr>
+            <tr>
+              <td>加密失败</td>
+              <td>敏感数据明文存储/传输</td>
+            </tr>
+            <tr>
+              <td>注入</td>
+              <td>SQL/命令/代码注入</td>
+            </tr>
+            <tr>
+              <td>不安全设计</td>
+              <td>架构层面缺少安全约束</td>
+            </tr>
+            <tr>
+              <td>安全配置错误</td>
+              <td>默认口令、错误页泄露信息、CORS 放开</td>
+            </tr>
+            <tr>
+              <td>易受攻击组件</td>
+              <td>依赖库有已知漏洞未升级</td>
+            </tr>
+            <tr>
+              <td>认证与识别失败</td>
+              <td>弱口令、撞库、会话固定</td>
+            </tr>
+            <tr>
+              <td>软件与数据完整性失败</td>
+              <td>反序列化漏洞、更新链被篡改</td>
+            </tr>
+            <tr>
+              <td>日志与监控不足</td>
+              <td>攻击发生无日志可查</td>
+            </tr>
+            <tr>
+              <td>服务端请求伪造 SSRF</td>
+              <td>诱导服务器访问内网</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>13.2 SQL 注入原理与防御</h3>
+        <p>
+          <strong>原理：</strong>用户输入被拼进 SQL
+          语句执行，导致查询逻辑被篡改。例如用户名输入
+          <code>' OR '1'='1</code> 绕过登录。
+        </p>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 危险写法：字符串拼接
+sql = "SELECT * FROM users WHERE name='" + name + "'"
+# 输入  ' OR '1'='1   → 变成
+# SELECT * FROM users WHERE name='' OR '1'='1'   # 恒真，绕过登录！
+
+# 正确写法：参数化查询
+cur.execute('SELECT * FROM users WHERE name=%s', (name,))</code></pre>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>参数化打底、白名单加固、最小权限兜底</strong>」——参数化能堵住绝大多数注入；特殊场景（排序字段、表名）用白名单校验；数据库账号按需授权。
+        </div>
+
+        <h3>13.3 XSS 跨站脚本</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>触发方式</th>
+              <th>危害</th>
+            </tr>
+            <tr>
+              <td>反射型</td>
+              <td>URL 参数带脚本，未过滤直接渲染</td>
+              <td>诱导点击窃取 Cookie</td>
+            </tr>
+            <tr>
+              <td>存储型</td>
+              <td>评论/昵称存脚本，所有人访问都执行</td>
+              <td>蠕虫传播、批量窃取</td>
+            </tr>
+            <tr>
+              <td>DOM 型</td>
+              <td>前端 JS 操作 DOM 时注入</td>
+              <td>绕过服务端过滤</td>
+            </tr>
+          </table>
+        </div>
+        <div class="info">
+          <strong>防御：</strong>输出编码（<code>&lt;script&gt;</code> 转义为
+          <code>&amp;lt;script&amp;gt;</code>）、CSP 策略、HttpOnly Cookie。
+        </div>
+
+        <h3>13.4 CSRF 与越权</h3>
+        <ul>
+          <li>
+            <strong>CSRF 跨站请求伪造</strong
+            >：用户已登录，攻击者诱导浏览器自动发请求（改密码/转账）。防御：CSRF
+            Token、同源校验、SameSite Cookie。
+          </li>
+          <li>
+            <strong>越权</strong>：水平越权（改 URL 中的 id
+            看别人的订单）、垂直越权（普通用户调管理员接口）。防御：服务端每次请求校验身份与资源归属。
+          </li>
+        </ul>
+        <div class="tip">
+          <strong>🧠 口诀：</strong>「<strong>水平换 id，垂直换角色</strong
+          >」——测试越权就这两招：把 id
+          换成别人的，把角色从普通用户换成管理员再调接口。
+        </div>
+
+        <h3>13.5 安全测试流程与工具</h3>
+        <ol>
+          <li><strong>信息收集</strong>：域名、端口、指纹、技术栈</li>
+          <li><strong>漏洞扫描</strong>：AWVS/AppScan/Nessus 自动化扫描</li>
+          <li>
+            <strong>人工验证</strong>：Burp Suite
+            改包验证（绕过前端校验、篡改参数）
+          </li>
+          <li>
+            <strong>专项测试</strong>：注入、越权、文件上传、反序列化、逻辑漏洞
+          </li>
+          <li><strong>报告与复测</strong>：出具风险等级报告，修复后回归</li>
+        </ol>
+        <div class="warn">
+          <strong>红线：</strong
+          >安全测试只允许在授权范围内进行！未授权的扫描/攻击是违法行为。测试账号数据用脱敏数据，严禁触碰生产真实用户数据。
+        </div>
+      </section>
+
+      <!-- ==================== 第14章 ==================== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 持续集成与测试平台</h2>
+
+        <h3>14.1 CI/CD 三兄弟</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>概念</th>
+              <th>做什么</th>
+              <th>测试的价值</th>
+            </tr>
+            <tr>
+              <td>持续集成 CI</td>
+              <td>代码提交即自动构建 + 自动测试</td>
+              <td>测试是 CI 的"守门员"</td>
+            </tr>
+            <tr>
+              <td>持续交付 CD</td>
+              <td>构建产物随时可部署到任何环境</td>
+              <td>测试通过即可发布</td>
+            </tr>
+            <tr>
+              <td>持续部署</td>
+              <td>自动部署到生产</td>
+              <td>全自动流水线 + 生产监控兜底</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>14.2 流水线中的测试分层</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># GitLab CI 示例：测试分层流水线
+stages:
+  - test
+  - build
+  - deploy
+
+# ① 单元测试（最快，最先跑）
+unit-test:
+  stage: test
+  script:
+    - pip install -r requirements.txt
+    - pytest tests/unit --cov=app --cov-fail-under=80
+
+# ② 接口测试（依赖被测服务）
+api-test:
+  stage: test
+  script:
+    - docker compose up -d app
+    - pytest tests/api -m api
+
+# ③ E2E 冒烟（最慢，放最后）
+e2e-smoke:
+  stage: test
+  script:
+    - pytest tests/e2e -m smoke
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'</code></pre>
+        <div class="tip">
+          <strong>为什么按这个顺序？</strong>单测秒级、接口分级、E2E
+          最慢——把最便宜的先跑，快速失败、快速反馈。
+        </div>
+
+        <h3>14.3 质量门禁</h3>
+        <p>质量门禁是流水线上的"硬关卡"，不满足就<strong>阻断发布</strong>：</p>
+        <ul>
+          <li>单元测试通过率 = 100%</li>
+          <li>覆盖率 ≥ 80%（新代码）</li>
+          <li>静态扫描无 P0/P1 级问题</li>
+          <li>接口测试全部通过</li>
+          <li>冒烟测试通过</li>
+        </ul>
+        <div class="info">
+          <strong>门禁的意义：</strong
+          >把"质量靠人盯"变成"质量靠流程守"。门禁一旦设立，就是团队红线，不可随意绕过。
+        </div>
+
+        <h3>14.4 测试左移与右移</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方向</th>
+              <th>做什么</th>
+              <th>典型活动</th>
+            </tr>
+            <tr>
+              <td>左移</td>
+              <td>测试往开发前期移动</td>
+              <td>需求评审、静态扫描、单测、代码评审</td>
+            </tr>
+            <tr>
+              <td>右移</td>
+              <td>测试延伸到生产阶段</td>
+              <td>灰度验证、生产监控、A/B 测试、混沌演练</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>左移降成本，右移保体验</strong>」——左移尽早发现缺陷，右移确保线上真实环境质量。
+        </div>
+
+        <h3>14.5 测试平台化</h3>
+        <p>
+          成熟团队会把能力沉淀为平台：<strong>用例管理平台</strong>（用例在线维护）、<strong>自动化执行平台</strong>（定时/触发执行
+          +
+          报告）、<strong>测试环境管理</strong>（环境申请与释放）、<strong>数据工厂</strong>（造数平台）、<strong>质量大盘</strong>（度量可视化）。
+        </p>
+        <div class="warn">
+          <strong>避坑：</strong
+          >平台化是"锦上添花"不是"雪中送炭"。流程混乱、用例都没沉淀时先搞平台，只会造出一堆没人用的"系统"。
+        </div>
+      </section>
+
+      <!-- ==================== 第15章 ==================== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 测试架构与分层策略</h2>
+
+        <h3>15.1 测试金字塔</h3>
+        <p>
+          <strong>测试金字塔</strong
+          >是最经典的分层策略：底层单元测试数量最多、速度最快、成本最低；中层接口测试；顶层
+          E2E 测试数量最少、最慢、最脆弱。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>层级</th>
+              <th>数量</th>
+              <th>速度</th>
+              <th>成本</th>
+              <th>定位</th>
+            </tr>
+            <tr>
+              <td>E2E 端到端</td>
+              <td>少（10% 左右）</td>
+              <td>最慢（分钟级）</td>
+              <td>最高</td>
+              <td>核心主流程兜底</td>
+            </tr>
+            <tr>
+              <td>接口测试</td>
+              <td>中（30%）</td>
+              <td>快（秒级）</td>
+              <td>中</td>
+              <td>业务逻辑主战场</td>
+            </tr>
+            <tr>
+              <td>单元测试</td>
+              <td>多（60%+）</td>
+              <td>最快（毫秒级）</td>
+              <td>最低</td>
+              <td>代码逻辑兜底</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>为什么这样分？</strong>E2E
+          慢且脆，跑一次全量要几十分钟还老"误报"；单元测试秒级跑完千条。把验证重心压到中下层，反馈又快又稳。
+        </div>
+
+        <h3>15.2 分层测试策略设计</h3>
+        <ul>
+          <li>
+            <strong>冒烟层</strong
+            >：每次构建跑，主流程快速过（登录、下单、支付）
+          </li>
+          <li><strong>回归层</strong>：每晚/每次合并跑，全量用例</li>
+          <li><strong>专项层</strong>：性能/安全/兼容，按迭代节奏跑</li>
+          <li><strong>线上层</strong>：生产监控、巡检、拨测</li>
+        </ul>
+
+        <h3>15.3 测试右移实践</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>实践</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td>灰度发布</td>
+              <td>新版本先给 5% 用户，监控无恙再全量</td>
+            </tr>
+            <tr>
+              <td>线上巡检</td>
+              <td>定时脚本拨测核心链路（可用性、响应时间）</td>
+            </tr>
+            <tr>
+              <td>A/B 实验</td>
+              <td>同一功能两版本对比，用数据决策</td>
+            </tr>
+            <tr>
+              <td>全链路压测</td>
+              <td>生产环境模拟大促流量，验证容量</td>
+            </tr>
+            <tr>
+              <td>故障演练</td>
+              <td>主动注入故障（杀进程、断数据库），验证降级预案</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>15.4 全链路测试与混沌工程</h3>
+        <ul>
+          <li>
+            <strong>全链路测试</strong>：贯穿 App → 网关 → 微服务 → DB/缓存/MQ
+            的完整链路，配合链路追踪（SkyWalking/Zipkin）定位问题
+          </li>
+          <li>
+            <strong>混沌工程</strong
+            >：在生产（或镜像环境）主动注入故障，验证系统韧性——"提前打破，才能不怕坏"
+          </li>
+        </ul>
+        <div class="info">
+          <strong>一句话：</strong
+          >测试金字塔管"上线前"，测试右移管"上线后"，全链路与混沌把两段连成闭环。
+        </div>
+      </section>
+
+      <!-- ==================== 第16章 ==================== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 测试数据管理</h2>
+
+        <h3>16.1 测试数据的类型</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>类型</th>
+              <th>说明</th>
+              <th>示例</th>
+            </tr>
+            <tr>
+              <td>基础数据</td>
+              <td>系统运行必需</td>
+              <td>用户、商品、配置项</td>
+            </tr>
+            <tr>
+              <td>业务数据</td>
+              <td>支撑业务场景</td>
+              <td>订单、支付流水、优惠券</td>
+            </tr>
+            <tr>
+              <td>边界数据</td>
+              <td>验证边界逻辑</td>
+              <td>金额 0.01、最大长度、临界库存</td>
+            </tr>
+            <tr>
+              <td>异常数据</td>
+              <td>触发异常分支</td>
+              <td>空值、非法格式、失效状态</td>
+            </tr>
+            <tr>
+              <td>海量数据</td>
+              <td>性能与分页验证</td>
+              <td>百万级订单、千万级用户</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>16.2 造数方式对比</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>方式</th>
+              <th>优点</th>
+              <th>缺点</th>
+            </tr>
+            <tr>
+              <td>手工录入</td>
+              <td>简单</td>
+              <td>慢、易错、不可重复</td>
+            </tr>
+            <tr>
+              <td>SQL 造数</td>
+              <td>快、可控</td>
+              <td>需懂库结构，易污染</td>
+            </tr>
+            <tr>
+              <td>接口造数</td>
+              <td>走真实业务逻辑</td>
+              <td>依赖接口完整</td>
+            </tr>
+            <tr>
+              <td>造数工具/脚本</td>
+              <td>可复用、可批量</td>
+              <td>需要开发维护</td>
+            </tr>
+            <tr>
+              <td>数据工厂平台</td>
+              <td>按需自助、统一管理</td>
+              <td>建设成本高</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>16.3 数据脱敏规则</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>字段</th>
+              <th>脱敏示例</th>
+            </tr>
+            <tr>
+              <td>姓名</td>
+              <td>张三 → 张*</td>
+            </tr>
+            <tr>
+              <td>手机号</td>
+              <td>138****8000</td>
+            </tr>
+            <tr>
+              <td>身份证</td>
+              <td>110101********1234</td>
+            </tr>
+            <tr>
+              <td>银行卡</td>
+              <td>6222 **** **** 1234</td>
+            </tr>
+            <tr>
+              <td>邮箱</td>
+              <td>a***@example.com</td>
+            </tr>
+            <tr>
+              <td>地址</td>
+              <td>广东省深圳市***</td>
+            </tr>
+          </table>
+        </div>
+        <div class="danger">
+          <strong>合规红线：</strong
+          >生产数据复制到测试环境必须脱敏！《个人信息保护法》下，泄露真实用户信息（即使只是测试环境）也是重大违规。
+        </div>
+
+        <h3>16.4 数据隔离与清理</h3>
+        <ul>
+          <li><strong>按环境隔离</strong>：每套环境独立数据库，互不串数据</li>
+          <li>
+            <strong>按人/分支隔离</strong>：多人并行测试时按租户/前缀区分数据
+          </li>
+          <li>
+            <strong>定时清理</strong>：用例后置清理（fixture
+            teardown）、每日定时清库
+          </li>
+          <li>
+            <strong>数据版本快照</strong>：关键场景可整体恢复（数据库备份还原）
+          </li>
+        </ul>
+        <div class="warn">
+          <strong>避坑：</strong
+          >清理数据时注意外键与关联表顺序，先删子表再删主表；批量清理务必加
+          LIMIT 分批，避免长事务锁死。
+        </div>
+
+        <h3>16.5 测试数据平台化</h3>
+        <p>
+          成熟方案：<strong>数据工厂</strong>——按业务场景一键造数（如"生成一个已支付待发货的订单"），<strong>数据脱敏服务</strong>，<strong>数据生命周期管理</strong>（自动过期、自动清理）。
+        </p>
+      </section>
+
+      <!-- ==================== 第17章 ==================== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> 测试度量与效能</h2>
+
+        <h3>17.1 核心度量指标</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>指标</th>
+              <th>公式/含义</th>
+              <th>看什么</th>
+            </tr>
+            <tr>
+              <td>用例执行率</td>
+              <td>已执行 / 计划执行</td>
+              <td>是否按计划完成</td>
+            </tr>
+            <tr>
+              <td>用例通过率</td>
+              <td>通过 / 执行总数</td>
+              <td>质量达标情况</td>
+            </tr>
+            <tr>
+              <td>需求覆盖率</td>
+              <td>已测需求 / 总需求</td>
+              <td>是否有漏测风险</td>
+            </tr>
+            <tr>
+              <td>缺陷密度</td>
+              <td>缺陷数 / 千行代码（KLOC）</td>
+              <td>模块质量横向对比</td>
+            </tr>
+            <tr>
+              <td>缺陷逃逸率</td>
+              <td>线上缺陷 /（测试缺陷 + 线上缺陷）</td>
+              <td>测试有效性核心指标</td>
+            </tr>
+            <tr>
+              <td>自动化率</td>
+              <td>自动化用例 / 总用例</td>
+              <td>回归效率潜力</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>🧠 口诀：</strong
+          >「<strong>覆盖看漏测，逃逸看质量</strong>」——需求覆盖率防漏测，缺陷逃逸率衡量测试真的拦住多少问题。
+        </div>
+
+        <h3>17.2 缺陷分析</h3>
+        <ul>
+          <li><strong>按模块分布</strong>：哪块代码缺陷多，资源就往哪倾斜</li>
+          <li>
+            <strong>按阶段分布</strong>：缺陷多在哪个阶段引入（需求/设计/编码）→
+            改进对应环节
+          </li>
+          <li>
+            <strong>按类型分布</strong
+            >：逻辑错误、边界、并发、性能、UI……找出共性
+          </li>
+          <li><strong>80/20 法则</strong>：20% 的模块贡献 80% 的缺陷</li>
+        </ul>
+
+        <h3>17.3 根因分析工具</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>工具</th>
+              <th>用法</th>
+            </tr>
+            <tr>
+              <td>5 Why 分析法</td>
+              <td>连续追问 5 个"为什么"挖到根因</td>
+            </tr>
+            <tr>
+              <td>鱼骨图</td>
+              <td>从人机料法环（人员/机器/材料/方法/环境）找原因</td>
+            </tr>
+            <tr>
+              <td>帕累托图</td>
+              <td>缺陷按数量排序，聚焦"少数关键"</td>
+            </tr>
+            <tr>
+              <td>复盘会</td>
+              <td>事故后复盘：根因 → 改进 → 跟踪闭环</td>
+            </tr>
+          </table>
+        </div>
+        <div class="info">
+          <strong>5 Why 示例：</strong>线上订单丢失 → 为什么？支付回调没处理 →
+          为什么？回调逻辑有 bug → 为什么？没测过该场景 → 为什么？用例缺失 →
+          为什么？需求评审没识别该场景。根因在需求环节，而非"修个 bug"。
+        </div>
+
+        <h3>17.4 测试效能提升</h3>
+        <ul>
+          <li>
+            <strong>提自动化率</strong>：把高频回归自动化，释放人力做探索性测试
+          </li>
+          <li>
+            <strong>并行执行</strong>：分布式跑用例（pytest-xdist、Selenium
+            Grid）
+          </li>
+          <li><strong>用例瘦身</strong>：定期删除重复、无效、长期 P3 用例</li>
+          <li>
+            <strong>精准测试</strong>：按代码变更影响范围选择回归用例，不全量跑
+          </li>
+          <li><strong>反馈闭环</strong>：测试问题当天同步开发，别攒到最后</li>
+        </ul>
+        <div class="warn">
+          <strong>避坑：</strong>自动化率不是越高越好。为了"率"而自动化的脆弱 UI
+          用例，维护成本会反噬团队。先算 ROI，再决定自动化什么。
+        </div>
+
+        <h3>17.5 质量报告体系</h3>
+        <p>
+          分层报告：<strong>每日</strong>（执行进度 +
+          阻塞）、<strong>迭代</strong>（缺陷分析 +
+          质量结论）、<strong>季度</strong>（质量趋势 +
+          改进成果）。报告用趋势图说话，让质量"看得见、可改进"。
+        </p>
+      </section>
+
+      <!-- ==================== 第18章 ==================== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 前沿趋势与 AI 测试</h2>
+
+        <h3>18.1 AI 辅助测试</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>环节</th>
+              <th>AI 能做什么</th>
+            </tr>
+            <tr>
+              <td>用例生成</td>
+              <td>根据需求/接口文档自动生成测试用例与断言</td>
+            </tr>
+            <tr>
+              <td>元素定位</td>
+              <td>智能识别页面元素，减少维护成本</td>
+            </tr>
+            <tr>
+              <td>缺陷分析</td>
+              <td>自动聚类相似缺陷、识别高频根因</td>
+            </tr>
+            <tr>
+              <td>失败分析</td>
+              <td>自动化用例失败时智能定位"用例问题还是产品 bug"</td>
+            </tr>
+            <tr>
+              <td>视觉回归</td>
+              <td>图像对比找 UI 差异（pixelmatch 等）</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>18.2 智能用例生成示例（LLM）</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 用 LLM 生成边界用例（示意）
+prompt = """
+需求：注册接口，手机号 11 位、密码 6-20 位含字母数字。
+请生成等价类 + 边界值测试用例，输出 JSON 数组，字段：
+title, phone, pwd, expect_code
+"""
+
+# 可能的输出（示意）：
+# [
+#   {"title": "合法手机号+合法密码", "phone": "13800138000", "pwd": "abc123", "expect_code": 0},
+#   {"title": "手机号 10 位",         "phone": "1380013800", "pwd": "abc123", "expect_code": 400},
+#   {"title": "密码 5 位",            "phone": "13800138000", "pwd": "abc12", "expect_code": 400},
+#   {"title": "密码 20 位",           "phone": "13800138000", "pwd": "abc12345678901234567", "expect_code": 0},
+# ]</code></pre>
+        <div class="info">
+          <strong>AI 测试的核心：</strong>AI
+          是"提效助手"不是"替代者"。它擅长生成、聚类、初筛，最终判断质量结论的仍需要人来把关。
+        </div>
+
+        <h3>18.3 精准测试</h3>
+        <p>
+          基于<strong>代码变更分析</strong>（Diff +
+          调用链）自动圈定受影响范围，只回归相关用例，把回归时间从"全量几小时"降到"精准几分钟"。
+        </p>
+        <div class="tip">
+          <strong>为什么是趋势？</strong>微服务 +
+          快速迭代下，全量回归跑不动了。精准测试让"改一行代码"的验证成本趋近于零，是
+          CI 提速的关键技术。
+        </div>
+
+        <h3>18.4 大模型/智能应用测试</h3>
+        <ul>
+          <li>
+            <strong>LLM 功能评测</strong>：正确性、相关性、幻觉率、有害内容
+          </li>
+          <li>
+            <strong>RAG 评测</strong>：检索命中率、引用一致性、上下文长度边界
+          </li>
+          <li>
+            <strong>Agent 评测</strong>：任务完成率、工具调用正确性、多轮稳定性
+          </li>
+          <li>
+            <strong>测试基建</strong>：评测集（Golden
+            Set）、LLM-as-Judge、在线评测流水线
+          </li>
+        </ul>
+
+        <h3>18.5 测试开发成长路线</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>阶段</th>
+              <th>核心能力</th>
+              <th>代表产出</th>
+            </tr>
+            <tr>
+              <td>入门（0–1 年）</td>
+              <td>手工功能测试、用例设计、缺陷管理</td>
+              <td>高质量用例、缺陷报告</td>
+            </tr>
+            <tr>
+              <td>中级（1–3 年）</td>
+              <td>接口测试、自动化、SQL、性能基础</td>
+              <td>接口/UI 自动化脚本、压测报告</td>
+            </tr>
+            <tr>
+              <td>高级（3–5 年）</td>
+              <td>测试架构、性能/安全专项、CI 集成</td>
+              <td>分层测试体系、质量门禁、专项方案</td>
+            </tr>
+            <tr>
+              <td>专家（5 年+）</td>
+              <td>平台建设、AI 测试、质量治理</td>
+              <td>测试平台、质量模型、效能体系</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>18.6 学习路线与资源</h3>
+        <ol>
+          <li>
+            <strong>第 1–2 周</strong>：测试基础、用例设计方法（本笔记 1–3 章）
+          </li>
+          <li>
+            <strong>第 3–4 周</strong>：接口测试（Postman + requests +
+            实际项目）
+          </li>
+          <li>
+            <strong>第 5–6 周</strong>：自动化测试（Selenium + PO 模式 +
+            pytest）
+          </li>
+          <li>
+            <strong>第 7–8 周</strong>：SQL 与数据库测试、性能测试（JMeter）
+          </li>
+          <li>
+            <strong>第 9–10 周</strong>：移动端专项、安全测试基础、CI/CD 集成
+          </li>
+          <li>
+            <strong>持续</strong>：AI 测试、平台建设、质量治理、跟进行业实践
+          </li>
+        </ol>
+        <div class="tip">
+          <strong>最重要的建议：</strong
+          >动手实践。把一套真实系统（或开源项目）从用例设计到自动化、到压测完整做一遍。测试是"手艺活"，纸上得来终觉浅。
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // 代码复制功能
+      function copyCode(btn) {
+        const pre = btn.parentElement
+        const code = pre.querySelector('code')
+        const text = code.innerText
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent
+          btn.textContent = '已复制 ✓'
+          btn.style.background = 'var(--accent)'
+          btn.style.color = '#fff'
+          setTimeout(() => {
+            btn.textContent = original
+            btn.style.background = ''
+            btn.style.color = ''
+          }, 1500)
+        })
+      }
+
+      // 侧边栏滚动高亮
+      ;(function () {
+        const sections = document.querySelectorAll('.section')
+        const navLinks = document.querySelectorAll('.toc li a')
+
+        function updateActiveLink() {
+          let current = ''
+          sections.forEach((section) => {
+            const rect = section.getBoundingClientRect()
+            if (rect.top <= 120) current = section.id
+          })
+          navLinks.forEach((link) => {
+            link.classList.remove('active')
+            if (link.getAttribute('href') === '#' + current) {
+              link.classList.add('active')
+            }
+          })
+        }
+
+        window.addEventListener('scroll', updateActiveLink, { passive: true })
+        updateActiveLink()
+      })()
+
+      // 锚点平滑滚动（页内导航）
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          const targetId = this.getAttribute('href').substring(1)
+          const target = document.getElementById(targetId)
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            // 移动端点击后关闭侧边栏
+            document.querySelector('.sidebar').classList.remove('open')
+          }
+        })
+      })
+
+      document.addEventListener('pointerdown', function (e) {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !menuToggle.contains(e.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>

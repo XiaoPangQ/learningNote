@@ -1,0 +1,4032 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>计算机视觉工程师面试题总结 · 高频考点速记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #2dd4bf;
+        --accent-soft: rgba(45, 212, 191, 0.12);
+        --hot: #ff6b6b;
+        --hot-soft: rgba(255, 107, 107, 0.1);
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --warn: #ffd166;
+        --sidebar-w: 300px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+      .toc .hot-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--hot);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #2dd4bf 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-legend span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-legend .hot-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot-soft);
+        color: var(--hot);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+
+      /* Q&A Card */
+      .qa {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .qa:hover {
+        border-color: rgba(45, 212, 191, 0.3);
+      }
+      .qa.hot {
+        border-left: 3px solid var(--hot);
+        background: linear-gradient(
+          90deg,
+          var(--hot-soft) 0%,
+          var(--panel) 30%
+        );
+      }
+      .qa.hot:hover {
+        border-color: var(--hot);
+      }
+
+      .qa-q {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .qa-q .q-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+      }
+      .qa.hot .q-mark {
+        background: var(--hot-soft);
+        color: var(--hot);
+      }
+      .hot-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot);
+        color: #fff;
+        padding: 1px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+        white-space: nowrap;
+        animation: hotPulse 2s ease-in-out infinite;
+      }
+      @keyframes hotPulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .qa-a {
+        color: var(--text-secondary);
+        font-size: 0.93rem;
+      }
+      .qa-a ul,
+      .qa-a ol {
+        margin: 6px 0 6px 20px;
+      }
+      .qa-a li {
+        margin-bottom: 5px;
+      }
+      .qa-a strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .qa-a .key {
+        color: var(--code-green);
+        font-weight: 600;
+      }
+      .qa-a p {
+        margin-bottom: 8px;
+      }
+      .qa-a .mnemonic {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: rgba(98, 246, 168, 0.06);
+        border-left: 3px solid var(--code-green);
+        border-radius: 0 6px 6px 0;
+        font-size: 0.85rem;
+        color: var(--code-green);
+      }
+      .qa-a .mnemonic::before {
+        content: '🧠 速记：';
+        font-weight: 700;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        overflow-x: auto;
+        margin: 10px 0 14px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn {
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid;
+        font-size: 0.88rem;
+      }
+      .tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+        color: var(--text-secondary);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+        color: var(--text-secondary);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn,
+        .back-home {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        .qa {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .hot-badge {
+          background: #ccc;
+          color: #000;
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">👁</span> CV 面试指南</h2>
+        <p>高频考点 · 速记答案 · 80+ 题</p>
+      </div>
+      <ul class="toc">
+        <li><a href="indexInterview.html">← 返回面试题目录</a></li>
+        <li class="toc-section-title">数学与图像基础</li>
+        <li>
+          <a href="#img-repr"><span class="hot-dot"></span>图像数字化表示</a>
+        </li>
+        <li>
+          <a href="#img-norm"><span class="hot-dot"></span>归一化与 BGR/RGB</a>
+        </li>
+        <li>
+          <a href="#img-interp"><span class="hot-dot"></span>插值算法</a>
+        </li>
+        <li><a href="#hist-eq">直方图均衡化</a></li>
+        <li>
+          <a href="#conv-basic"><span class="hot-dot"></span>卷积与输出尺寸</a>
+        </li>
+        <li>
+          <a href="#receptive"><span class="hot-dot"></span>感受野</a>
+        </li>
+        <li><a href="#color-space">颜色空间</a></li>
+        <li>
+          <a href="#camera-model"
+            ><span class="hot-dot"></span>相机模型与标定</a
+          >
+        </li>
+        <li><a href="#distortion">图像畸变</a></li>
+
+        <li class="toc-section-title">传统图像处理</li>
+        <li>
+          <a href="#edge-det"><span class="hot-dot"></span>边缘检测算子</a>
+        </li>
+        <li>
+          <a href="#canny"><span class="hot-dot"></span>Canny 流程</a>
+        </li>
+        <li><a href="#filters">滤波器对比</a></li>
+        <li>
+          <a href="#median"><span class="hot-dot"></span>中值滤波与椒盐噪声</a>
+        </li>
+        <li>
+          <a href="#morphology"><span class="hot-dot"></span>形态学操作</a>
+        </li>
+        <li>
+          <a href="#sift"><span class="hot-dot"></span>SIFT 原理</a>
+        </li>
+        <li>
+          <a href="#sift-orb"><span class="hot-dot"></span>SIFT vs ORB</a>
+        </li>
+        <li><a href="#hog">HOG 特征</a></li>
+        <li>
+          <a href="#ransac"><span class="hot-dot"></span>RANSAC</a>
+        </li>
+
+        <li class="toc-section-title">深度学习基础</li>
+        <li>
+          <a href="#cnn-features"><span class="hot-dot"></span>CNN 三大特性</a>
+        </li>
+        <li>
+          <a href="#pooling"><span class="hot-dot"></span>池化</a>
+        </li>
+        <li>
+          <a href="#activation"><span class="hot-dot"></span>激活函数</a>
+        </li>
+        <li><a href="#relu">ReLU 与死区</a></li>
+        <li>
+          <a href="#bn"><span class="hot-dot"></span>BatchNorm</a>
+        </li>
+        <li>
+          <a href="#norm-family"><span class="hot-dot"></span>BN/LN/IN/GN</a>
+        </li>
+        <li>
+          <a href="#loss-fn"><span class="hot-dot"></span>损失函数</a>
+        </li>
+        <li><a href="#focal">Focal Loss</a></li>
+        <li>
+          <a href="#optimizer"><span class="hot-dot"></span>SGD vs Adam</a>
+        </li>
+        <li>
+          <a href="#overfit"><span class="hot-dot"></span>过拟合对策</a>
+        </li>
+        <li>
+          <a href="#grad-vanish"><span class="hot-dot"></span>梯度消失/爆炸</a>
+        </li>
+        <li><a href="#dropout">Dropout</a></li>
+        <li><a href="#init">权重初始化</a></li>
+        <li><a href="#lr-schedule">学习率调度</a></li>
+        <li>
+          <a href="#conv-1x1"><span class="hot-dot"></span>1×1 卷积</a>
+        </li>
+        <li>
+          <a href="#conv-variants"
+            ><span class="hot-dot"></span>空洞/转置/深度可分离卷积</a
+          >
+        </li>
+
+        <li class="toc-section-title">经典网络架构</li>
+        <li>
+          <a href="#cnn-history"><span class="hot-dot"></span>CNN 发展脉络</a>
+        </li>
+        <li>
+          <a href="#resnet"><span class="hot-dot"></span>ResNet 残差连接</a>
+        </li>
+        <li><a href="#inception">Inception 思想</a></li>
+        <li>
+          <a href="#mobilenet"><span class="hot-dot"></span>MobileNet</a>
+        </li>
+        <li>
+          <a href="#vit"><span class="hot-dot"></span>ViT 原理</a>
+        </li>
+        <li>
+          <a href="#cnn-vs-vit"><span class="hot-dot"></span>CNN vs ViT</a>
+        </li>
+        <li><a href="#senet">SENet 注意力</a></li>
+
+        <li class="toc-section-title">目标检测</li>
+        <li>
+          <a href="#det-paradigm"><span class="hot-dot"></span>检测两大范式</a>
+        </li>
+        <li>
+          <a href="#iou"><span class="hot-dot"></span>IoU</a>
+        </li>
+        <li>
+          <a href="#nms"><span class="hot-dot"></span>NMS 与 Soft-NMS</a>
+        </li>
+        <li>
+          <a href="#rcnn-family"><span class="hot-dot"></span>R-CNN 家族演进</a>
+        </li>
+        <li><a href="#anchor">Anchor 机制</a></li>
+        <li>
+          <a href="#yolo"><span class="hot-dot"></span>YOLO 系列演进</a>
+        </li>
+        <li>
+          <a href="#fpn"><span class="hot-dot"></span>FPN 特征金字塔</a>
+        </li>
+        <li>
+          <a href="#map"><span class="hot-dot"></span>mAP 计算</a>
+        </li>
+        <li>
+          <a href="#bbox-loss"><span class="hot-dot"></span>回归损失演进</a>
+        </li>
+        <li>
+          <a href="#small-obj"><span class="hot-dot"></span>小目标检测</a>
+        </li>
+        <li>
+          <a href="#detr"><span class="hot-dot"></span>DETR</a>
+        </li>
+
+        <li class="toc-section-title">图像分割</li>
+        <li>
+          <a href="#seg-types"><span class="hot-dot"></span>三种分割</a>
+        </li>
+        <li>
+          <a href="#unet"><span class="hot-dot"></span>U-Net</a>
+        </li>
+        <li><a href="#upsample">上采样方法</a></li>
+        <li><a href="#deeplab">DeepLab 与 ASPP</a></li>
+        <li><a href="#dice-loss">Dice Loss</a></li>
+        <li>
+          <a href="#roialign"
+            ><span class="hot-dot"></span>RoIAlign vs RoIPool</a
+          >
+        </li>
+        <li>
+          <a href="#miou"><span class="hot-dot"></span>mIoU</a>
+        </li>
+
+        <li class="toc-section-title">度量学习与人脸</li>
+        <li><a href="#face-flow">人脸识别流程</a></li>
+        <li>
+          <a href="#triplet"><span class="hot-dot"></span>Triplet Loss</a>
+        </li>
+        <li>
+          <a href="#arcface"><span class="hot-dot"></span>ArcFace</a>
+        </li>
+
+        <li class="toc-section-title">训练与调优</li>
+        <li>
+          <a href="#augmentation"><span class="hot-dot"></span>数据增强</a>
+        </li>
+        <li>
+          <a href="#imbalance"><span class="hot-dot"></span>类别不平衡</a>
+        </li>
+        <li>
+          <a href="#metrics"><span class="hot-dot"></span>精确率/召回率</a>
+        </li>
+        <li>
+          <a href="#finetune"><span class="hot-dot"></span>迁移学习与微调</a>
+        </li>
+        <li><a href="#debug-loss">Loss 不收敛排查</a></li>
+        <li><a href="#tta">TTA 与标签平滑</a></li>
+
+        <li class="toc-section-title">压缩与部署</li>
+        <li>
+          <a href="#compression"><span class="hot-dot"></span>模型压缩三板斧</a>
+        </li>
+        <li>
+          <a href="#quant"><span class="hot-dot"></span>量化原理</a>
+        </li>
+        <li>
+          <a href="#distill"><span class="hot-dot"></span>知识蒸馏</a>
+        </li>
+        <li>
+          <a href="#deploy-stack"><span class="hot-dot"></span>部署技术栈</a>
+        </li>
+        <li>
+          <a href="#preprocess-pit"
+            ><span class="hot-dot"></span>前后处理一致性</a
+          >
+        </li>
+
+        <li class="toc-section-title">生成模型与多模态</li>
+        <li>
+          <a href="#gan"><span class="hot-dot"></span>GAN 原理</a>
+        </li>
+        <li><a href="#gan-unstable">GAN 训练不稳</a></li>
+        <li>
+          <a href="#diffusion"><span class="hot-dot"></span>扩散模型</a>
+        </li>
+        <li>
+          <a href="#clip"><span class="hot-dot"></span>CLIP</a>
+        </li>
+        <li><a href="#sam">SAM</a></li>
+
+        <li class="toc-section-title">手写代码</li>
+        <li>
+          <a href="#code-iou"><span class="hot-dot"></span>手写 IoU</a>
+        </li>
+        <li>
+          <a href="#code-nms"><span class="hot-dot"></span>手写 NMS</a>
+        </li>
+        <li><a href="#code-kmeans">手写 K-Means</a></li>
+        <li>
+          <a href="#code-train"
+            ><span class="hot-dot"></span>PyTorch 训练流程</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🔥 高频标记 · 答案精炼易背诵</span>
+        <h1>计算机视觉工程师面试题总结</h1>
+        <p>
+          覆盖图像基础、传统视觉、深度学习、检测分割、模型部署与手写代码，共 80+
+          高频面试题。答案提炼为分点要点 + 速记口诀，方便快速背诵。
+        </p>
+        <div class="hero-legend">
+          <span
+            ><span class="hot-tag">🔥 高频</span>
+            标记为极高频考题，优先掌握</span
+          >
+          <span><span class="hot-tag">🧠 口诀</span> 答案末尾附速记口诀</span>
+        </div>
+      </header>
+
+      <!-- ============ 01 数学与图像基础 ============ -->
+      <section class="section" id="sec-math">
+        <h2><span class="num">01</span> 数学与图像基础</h2>
+
+        <div class="qa hot" id="img-repr">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            图像在计算机中是如何表示的？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>图像本质是一个<strong>多维数组（张量）</strong>：</p>
+            <ul>
+              <li>
+                <span class="key">灰度图</span>：H × W 的二维矩阵，每个像素是
+                0~255 的亮度值
+              </li>
+              <li>
+                <span class="key">彩色图</span>：H × W × 3 的三维张量，3
+                个通道（RGB/BGR）
+              </li>
+              <li>
+                <span class="key">位深</span>：8bit = 256 级；医疗影像常用 16bit
+              </li>
+              <li>
+                <span class="key">像素值含义</span>：光强量化值，取值范围 [0,
+                255]
+              </li>
+            </ul>
+            <p>
+              深度学习框架中常用
+              <code>(B, C, H, W)</code>
+              四维张量批量表示图像（PyTorch），OpenCV/NumPy 用
+              <code>(H, W, C)</code>。
+            </p>
+            <span class="mnemonic"
+              >图即矩阵：灰度是 2 维、彩图是 3 维、带 batch 是 4 维</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="img-norm">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            为什么要做图像归一化？BGR 和 RGB 有什么坑？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p><strong>归一化原因：</strong></p>
+            <ul>
+              <li>
+                让输入分布稳定，<span class="key">加快收敛</span>、避免梯度病态
+              </li>
+              <li>
+                常用方式：除以 255 缩放到 [0,1]，或减均值除方差（如 ImageNet 的
+                mean/std）
+              </li>
+              <li>
+                必须与<strong>训练时的预处理完全一致</strong>，否则精度大幅下降
+              </li>
+            </ul>
+            <p>
+              <strong>BGR/RGB 的坑：</strong>OpenCV 默认读取为
+              <code>BGR</code>，PIL/matplotlib 默认
+              <code>RGB</code>。混用会导致输入通道顺序错误，精度莫名下降。
+            </p>
+            <div class="warn">
+              部署翻车重灾区：训练用 PIL+RGB，部署用
+              OpenCV+BGR，通道顺序没换，模型直接"失明"。
+            </div>
+            <span class="mnemonic"
+              >归一化保一致，通道顺序要对齐；CV 读图是 BGR，换框架先转 RGB</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="img-interp">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            图像缩放有哪些插值方法？各有什么特点？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>方法</th>
+                  <th>原理</th>
+                  <th>特点</th>
+                </tr>
+                <tr>
+                  <td>最近邻</td>
+                  <td>取最近像素值</td>
+                  <td>最快，有锯齿、块状</td>
+                </tr>
+                <tr>
+                  <td>双线性</td>
+                  <td>相邻 4 像素加权</td>
+                  <td>速度/质量均衡，最常用</td>
+                </tr>
+                <tr>
+                  <td>双三次</td>
+                  <td>相邻 16 像素加权</td>
+                  <td>更平滑，较慢</td>
+                </tr>
+                <tr>
+                  <td>Lanczos</td>
+                  <td>sinc 核加窗</td>
+                  <td>质量最高，保留细节</td>
+                </tr>
+              </table>
+            </div>
+            <ul>
+              <li>
+                <span class="key">缩小</span>：注意走样，先高斯模糊再下采样
+              </li>
+              <li>
+                <span class="key">放大</span>：插值补信息；超分辨率可用 learned
+                模型
+              </li>
+              <li>区域插值（INTER_AREA）适合缩小，抗摩尔纹</li>
+            </ul>
+            <span class="mnemonic"
+              >最近邻快而糙，双线性是万金油，缩小用 AREA，放大用 LANCZOS</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="hist-eq">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">直方图均衡化的原理是什么？</div>
+          <div class="qa-a">
+            <p>
+              <strong>思想：</strong>把像素灰度的分布拉平，让直方图均匀覆盖
+              [0,255]，提升对比度。
+            </p>
+            <ul>
+              <li>
+                统计灰度直方图 → 求累积分布函数（CDF）→ 用 CDF
+                作为映射函数重映射像素
+              </li>
+              <li>
+                <span class="key">效果</span>：暗部细节被"拉开"，整体对比度增强
+              </li>
+              <li>
+                <span class="key">缺点</span>：全局变换，可能过度增强背景噪声
+              </li>
+              <li>
+                改进：<span class="key">自适应直方图均衡（CLAHE）</span
+                >——分块做均衡再限制对比度放大倍数，适合光照不均场景
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >CDF 当映射，直方图拉平；怕过头就用 CLAHE 分块限幅</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="conv-basic">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            什么是卷积？输出尺寸怎么算？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>卷积：</strong
+              >卷积核在图像上滑动，对应位置相乘再求和，提取局部特征（边缘、纹理、角点等）。
+            </p>
+            <p><strong>输出尺寸公式（必背）：</strong></p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>O = floor((I + 2P - K) / S) + 1
+
+I = 输入尺寸  K = 卷积核尺寸
+P = padding   S = 步长</code></pre>
+            <p>
+              例：输入 224、核 3、padding 1、步长 1 → 输出 224（尺寸不变，VGG
+              风格）。
+            </p>
+            <span class="mnemonic"
+              >输入加两倍补，减去核大小，除以步长取整，最后加个一</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="receptive">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            什么是感受野？如何计算？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>定义：</strong
+              >特征图上一个点对应输入图像上的区域大小，即"这个神经元能看到多大范围的原图"。
+            </p>
+            <ul>
+              <li>
+                逐层计算：<span class="key"
+                  >r<sub>l</sub> = r<sub>l-1</sub> + (k<sub>l</sub> - 1) × j<sub
+                    >l-1</sub
+                  ></span
+                >，其中 j 是跳跃间距（之前所有步长的连乘）
+              </li>
+              <li>
+                堆叠两层 3×3 卷积 = 一层 5×5 的感受野，但参数更少（18 vs
+                25）、非线性更强 → VGG 的设计哲学
+              </li>
+              <li>
+                下采样（池化/步长2）<span class="key">指数级扩大感受野</span>
+              </li>
+              <li>感受野不足 → 只能看到局部，语义不完整；太大 → 浪费算力</li>
+            </ul>
+            <span class="mnemonic"
+              >小核堆叠换大感受野：两个 3×3 顶一个 5×5，三个顶一个 7×7</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="color-space">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">常见颜色空间有哪些？各自的应用场景？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>颜色空间</th>
+                  <th>构成</th>
+                  <th>典型用途</th>
+                </tr>
+                <tr>
+                  <td>RGB</td>
+                  <td>红绿蓝三通道</td>
+                  <td>显示器、通用图像表示</td>
+                </tr>
+                <tr>
+                  <td>HSV</td>
+                  <td>色调/饱和度/明度</td>
+                  <td>颜色分割、目标追踪（光照鲁棒）</td>
+                </tr>
+                <tr>
+                  <td>Lab</td>
+                  <td>亮度 + a/b 色度</td>
+                  <td>色彩迁移、感知均匀的距离计算</td>
+                </tr>
+                <tr>
+                  <td>YUV/YCrCb</td>
+                  <td>亮度 + 色度</td>
+                  <td>视频压缩（人眼对亮度敏感）</td>
+                </tr>
+                <tr>
+                  <td>灰度</td>
+                  <td>单通道亮度</td>
+                  <td>边缘检测、传统算法</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">关键点</span>：HSV
+              把"是什么颜色"（H）和"多亮"（V）解耦，所以基于颜色的分割（如红色交通灯检测）常用
+              HSV 阈值。
+            </p>
+            <span class="mnemonic"
+              >分割颜色用 HSV，视频压缩用 YUV，算距离用 Lab</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="camera-model">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            讲一下相机成像模型？内参和外参是什么？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p><strong>针孔相机模型（必背公式）：</strong></p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>s · [u, v, 1]ᵀ = K · [R | t] · [X, Y, Z, 1]ᵀ
+
+K = [fx  0  cx]        fx, fy: 焦距(像素单位)
+    [0   fy cy]        cx, cy: 光心(图像中心偏移)
+    [0   0   1]        K 即"内参"矩阵</code></pre>
+            <ul>
+              <li>
+                <span class="key">内参 K</span
+                >：相机自身属性（焦距、光心、畸变系数），标定一次长期有效
+              </li>
+              <li>
+                <span class="key">外参 [R|t]</span
+                >：相机相对世界坐标系的旋转和平移，随位姿变化
+              </li>
+              <li>
+                <span class="key">标定方法</span
+                >：张正友标定法——拍多张棋盘格，解 K 和畸变
+              </li>
+              <li>单目无法直接测深度，需要双目视差或结构光/ToF</li>
+            </ul>
+            <span class="mnemonic"
+              >内参管相机（焦距光心），外参管姿态（旋转平移）；棋盘格一摆，张正友标定</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="distortion">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">图像畸变有哪些类型？怎么矫正？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">径向畸变</span>：透镜形状引起，直线变弯
+                <ul>
+                  <li>枕形畸变（放大向外弯）、桶形畸变（缩小向内弯）</li>
+                </ul>
+              </li>
+              <li>
+                <span class="key">切向畸变</span
+                >：透镜与成像平面不平行（装配误差）引起，图像轻微倾斜拉伸
+              </li>
+              <li>
+                矫正：用畸变系数（k1, k2, k3 径向 + p1, p2
+                切向）对像素坐标做多项式重映射，再插值取值
+              </li>
+              <li>
+                OpenCV：<code>cv2.undistort(img, K, dist_coeffs)</code
+                >，畸变系数来自标定
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >径向弯（桶形/枕形），切向斜；五个系数一重映射就直了</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 02 传统图像处理 ============ -->
+      <section class="section" id="sec-classic">
+        <h2><span class="num">02</span> 传统图像处理与特征</h2>
+
+        <div class="qa hot" id="edge-det">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            常见的边缘检测算子有哪些？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>算子</th>
+                  <th>类型</th>
+                  <th>特点</th>
+                </tr>
+                <tr>
+                  <td>Sobel</td>
+                  <td>一阶导数</td>
+                  <td>3×3，分 X/Y 方向，抗噪一般</td>
+                </tr>
+                <tr>
+                  <td>Prewitt</td>
+                  <td>一阶导数</td>
+                  <td>类似 Sobel，核内权重平均</td>
+                </tr>
+                <tr>
+                  <td>Laplacian</td>
+                  <td>二阶导数</td>
+                  <td>各向同性，对噪声敏感，常先高斯平滑（LoG）</td>
+                </tr>
+                <tr>
+                  <td>Canny</td>
+                  <td>多阶段</td>
+                  <td>效果最好、最常用，边缘细且连续</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">本质</span>：边缘 = 灰度突变处 →
+              一阶导数取极值，二阶导数过零点。
+            </p>
+            <span class="mnemonic"
+              >一阶求极值，二阶看过零；Sobel 求方向，Canny 是王者</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="canny">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Canny 边缘检测的完整流程？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>
+                <span class="key">高斯平滑</span>：降噪，减少噪声引起的伪边缘
+              </li>
+              <li>
+                <span class="key">计算梯度</span>：Sobel 求 X/Y
+                方向梯度幅值和方向
+              </li>
+              <li>
+                <span class="key">非极大值抑制（NMS）</span
+                >：沿梯度方向只保留局部最大值，把粗边缘变细
+              </li>
+              <li>
+                <span class="key">双阈值检测</span
+                >：高于高阈值为强边缘，低于低阈值舍弃，之间为弱边缘
+              </li>
+              <li>
+                <span class="key">滞后连接</span
+                >：弱边缘只有与强边缘连通才保留，抑制孤立噪声
+              </li>
+            </ol>
+            <span class="mnemonic"
+              >高斯去噪 → 梯度找边 → NMS 变细 → 双阈值分级 → 连接定生死</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="filters">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">高斯滤波、均值滤波、中值滤波的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">均值滤波</span>：邻域取平均 →
+                简单但模糊严重，对椒盐噪声无效
+              </li>
+              <li>
+                <span class="key">高斯滤波</span>：邻域加权平均（中心权重大）→
+                平滑自然，抑制高斯噪声
+              </li>
+              <li>
+                <span class="key">中值滤波</span>：邻域取中位数 →
+                <strong>非线性</strong>，专治椒盐噪声，保边缘能力强
+              </li>
+              <li>
+                高斯 vs 均值：高斯按距离衰减加权，模糊更"自然"；方差越大越模糊
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >均值一刀切、高斯看远近、中值挑中间；椒盐找中值，高斯噪声找高斯</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="median">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            为什么中值滤波对椒盐噪声特别有效？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p>
+              椒盐噪声是<strong>极端值</strong>（0 或 255 的孤立亮点/黑点）：
+            </p>
+            <ul>
+              <li>
+                均值/高斯滤波是<strong>线性加权</strong>，极端值会被"摊"进结果，噪声变成一片模糊灰雾
+              </li>
+              <li>
+                中值滤波<strong>排序取中间值</strong>：极端大/小的噪声点排在两端，直接被丢弃
+              </li>
+              <li>
+                且边缘处中值仍是两侧真实像素之一，所以<span class="key"
+                  >保边能力强</span
+                >
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >排序一出，极端值出局；中值滤波，椒盐克星</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="morphology">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            形态学操作有哪些？腐蚀和膨胀的区别？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>操作</th>
+                  <th>效果</th>
+                  <th>典型用途</th>
+                </tr>
+                <tr>
+                  <td>腐蚀</td>
+                  <td>白色区域缩小</td>
+                  <td>去小白点噪声、分离粘连物体</td>
+                </tr>
+                <tr>
+                  <td>膨胀</td>
+                  <td>白色区域扩大</td>
+                  <td>填补小黑洞、连接断裂区域</td>
+                </tr>
+                <tr>
+                  <td>开运算</td>
+                  <td>先腐蚀再膨胀</td>
+                  <td>去噪点、保持整体尺寸不变</td>
+                </tr>
+                <tr>
+                  <td>闭运算</td>
+                  <td>先膨胀再腐蚀</td>
+                  <td>填小洞、连接裂缝</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">口诀化理解</span
+              >：腐蚀"瘦"、膨胀"胖"；开"去刺"、闭"填坑"。核的形状和大小决定操作粒度。
+            </p>
+            <span class="mnemonic">腐蚀瘦、膨胀胖，开去毛刺闭填坑</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="sift">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            SIFT 的原理和步骤？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>SIFT = 尺度不变特征变换</strong
+              >，具有<strong>尺度、旋转、光照不变性</strong>。四步：
+            </p>
+            <ol>
+              <li>
+                <span class="key">尺度空间极值检测</span
+                >：高斯差分金字塔（DoG）找候选关键点
+              </li>
+              <li>
+                <span class="key">关键点定位</span
+                >：泰勒展开精化位置，剔除低对比度和边缘响应点
+              </li>
+              <li>
+                <span class="key">方向分配</span
+                >：统计邻域梯度直方图，主方向作为关键点方向（旋转不变）
+              </li>
+              <li>
+                <span class="key">特征描述</span>：16×16 邻域分 4×4 子块，每块 8
+                方向直方图 → <strong>128 维描述子</strong>
+              </li>
+            </ol>
+            <ul>
+              <li>
+                匹配：两图描述子欧氏距离 + 最近邻/次近邻比值（Lowe's ratio &lt;
+                0.75）筛选
+              </li>
+              <li>
+                缺点：计算慢、专利问题；优点：极稳，遮挡/视角变化下仍能匹配
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >金字塔找点、精定位、定方向、128 维做描述</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="sift-orb">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            SIFT、SURF、ORB 的对比？怎么选？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>算法</th>
+                  <th>关键点</th>
+                  <th>描述子</th>
+                  <th>速度</th>
+                  <th>专利</th>
+                </tr>
+                <tr>
+                  <td>SIFT</td>
+                  <td>DoG 金字塔</td>
+                  <td>128 维浮点</td>
+                  <td>慢</td>
+                  <td>有专利</td>
+                </tr>
+                <tr>
+                  <td>SURF</td>
+                  <td>Hessian + 积分图</td>
+                  <td>64 维浮点</td>
+                  <td>中</td>
+                  <td>有专利</td>
+                </tr>
+                <tr>
+                  <td>ORB</td>
+                  <td>FAST 角点 + 金字塔</td>
+                  <td>BRIEF 二进制</td>
+                  <td>快</td>
+                  <td>免费开源</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">选择</span>：实时性要求高（SLAM、移动端）用
+              ORB；匹配质量优先、算力充足用 SIFT。ORB
+              用汉明距离匹配（异或计数），比欧氏距离快得多。
+            </p>
+            <span class="mnemonic"
+              >要稳用 SIFT，要快要免费用 ORB，SURF 夹中间</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="hog">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">HOG 特征是怎么提取的？</div>
+          <div class="qa-a">
+            <ol>
+              <li>预处理：灰度化 → Gamma 校正 → 计算梯度</li>
+              <li>
+                分 cell（如 8×8 像素）：统计每个 cell
+                的<strong>梯度方向直方图</strong>（9 个方向 bin）
+              </li>
+              <li>
+                归一化：把 2×2 个 cell 组成 block，block 内做 L2
+                归一化（抗光照）
+              </li>
+              <li>拼接所有 block 的直方图 → 得到最终特征向量</li>
+            </ol>
+            <p>经典应用：HOG + SVM 行人检测（2005，Dalal &amp; Triggs）。</p>
+            <span class="mnemonic"
+              >梯度算方向，cell 做统计，block 管归一，拼接成特征</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="ransac">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            RANSAC 的原理？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>RANSAC = 随机抽样一致</strong>，从带噪声数据中拟合模型：
+            </p>
+            <ol>
+              <li>
+                <span class="key">随机采样</span
+                >：随机挑最小数量点估计模型（如两点定直线、四点定单应矩阵）
+              </li>
+              <li>
+                <span class="key">计算内点</span
+                >：用模型测试所有点，误差小于阈值的为内点
+              </li>
+              <li><span class="key">重复迭代</span>：保留内点最多的模型</li>
+              <li>用最佳模型的全部内点重新精化参数</li>
+            </ol>
+            <ul>
+              <li>
+                应用：特征匹配剔除外点、求解基础矩阵/单应矩阵、直线/圆拟合
+              </li>
+              <li>
+                迭代次数公式：N = log(1-p) / log(1-w^s)（p 置信度、w 内点率、s
+                采样点数）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >随机抽点拟模型，数一数谁是内点，内点最多者胜出</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 深度学习基础 ============ -->
+      <section class="section" id="sec-dl">
+        <h2><span class="num">03</span> 深度学习基础</h2>
+
+        <div class="qa hot" id="cnn-features">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            CNN 为什么适合处理图像？三大特性是什么？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">局部连接</span
+                >：每个神经元只连接输入的局部区域（图像局部相关性强），大幅减少参数
+              </li>
+              <li>
+                <span class="key">权值共享</span
+                >：同一个卷积核在整张图上滑动（猫在左上角和右下角都用同一套参数检测），带来平移不变性
+              </li>
+              <li>
+                <span class="key">层次化特征</span
+                >：浅层学边缘/纹理，中层学部件，深层学语义——自动特征提取，不用手工设计
+              </li>
+            </ul>
+            <p>
+              对比全连接：224×224×3 输入若直接接 4096 神经元，参数约 3 亿；用
+              3×3 卷积仅几十个参数。
+            </p>
+            <span class="mnemonic"
+              >局部连接省参数，权值共享平移不变，逐层抽象出语义</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="pooling">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            池化的作用？平均池化和最大池化怎么选？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p><strong>池化作用：</strong></p>
+            <ul>
+              <li>
+                <span class="key">下采样降维</span>：减小特征图、降低计算量
+              </li>
+              <li>
+                <span class="key">扩大感受野</span
+                >：让后面的神经元"看"到更大范围
+              </li>
+              <li><span class="key">平移鲁棒性</span>：小位移不改变池化输出</li>
+            </ul>
+            <p><strong>两者区别：</strong></p>
+            <ul>
+              <li>
+                <span class="key">最大池化</span>：保留最强响应，突出显著特征 →
+                分类网络主流
+              </li>
+              <li>
+                <span class="key">平均池化</span>：保留整体分布，信息更平滑 →
+                常用于网络末端（如 GoogLeNet 的全局平均池化代替全连接）
+              </li>
+            </ul>
+            <div class="tip">
+              全局平均池化（GAP）可替代全连接层：无参数、抗过拟合、输入尺寸灵活。
+            </div>
+            <span class="mnemonic"
+              >池化三件事：降维、扩视野、抗位移；找特征用 max，保全局用
+              avg</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="activation">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            常见激活函数对比？各自的优缺点？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>激活函数</th>
+                  <th>公式/特点</th>
+                  <th>优点</th>
+                  <th>缺点</th>
+                </tr>
+                <tr>
+                  <td>Sigmoid</td>
+                  <td>压缩到 (0,1)</td>
+                  <td>可解释为概率</td>
+                  <td>梯度消失、非零中心、算 exp 慢</td>
+                </tr>
+                <tr>
+                  <td>Tanh</td>
+                  <td>压缩到 (-1,1)</td>
+                  <td>零中心</td>
+                  <td>仍梯度消失</td>
+                </tr>
+                <tr>
+                  <td>ReLU</td>
+                  <td>max(0,x)</td>
+                  <td>计算快、缓解梯度消失、稀疏激活</td>
+                  <td>神经元死亡</td>
+                </tr>
+                <tr>
+                  <td>Leaky ReLU</td>
+                  <td>负区间小斜率</td>
+                  <td>解决死亡问题</td>
+                  <td>斜率需调参</td>
+                </tr>
+                <tr>
+                  <td>GELU</td>
+                  <td>概率加权平滑</td>
+                  <td>平滑、Transformer 标配</td>
+                  <td>计算略贵</td>
+                </tr>
+                <tr>
+                  <td>Swish/SiLU</td>
+                  <td>x·sigmoid(x)</td>
+                  <td>平滑、深层表现好</td>
+                  <td>计算略贵</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">选择</span>：CNN 默认 ReLU/Leaky
+              ReLU；Transformer 用 GELU；二分类输出层用 Sigmoid，多分类输出层用
+              Softmax。
+            </p>
+            <span class="mnemonic"
+              >CNN 用 ReLU，Transformer 用 GELU，输出层看任务是 sig 还是
+              softmax</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="relu">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">ReLU 的"神经元死亡"是什么？怎么解决？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">原因</span>：输入为负时梯度恒为
+                0，若某次大梯度更新使权重偏移过大，该神经元永远输出 0，"死了"
+              </li>
+              <li>
+                <span class="key">解决</span>：
+                <ul>
+                  <li>换 Leaky ReLU / PReLU（负区间给小斜率如 0.01）</li>
+                  <li>降低学习率、合适的权重初始化（He 初始化）</li>
+                  <li>用 GELU/Swish 等平滑替代</li>
+                </ul>
+              </li>
+              <li>
+                <span class="key">为什么 ReLU 缓解梯度消失</span
+                >：正区间梯度恒为 1，链式相乘不衰减（对比 sigmoid 最大梯度
+                0.25）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >负区梯度零就死，Leaky 给条活路；正区梯度一，深网不怕传</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="bn">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            BatchNorm 的原理和作用？训练和推理有什么区别？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>原理：</strong>对每个 mini-batch
+              内的每个通道做标准化（减均值除方差），再通过可学习的 γ、β
+              缩放平移。
+            </p>
+            <p><strong>作用：</strong></p>
+            <ul>
+              <li>
+                缓解内部协变量偏移（ICS），<span class="key"
+                  >允许更大学习率、加快收敛</span
+                >
+              </li>
+              <li>平滑损失面，有一定正则化效果</li>
+              <li>降低对初始化的敏感度</li>
+            </ul>
+            <p><strong>训练 vs 推理（高频考点）：</strong></p>
+            <ul>
+              <li>
+                <span class="key">训练</span>：用当前 batch
+                的均值方差，同时用滑动平均更新全局统计量
+              </li>
+              <li>
+                <span class="key">推理</span>：用累积的全局均值方差（running
+                mean/var），不再依赖 batch
+              </li>
+              <li>
+                因此训练时 batch 不能太小（否则统计量不准）；batch=1
+                的场景（超分、检测单图）慎用 BN，改用 GN/IN
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >训练用 batch 统计，推理用滑动平均；小 batch 换 GN，别跟 BN
+              死磕</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="norm-family">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            BN、LN、IN、GN 的区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              四者公式相同（标准化 +
+              仿射），区别只在<strong>沿哪个维度统计均值方差</strong>（以
+              (N,C,H,W) 为例）：
+            </p>
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>方法</th>
+                  <th>统计范围</th>
+                  <th>典型场景</th>
+                </tr>
+                <tr>
+                  <td>BN</td>
+                  <td>每个通道，跨 N,H,W</td>
+                  <td>大 batch 的分类/检测 CNN</td>
+                </tr>
+                <tr>
+                  <td>LN</td>
+                  <td>每个样本，跨 C,H,W</td>
+                  <td>RNN/Transformer（batch 无关）</td>
+                </tr>
+                <tr>
+                  <td>IN</td>
+                  <td>每个样本每个通道（跨 H,W）</td>
+                  <td>风格迁移（去掉风格统计量）</td>
+                </tr>
+                <tr>
+                  <td>GN</td>
+                  <td>每个样本，通道分组</td>
+                  <td>小 batch 目标检测/分割</td>
+                </tr>
+              </table>
+            </div>
+            <span class="mnemonic"
+              >BN 跨 batch，LN 跨通道，IN 单图单通道，GN 分组折中</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="loss-fn">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            分类为什么用交叉熵而不是 MSE？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">梯度角度</span>：sigmoid/softmax + MSE
+                的梯度包含 σ'(x) 项，错误大时梯度反而小 → 收敛慢；交叉熵配合
+                softmax 梯度简化为
+                <code>ŷ - y</code>，<strong>错得越多惩罚越大</strong>，收敛快
+              </li>
+              <li>
+                <span class="key">概率角度</span
+                >：交叉熵衡量两个概率分布的差异，与分类输出的概率语义天然匹配
+              </li>
+              <li>
+                <span class="key">MSE 问题</span>：分类标签离散，MSE
+                假设高斯噪声，用错了分布假设
+              </li>
+              <li>
+                MSE 适合回归任务（坐标、角度、深度），但角度回归要注意周期性（用
+                sin/cos 编码）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >分类交叉熵、回归用 MSE；概率配交叉，欧氏配回归</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="focal">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">Focal Loss 是什么？解决了什么问题？</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>FL(p) = -(1 - p)^γ · log(p)
+
+γ = 聚焦因子（常取 2），p 为预测正确概率</code></pre>
+            <ul>
+              <li>
+                <span class="key">背景</span
+                >：目标检测中前景/背景极度不平衡（1:1000），易分负样本的 loss
+                淹没难样本
+              </li>
+              <li>
+                <span class="key">机制</span>：(1-p)^γ 因子让<span class="key"
+                  >易分样本（p 大）的 loss 权重趋近 0</span
+                >，聚焦难样本
+              </li>
+              <li>出自 RetinaNet（2017），让单阶段检测精度首次超过两阶段</li>
+            </ul>
+            <span class="mnemonic"
+              >易分样本打折，难分样本全价——样本不平衡就 Focal</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="optimizer">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            SGD 和 Adam 的区别？怎么选？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>对比</th>
+                  <th>SGD（+Momentum）</th>
+                  <th>Adam</th>
+                </tr>
+                <tr>
+                  <td>机制</td>
+                  <td>固定学习率 + 动量惯性</td>
+                  <td>自适应学习率（一阶+二阶矩估计）</td>
+                </tr>
+                <tr>
+                  <td>收敛</td>
+                  <td>慢，需调学习率</td>
+                  <td>快，对超参不敏感</td>
+                </tr>
+                <tr>
+                  <td>泛化</td>
+                  <td><strong>最终精度往往更高</strong></td>
+                  <td>有时略差</td>
+                </tr>
+                <tr>
+                  <td>适用</td>
+                  <td>CV 大 batch 训练（检测/分割标配）</td>
+                  <td>Transformer、小数据快速实验</td>
+                </tr>
+              </table>
+            </div>
+            <ul>
+              <li>AdamW：Adam + 解耦权重衰减，Transformer 标配</li>
+              <li>
+                实践：<span class="key">CV 论文多用 SGD momentum=0.9</span
+                >；训练 ViT/检测头用 AdamW
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >要快用 Adam，要泛化 SGD 加动量；Transformer 一律 AdamW</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="overfit">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            过拟合的表现和解决方案？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>表现：</strong
+              >训练损失持续下降，验证损失先降后升；训练精度远高于验证精度。
+            </p>
+            <p><strong>方案（按优先级）：</strong></p>
+            <ul>
+              <li>
+                <span class="key">加数据</span
+                >：数据增强（翻转/裁剪/MixUp/CutMix）、收集更多数据
+              </li>
+              <li><span class="key">正则化</span>：weight decay、Dropout</li>
+              <li>
+                <span class="key">降模型容量</span>：换小 backbone、早停（early
+                stopping）
+              </li>
+              <li><span class="key">迁移学习</span>：用预训练权重，冻结浅层</li>
+              <li>
+                <span class="key">集成/标签平滑</span>：多模型平均、soft label
+              </li>
+            </ul>
+            <span class="mnemonic">一加数据二正则，三减模型四早停</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="grad-vanish">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            梯度消失/爆炸的原因和解决方案？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>原因：</strong>链式法则连乘——每层梯度 &lt; 1
+              连乘趋零（消失），&gt; 1 连乘爆炸（如 RNN 长序列、初始化不当）。
+            </p>
+            <p><strong>解决方案：</strong></p>
+            <ul>
+              <li>
+                <span class="key">结构</span>：残差连接（ResNet）、LSTM
+                门控（RNN 场景）
+              </li>
+              <li><span class="key">激活</span>：ReLU 系替代 sigmoid</li>
+              <li><span class="key">归一化</span>：BN/LN 稳定每层输入分布</li>
+              <li>
+                <span class="key">初始化</span>：Xavier（tanh）/
+                He（ReLU）保持方差不变
+              </li>
+              <li>
+                <span class="key">爆炸专用</span>：梯度裁剪（clip by norm，RNN
+                必备）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >连乘是根因；残差救深网，ReLU 保梯度，BN 稳分布，裁剪防爆炸</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="dropout">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">Dropout 的原理？训练和推理有什么不同？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">训练</span>：每个 batch 随机以概率 p
+                丢弃神经元（输出置 0），剩余按 1/(1-p) 放大（inverted dropout）
+              </li>
+              <li>
+                <span class="key">推理</span
+                >：不丢弃，直接前向——因为训练时已放大，期望值一致，无需缩放
+              </li>
+              <li>
+                <strong>作用</strong
+                >：防止神经元"共适应"，相当于隐式训练指数级个共享参数的子网络（集成思想）
+              </li>
+              <li>
+                CV 中主要用于全连接层；卷积层常用 spatial
+                dropout（丢弃整个通道）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >训练随机丢、推理全保留；inverted 缩放在训练做，推理不用管</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="init">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">为什么要做权重初始化？Xavier 和 He 的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">全零初始化</span
+                >：所有神经元对称，学到相同特征 → 死网
+              </li>
+              <li>
+                <span class="key">太大</span>：梯度爆炸；<span class="key"
+                  >太小</span
+                >：梯度消失
+              </li>
+              <li>
+                <span class="key">目标</span>：让每层输出方差 ≈
+                输入方差，信号不放大不衰减
+              </li>
+              <li>
+                <span class="key">Xavier</span>：配合 tanh/sigmoid，方差 =
+                1/fan_in（输入节点数）
+              </li>
+              <li>
+                <span class="key">He（Kaiming）</span>：配合
+                ReLU（负半轴丢弃一半信息），方差 = 2/fan_in →
+                <strong>CNN 默认</strong>
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >tanh 找 Xavier，ReLU 找 He；方差不放大，信号才稳当</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="lr-schedule">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">常见的学习率调度策略有哪些？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>策略</th>
+                  <th>机制</th>
+                  <th>备注</th>
+                </tr>
+                <tr>
+                  <td>Step 衰减</td>
+                  <td>每 N 个 epoch 乘 γ</td>
+                  <td>简单经典（如每 30 epoch × 0.1）</td>
+                </tr>
+                <tr>
+                  <td>Cosine 退火</td>
+                  <td>余弦曲线降到接近 0</td>
+                  <td>现代 CV 主流，平滑少调参</td>
+                </tr>
+                <tr>
+                  <td>Warmup</td>
+                  <td>前期线性升温再降</td>
+                  <td>大 batch/Transformer 必备</td>
+                </tr>
+                <tr>
+                  <td>Reduce-on-Plateau</td>
+                  <td>验证指标停滞就降</td>
+                  <td>适合不熟悉收敛行为时</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">warmup 为什么有效</span
+              >：训练初期权重随机，大梯度容易把参数带偏；小学习率热身让统计量（BN）先稳定。
+            </p>
+            <span class="mnemonic">先热身、再冲刺、余弦缓落地</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="conv-1x1">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            1×1 卷积有什么作用？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">升维/降维</span>：改变通道数（Network in
+                Network 首创，Inception 大量使用），降维大幅省计算
+              </li>
+              <li>
+                <span class="key">跨通道信息融合</span
+                >：在通道维度做全连接式组合
+              </li>
+              <li>
+                <span class="key">增加非线性</span>：后接 ReLU
+                即可，不改变空间尺寸
+              </li>
+              <li>
+                例：256 通道 → 用 1×1 降到 64 → 再 3×3 卷积，计算量降到约
+                1/8（Bottleneck 结构）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >1×1 三件事：变通道、融信息、加非线性；瓶颈结构省算力</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="conv-variants">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            空洞卷积、转置卷积、深度可分离卷积分别是干什么的？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>卷积变体</th>
+                  <th>原理</th>
+                  <th>用途</th>
+                </tr>
+                <tr>
+                  <td>空洞卷积</td>
+                  <td>核内插洞（rate=r 隔 r-1 个采样）</td>
+                  <td>不损失分辨率扩大感受野（DeepLab 分割）</td>
+                </tr>
+                <tr>
+                  <td>转置卷积</td>
+                  <td>卷积的反向操作（插 0 再卷积）</td>
+                  <td>上采样恢复分辨率（分割解码器）</td>
+                </tr>
+                <tr>
+                  <td>深度可分离卷积</td>
+                  <td>逐通道卷积 + 1×1 融合</td>
+                  <td>轻量化（MobileNet），计算量约降 1/8~1/9</td>
+                </tr>
+              </table>
+            </div>
+            <ul>
+              <li>
+                空洞卷积的"gridding 问题"：连续空洞采样有洞 → 混合不同
+                rate（ASPP）缓解
+              </li>
+              <li>转置卷积有棋盘伪影 → 可用双线性上采样 + 3×3 卷积替代</li>
+            </ul>
+            <span class="mnemonic">空洞扩视野、转置做上采样、可分离省算力</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 经典网络架构 ============ -->
+      <section class="section" id="sec-arch">
+        <h2><span class="num">04</span> 经典网络架构</h2>
+
+        <div class="qa hot" id="cnn-history">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            梳理一下 CNN 的发展脉络？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>年份</th>
+                  <th>网络</th>
+                  <th>核心贡献</th>
+                </tr>
+                <tr>
+                  <td>1998</td>
+                  <td>LeNet-5</td>
+                  <td>CNN 开山，卷积+池化+全连接，手写数字识别</td>
+                </tr>
+                <tr>
+                  <td>2012</td>
+                  <td>AlexNet</td>
+                  <td>
+                    ReLU + Dropout + GPU + 数据增强，ImageNet 夺冠引爆深度学习
+                  </td>
+                </tr>
+                <tr>
+                  <td>2014</td>
+                  <td>VGG</td>
+                  <td>小核堆叠（3×3）+ 规整结构，证明深度重要性</td>
+                </tr>
+                <tr>
+                  <td>2014</td>
+                  <td>GoogLeNet</td>
+                  <td>Inception 多尺度并行 + 1×1 降维 + GAP</td>
+                </tr>
+                <tr>
+                  <td>2015</td>
+                  <td>ResNet</td>
+                  <td>残差连接，训练 152 层，ImageNet 超人类</td>
+                </tr>
+                <tr>
+                  <td>2017</td>
+                  <td>MobileNet</td>
+                  <td>深度可分离卷积，移动端轻量化</td>
+                </tr>
+                <tr>
+                  <td>2017</td>
+                  <td>SENet</td>
+                  <td>通道注意力（SE 模块）</td>
+                </tr>
+                <tr>
+                  <td>2020</td>
+                  <td>ViT</td>
+                  <td>Transformer 进军视觉，大放异彩</td>
+                </tr>
+              </table>
+            </div>
+            <span class="mnemonic"
+              >LeNet 开山、AlexNet 引爆、VGG 拼深度、GoogLeNet 拼宽度、ResNet
+              破退化、MobileNet 拼轻量、ViT 换范式</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="resnet">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            ResNet 为什么能训练上百层深的网络？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>核心：残差学习</strong>，块内学习目标从 H(x) 改为残差 F(x)
+              = H(x) - x，输出为 F(x) + x。
+            </p>
+            <ul>
+              <li>
+                <span class="key">问题背景</span
+                >：普通深网出现"退化"——更深网络训练误差反而更高（不是过拟合，是优化困难）
+              </li>
+              <li>
+                <span class="key">梯度角度</span
+                >：恒等映射分支让梯度可以"无损直通"（加法对梯度恒为
+                1），深链梯度不消失
+              </li>
+              <li>
+                <span class="key">优化角度</span
+                >：学残差比学恒等映射容易——"改一点点"比"从头学"简单；最差情况
+                F(x)=0，退化为恒等，深网不比浅网差
+              </li>
+              <li>
+                细节：Bottleneck 结构（1×1 → 3×3 →
+                1×1）降维升维省计算；下采样放在捷径里用 1×1 卷积匹配维度
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >捷径一条路，梯度直接流；学的不是映射是残差，深网从此不怕退化</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="inception">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">Inception 模块的设计思想是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">多尺度并行</span>：同一输入并行经过
+                1×1、3×3、5×5 卷积和池化，再拼接——不知道该用多大卷积核就全用
+              </li>
+              <li>
+                <span class="key">1×1 瓶颈降维</span>（Inception v2/v3
+                改进）：先降通道再卷积，计算量大降
+              </li>
+              <li>
+                v3 改进：大核分解（5×5 → 两个 3×3、n×n → 1×n + n×1）、Label
+                Smoothing、BN 辅助分类器
+              </li>
+              <li>
+                本质：<strong>让网络自己学"要多大的感受野"</strong>，多尺度特征融合的早期典范
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >大小核一起上，1×1 先降维；不确定尺度就全试一遍</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="mobilenet">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            MobileNet 为什么快？深度可分离卷积省了多少计算？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong
+                >深度可分离卷积 = Depthwise（逐通道）+ Pointwise（1×1）</strong
+              >
+            </p>
+            <ul>
+              <li>
+                普通卷积：D<sub>K</sub>·D<sub>K</sub>·M·N·D<sub>F</sub>·D<sub>F</sub>（核、输入通道
+                M、输出通道 N、特征图）
+              </li>
+              <li>
+                可分离卷积：D<sub>K</sub>·D<sub>K</sub>·M·D<sub>F</sub>·D<sub
+                  >F</sub
+                >
+                + M·N·D<sub>F</sub>·D<sub>F</sub>
+              </li>
+              <li>
+                计算量比值 =
+                <span class="key">1/N + 1/D<sub>K</sub>²</span>，3×3 核、256
+                通道时约 <strong>1/8~1/9</strong>
+              </li>
+              <li>精度略降，但计算量降一个数量级 → 移动端标配</li>
+            </ul>
+            <div class="tip">
+              v2 加了倒残差（先升维再降维）+ 线性瓶颈；v3 用 NAS 搜索 +
+              h-swish。答到 v1 原理 + 倒残差就是加分项。
+            </div>
+            <span class="mnemonic">逐通道扫一遍，1×1 融一遍，计算省到零头</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="vit">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            ViT 的核心思想？图像是怎么变成序列的？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>
+                <span class="key">切 patch</span>：图像切成 16×16 的小块，展平成
+                token 序列（224/16 = 196 个 token）
+              </li>
+              <li>
+                <span class="key">线性嵌入</span>：每个 patch 线性投影成 d
+                维向量（Patch Embedding）
+              </li>
+              <li>
+                <span class="key">加位置编码</span>：可学习的 1D 位置
+                embedding，让模型知道 patch 位置
+              </li>
+              <li>
+                <span class="key">加 [CLS] token</span>：汇聚全局信息的可学习
+                token
+              </li>
+              <li>
+                <span class="key">过标准 Transformer Encoder</span
+                >：多头自注意力 + MLP，堆 L 层
+              </li>
+              <li>[CLS] 输出接分类头</li>
+            </ol>
+            <ul>
+              <li>
+                <strong>关键结论</strong>：大数据集（JFT-300M）上超过
+                CNN；小数据不及 CNN（缺归纳偏置）→ DeiT 用蒸馏解决
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >切块成词、线性嵌入、加位置、CLS 打头、注意力通吃</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="cnn-vs-vit">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            CNN 和 ViT 的本质区别？各自优劣？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>维度</th>
+                  <th>CNN</th>
+                  <th>ViT</th>
+                </tr>
+                <tr>
+                  <td>归纳偏置</td>
+                  <td>强（局部性 + 平移等变）</td>
+                  <td>弱（对数据量要求高）</td>
+                </tr>
+                <tr>
+                  <td>感受野</td>
+                  <td>由浅到深逐渐扩大</td>
+                  <td>全局注意力，一层看全图</td>
+                </tr>
+                <tr>
+                  <td>数据效率</td>
+                  <td>小数据表现好</td>
+                  <td>需大数据或强增广</td>
+                </tr>
+                <tr>
+                  <td>计算复杂度</td>
+                  <td>与图像大小线性相关</td>
+                  <td>token 数平方相关（patch 越多越贵）</td>
+                </tr>
+                <tr>
+                  <td>扩展性</td>
+                  <td>一般</td>
+                  <td>极好（模型+数据+算力齐涨）</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">趋势</span>：混合架构（卷积 stem + Transformer
+              主干）、层次化 ViT（Swin 的窗口注意力）。
+            </p>
+            <span class="mnemonic"
+              >CNN 有先验省数据，ViT
+              无先验吃数据；一个局部归纳，一个全局注意力</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="senet">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">SENet 的通道注意力是怎么做的？</div>
+          <div class="qa-a">
+            <ol>
+              <li>
+                <span class="key">Squeeze</span
+                >：全局平均池化把每个通道压成一个数（H×W → 1×1）
+              </li>
+              <li>
+                <span class="key">Excitation</span>：两级全连接（降维 → ReLU →
+                升维 → Sigmoid）学出每个通道的权重
+              </li>
+              <li><span class="key">Reweight</span>：权重逐通道乘回原特征</li>
+            </ol>
+            <p>
+              本质：让网络<strong>动态判断"哪个通道更重要"</strong>，即特征通道级的自适应校准。可插入任何
+              CNN，几乎零成本涨点。
+            </p>
+            <span class="mnemonic">压成一根线，学出一组权，乘回每一层</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 05 目标检测 ============ -->
+      <section class="section" id="sec-det">
+        <h2><span class="num">05</span> 目标检测</h2>
+
+        <div class="qa hot" id="det-paradigm">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            目标检测的两大范式是什么？各有什么代表？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>范式</th>
+                  <th>思路</th>
+                  <th>代表</th>
+                  <th>优缺点</th>
+                </tr>
+                <tr>
+                  <td>两阶段</td>
+                  <td>先出候选框，再分类+回归精修</td>
+                  <td>Faster R-CNN、Mask R-CNN</td>
+                  <td>精度高、速度慢</td>
+                </tr>
+                <tr>
+                  <td>单阶段</td>
+                  <td>一次前向直接出框+类别</td>
+                  <td>YOLO 系列、SSD、RetinaNet</td>
+                  <td>速度快、早期精度略低</td>
+                </tr>
+                <tr>
+                  <td>Anchor-free</td>
+                  <td>不要预设框，直接预测中心/关键点</td>
+                  <td>FCOS、CenterNet</td>
+                  <td>免调 anchor、更简洁</td>
+                </tr>
+                <tr>
+                  <td>端到端集合预测</td>
+                  <td>Transformer 直接输出集合</td>
+                  <td>DETR 系列</td>
+                  <td>无需 NMS、需长训练</td>
+                </tr>
+              </table>
+            </div>
+            <span class="mnemonic"
+              >两阶段先粗后精，单阶段一步到位；anchor-free 卸包袱，DETR
+              一波流</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="iou">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            IoU 是什么？有什么变体？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>
+              <strong>IoU = 交集面积 / 并集面积</strong
+              >，衡量预测框和真实框的重合度，取值 [0,1]。
+            </p>
+            <ul>
+              <li>
+                <span class="key">用途</span>：NMS 去重、正负样本分配、mAP
+                评价、回归损失
+              </li>
+              <li>
+                <span class="key">GIoU</span>：加最小包围框惩罚 →
+                两框不相交时仍有梯度
+              </li>
+              <li>
+                <span class="key">DIoU</span>：加中心点距离惩罚 → 加快收敛
+              </li>
+              <li>
+                <span class="key">CIoU</span>：再加长宽比一致性 →
+                三合一最优，YOLO 系列标配
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >交比并是 IoU；G 补不相交，D 拉中心， C 加宽高比</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="nms">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            NMS 的原理？Soft-NMS 解决了什么问题？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p><strong>NMS（非极大值抑制）流程：</strong></p>
+            <ol>
+              <li>按置信度排序所有框</li>
+              <li>取最高分框保留，删掉与它 IoU 超过阈值（如 0.5）的其他框</li>
+              <li>对剩余框重复，直到处理完</li>
+            </ol>
+            <ul>
+              <li>
+                <span class="key">Soft-NMS</span
+                >：不直接删除，而是对重叠框的分数乘以衰减函数（线性/高斯）→
+                密集场景（相邻两人）下保住被误删的框
+              </li>
+              <li>其他变体：DIoU-NMS（考虑中心距）、Softer-NMS（框融合）</li>
+              <li>
+                DETR 用集合匹配 + 匈牙利算法，<strong>天然不需要 NMS</strong>
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >分数最高的留，重叠超标的删；密集场景怕误杀，Soft
+              只降分不删框</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="rcnn-family">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            R-CNN → Fast R-CNN → Faster R-CNN 的演进逻辑？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>版本</th>
+                  <th>候选框来源</th>
+                  <th>核心改进</th>
+                  <th>瓶颈</th>
+                </tr>
+                <tr>
+                  <td>R-CNN</td>
+                  <td>Selective Search（~2000 框）</td>
+                  <td>CNN 提特征 + SVM 分类</td>
+                  <td>每个框都过一遍 CNN，重复计算爆炸</td>
+                </tr>
+                <tr>
+                  <td>Fast R-CNN</td>
+                  <td>Selective Search</td>
+                  <td><strong>整图一次卷积</strong>，RoI Pooling 抠特征</td>
+                  <td>候选框生成慢（CPU 上 2s）</td>
+                </tr>
+                <tr>
+                  <td>Faster R-CNN</td>
+                  <td><strong>RPN 网络</strong>生成候选</td>
+                  <td>候选框生成 GPU 化，端到端</td>
+                  <td>两阶段固有速度上限</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              <span class="key">RPN</span>：滑动 3×3 窗口生成
+              anchor，两个分支分别做"是不是物体"（二分类）和"框怎么修"（回归）。
+            </p>
+            <span class="mnemonic"
+              >R-CNN 框选 CNN 跑两千遍，Fast 整图一遍 RoI 抠，Faster 让 RPN
+              自己找框</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="anchor">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">Anchor 是什么？正负样本怎么分配？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">Anchor</span
+                >：预设的一组不同尺度/长宽比的参考框（如 3 尺度 × 3 比例 = 9
+                个/位置），网络学的是相对 anchor 的偏移量，降低回归难度
+              </li>
+              <li>
+                <span class="key">正样本</span>：与某 GT 框 IoU 最大，或 IoU
+                &gt; 0.7 的 anchor
+              </li>
+              <li>
+                <span class="key">负样本</span>：与所有 GT 框 IoU &lt; 0.3 →
+                背景类
+              </li>
+              <li>中间的忽略不参与训练 → 正负悬殊催生 Focal Loss</li>
+              <li>
+                anchor-free（FCOS）：直接预测中心点到四边的距离 + centerness
+                分支，免去 anchor 超参
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >anchor 是模板，回归修偏移；正负看 IoU，中间不管它</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="yolo">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            YOLO 系列的关键演进？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>版本</th>
+                  <th>年份</th>
+                  <th>关键改进</th>
+                </tr>
+                <tr>
+                  <td>v1</td>
+                  <td>2016</td>
+                  <td>开创单阶段：整图一次回归 7×7 网格 + 框参数，快但粗糙</td>
+                </tr>
+                <tr>
+                  <td>v2</td>
+                  <td>2017</td>
+                  <td>加 anchor、BN、高分辨率微调、passthrough 细节层</td>
+                </tr>
+                <tr>
+                  <td>v3</td>
+                  <td>2018</td>
+                  <td>
+                    多尺度预测（3 个检测头）、Darknet-53、logistic 替
+                    softmax（多标签）
+                  </td>
+                </tr>
+                <tr>
+                  <td>v5</td>
+                  <td>2020</td>
+                  <td>
+                    工程化巅峰：PyTorch、Mosaic/CopyPaste 增广、自动
+                    anchor、Focus→Conv 重排、多种尺寸模型
+                  </td>
+                </tr>
+                <tr>
+                  <td>v8</td>
+                  <td>2023</td>
+                  <td>
+                    anchor-free + 解耦头 + C2f 模块 + distribution focal
+                    loss，全任务统一（检测/分割/分类/姿态）
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="tip">
+              面试常追问 v3
+              多尺度为什么检测小目标变好：深层语义强但分辨率低，浅层相反；三个头各管一个尺度，浅层头负责小目标。
+            </div>
+            <span class="mnemonic"
+              >v1 定范式，v2 加 anchor，v3 多尺度，v5 工程王，v8 去 anchor
+              全家桶</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="fpn">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            FPN 特征金字塔解决了什么问题？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">问题</span
+                >：深浅层特征各有优劣——深层语义强但分辨率低（小目标没了），浅层细节多但语义弱
+              </li>
+              <li>
+                <span class="key">结构</span>：自底向上提特征 + 自顶向下上采样 +
+                <strong>横向连接</strong>（1×1 对齐通道后逐元素相加）
+              </li>
+              <li>
+                <span class="key">效果</span
+                >：每层输出都"既有语义又有分辨率"，不同尺度目标在对应层检测 →
+                小目标精度大涨
+              </li>
+              <li>后续：PANet 加自底向上增强路径；BiFPN 双向 + 可学习权重</li>
+            </ul>
+            <span class="mnemonic"
+              >深层传语义，浅层给细节，横向一连，层层都有好特征</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="map">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            mAP 是怎么计算的？AP 和 mAP 的关系？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>所有预测按置信度从高到低排序</li>
+              <li>逐个判定 TP/FP（与某 GT 的 IoU ≥ 阈值且未匹配过 → TP）</li>
+              <li>
+                累积计算不同置信度下的
+                <span class="key">精确率 P = TP/(TP+FP)</span> 和
+                <span class="key">召回率 R = TP/所有 GT</span>
+              </li>
+              <li>
+                画 PR 曲线，曲线下面积 = <span class="key">该类的 AP</span>
+              </li>
+              <li>所有类别 AP 取平均 = <span class="key">mAP</span></li>
+            </ol>
+            <ul>
+              <li>
+                <span class="key">mAP@0.5</span>：IoU 阈值 0.5（VOC 风格）
+              </li>
+              <li>
+                <span class="key">mAP@0.5:0.95</span>：IoU 从 0.5 到 0.95 步长
+                0.05 取平均（COCO 风格，更严格）
+              </li>
+              <li>新式算法（YOLOv8+）AP 用积分法（101 点插值）计算</li>
+            </ul>
+            <span class="mnemonic"
+              >排序、匹配、画 PR、算面积；单类是 AP，类均是 mAP</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="bbox-loss">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            边界框回归损失的演进？L1 → IoU → GIoU → DIoU → CIoU？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>损失</th>
+                  <th>形式</th>
+                  <th>问题/改进</th>
+                </tr>
+                <tr>
+                  <td>L1 / L2</td>
+                  <td>逐坐标差</td>
+                  <td>
+                    与 IoU 无关，同样误差 IoU 差异巨大；L1 在 0 点不可导 →
+                    Smooth L1
+                  </td>
+                </tr>
+                <tr>
+                  <td>IoU Loss</td>
+                  <td>-ln(IoU)</td>
+                  <td>尺度不变；不相交时 loss 相同且梯度为 0</td>
+                </tr>
+                <tr>
+                  <td>GIoU</td>
+                  <td>IoU - 最小包围框占比</td>
+                  <td>不相交时也有梯度</td>
+                </tr>
+                <tr>
+                  <td>DIoU</td>
+                  <td>IoU - 中心距惩罚</td>
+                  <td>直接拉近中心，收敛快</td>
+                </tr>
+                <tr>
+                  <td>CIoU</td>
+                  <td>DIoU + 长宽比一致性</td>
+                  <td>三因素齐全：重叠+中心+宽高比</td>
+                </tr>
+              </table>
+            </div>
+            <span class="mnemonic"
+              >L1 看坐标、IoU 看重叠、G 补距离、D 拉中心、C 比宽高</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="small-obj">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            小目标检测为什么难？有哪些优化手段？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <p><strong>难的原因：</strong></p>
+            <ul>
+              <li>像素少 → 特征弱，多层下采样后信息几乎消失</li>
+              <li>标注框小 → IoU 对偏移极敏感（1 像素偏移 IoU 大变）</li>
+              <li>数据集中小目标样本占比低</li>
+            </ul>
+            <p><strong>优化手段：</strong></p>
+            <ul>
+              <li>
+                <span class="key">结构</span>：FPN/PAN
+                多尺度融合、加浅层检测头（P2 层）、空洞卷积保分辨率
+              </li>
+              <li>
+                <span class="key">数据</span>：高分辨率输入/切片推理（SAHI
+                切图检测）、小目标过采样/复制粘贴增强
+              </li>
+              <li>
+                <span class="key">标签分配</span>：用 RFLA/NWD
+                等基于高斯分布的分配，缓解 IoU 敏感问题
+              </li>
+              <li>
+                <span class="key">损失</span>：归一化 Wasserstein
+                距离（NWD）替代 IoU 评价小框
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >下采样丢信息、IoU
+              太敏感；多尺度加浅层，切图升分辨率，复制粘贴做增广</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="detr">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            DETR 的核心思想？有什么优缺点？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">流程</span>：CNN backbone 提特征 → 展平 +
+                位置编码 → Transformer Encoder（自注意力）→ Decoder 用
+                <strong>N 个可学习 object query</strong> 交叉注意力解码 → 每个
+                query 输出类别 + 框
+              </li>
+              <li>
+                <span class="key">集合预测</span>：预测 N 个框与 GT
+                做一对一<span class="key">匈牙利匹配</span>，所以<strong
+                  >不需要 NMS 和 anchor</strong
+                >
+              </li>
+              <li>
+                <span class="key">优点</span>：端到端、可扩展性强、全局关系建模
+              </li>
+              <li>
+                <span class="key">缺点</span>：训练极慢（500
+                epoch）、小目标差（分辨率细节在 encoder 前被下采样压缩）
+              </li>
+              <li>
+                改进：Deformable DETR（稀疏采样收敛快 10
+                倍）、DINO、RT-DETR（实时）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >query 问图要目标，匈牙利一对一配，无需 NMS 天然去重</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 06 图像分割 ============ -->
+      <section class="section" id="sec-seg">
+        <h2><span class="num">06</span> 图像分割</h2>
+
+        <div class="qa hot" id="seg-types">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            语义分割、实例分割、全景分割的区别？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>任务</th>
+                  <th>含义</th>
+                  <th>回答的问题</th>
+                  <th>代表</th>
+                </tr>
+                <tr>
+                  <td>语义分割</td>
+                  <td>每个像素分类别</td>
+                  <td>"这是路/车/人吗"</td>
+                  <td>FCN、U-Net、DeepLab</td>
+                </tr>
+                <tr>
+                  <td>实例分割</td>
+                  <td>类别 + 区分同类的个体</td>
+                  <td>"这是第几辆车"</td>
+                  <td>Mask R-CNN、SOLO</td>
+                </tr>
+                <tr>
+                  <td>全景分割</td>
+                  <td>语义 + 实例统一</td>
+                  <td>thing + stuff 全标注</td>
+                  <td>Panoptic FPN、Mask2Former</td>
+                </tr>
+              </table>
+            </div>
+            <ul>
+              <li>
+                <span class="key">thing</span>：可数物体（人、车）；<span
+                  class="key"
+                  >stuff</span
+                >：不可数背景（天空、道路）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >语义只分类、实例分个体、全景全都要（thing + stuff）</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="unet">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            U-Net 的结构？为什么在医学图像上这么好用？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">结构</span>：对称的编码器（下采样提语义）+
+                解码器（上采样恢复分辨率）+
+                <strong>跳跃连接</strong>（把编码器同尺度特征拼接到解码器）
+              </li>
+              <li>
+                <span class="key">为什么好用</span>：
+                <ul>
+                  <li>
+                    跳跃连接把浅层<strong>细节/边界</strong>信息直通到深层，弥补下采样丢失的空间信息
+                  </li>
+                  <li>参数少（~31M 以下），医学数据集小也能训练</li>
+                  <li>端到端输出像素级掩码，天然适合分割</li>
+                </ul>
+              </li>
+              <li>
+                后续：3D U-Net、Attention
+                U-Net、U-Net++（嵌套密集跳跃）、nnU-Net（自动调参医学神器）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >下采样学语义，上采样复原，跳连保细节；数据少也能练，医学生的最爱</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="upsample">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">上采样有哪些方法？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">插值</span
+                >：最近邻、双线性（无参数、稳定，分割最常用，常再接 3×3 卷积）
+              </li>
+              <li>
+                <span class="key">转置卷积</span
+                >：可学习的上采样，但有棋盘伪影（核尺寸不能被步长整除导致不均匀重叠）
+              </li>
+              <li>
+                <span class="key">反池化</span>：max-unpooling
+                记录池化时的位置放回
+              </li>
+              <li>
+                <span class="key">亚像素卷积</span
+                >（PixelShuffle）：通道重排到空间维（r²×C×H×W →
+                C×rH×rW），超分常用
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >双线性最稳、转置可学有伪影、PixelShuffle 靠重排</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="deeplab">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">DeepLab 系列的核心？ASPP 是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">ASPP（空洞空间金字塔池化）</span
+                >：并行多个不同 rate 的空洞卷积 + 全局池化，拼接 →
+                <strong>多尺度上下文</strong>
+              </li>
+              <li>
+                <span class="key">v1</span>：空洞卷积在不丢分辨率下扩大感受野
+              </li>
+              <li><span class="key">v2</span>：ASPP 多尺度</li>
+              <li>
+                <span class="key">v3+</span>：加编码器-解码器结构，深层语义 +
+                浅层细节融合，backbone 换 Xception/深度可分离卷积
+              </li>
+              <li>
+                输出比输入小 8 倍 → 最后双线性上采样回原尺寸（或 label 上采样）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >空洞保分辨率，ASPP 看多尺度，v3+ 编码解码补细节</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="dice-loss">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">分割为什么常用 Dice Loss？和 CE 怎么配合？</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>Dice = 2|A∩B| / (|A|+|B|)
+Dice Loss = 1 - Dice</code></pre>
+            <ul>
+              <li>
+                <span class="key">优势</span>：直接优化 IoD/Dice
+                指标本身；对小目标友好（像素少的类在 CE 中被淹没，Dice
+                是比例指标，天然平衡）
+              </li>
+              <li>
+                <span class="key">缺点</span>：小 batch
+                下梯度不稳（尤其单目标时），训练曲线震荡
+              </li>
+              <li>
+                <span class="key">实践</span>：BCE + Dice 各 0.5
+                加权最常见；大背景占优时再叠加 Focal 或 Online Hard Example
+                Mining
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >Dice 管重叠、CE 管像素；两者各半，小目标有救</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="roialign">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            RoIAlign 和 RoIPooling 的区别？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">RoIPooling</span
+                >：候选框映射到特征图时坐标<strong>取整量化</strong>，两次量化误差在特征图上被放大，对检测影响小，对像素级掩码是灾难（边界错位
+                1 像素就是错）
+              </li>
+              <li>
+                <span class="key">RoIAlign</span>：不取整，用<strong
+                  >浮点坐标 + 双线性插值</strong
+                >采样每个 bin 内的值，再池化 → 像素级对齐
+              </li>
+              <li>
+                这是 Mask R-CNN 相对 Faster R-CNN
+                的关键改动之一，让实例分割精度大涨
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >Pooling 两次取整误差大，Align 浮点插值贴边界</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="miou">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            分割的评价指标 mIoU 怎么算？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>单类 IoU = TP / (TP + FP + FN)
+mIoU = 所有类别 IoU 的平均
+
+混淆矩阵：行=预测，列=真实
+TP: 预测对的正像素  FP: 误报  FN: 漏报</code></pre>
+            <ul>
+              <li>
+                其他指标：<span class="key">PA</span
+                >（像素准确率，受大类别主导）、<span class="key">Dice/F1</span
+                >、<span class="key">边界 IoU</span>（对边缘敏感）
+              </li>
+              <li>mIoU 是语义分割的"mAP"，比赛标准指标</li>
+            </ul>
+            <span class="mnemonic"
+              >交集除并集，各类求平均；分割看 mIoU，边界看 Boundary</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 07 度量学习 ============ -->
+      <section class="section" id="sec-metric">
+        <h2><span class="num">07</span> 度量学习与人脸识别</h2>
+
+        <div class="qa" id="face-flow">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">人脸识别系统的完整流程？</div>
+          <div class="qa-a">
+            <ol>
+              <li>
+                <span class="key">人脸检测</span>：MTCNN / RetinaFace 找到人脸框
+              </li>
+              <li>
+                <span class="key">关键点对齐</span
+                >：定位眼、鼻、嘴关键点，仿射变换把脸转正
+              </li>
+              <li>
+                <span class="key">特征提取</span>：CNN backbone 提取
+                embedding（如 512 维向量），经 L2 归一化
+              </li>
+              <li>
+                <span class="key">比对</span
+                >：两向量余弦相似度，超过阈值判定同一人
+              </li>
+            </ol>
+            <ul>
+              <li>
+                1:1 验证（刷脸支付）vs 1:N 识别（安防布控）——N
+                越大误识率越高，需要 ROC 曲线上选阈值
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >检测 → 对齐 → 提特征 → 算相似度；验证 1:1，识别 1:N</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="triplet">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Triplet Loss 的原理？怎么采样三元组？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>L = max(0, d(a, p) - d(a, n) + margin)
+
+a: anchor 锚样本   p: positive 同类   n: negative 异类
+目标：同类距离 + margin < 异类距离</code></pre>
+            <ul>
+              <li>
+                <span class="key">采样策略</span
+                >：随机采样的三元组大多"太容易"（loss=0 无梯度）→
+                用<strong>难例挖掘</strong>：batch 内选最远的同类（hard
+                positive）和最近的异类（hard negative）
+              </li>
+              <li>
+                <span class="key">缺点</span>：样本对爆炸、训练不稳定、margin
+                敏感
+              </li>
+              <li>
+                <span class="key">演进</span>：对比损失 → Triplet →
+                <strong>Proxy</strong> 类代理 →
+                <strong>分类式度量学习</strong>（ArcFace 一条路走到黑）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >锚点同类拉得近，异类推开 margin 远；难的样本才有用</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="arcface">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            ArcFace 为什么效果好？加性角度间隔的核心思想？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">思路</span>：把分类权重与特征的点积改写成
+                <code>cos θ</code>，在
+                <strong>logit 上加角度间隔 m</strong>：s·cos(θ<sub>y</sub>+m) →
+                逼同类在角度空间更紧凑
+              </li>
+              <li>
+                <span class="key">几何意义</span
+                >：每个类别在超球面上占据一个更"窄"的扇形区域 →
+                类内更聚、类间更开
+              </li>
+              <li>
+                <span class="key">优势</span>：训练稳定（对比
+                Triplet）、不需要复杂采样、embedding 判别力强
+              </li>
+              <li>
+                同族：SphereFace（乘性间隔）、CosFace（加性余弦间隔）——ArcFace
+                是集大成者
+              </li>
+              <li>推理时丢弃分类头，只用 embedding 做比对</li>
+            </ul>
+            <span class="mnemonic"
+              >分类即度量：角上加个 m，同类抱成团；训练当分类，推理用向量</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 08 训练与调优 ============ -->
+      <section class="section" id="sec-train">
+        <h2><span class="num">08</span> 训练与调优</h2>
+
+        <div class="qa hot" id="augmentation">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            常见的数据增强方法有哪些？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>类别</th>
+                  <th>方法</th>
+                </tr>
+                <tr>
+                  <td>几何</td>
+                  <td>
+                    翻转、旋转、裁剪（RandomResizedCrop）、缩放、平移、透视
+                  </td>
+                </tr>
+                <tr>
+                  <td>颜色</td>
+                  <td>亮度/对比度/饱和度抖动、灰度化、HSV 扰动</td>
+                </tr>
+                <tr>
+                  <td>遮挡/噪声</td>
+                  <td>Random Erasing、Cutout、高斯噪声、模糊</td>
+                </tr>
+                <tr>
+                  <td>混合</td>
+                  <td>
+                    MixUp（图像+标签线性混合）、CutMix（贴块+标签按面积加权）
+                  </td>
+                </tr>
+                <tr>
+                  <td>检测/分割专用</td>
+                  <td>
+                    Mosaic（4 图拼接）、CopyPaste（实例粘贴）、颜色空间 HSV
+                  </td>
+                </tr>
+                <tr>
+                  <td>自动</td>
+                  <td>AutoAugment / RandAugment（搜索增强策略）</td>
+                </tr>
+              </table>
+            </div>
+            <div class="tip">
+              注意标签一致性：关键点/框要跟着几何变换走；Mosaic 是 YOLO
+              系列涨点神器，但推理前记得关掉。
+            </div>
+            <span class="mnemonic"
+              >几何颜色打底，MixCut 混合升华，检测加 Mosaic，分割用
+              CopyPaste</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="imbalance">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            类别不平衡怎么处理？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">数据层面</span
+                >：过采样小类（+增强）、欠采样大类、复制粘贴小类目标
+              </li>
+              <li>
+                <span class="key">损失层面</span>：类别加权 CE（weight
+                与频率成反比）、Focal Loss、Class-balanced Loss（按有效样本数）
+              </li>
+              <li>
+                <span class="key">策略层面</span
+                >：两阶段解耦训练（先正常学表征，再重采样调分类头）、重加权延迟（前期不加权）
+              </li>
+              <li>
+                <span class="key">评价层面</span>：别看总体准确率，看每类的
+                P/R/F1 和混淆矩阵
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >采样再平衡、损失做加权、训练分两段、评价看单类</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="metrics">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            精确率和召回率的区别？F1 是什么？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>精确率 P = TP / (TP + FP)   → 查准：报出来的有多少是真的
+召回率 R = TP / (TP + FN)   → 查全：真目标漏了多少
+F1 = 2PR / (P + R)          → 调和平均，两者兼顾</code></pre>
+            <ul>
+              <li>
+                <span class="key">P 高 R 低</span
+                >：宁可放过不可错杀（垃圾过滤）；<span class="key"
+                  >R 高 P 低</span
+                >：宁可错杀不可放过（癌症筛查、安防布控）
+              </li>
+              <li>PR 曲线：阈值越松 R 升 P 降，曲线下面积即 AP</li>
+            </ul>
+            <span class="mnemonic"
+              >P 管报得准，R 管抓得全；调和不偏科，场景定取舍</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="finetune">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            迁移学习和微调怎么做？什么情况全量训练？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">流程</span>：加载 ImageNet 预训练权重 →
+                替换最后分类层 → 小学习率先调头几层，再解冻全网络微调
+              </li>
+              <li>
+                <span class="key">数据少 + 相似</span>：只微调最后一层（linear
+                probing）
+              </li>
+              <li>
+                <span class="key">数据少 + 差异大</span>：微调中后段，冻结浅层
+              </li>
+              <li><span class="key">数据多</span>：全量微调甚至从头训</li>
+              <li>
+                backbone 用小学习率（如 1e-4），新层用大学习率（如
+                1e-3），差分学习率是标配技巧
+              </li>
+              <li>
+                域差异大（红外 vs
+                可见光、医学影像）：浅层边缘特征仍通用，深层需大调
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >预训练打底，浅层通用深层专用；数据越多解冻越多，差分学习率开路</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="debug-loss">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">训练 loss 不收敛/NaN，怎么排查？</div>
+          <div class="qa-a">
+            <ol>
+              <li>
+                <span class="key">数据</span>：标注错乱、图片损坏、mean/std
+                错误、标签越界（如类别号 ≥ num_classes）
+              </li>
+              <li>
+                <span class="key">预处理</span>：除零、归一化搞反、通道顺序错
+              </li>
+              <li>
+                <span class="key">学习率</span>：过大是 NaN 首因 → 降 10
+                倍试；加 warmup
+              </li>
+              <li>
+                <span class="key">数值稳定</span>：log(0)、除 0 → 加 eps；用
+                BCEWithLogitsLoss 替代 sigmoid+BCE
+              </li>
+              <li>
+                <span class="key">梯度</span>：加 clip（如
+                max_norm=5）；检查梯度爆炸层
+              </li>
+              <li>
+                <span class="key">流程</span>：先过拟合 1 个 batch
+                验证代码正确性——loss 应能降到接近 0
+              </li>
+            </ol>
+            <span class="mnemonic"
+              >先小批过拟合验代码，再查数据和学习率；log 零除零加
+              eps，梯度大了就 clip</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="tta">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">什么是 TTA？什么是标签平滑？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">TTA（测试时增强）</span
+                >：推理时对输入做多种变换（翻转、多尺度裁剪），分别预测后融合（平均/投票）→
+                白拿 1~2 个点，代价是推理变慢
+              </li>
+              <li>
+                <span class="key">标签平滑</span>：把 one-hot 的 [0,1] 变成
+                [ε/K, 1-ε+ε/K] → 防止模型对预测过度自信，提升泛化（Inception
+                v3、检测头常用）
+              </li>
+            </ul>
+            <span class="mnemonic">TTA 多变体投票，标签平滑防自满</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 09 压缩与部署 ============ -->
+      <section class="section" id="sec-deploy">
+        <h2><span class="num">09</span> 模型压缩与部署</h2>
+
+        <div class="qa hot" id="compression">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            模型压缩有哪些手段？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>手段</th>
+                  <th>原理</th>
+                  <th>压缩/加速比</th>
+                </tr>
+                <tr>
+                  <td>剪枝</td>
+                  <td>去掉不重要的权重/通道/层（按幅值或重要性分数）</td>
+                  <td>结构化剪枝 2~4 倍，精度损失小</td>
+                </tr>
+                <tr>
+                  <td>量化</td>
+                  <td>FP32 → INT8/INT4 表示权重和激活</td>
+                  <td>INT8 约 4 倍提速、4 倍省内存</td>
+                </tr>
+                <tr>
+                  <td>知识蒸馏</td>
+                  <td>大模型（教师）监督小模型（学生）训练</td>
+                  <td>学生小 10 倍，保住大部分精度</td>
+                </tr>
+                <tr>
+                  <td>轻量结构</td>
+                  <td>换 MobileNet/ShuffleNet/GhostNet 等 backbone</td>
+                  <td>从设计端解决，最稳定</td>
+                </tr>
+                <tr>
+                  <td>算子融合</td>
+                  <td>Conv+BN+ReLU 合并为一个算子</td>
+                  <td>部署框架自动做，免费提速</td>
+                </tr>
+              </table>
+            </div>
+            <span class="mnemonic"
+              >剪枝剪赘肉、量化降精度、蒸馏传功力、换轻量网络换骨架</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="quant">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            量化的原理？PTQ 和 QAT 的区别？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># 对称量化：真实值 = 量化值 × scale
+scale = max|w| / 127          (INT8)
+q = round(w / scale)</code></pre>
+            <ul>
+              <li>
+                <span class="key">PTQ（训练后量化）</span
+                >：训完直接量化，用几百张校准图片统计激活分布 → 快，精度可能掉
+                1~2 个点
+              </li>
+              <li>
+                <span class="key">QAT（量化感知训练）</span
+                >：训练时插入伪量化节点模拟量化误差，让权重适应 →
+                精度几乎无损，但要重新训练
+              </li>
+              <li>
+                <span class="key">为什么能加速</span>：INT8 的乘加吞吐量是 FP32
+                的数倍（Tensor Core），且省带宽和内存
+              </li>
+              <li>
+                坑点：异常大激活值会把 scale 撑大 → 其他值精度损失（可用
+                percentile/entropy 校准缓解）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >PTQ 免训快掉点，QAT 慢工出细活；scale 一被撑大，精度全完蛋</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="distill">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            知识蒸馏的原理？软标签为什么有效？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>L = α · CE(y, student) + (1-α) · KL(soft_T, student_T)
+
+soft_T = softmax(logits / T)   # T = 温度，通常 3~10</code></pre>
+            <ul>
+              <li>
+                <span class="key">软标签</span
+                >：教师输出的类别概率含"暗知识"——"这张猫图 90%
+                是猫，但更像狗而不像卡车"，比 one-hot 信息量大得多
+              </li>
+              <li>
+                <span class="key">温度 T</span>：放大 logits
+                差异让小概率类的相对关系显现
+              </li>
+              <li>
+                蒸馏方式：logits
+                蒸馏（Hinton）、特征蒸馏（FitNet，中间层对齐）、关系蒸馏（样本间关系）
+              </li>
+              <li>
+                应用：大模型→小模型压缩、自蒸馏（Born-Again）、半监督利用无标注数据
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >老师给软标签，温度一升暗知识显；logits
+              特征关系，三条路都可蒸</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="deploy-stack">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            常见的部署技术栈？ONNX / TensorRT / OpenVINO / NCNN 怎么选？<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr>
+                  <th>工具</th>
+                  <th>厂商/平台</th>
+                  <th>定位</th>
+                </tr>
+                <tr>
+                  <td>ONNX Runtime</td>
+                  <td>跨平台</td>
+                  <td>通用推理引擎，模型交换格式（.onnx）事实标准</td>
+                </tr>
+                <tr>
+                  <td>TensorRT</td>
+                  <td>NVIDIA</td>
+                  <td>GPU 极致优化：算子融合、FP16/INT8、kernel 自动调优</td>
+                </tr>
+                <tr>
+                  <td>OpenVINO</td>
+                  <td>Intel</td>
+                  <td>CPU/iGPU 优化，Intel 平台首选</td>
+                </tr>
+                <tr>
+                  <td>NCNN / MNN</td>
+                  <td>腾讯/阿里</td>
+                  <td>移动端 ARM 优化，无第三方依赖</td>
+                </tr>
+                <tr>
+                  <td>Triton</td>
+                  <td>NVIDIA</td>
+                  <td>服务化推理平台：动态 batch、多模型并发</td>
+                </tr>
+              </table>
+            </div>
+            <ul>
+              <li>
+                <span class="key">典型链路</span>：PyTorch → export ONNX →
+                parser 进 TensorRT → 生成 engine → 部署
+              </li>
+              <li>
+                常见坑：自定义算子不支持（改写/注册 plugin）、动态 shape
+                处理、opset 版本兼容
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >N 卡找 TensorRT，Intel 找 OpenVINO，手机找 NCNN，中间都走
+              ONNX</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="preprocess-pit">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            部署时精度对不上训练，怎么排查？（前后处理一致性）<span
+              class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>
+                <span class="key">预处理一致性</span>（占 80% 的原因）：
+                <ul>
+                  <li>resize 方式不同（双线性 vs 最近邻）</li>
+                  <li>通道顺序 BGR vs RGB</li>
+                  <li>归一化 mean/std 是否一致、除 255 顺序</li>
+                  <li>letterbox 填充色/比例计算（检测常见坑）</li>
+                </ul>
+              </li>
+              <li>
+                <span class="key">数值精度</span>：FP16/INT8 量化掉点 → 先验证
+                FP32 一致再量化
+              </li>
+              <li>
+                <span class="key">后处理</span>：decode 框逻辑、置信度阈值、NMS
+                实现、anchor 顺序
+              </li>
+              <li>
+                <span class="key">验证方法</span>：同一张图，PyTorch
+                和部署引擎各跑一遍，比对输入张量和输出 logits 误差（应 &lt;
+                1e-4）
+              </li>
+            </ol>
+            <span class="mnemonic"
+              >先对输入，再对输出，中间查精度；resize、通道、归一化，三大惯犯先提审</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 10 生成模型与多模态 ============ -->
+      <section class="section" id="sec-gen">
+        <h2><span class="num">10</span> 生成模型与多模态</h2>
+
+        <div class="qa hot" id="gan">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            GAN 的基本原理？为什么生成器和判别器对抗？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">两个网络</span>：
+                <ul>
+                  <li>生成器 G：噪声 z → 假图，目标是骗过 D</li>
+                  <li>判别器 D：输入图 → 真/假概率，目标是分辨真假</li>
+                </ul>
+              </li>
+              <li>
+                <span class="key">博弈目标</span>：min<sub>G</sub> max<sub
+                  >D</sub
+                >
+                V(D,G)，理想终局是<strong>纳什均衡</strong>：G 生成的分布 =
+                真实分布，D 输出恒 0.5
+              </li>
+              <li>JS 散度视角：GAN 在最小化生成分布与真实分布的 JS 散度</li>
+              <li>
+                经典变体：DCGAN（卷积
+                GAN）、cGAN（条件生成）、CycleGAN（风格迁移免配对）、StyleGAN（可控人脸生成）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >G 造假骗 D，D 鉴假逼 G；越斗越像真的，均衡时真假难辨</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="gan-unstable">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">GAN 训练不稳定，有哪些稳定化技巧？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">损失改进</span>：WGAN（Wasserstein 距离 +
+                权重裁剪/谱归一化）、LSGAN（最小二乘）、Hinge loss
+              </li>
+              <li>
+                <span class="key">训练技巧</span>：G/D 交替更新（如 D 更新 5
+                次再更新 G 1 次）、TTUR（两边不同学习率）、EMA 权重
+              </li>
+              <li>
+                <span class="key">结构</span>：谱归一化（SN）约束 D 的
+                Lipschitz、跳跃连接
+              </li>
+              <li>
+                <span class="key">诊断</span>：模式崩溃（mode collapse）——G
+                只会生成少数几种样本 → mini-batch discrimination、unroll
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >梯度不稳换 WGAN，模式崩溃查采样；谱归一化约束
+              D，交替训练别偏科</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="diffusion">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            扩散模型的原理？为什么能生成高质量图像？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">前向过程</span>：对真实图逐步加高斯噪声，T
+                步后变成纯噪声（不可逆的破坏）
+              </li>
+              <li>
+                <span class="key">反向过程</span
+                >：训练一个网络（U-Net/Transformer）学习"从噪声图预测每一步加的噪声"，推理时逐步去噪还原图像
+              </li>
+              <li>
+                <span class="key">训练目标</span>：简化为预测噪声的 MSE：L =
+                E||ε - ε<sub>θ</sub>(x<sub>t</sub>, t)||²
+              </li>
+              <li>
+                <span class="key">为什么强</span
+                >：把生成建模成千百个小步去噪（相比 GAN
+                一步到位），每步任务简单、训练稳定、无对抗博弈，且渐进采样质量高
+              </li>
+              <li>
+                <span class="key">Stable Diffusion 三件套</span>：VAE
+                压缩到潜空间（省算力）+ U-Net 去噪 + CLIP 文本编码（条件控制）
+              </li>
+              <li>采样加速：DDIM、蒸馏（LCM）、一致性模型</li>
+            </ul>
+            <span class="mnemonic"
+              >前向加噪好学，反向去噪成画；一步一步慢慢来，稳定质量两开花</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="clip">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            CLIP 的原理？为什么能做零样本分类？<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">双塔结构</span>：图像编码器（ViT/ResNet）+
+                文本编码器（Transformer），各自映射到同一嵌入空间
+              </li>
+              <li>
+                <span class="key">对比学习</span>：4 亿图文对上做
+                InfoNCE——匹配的图文对相似度拉近，不匹配的推开（N×N
+                相似度矩阵，对角线为正样本）
+              </li>
+              <li>
+                <span class="key">零样本分类</span>：把每个类名写成 prompt（"a
+                photo of a {label}"），与图像算相似度，取最大的类 →
+                <strong>不需要任何训练样本</strong>
+              </li>
+              <li>
+                应用：文生图的文本理解、开放词汇检测（Grounding
+                DINO）、检索、多模态大模型的视觉编码器（LLaVA 直接复用其视觉塔）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >图一文一塔，对比拉近配对；类名当 prompt，零样本开箱用</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="sam">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">SAM（Segment Anything）的核心思想？</div>
+          <div class="qa-a">
+            <ul>
+              <li>
+                <span class="key">三大组件</span>：图像编码器（ViT，一次编码）+
+                Prompt 编码器（点/框/文本提示）+ 轻量 Mask 解码器（.mask 预测）
+              </li>
+              <li>
+                <span class="key">可提示分割</span
+                >：给个点、画个框就能出掩码，交互式抠图；模糊提示输出多个候选掩码
+              </li>
+              <li>
+                <span class="key">数据引擎</span>：辅助标注 → 半自动 →
+                全自动，滚出 11 亿掩码的 SA-1B 数据集
+              </li>
+              <li>
+                意义：分割领域的"基础模型"，zero-shot 迁移到新任务；衍生
+                MobileSAM、SAM2（视频）
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >图编一次，提示随意，解码轻量；一点一框一个掩码，分割进入基础模型时代</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 11 手写代码 ============ -->
+      <section class="section" id="sec-code">
+        <h2><span class="num">11</span> 手写代码</h2>
+
+        <div class="qa hot" id="code-iou">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写 IoU 计算（NumPy）<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>import numpy as np
+
+def iou(box1, box2):
+    """box: [x1, y1, x2, y2] 左上角/右下角格式"""
+    # 1. 交集区域
+    x1 = max(box1[0], box2[0])
+    y1 = max(box1[1], box2[1])
+    x2 = min(box1[2], box2[2])
+    y2 = min(box1[3], box2[3])
+
+    inter = max(0, x2 - x1) * max(0, y2 - y1)  # 无交集时为 0
+
+    # 2. 并集 = 面积和 - 交集
+    area1 = (box1[2] - box1[0]) * (box1[3] - box1[1])
+    area2 = (box2[2] - box2[0]) * (box2[3] - box2[1])
+    union = area1 + area2 - inter
+
+    return inter / (union + 1e-6)  # 防 0 除</code></pre>
+            <span class="mnemonic"
+              >左上取大、右下取小得交集；面积相加减交集得并集，交比并</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="code-nms">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写 NMS（NumPy）<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>def nms(boxes, scores, iou_thresh=0.5):
+    """boxes: (N,4) [x1,y1,x2,y2]  scores: (N,)"""
+    x1, y1, x2, y2 = boxes[:, 0], boxes[:, 1], boxes[:, 2], boxes[:, 3]
+    areas = (x2 - x1) * (y2 - y1)
+
+    order = scores.argsort()[::-1]   # 按分数从高到低排序
+    keep = []
+
+    while order.size > 0:
+        i = order[0]                 # 当前最高分框
+        keep.append(i)
+
+        # 剩余框与当前框的 IoU（向量化）
+        xx1 = np.maximum(x1[i], x1[order[1:]])
+        yy1 = np.maximum(y1[i], y1[order[1:]])
+        xx2 = np.minimum(x2[i], x2[order[1:]])
+        yy2 = np.minimum(y2[i], y2[order[1:]])
+        inter = np.maximum(0, xx2 - xx1) * np.maximum(0, yy2 - yy1)
+        ious = inter / (areas[i] + areas[order[1:]] - inter + 1e-6)
+
+        # 保留 IoU 小于阈值的框，删掉重叠度高的
+        order = order[1:][ious < iou_thresh]
+
+    return keep</code></pre>
+            <span class="mnemonic"
+              >排序取头，算重叠，删掉超标的；循环到空，留下的就是答案</span
+            >
+          </div>
+        </div>
+
+        <div class="qa" id="code-kmeans">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">手写 K-Means（可用于聚类 anchor 尺寸）</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>def kmeans(data, k, iters=100):
+    """data: (N, d)"""
+    # 1. 随机初始化中心
+    idx = np.random.choice(len(data), k, replace=False)
+    centers = data[idx].copy()
+
+    for _ in range(iters):
+        # 2. 分配：每个点找最近的中心
+        dist = np.linalg.norm(data[:, None] - centers[None], axis=2)
+        labels = dist.argmin(axis=1)
+
+        # 3. 更新：每类取均值作为新中心
+        new_centers = np.array([
+            data[labels == j].mean(axis=0) if np.any(labels == j) else centers[j]
+            for j in range(k)
+        ])
+        if np.allclose(new_centers, centers):
+            break
+        centers = new_centers
+
+    return labels, centers</code></pre>
+            <span class="mnemonic"
+              >先随机定心，再就近归队，队内取均值当新心；不动即收敛</span
+            >
+          </div>
+        </div>
+
+        <div class="qa hot" id="code-train">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            写出 PyTorch 图像分类的完整训练循环<span class="hot-badge"
+              >🔥 高频</span
+            >
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>import torch
+import torch.nn as nn
+from torchvision import models, transforms, datasets
+
+# 1. 数据
+train_tf = transforms.Compose([
+    transforms.RandomResizedCrop(224),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])
+train_set = datasets.ImageFolder("data/train", transform=train_tf)
+loader = torch.utils.data.DataLoader(train_set, batch_size=32,
+                                     shuffle=True, num_workers=4)
+
+# 2. 模型：预训练 + 换分类头
+model = models.resnet50(weights="IMAGENET1K_V2")
+model.fc = nn.Linear(model.fc.in_features, num_classes)
+model = model.cuda()
+
+criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-3,
+                            momentum=0.9, weight_decay=5e-4)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=90)
+
+# 3. 训练循环
+for epoch in range(90):
+    model.train()
+    total, correct, loss_sum = 0, 0, 0.0
+    for images, labels in loader:
+        images, labels = images.cuda(), labels.cuda()
+
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+
+        loss_sum += loss.item() * labels.size(0)
+        correct  += (outputs.argmax(1) == labels).sum().item()
+        total    += labels.size(0)
+    scheduler.step()
+    print(f"epoch {epoch}: loss={loss_sum/total:.4f} acc={correct/total:.4f}")
+
+# 4. 保存
+torch.save(model.state_dict(), "model.pth")</code></pre>
+            <ul>
+              <li>
+                <span class="key">五个必答要点</span>：zero_grad
+                位置（先清后反向）、train/eval 模式切换、loss.item()
+                防显存累积、scheduler.step() 每 epoch、验证时
+                <code>torch.no_grad()</code>
+              </li>
+            </ul>
+            <span class="mnemonic"
+              >数据模型损失优化器，循环五步：清零→前向→损失→反向→更新</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <footer
+        style="
+          text-align: center;
+          padding: 40px 0 20px;
+          border-top: 1px solid var(--border);
+          color: var(--text-secondary);
+          font-size: 0.85rem;
+        ">
+        <p>
+          👁 计算机视觉工程师面试题总结 · 80+ 高频考点 &nbsp;|&nbsp;
+          <a
+            href="indexInterview.html"
+            style="color: var(--link-blue); text-decoration: none"
+            >返回面试题目录</a
+          >
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      function copyCode(btn) {
+        const pre = btn.parentElement
+        const code = pre.querySelector('code').innerText
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '已复制 ✓'
+          setTimeout(() => {
+            btn.textContent = '复制'
+          }, 1500)
+        })
+      }
+
+      // 侧边栏当前章节高亮
+      const sections = document.querySelectorAll('.section')
+      const navLinks = document.querySelectorAll('.toc li a')
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              navLinks.forEach((link) => link.classList.remove('active'))
+              const activeLink = document.querySelector(
+                `.toc li a[href="#${entry.target.id}"]`,
+              )
+              if (activeLink) activeLink.classList.add('active')
+            }
+          })
+        },
+        { rootMargin: '-10% 0px -70% 0px' },
+      )
+      sections.forEach((s) => observer.observe(s))
+
+      // 移动端点击链接关闭侧边栏
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          document.querySelector('.sidebar').classList.remove('open')
+        })
+      })
+
+      document.addEventListener('pointerdown', (event) => {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(event.target) &&
+          !menuToggle.contains(event.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>

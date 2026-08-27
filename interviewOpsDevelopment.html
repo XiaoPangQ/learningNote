@@ -1,0 +1,2872 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>运维工程师面试题总结 · 高频考点速记</title>
+    <style>
+      :root {
+        --bg: #080a14;
+        --panel: #0d1020;
+        --panel-hover: #131836;
+        --text: #eaecfb;
+        --text-secondary: #b4badf;
+        --border: #2a3160;
+        --accent: #818cf8;
+        --accent-soft: rgba(129, 140, 248, 0.12);
+        --hot: #ff6b6b;
+        --hot-soft: rgba(255, 107, 107, 0.1);
+        --code-green: #a5b4fc;
+        --link-blue: #93c5fd;
+        --warn: #ffd166;
+        --sidebar-w: 300px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3b447f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+      .toc .hot-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--hot);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #eaecfb 0%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-legend span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-legend .hot-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot-soft);
+        color: var(--hot);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+
+      /* Q&A Card */
+      .qa {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .qa:hover {
+        border-color: rgba(129, 140, 248, 0.3);
+      }
+      .qa.hot {
+        border-left: 3px solid var(--hot);
+        background: linear-gradient(
+          90deg,
+          var(--hot-soft) 0%,
+          var(--panel) 30%
+        );
+      }
+      .qa.hot:hover {
+        border-color: var(--hot);
+      }
+
+      .qa-q {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .qa-q .q-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+      }
+      .qa.hot .q-mark {
+        background: var(--hot-soft);
+        color: var(--hot);
+      }
+      .hot-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot);
+        color: #fff;
+        padding: 1px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+        white-space: nowrap;
+        animation: hotPulse 2s ease-in-out infinite;
+      }
+      @keyframes hotPulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .qa-a {
+        color: var(--text-secondary);
+        font-size: 0.93rem;
+      }
+      .qa-a ul,
+      .qa-a ol {
+        margin: 6px 0 6px 20px;
+      }
+      .qa-a li {
+        margin-bottom: 5px;
+      }
+      .qa-a strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .qa-a .key {
+        color: var(--code-green);
+        font-weight: 600;
+      }
+      .qa-a p {
+        margin-bottom: 8px;
+      }
+      .qa-a .mnemonic {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: rgba(165, 180, 252, 0.06);
+        border-left: 3px solid var(--code-green);
+        border-radius: 0 6px 6px 0;
+        font-size: 0.85rem;
+        color: var(--code-green);
+      }
+      .qa-a .mnemonic::before {
+        content: '🧠 速记：';
+        font-weight: 700;
+      }
+
+      pre {
+        background: #060810;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        overflow-x: auto;
+        margin: 10px 0 14px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #a5b4fc;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn {
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid;
+        font-size: 0.88rem;
+      }
+      .tip {
+        background: rgba(165, 180, 252, 0.06);
+        border-color: var(--code-green);
+        color: var(--text-secondary);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+        color: var(--text-secondary);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn,
+        .back-home {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        .qa {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .hot-badge {
+          background: #ccc;
+          color: #000;
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🛠️</span> 运维工程师面试指南</h2>
+        <p>高频考点 · 速记答案 · 100+ 题</p>
+      </div>
+      <ul class="toc">
+        <li><a href="indexInterview.html">← 返回面试题目录</a></li>
+        <li class="toc-section-title">运维基础与职业认知</li>
+        <li><a href="#ops-role"><span class="hot-dot"></span>运维职责与价值</a></li>
+        <li><a href="#ops-sre"><span class="hot-dot"></span>SRE 与传统运维</a></li>
+        <li><a href="#ops-devops"><span class="hot-dot"></span>如何理解 DevOps</a></li>
+        <li><a href="#ops-skill">运维技能栈</a></li>
+        <li><a href="#ops-trend">云原生与运维转型</a></li>
+
+        <li class="toc-section-title">Linux 基础与核心命令</li>
+        <li><a href="#ops-cpu"><span class="hot-dot"></span>负载与使用率</a></li>
+        <li><a href="#ops-top"><span class="hot-dot"></span>top 关键指标</a></li>
+        <li><a href="#ops-proc">ps 与进程状态</a></li>
+        <li><a href="#ops-kill">kill 信号区别</a></li>
+        <li><a href="#ops-mem"><span class="hot-dot"></span>free 与 buffer/cache</a></li>
+        <li><a href="#ops-oom"><span class="hot-dot"></span>OOM 排查</a></li>
+        <li><a href="#ops-file">Linux 目录结构</a></li>
+        <li><a href="#ops-soft"><span class="hot-dot"></span>软链接与硬链接</a></li>
+        <li><a href="#ops-find"><span class="hot-dot"></span>find 与三剑客</a></li>
+        <li><a href="#ops-awk">awk/sed 常用法</a></li>
+        <li><a href="#ops-tar">打包与压缩</a></li>
+        <li><a href="#ops-vmstat">vmstat/iostat/sar</a></li>
+
+        <li class="toc-section-title">文件系统与磁盘管理</li>
+        <li><a href="#ops-inode"><span class="hot-dot"></span>inode 与 block</a></li>
+        <li><a href="#ops-df"><span class="hot-dot"></span>df/du 与磁盘满排查</a></li>
+        <li><a href="#ops-lvm">LVM 扩容步骤</a></li>
+        <li><a href="#ops-raid"><span class="hot-dot"></span>RAID 0/1/5/10</a></li>
+        <li><a href="#ops-mount">mount 与 fstab</a></li>
+        <li><a href="#ops-fsck">文件系统只读修复</a></li>
+        <li><a href="#ops-dd">dd 命令用途</a></li>
+
+        <li class="toc-section-title">用户权限与安全加固</li>
+        <li><a href="#ops-rwx"><span class="hot-dot"></span>rwx 权限计算</a></li>
+        <li><a href="#ops-sudo">sudo 与 su 区别</a></li>
+        <li><a href="#ops-suid">SUID/SGID/Sticky</a></li>
+        <li><a href="#ops-ssh"><span class="hot-dot"></span>SSH 免密原理</a></li>
+        <li><a href="#ops-firewall"><span class="hot-dot"></span>防火墙与四表五链</a></li>
+        <li><a href="#ops-hard"><span class="hot-dot"></span>安全加固清单</a></li>
+        <li><a href="#ops-port"><span class="hot-dot"></span>端口占用排查</a></li>
+
+        <li class="toc-section-title">Shell 脚本编程</li>
+        <li><a href="#ops-shebang"><span class="hot-dot"></span>脚本执行方式</a></li>
+        <li><a href="#ops-var">变量与特殊变量</a></li>
+        <li><a href="#ops-quote">单引号双引号区别</a></li>
+        <li><a href="#ops-if">条件判断语法</a></li>
+        <li><a href="#ops-loop">循环写法</a></li>
+        <li><a href="#ops-func">函数与返回值</a></li>
+        <li><a href="#ops-debug">脚本调试方法</a></li>
+        <li><a href="#ops-crond"><span class="hot-dot"></span>crontab 定时任务</a></li>
+
+        <li class="toc-section-title">网络基础与排查</li>
+        <li><a href="#ops-osi"><span class="hot-dot"></span>OSI 与 TCP/IP 模型</a></li>
+        <li><a href="#ops-tcp"><span class="hot-dot"></span>三次握手四次挥手</a></li>
+        <li><a href="#ops-tcpudp"><span class="hot-dot"></span>TCP vs UDP</a></li>
+        <li><a href="#ops-dns"><span class="hot-dot"></span>DNS 解析过程</a></li>
+        <li><a href="#ops-http">HTTP 状态码与 HTTPS</a></li>
+        <li><a href="#ops-ping"><span class="hot-dot"></span>网络不通排查</a></li>
+        <li><a href="#ops-ip">子网划分计算</a></li>
+        <li><a href="#ops-nat">NAT 原理</a></li>
+        <li><a href="#ops-tcpdump">tcpdump 抓包</a></li>
+
+        <li class="toc-section-title">Nginx 与负载均衡</li>
+        <li><a href="#ops-nginx-arch"><span class="hot-dot"></span>Nginx 高性能原理</a></li>
+        <li><a href="#ops-nginx-conf"><span class="hot-dot"></span>配置与 location 匹配</a></li>
+        <li><a href="#ops-lb"><span class="hot-dot"></span>负载均衡策略</a></li>
+        <li><a href="#ops-l4l7"><span class="hot-dot"></span>四层 vs 七层负载</a></li>
+        <li><a href="#ops-proxy">正向与反向代理</a></li>
+        <li><a href="#ops-502"><span class="hot-dot"></span>502/504 排查</a></li>
+        <li><a href="#ops-php-fpm">Nginx + PHP-FPM</a></li>
+        <li><a href="#ops-opt"><span class="hot-dot"></span>Nginx 性能优化</a></li>
+        <li><a href="#ops-keepalive">Keepalive 长连接</a></li>
+
+        <li class="toc-section-title">数据库运维</li>
+        <li><a href="#ops-mysql-backup"><span class="hot-dot"></span>MySQL 备份方案</a></li>
+        <li><a href="#ops-mysql-master"><span class="hot-dot"></span>主从复制原理</a></li>
+        <li><a href="#ops-mysql-slow"><span class="hot-dot"></span>慢查询优化</a></li>
+        <li><a href="#ops-mysql-index"><span class="hot-dot"></span>索引失效场景</a></li>
+        <li><a href="#ops-mysql-lock">死锁排查</a></li>
+        <li><a href="#ops-redis-arch"><span class="hot-dot"></span>Redis 为什么快</a></li>
+        <li><a href="#ops-redis-persist"><span class="hot-dot"></span>RDB vs AOF</a></li>
+        <li><a href="#ops-redis-cache"><span class="hot-dot"></span>缓存三大问题</a></li>
+        <li><a href="#ops-redis-ha">Redis 高可用</a></li>
+
+        <li class="toc-section-title">Docker 与 Kubernetes</li>
+        <li><a href="#ops-docker-vm"><span class="hot-dot"></span>容器 vs 虚拟机</a></li>
+        <li><a href="#ops-docker-arch"><span class="hot-dot"></span>镜像分层原理</a></li>
+        <li><a href="#ops-docker-cmd"><span class="hot-dot"></span>常用命令</a></li>
+        <li><a href="#ops-dockerfile"><span class="hot-dot"></span>Dockerfile 与瘦身</a></li>
+        <li><a href="#ops-docker-net">容器网络模式</a></li>
+        <li><a href="#ops-docker-data">数据卷管理</a></li>
+        <li><a href="#ops-k8s-arch"><span class="hot-dot"></span>K8s 核心组件</a></li>
+        <li><a href="#ops-k8s-pod"><span class="hot-dot"></span>Pod 生命周期</a></li>
+        <li><a href="#ops-k8s-svc"><span class="hot-dot"></span>Service 类型</a></li>
+        <li><a href="#ops-k8s-deploy"><span class="hot-dot"></span>滚动更新</a></li>
+        <li><a href="#ops-k8s-debug"><span class="hot-dot"></span>Pod 故障排查</a></li>
+        <li><a href="#ops-k8s-res">requests 与 limits</a></li>
+
+        <li class="toc-section-title">CI/CD 与自动化</li>
+        <li><a href="#ops-git"><span class="hot-dot"></span>Git 常用与冲突</a></li>
+        <li><a href="#ops-gitflow">分支管理模型</a></li>
+        <li><a href="#ops-jenkins"><span class="hot-dot"></span>Jenkins 流水线</a></li>
+        <li><a href="#ops-ansible"><span class="hot-dot"></span>Ansible 原理</a></li>
+        <li><a href="#ops-cicd"><span class="hot-dot"></span>CI/CD 完整流程</a></li>
+        <li><a href="#ops-release"><span class="hot-dot"></span>蓝绿/灰度/滚动发布</a></li>
+        <li><a href="#ops-artif">制品与镜像仓库</a></li>
+
+        <li class="toc-section-title">监控告警与日志</li>
+        <li><a href="#ops-prom"><span class="hot-dot"></span>Prometheus 架构</a></li>
+        <li><a href="#ops-metric"><span class="hot-dot"></span>监控指标方法</a></li>
+        <li><a href="#ops-grafana">Grafana 与告警</a></li>
+        <li><a href="#ops-elk"><span class="hot-dot"></span>ELK 日志体系</a></li>
+        <li><a href="#ops-log"><span class="hot-dot"></span>日志排查技巧</a></li>
+        <li><a href="#ops-alert">告警治理</a></li>
+        <li><a href="#ops-zabbix">Zabbix vs Prometheus</a></li>
+        <li><a href="#ops-sla">SLA 与错误预算</a></li>
+
+        <li class="toc-section-title">故障排查与场景题</li>
+        <li><a href="#ops-trouble"><span class="hot-dot"></span>服务器变慢排查</a></li>
+        <li><a href="#ops-down"><span class="hot-dot"></span>网站打不开排查</a></li>
+        <li><a href="#ops-diskfull"><span class="hot-dot"></span>磁盘满了怎么办</a></li>
+        <li><a href="#ops-hacked"><span class="hot-dot"></span>服务器被入侵</a></li>
+        <li><a href="#ops-sqlslow">数据库 CPU 飙高</a></li>
+        <li><a href="#ops-incident"><span class="hot-dot"></span>故障处理与复盘</a></li>
+        <li><a href="#ops-case-night">半夜告警处理</a></li>
+        <li><a href="#ops-dr">容灾与备份策略</a></li>
+
+        <li class="toc-section-title">手写命令与脚本</li>
+        <li><a href="#ops-code-logs"><span class="hot-dot"></span>日志 IP Top10</a></li>
+        <li><a href="#ops-code-monitor"><span class="hot-dot"></span>磁盘告警脚本</a></li>
+        <li><a href="#ops-code-batch">批量创建用户</a></li>
+        <li><a href="#ops-code-nginx">Nginx 日志分析</a></li>
+        <li><a href="#ops-code-docker">Docker 清理脚本</a></li>
+        <li><a href="#ops-code-backup"><span class="hot-dot"></span>备份归档脚本</a></li>
+        <li><a href="#ops-code-check"><span class="hot-dot"></span>服务存活检测</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <a class="back-home" href="indexInterview.html">← 返回面试题目录</a>
+
+      <header class="hero">
+        <span class="hero-badge">🛠️ 运维工程师</span>
+        <h1>运维工程师面试题总结</h1>
+        <p>
+          覆盖 Linux 命令与性能排查、文件系统磁盘、权限安全加固、Shell 脚本、网络排查、Nginx 负载均衡、MySQL/Redis 运维、Docker/K8s、CI/CD 自动化、监控日志、故障场景题与手写脚本，高频题带 🔥 标记，答案全部为「要点 + 口诀」速记格式。
+        </p>
+        <div class="hero-legend">
+          <span><span class="hot-tag">🔥 高频</span> 面试必考</span>
+          <span>🧠 速记口诀</span>
+          <span>✍️ 手写脚本</span>
+        </div>
+      </header>
+
+      <section class="section" id="sec-01">
+        <h2><span class="num">01</span>运维基础与职业认知</h2>
+
+        <div class="qa hot" id="ops-role">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            运维工程师的职责是什么？运维的价值在哪里？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>核心职责</strong>：</p>
+            <ul>
+              <li><strong>保障稳定性</strong>：保障线上服务 7×24 可用（可用性 ≥ 99.9%）</li>
+              <li><strong>交付效率</strong>：搭建 CI/CD 流水线，让发布又快又稳</li>
+              <li><strong>成本控制</strong>：容量规划、资源利用率优化</li>
+              <li><strong>安全保障</strong>：漏洞修复、权限管控、数据备份</li>
+              <li><strong>效率提升</strong>：把重复劳动<strong>工具化、自动化、平台化</strong></li>
+            </ul>
+            <p><strong>运维的价值</strong>：不是「修机器的」，而是<strong>用技术手段让业务跑得稳、跑得快、花得少</strong>；每一次故障的避免都是隐形的收益。</p>
+            <span class="mnemonic">「稳、快、省、安、效」五字诀——稳定是底线，效率是追求，自动化是出路</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-sre">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            SRE 和传统运维有什么区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>SRE</strong>（Site Reliability Engineering，站点可靠性工程）由 Google 提出，核心是<strong>用软件工程方法解决运维问题</strong>。</p>
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>传统运维</th><th>SRE</th></tr>
+                <tr><td>工作方式</td><td>人工操作、救火式</td><td><strong>代码/工具自动化</strong></td></tr>
+                <tr><td>目标</td><td>不出故障</td><td><strong>SLO + 错误预算</strong>（允许合理故障率）</td></tr>
+                <tr><td>琐事</td><td>重复劳动常态</td><td>琐事（toil）占比 <strong>&lt; 50%</strong>，超了就做自动化</td></tr>
+                <tr><td>应急</td><td>靠经验</td><td><strong>预案、演练、无责复盘</strong></td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">传统运维「人盯机器」，SRE「代码管机器」；SLO 定目标，错误预算给弹性，toil 超半就自动化</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-devops">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            谈谈你对 DevOps 的理解？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>定义</strong>：Development + Operations，打破开发与运维的墙，通过<strong>文化 + 流程 + 工具</strong>实现「快速交付 + 稳定运行」。</p>
+            <p><strong>核心环节</strong>：计划 → 编码 → 构建 → 测试 → 发布 → 部署 → 运营 → 监控 → 反馈（闭环迭代）。</p>
+            <p><strong>关键实践</strong>：</p>
+            <ul>
+              <li><strong>CI/CD</strong>：持续集成/持续交付（Jenkins、GitLab CI）</li>
+              <li><strong>基础设施即代码</strong>：IaC（Ansible、Terraform）</li>
+              <li><strong>容器化与微服务</strong>：Docker + K8s</li>
+              <li><strong>可观测性</strong>：监控 + 日志 + 链路追踪</li>
+            </ul>
+            <span class="mnemonic">「一个字：快；两个字：闭环；三个字：自动化」；Dev 做得快，Ops 管得稳，中间靠流水线</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-skill">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            运维工程师需要掌握哪些技能栈？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>系统层</strong>：Linux 原理、性能调优、Shell/Python 脚本</li>
+              <li><strong>网络层</strong>：TCP/IP、DNS、负载均衡、抓包分析</li>
+              <li><strong>中间件</strong>：Nginx、MySQL、Redis、消息队列</li>
+              <li><strong>云原生</strong>：Docker、Kubernetes、Helm、Service Mesh</li>
+              <li><strong>自动化</strong>：Ansible、Jenkins、Git、Terraform</li>
+              <li><strong>可观测</strong>：Prometheus、Grafana、ELK、Zabbix</li>
+            </ul>
+            <span class="mnemonic">口诀「系统网络中间件，云原自动化可观测」——六大层，由底向上垒</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-trend">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            云原生时代，运维岗位如何转型？
+          </div>
+          <div class="qa-a">
+            <p><strong>趋势</strong>：物理机 → 虚拟化 → 容器化 → 云原生/Serverless，运维对象从「机器」变成「服务与平台」。</p>
+            <ul>
+              <li>手工操作 → <strong>声明式自动化</strong>（IaC、GitOps）</li>
+              <li>被动救火 → <strong>可观测性 + 故障预测</strong></li>
+              <li>命令行运维 → <strong>平台工程 / 自助化门户</strong></li>
+              <li>技能上：<strong>会一门开发语言（Go/Python）</strong> 成为硬要求</li>
+            </ul>
+            <span class="mnemonic">「机器变服务，手工变声明，救火变预防」；不想被淘汰就学 K8s + 写代码</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-02">
+        <h2><span class="num">02</span>Linux 基础与核心命令</h2>
+
+        <div class="qa hot" id="ops-cpu">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            CPU 负载（load average）和 CPU 使用率有什么区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>CPU 使用率</strong>：单位时间内 CPU <strong>忙着干活的时间占比</strong>（用户态 us + 系统态 sy + 等 IO 的 wa 等）。</p>
+            <p><strong>负载（load average）</strong>：一段时间内<strong>正在运行 + 等待运行（可运行态）+ 不可中断睡眠（D 状态，通常是等 IO）</strong>的任务数，三个数值分别是 1 / 5 / 15 分钟平均。</p>
+            <p><strong>关键结论</strong>：</p>
+            <ul>
+              <li>负载和 CPU 核数比：<strong>load / 核数 &gt; 1 表示过载</strong>（4 核机器 load &gt; 4 就危险）</li>
+              <li>负载高但使用率低 → 多半是 <strong>IO 瓶颈（D 状态进程堆积）</strong>，不是 CPU 不够</li>
+              <li>使用率高 + us 大 → 计算密集；sy 大 → 系统调用/上下文切换多；wa 大 → 等 IO</li>
+            </ul>
+            <span class="mnemonic">「使用率看忙不忙，负载看排队长不长」；负载除以核数，超 1 就排队，wa 高别加核——先查磁盘</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-top">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            top 命令里主要看哪些指标？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>头部全局指标</strong>：</p>
+            <ul>
+              <li><strong>load average</strong>：1/5/15 分钟负载（对照核数）</li>
+              <li><strong>%Cpu(s)</strong>：us 用户态 / sy 内核态 / id 空闲 / wa 等 IO / st 被虚拟化偷走</li>
+              <li><strong>MiB Mem / Swap</strong>：free 剩余、buff/cache 缓存、available 真正可用</li>
+            </ul>
+            <p><strong>进程区关键列</strong>：PID、USER、%CPU、%MEM、RES（常驻内存）、S（状态 R/S/D/Z）、TIME+。</p>
+            <p>常用交互键：<span class="key">P</span> 按 CPU 排序、<span class="key">M</span> 按内存排序、<span class="key">1</span> 展开各核、<span class="key">c</span> 显示完整命令、<span class="key">k</span> 杀进程。</p>
+            <span class="mnemonic">「先看负载再看 wa，us 计算重、wa 磁盘慢、sy 切换多」；进程排序 P 和 M，一眼找元凶</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-proc">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            ps 命令怎么用？进程有哪些状态？
+          </div>
+          <div class="qa-a">
+            <p>常用：<code>ps aux</code>（BSD 风格全量）与 <code>ps -ef</code>（标准风格）；查某服务：<code>ps aux | grep nginx</code>。</p>
+            <p><strong>进程状态（S 列）</strong>：</p>
+            <ul>
+              <li><strong>R</strong>：运行/就绪</li>
+              <li><strong>S</strong>：可中断睡眠（等事件，多数进程常态）</li>
+              <li><strong>D</strong>：<strong>不可中断睡眠</strong>（等 IO，kill -9 都杀不掉，负载高的常客）</li>
+              <li><strong>Z</strong>：僵尸（子进程退出但父进程没回收）</li>
+              <li><strong>T</strong>：停止</li>
+            </ul>
+            <span class="mnemonic">「R 跑 S 睡 D 硬等，Z 是僵尸 T 是停」；D 杀不死只能修 IO，Z 要打父进程</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-kill">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            kill -9 和 kill -15 有什么区别？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>kill -15（SIGTERM，默认）</strong>：<strong>礼貌终止</strong>，进程可以捕获信号、清理资源（释放锁、刷盘）后再退出——<strong>首选</strong>。</li>
+              <li><strong>kill -9（SIGKILL）</strong>：<strong>强制击杀</strong>，内核直接回收，进程无机会清理，可能丢数据、留脏文件——最后手段。</li>
+              <li><strong>kill -1（SIGHUP）</strong>：挂断信号，常被用于<strong>重载配置</strong>（如 nginx -s reload 的效果）。</li>
+              <li><strong>kill -HUP pid / kill -USR2</strong>：平滑重启类。</li>
+            </ul>
+            <p>顺序建议：先 <code>kill -15</code>，等几秒没退出再 <code>kill -9</code>。</p>
+            <span class="mnemonic">「15 商量着走，9 直接枪毙」；先礼后兵，能 -15 别 -9</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-mem">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            free 命令输出怎么解读？buffer 和 cache 有什么区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>$ free -h
+              total   used   free   shared  buff/cache   available
+              7.6Gi   2.1Gi  500Mi  100Mi   5.0Gi        5.2Gi</code></pre>
+            <ul>
+              <li><strong>buff（缓冲）</strong>：写方向缓存，暂存<strong>要写入磁盘</strong>的数据</li>
+              <li><strong>cache（缓存）</strong>：读方向缓存，缓存<strong>从磁盘读出</strong>的数据</li>
+              <li><strong>available 才是关键</strong>：free 小 ≠ 内存不足，因为 buff/cache 在内存紧张时会自动释放</li>
+              <li><strong>判断标准</strong>：available 持续很低 + swap used 增长 → 真缺内存</li>
+            </ul>
+            <span class="mnemonic">「buffer 管写，cache 管读；不看 free 看 available」；Linux 白拿闲内存当缓存，不是泄漏</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-oom">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            进程被 OOM Kill 了，如何排查？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>什么是 OOM</strong>：物理内存 + swap 都耗尽时，内核的 OOM Killer 按 <code>oom_score</code>（内存占用越大分越高）选进程杀掉自救。</p>
+            <p><strong>排查步骤</strong>：</p>
+            <ol>
+              <li>确认 OOM：<code>dmesg -T | grep -i "killed process"</code> 或 <code>grep -i oom /var/log/messages</code></li>
+              <li>看内存趋势：Prometheus/Grafana 内存曲线、<code>sar -r</code> 历史数据</li>
+              <li>定位进程：<code>top / ps aux --sort=-%mem | head</code> 找内存大户</li>
+              <li>分清类型：<strong>内存泄漏</strong>（只涨不降）还是 <strong>配置不足</strong>（流量高峰打满）</li>
+              <li>处理：加内存/加交换分区应急 → 泄漏则 dump 分析或升级修复 → 关键服务设 <code>oom_score_adj</code> 保护</li>
+            </ol>
+            <span class="mnemonic">「dmesg 找证据，曲线分泄漏；只涨不降是泄漏，高峰打满是容量」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-file">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            说说 Linux 标准目录结构（FHS）？
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>目录</th><th>用途</th><th>目录</th><th>用途</th></tr>
+                <tr><td><code>/etc</code></td><td>配置文件</td><td><code>/var/log</code></td><td>日志（会增长）</td></tr>
+                <tr><td><code>/home</code></td><td>普通用户家目录</td><td><code>/var/lib</code></td><td>应用数据（MySQL 库在这）</td></tr>
+                <tr><td><code>/root</code></td><td>root 家目录</td><td><code>/tmp</code></td><td>临时文件（重启可清）</td></tr>
+                <tr><td><code>/usr/bin</code></td><td>系统命令</td><td><code>/opt</code></td><td>第三方大型软件</td></tr>
+                <tr><td><code>/usr/local</code></td><td>本地编译安装</td><td><code>/proc</code></td><td>内核虚拟文件系统</td></tr>
+                <tr><td><code>/boot</code></td><td>内核与引导</td><td><code>/dev</code></td><td>设备文件</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「etc 管配置，var 管可变，home 住用户，proc 是内核的窗户」；磁盘满先查 /var/log</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-soft">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            软链接和硬链接的区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>硬链接 ln</th><th>软链接 ln -s</th></tr>
+                <tr><td>本质</td><td>指向同一 <strong>inode</strong></td><td>独立文件，存<strong>路径</strong></td></tr>
+                <tr><td>跨分区</td><td>不能</td><td>可以</td></tr>
+                <tr><td>链接目录</td><td>不能</td><td>可以</td></tr>
+                <tr><td>源文件删除</td><td>不影响（链接数-1）</td><td><strong>悬空失效</strong>（红闪）</td></tr>
+                <tr><td>文件大小</td><td>与源相同</td><td>为路径字符串长度</td></tr>
+              </table>
+            </div>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>ln  file.txt  file.hard      # 硬链接：inode 相同
+ln -s /data/app/log  /var/log/app   # 软链接：常用，路径可迁移
+ls -li   # -i 可查看 inode 号验证</code></pre>
+            <span class="mnemonic">「硬连 inode 共生死，软连路径像快捷方式」；运维场景多用软链（版本切换、日志迁移）</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-find">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            find 常用姿势？文本三剑客怎么分工？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>find /var/log -name "*.log" -mtime +7 -size +100M   # 7 天前且大于 100M
+find / -type f -perm /4000 2&gt;/dev/null              # 找 SUID 文件（安全审计）
+find ./ -name "*.tmp" -exec rm -f {} \;              # 找到即删
+find ./ -name "*.log" | xargs grep -l "ERROR"        # 配合 xargs 搜内容</code></pre>
+            <p><strong>三剑客分工</strong>：<code>grep</code> 负责<strong>找（过滤行）</strong>、<code>sed</code> 负责<strong>改（编辑替换）</strong>、<code>awk</code> 负责<strong>算（按列处理）</strong>。</p>
+            <span class="mnemonic">「grep 找、sed 改、awk 算」；find 按条件选文件，xargs 把文件名变参数</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-awk">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            awk 和 sed 有哪些高频用法？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># awk：取列、过滤、统计
+awk -F: '{print $1, $NF}' /etc/passwd     # 按冒号分隔，打印首尾列
+awk '$3&gt;1000{print $1}' file              # 第三列大于 1000 的行
+awk '{sum+=$1} END{print sum/NR}' file     # 求平均值
+
+# sed：替换、删除、追加
+sed -i 's/8080/9090/g' app.conf           # 全局替换并写回文件
+sed -n '10,20p' file                       # 只看 10-20 行
+sed '/^#/d;/^$/d' file                     # 删注释行和空行</code></pre>
+            <span class="mnemonic">awk「按列切」$1 第一列 NF 最后列；sed「按行改」s 替换 d 删除 -i 写回；改配置前先备份 cp conf conf.bak</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-tar">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            tar 打包压缩的常用命令？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>tar czf app_$(date +%F).tar.gz app/          # 打包+gzip 压缩
+tar xzf app_2026-08-27.tar.gz               # 解压
+tar tf app.tar.gz                           # 不解压先看内容
+tar czf etc.tar.gz -C / etc                 # -C 指定基目录，避免绝对路径</code></pre>
+            <ul>
+              <li><strong>z=gzip</strong>（通用）、<strong>j=bzip2</strong>（更小更慢）、<strong>J=xz</strong>（最小最慢）</li>
+              <li><strong>c=create</strong> 打包、<strong>x=extract</strong> 解压、<strong>t=list</strong> 查看、<strong>f=file</strong> 指定文件名（必须放最后）</li>
+            </ul>
+            <span class="mnemonic">「c 打 x 解 t 看，f 名字放最后，z 压 gzip」；备份命名带日期 $(date +%F)</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-vmstat">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            vmstat、iostat、sar 分别用来看什么？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>vmstat</strong>：全局概览——<code>r</code>（运行队列，应 ≤ 核数）、<code>si/so</code>（swap 换入换出，非 0 即内存紧张）、<code>bi/bo</code>（块设备读写）、<code>wa</code> 高说明等 IO</li>
+              <li><strong>iostat -x 1</strong>：磁盘细节——<code>%util</code>（接近 100% 即打满）、<code>await</code>（IO 平均等待毫秒数，机械盘 &gt; 20 就偏慢）</li>
+              <li><strong>sar -r / -n DEV / -q</strong>：<strong>历史回溯</strong>——内存、网卡流量、负载的按时间曲线，排查「昨晚几点开始出的问题」</li>
+            </ul>
+            <span class="mnemonic">「vmstat 看全局，iostat 看磁盘，sar 看历史」；si/so 非 0 内存紧，%util 打满盘不行，await 高要换 SSD</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-03">
+        <h2><span class="num">03</span>文件系统与磁盘管理</h2>
+
+        <div class="qa hot" id="ops-inode">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            什么是 inode？磁盘有空间却提示 No space left 怎么回事？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>inode</strong>：文件的「户口本」，存储<strong>元数据</strong>（权限、属主、时间戳、大小、数据块指针），<strong>不存文件名</strong>（文件名存在目录项里）。</p>
+            <p><strong>两种磁盘满</strong>：</p>
+            <ul>
+              <li><strong>块用完</strong>：大文件占满 <code>df -h</code> 可见 100%</li>
+              <li><strong>inode 用完</strong>：海量小文件（邮件队列、session、缓存碎片），<code>df -h</code> 有空间但 <code>df -i</code> 100%，同样报 No space left</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>df -h                        # 看容量
+df -i                        # 看 inode 使用率
+for i in /*; do echo $i $(find $i -xdev | wc -l); done   # 定位小文件目录</code></pre>
+            <span class="mnemonic">「块装数据，inode 存户口」；df -h 满查大文件，df -i 满查海量小文件</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-df">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            df 和 du 结果不一致是什么原因？磁盘满了怎么安全清理？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>不一致原因</strong>：文件被 <strong>rm 删除但仍被进程持有句柄</strong>（常见于被删的日志），空间不会释放；df 看块位图，du 遍历目录，所以 <code>df &gt; du</code>。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>lsof | grep deleted           # 找被删但未释放的文件
+# 方案一：重启或重载持有进程；方案二（不重启清日志）：
+&gt; /var/log/big.log             # 清空文件内容而非删除文件
+truncate -s 0 /var/log/big.log</code></pre>
+            <p><strong>安全清理顺序</strong>：日志轮转压缩 → <code>journalctl --vacuum-size=500M</code> → <code>yum clean all</code> / <code>apt clean</code> → docker 镜像清理 → 最后才考虑删业务数据（先确认再动手）。</p>
+            <span class="mnemonic">「df 大 du 小，句柄没放掉」；删文件 ≠ 释放空间，清日志用重定向别用 rm</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-lvm">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            LVM 扩容的步骤？
+          </div>
+          <div class="qa-a">
+            <p><strong>LVM 三层结构</strong>：物理卷 PV → 卷组 VG → 逻辑卷 LV（在 LV 上建文件系统）。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>pvcreate /dev/sdb                     # 1. 新盘建 PV
+vgextend vg_data /dev/sdb             # 2. 加入 VG
+lvextend -l +100%FREE /dev/vg_data/lv # 3. 扩 LV
+resize2fs /dev/vg_data/lv             # 4. 在线扩文件系统（xfs 用 xfs_growfs）
+df -h                                  # 5. 验证</code></pre>
+            <span class="mnemonic">「pv 建、vg 并、lv 扩、fs 长」四步走；ext4 用 resize2fs，xfs 用 xfs_growfs，缩容 risky 别乱试</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-raid">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            RAID 0、1、5、10 的区别与选型？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>级别</th><th>原理</th><th>最少盘</th><th>容量利用率</th><th>容错</th></tr>
+                <tr><td>RAID 0</td><td>条带化，分散写</td><td>2</td><td>100%</td><td><strong>无</strong>，坏一盘全完</td></tr>
+                <tr><td>RAID 1</td><td>镜像，一份写两份</td><td>2</td><td>50%</td><td>坏一盘没事</td></tr>
+                <tr><td>RAID 5</td><td>条带 + 分布式校验</td><td>3</td><td>(n-1)/n</td><td><strong>坏一盘可重建</strong></td></tr>
+                <tr><td>RAID 10</td><td>先镜像再条带</td><td>4</td><td>50%</td><td>性能与安全兼顾</td></tr>
+              </table>
+            </div>
+            <p><strong>选型</strong>：数据库等高 IO 高可靠 → <strong>RAID 10</strong>；文件存储性价比 → RAID 5/6；纯缓存临时数据 → RAID 0；系统盘 → RAID 1。</p>
+            <span class="mnemonic">「0 快不容错，1 镜像贵一半，5 校验省盘，10 镜像加快」；数据库选 10，图便宜选 5</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-mount">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            mount 挂载与 /etc/fstab 怎么写？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>mount /dev/sdb1 /data                      # 临时挂载，重启失效
+# 永久挂载 /etc/fstab 六个字段：
+/dev/sdb1  /data  ext4  defaults,noatime  0  2
+# 设备  挂载点  类型  选项  是否dump备份  fsck顺序(根为1，其他2，0不检查)
+mount -a                                    # 重新读取 fstab，改完必测！
+findmnt /data                               # 验证挂载</code></pre>
+            <div class="warn">fstab 写错可能导致<strong>重启失败进紧急模式</strong>，改完一定 <code>mount -a</code> 验证再用 UUID（blkid 查询）代替设备名更稳。</div>
+            <span class="mnemonic">「设备挂哪啥类型，选项备份检查序」六字段；改完 mount -a 测一测，UUID 比 sdb 稳</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-fsck">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            文件系统变成只读（read-only）怎么修复？
+          </div>
+          <div class="qa-a">
+            <p><strong>原因</strong>：磁盘坏道、异常断电、内核检测到文件系统不一致后<strong>自我保护</strong>。</p>
+            <ol>
+              <li>先看日志：<code>dmesg -T | tail</code> 找 Remounting read-only / I/O error</li>
+              <li>有 IO 报错 → 优先<strong>备份数据</strong>、检查磁盘健康 <code>smartctl -a /dev/sda</code></li>
+              <li>卸载后修复：ext 系列 <code>fsck -y /dev/sdb1</code>；xfs 用 <code>xfs_repair</code></li>
+              <li>修复后重新挂载：<code>mount -o remount,rw /data</code></li>
+            </ol>
+            <span class="mnemonic">「只读是保护，先看 dmesg 再备份」；fsck 必须先卸载，带 IO 错误先想换盘</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-dd">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            dd 命令有什么用途？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>dd if=/dev/zero of=/data/test bs=1M count=1024 oflag=direct  # 测磁盘写
+dd if=/dev/sda of=/dev/sdb bs=4M           # 整盘克隆
+dd if=/dev/urandom of=/swapfile bs=1M count=2048  # 造 2G swap 文件
+dd if=ubuntu.iso of=/dev/sdc bs=4M status=progress  # 制作启动 U 盘</code></pre>
+            <p><strong>注意</strong>：if/of 写反会<strong>毁盘</strong>，目标盘务必确认三遍。</p>
+            <span class="mnemonic">「dd 是块拷贝，测速克隆造盘都靠它」；of 写错全盘没，执行之前深呼吸</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-04">
+        <h2><span class="num">04</span>用户权限与安全加固</h2>
+
+        <div class="qa hot" id="ops-rwx">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Linux 权限怎么计算？755、644 分别是什么意思？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>权限位三组：<strong>属主 u、属组 g、其他人 o</strong>；每组三位 <strong>r=4、w=2、x=1</strong>，相加得出数字。</p>
+            <ul>
+              <li><strong>755</strong> = rwxr-xr-x：属主全权，其他人可进可执行（<strong>目录常用</strong>）</li>
+              <li><strong>644</strong> = rw-r--r--：属主可读写，其他只读（<strong>普通文件常用</strong>）</li>
+              <li><strong>700/600</strong>：仅属主可用（<strong>私钥 ~/.ssh 必须 600</strong>，否则 ssh 拒用）</li>
+              <li>目录的 x 代表<strong>能否进入</strong>，r 只是能 ls 看名字</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>chmod 755 deploy.sh        # 数字法
+chmod u+x,g-w file          # 符号法
+chown -R app:app /data/app  # 递归改属主属组
+chmod 600 ~/.ssh/id_rsa     # 私钥权限，SSH 硬性要求</code></pre>
+            <span class="mnemonic">「读4写2执行1，主组其他排三组」；目录没 x 进不去，私钥不是 600 连不上</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-sudo">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            sudo 和 su 的区别？怎么给用户授权？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>su</strong>：切换用户身份，<code>su - root</code> 需要 root 密码（知道的人越多越危险）</li>
+              <li><strong>sudo</strong>：临时提权执行单条命令，用<strong>自己的密码</strong>，可限制命令范围、有审计日志</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>visudo        # 必须用它编辑，改坏 sudo 全员瘫痪
+# 授权格式：用户  主机=(身份)  命令
+deploy  ALL=(ALL)  NOPASSWD: /usr/bin/systemctl restart nginx
+tail /var/log/secure    # sudo 审计日志</code></pre>
+            <span class="mnemonic">「su 换人要 root 密码，sudo 借权用自己的密码」；授权用 visudo，命令写全路径</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-suid">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            SUID、SGID、Sticky 分别是什么？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>SUID（4xxx，u 位的 s）</strong>：执行时临时获得<strong>文件属主身份</strong>，如 <code>passwd</code>（普通用户改密码要写 /etc/shadow）</li>
+              <li><strong>SGID（2xxx，g 位的 s）</strong>：目录下新文件<strong>继承目录属组</strong>，团队共享目录常用</li>
+              <li><strong>Sticky（1xxx，o 位的 t）</strong>：在目录里<strong>只能删自己的文件</strong>，<code>/tmp</code> 的 1777 就是它</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>chmod 1777 /share      # 加 sticky
+find / -perm -4000      # 审计 SUID 文件，可疑的要去掉</code></pre>
+            <span class="mnemonic">「SUID 借主人的身份，SGID 继承组，Sticky 各删各的」；SUID 是提权风险点，审计要常做</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-ssh">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            SSH 免密登录的原理和配置步骤？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>原理（非对称加密）</strong>：客户端把<strong>公钥</strong>放到服务器 <code>~/.ssh/authorized_keys</code>；登录时服务器用公钥出题，客户端用<strong>私钥</strong>应答证明身份，全程不传密码。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>ssh-keygen -t ed25519                        # 客户端生成密钥对
+ssh-copy-id user@server                      # 一键分发公钥
+# 手动方式：cat ~/.ssh/id_ed25519.pub &gt;&gt; server:~/.ssh/authorized_keys
+chmod 700 ~/.ssh &amp;&amp; chmod 600 ~/.ssh/authorized_keys   # 权限不对会被拒绝
+ssh -i ~/.ssh/id_ed25519 user@server         # 指定私钥登录</code></pre>
+            <p><strong>排错点</strong>：.ssh 必须 700、authorized_keys 必须 600、家目录不能对 group/other 可写——权限错是免密失败第一大原因；<code>ssh -v</code> 看详细过程。</p>
+            <span class="mnemonic">「公钥锁门私钥开，700/600 缺一挂」；失败先查权限再查 ssh -v</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-firewall">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            iptables 四表五链是什么？firewalld 怎么用？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>四表（按优先级）</strong>：raw → mangle → nat → <strong>filter（默认，管放行拦截）</strong>。</p>
+            <p><strong>五链</strong>：PREROUTING → INPUT（进本机）/ FORWARD（转发）→ OUTPUT → POSTROUTING。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code># firewalld（CentOS 7+ / RHEL 系）
+firewall-cmd --permanent --add-port=80/tcp   # 永久开 80 端口
+firewall-cmd --reload                        # 重载生效
+firewall-cmd --list-all                      # 查看当前规则
+# ufw（Ubuntu）
+ufw allow 22/tcp &amp;&amp; ufw enable</code></pre>
+            <p><strong>经典题</strong>：本机 80 端口通，telnet 不通？查防火墙 → 查服务监听 0.0.0.0 还是 127.0.0.1 → 查云厂商<strong>安全组</strong>（新手最常忘）。</p>
+            <span class="mnemonic">「四表 nat 管 NAT、filter 管过滤；五链进转出、前后路由」；端口不通三板斧：防火墙、监听地址、安全组</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-hard">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            新服务器上线要做哪些安全加固？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>禁 root 远程登录</strong>：sshd_config 里 <code>PermitRootLogin no</code>，改用 sudo 用户 + 密钥</li>
+              <li><strong>改 SSH 端口 + 仅密钥登录</strong>：<code>PasswordAuthentication no</code></li>
+              <li><strong>密码策略</strong>：复杂度、90 天过期、错误锁定（fail2ban 防爆破）</li>
+              <li><strong>最小化服务</strong>：关无用端口和进程，<code>ss -tlnp</code> 巡检</li>
+              <li><strong>及时打补丁</strong>：<code>yum update</code> 纳入周期任务</li>
+              <li><strong>审计三件套</strong>：history 加时间戳、日志集中采集、sudo 审计</li>
+              <li><strong>最小权限</strong>：应用跑非 root 独立账号，文件权限收紧</li>
+              <li><strong>备份</strong>：关键数据异地备份并<strong>演练恢复</strong></li>
+            </ol>
+            <span class="mnemonic">「禁 root、改端口、密钥登、关服务、打补丁、留审计、最小权、有备份」八板斧</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-port">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            如何查看端口占用？Address already in use 怎么办？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>ss -tlnp | grep :80        # 首选：谁在监听 80
+netstat -tlnp | grep :80    # 老命令，结果同上
+lsof -i :80                 # 另一种姿势
+lsof -i tcp -P -n | head    # 全部 TCP 连接</code></pre>
+            <p><strong>处理</strong>：找到占用进程 → 确认是否可杀（<code>kill -15</code>）→ 或让新服务换端口；<strong>TIME_WAIT 过多</strong>属正常回收（约 60s），量级大可调内核参数 <code>net.ipv4.tcp_tw_reuse</code>。</p>
+            <span class="mnemonic">「ss/netstat 查监听，lsof -i 定进程」；占用先杀或换口，TIME_WAIT 不是错</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-05">
+        <h2><span class="num">05</span>Shell 脚本编程</h2>
+
+        <div class="qa hot" id="ops-shebang">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            脚本的几种执行方式有什么区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#!/bin/bash              # shebang：声明解释器
+bash test.sh             # 方式1：子 shell 执行，不需要可执行权限
+./test.sh                # 方式2：需要 chmod +x，同样是子 shell
+source test.sh           # 方式3：当前 shell 执行，变量会留在当前环境
+. test.sh                # 等价于 source</code></pre>
+            <p><strong>核心区别</strong>：前两种开<strong>子进程</strong>（脚本里 cd、export 不影响当前终端）；source 在<strong>当前进程</strong>执行——所以改了 ~/.bashrc 要 <code>source ~/.bashrc</code> 才生效。</p>
+            <span class="mnemonic">「bash 和 ./ 开儿子，source 在自家改」；改完 bashrc 记得 source</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-var">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Shell 有哪些特殊变量？
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>变量</th><th>含义</th><th>变量</th><th>含义</th></tr>
+                <tr><td><code>$0</code></td><td>脚本名</td><td><code>$?</code></td><td>上一条命令<strong>退出码</strong>（0 成功）</td></tr>
+                <tr><td><code>$1 $2</code></td><td>第 1/2 个参数</td><td><code>$$</code></td><td>当前脚本 PID</td></tr>
+                <tr><td><code>$#</code></td><td>参数个数</td><td><code>$!</code></td><td>最近后台进程 PID</td></tr>
+                <tr><td><code>$@</code></td><td>所有参数（各自独立）</td><td><code>$_</code></td><td>上一条命令最后参数</td></tr>
+                <tr><td><code>$*</code></td><td>所有参数（合成整体）</td><td><code>${#var}</code></td><td>变量长度</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「$? 判断成败，$# 数个数，$@ 逐个取，$$ 是自己」；判断上一条命令必须靠 $?</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-quote">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            单引号、双引号、反引号有什么区别？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>单引号 ''</strong>：<strong>所见即所得</strong>，内部所有符号不解析（$ 也不展开）</li>
+              <li><strong>双引号 ""</strong>：解析 <strong>$ 变量、` 命令替换、\ 转义</strong>，其余原样</li>
+              <li><strong>反引号 `` / $()</strong>：命令替换，先执行命令取输出（推荐 $()，可嵌套）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>echo '$HOME'        # 输出 $HOME 字面量
+echo "$HOME"        # 输出 /root
+echo "now: $(date +%F)"   # 命令替换</code></pre>
+            <span class="mnemonic">「单引原样双引变，反引执行取结果」；写脚本变量套双引号 "$var" 防空格断裂</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-if">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            条件判断怎么写？常用测试表达式有哪些？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>if [ -f /etc/hosts ] &amp;&amp; [ $(id -u) -eq 0 ]; then
+  echo "文件存在且是 root"
+elif [ -d /tmp ]; then
+  echo "目录存在"
+else
+  echo "不满足"
+fi
+# 文件：-f 普通文件 -d 目录 -e 存在 -r 可读 -z 空文件
+# 数字：-eq -ne -gt -lt -ge -le
+# 字符串：= != -z 空 -n 非空
+# 逻辑：&& 并且 || 或者 ! 取反（[]内用 -a/-o）</code></pre>
+            <div class="warn">中括号两边<strong>必须有空格</strong>、变量要加双引号——<code>[ $a = 1 ]</code> 当 $a 为空会语法报错，正确写法 <code>[ "$a" = "1" ]</code>。</div>
+            <span class="mnemonic">「括号两边留空格，变量永远套引号」；-eq 数字比，= 字符串比，-f 文件 -d 目录</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-loop">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            for、while、until 循环怎么写？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>for ip in 192.168.1.{1..5}; do ping -c1 -W1 $ip &amp;&gt;/dev/null &amp;&amp; echo "$ip up"; done
+
+for i in $(seq 1 100); do echo $i; done
+
+while read line; do echo "$line"; done &lt; users.txt   # 逐行读文件（最稳）
+
+i=1; while [ $i -le 5 ]; do echo $i; i=$((i+1)); done
+
+until systemctl is-active nginx &gt;/dev/null; do sleep 1; done   # 条件不成立才循环</code></pre>
+            <span class="mnemonic">「for 遍历清单，while 读文件，until 反着来」；逐行处理文件用 while read + 重定向</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-func">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Shell 函数怎么定义和返回值？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>log() {
+  echo "[$(date '+%F %T')] $*"
+}
+check() {
+  systemctl is-active --quiet "$1" &amp;&amp; return 0 || return 1
+}
+check nginx &amp;&amp; log "nginx 正常" || log "nginx 异常"    # 函数须先定义后调用</code></pre>
+            <p>返回值两种：<code>return</code> 返回<strong>退出码</strong>（0-255，用于判断成败）；<code>echo</code> 输出内容用 <code>res=$(func)</code> 捕获。</p>
+            <span class="mnemonic">「return 给状态，echo 给结果」；先定义后调用，$* 收全部参数</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-debug">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Shell 脚本怎么调试？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><code>bash -x script.sh</code>：打印每条执行的命令与变量展开（<strong>最常用</strong>）</li>
+              <li><code>set -x / set +x</code>：脚本内局部开启/关闭追踪</li>
+              <li><code>set -e</code>：任何命令失败立即退出；<code>set -o pipefail</code>：管道中任一环节失败整条算失败</li>
+              <li><code>set -u</code>：引用未定义变量直接报错</li>
+              <li>脚本头部三连：<code>set -euo pipefail</code>（生产脚本标配）</li>
+            </ul>
+            <span class="mnemonic">「-x 看过程，-e 错就停，-u 未定义报错，pipefail 管道不背锅」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-crond">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            crontab 定时任务怎么写？常见的坑有哪些？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>五个字段</strong>：分 时 日 月 周</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>crontab -e      # 编辑当前用户任务
+# 分 时 日 月 周  命令
+*/5 * * * *  /opt/check.sh                 # 每 5 分钟
+0 2 * * *    /opt/backup.sh               # 每天凌晨 2 点
+30 3 * * 1   /opt/week.sh                 # 每周一 3:30
+0 0 1 * *    /opt/month.sh                # 每月 1 号
+crontab -l      # 查看；日志看 /var/log/cron</code></pre>
+            <p><strong>三大坑</strong>：</p>
+            <ol>
+              <li><strong>没写绝对路径</strong>：cron 的 PATH 很精简，命令和脚本内命令都要绝对路径</li>
+              <li><strong>% 要转义</strong>：crontab 里 % 有特殊含义（换行），日期 <code>date +\%F</code> 要加反斜杠</li>
+              <li><strong>输出未重定向</strong>：stdout 会发邮件堆积，养成 <code>&gt;&gt; /var/log/x.log 2&gt;&amp;1</code> 习惯</li>
+            </ol>
+            <span class="mnemonic">「分时日月周五域，*/n 表示每 n」；坑在路径、百分号、输出重定向</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-06">
+        <h2><span class="num">06</span>网络基础与排查</h2>
+
+        <div class="qa hot" id="ops-osi">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            说一下 OSI 七层模型和 TCP/IP 四层模型？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>OSI 七层</th><th>TCP/IP 四层</th><th>典型协议/设备</th></tr>
+                <tr><td>应用/表示/会话</td><td><strong>应用层</strong></td><td>HTTP、DNS、FTP、SSH</td></tr>
+                <tr><td>传输层</td><td><strong>传输层</strong></td><td>TCP、UDP（四层负载均衡 LVS）</td></tr>
+                <tr><td>网络层</td><td><strong>网络层</strong></td><td>IP、ICMP、路由器（三层）</td></tr>
+                <tr><td>数据链路/物理</td><td><strong>网络接口层</strong></td><td>以太网、ARP、交换机（二层）</td></tr>
+              </table>
+            </div>
+            <p>记忆口诀（自下而上）：物理链路网传会表应。</p>
+            <span class="mnemonic">「物链网传会表应」；运维常用四层记忆：应用传网接口；排障从底层往上 ping 通再查端口</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-tcp">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            TCP 三次握手和四次挥手的过程与原因？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>三次握手（建连）</strong>：客户端 SYN → 服务端 SYN+ACK → 客户端 ACK。</p>
+            <ul>
+              <li>为什么三次：<strong>双方都要确认收发能力</strong>；两次会让失效的历史 SYN 突然到达造成错误连接</li>
+              <li>握手失败看：服务端 SYN_RECV 堆积 = SYN 洪水攻击，可开 <code>tcp_syncookies</code></li>
+            </ul>
+            <p><strong>四次挥手（断连）</strong>：主动方 FIN → 对方 ACK →（对方发完数据）FIN → 主动方 ACK，之后进入 <strong>TIME_WAIT 等 2MSL</strong>。</p>
+            <ul>
+              <li>为什么四次：TCP <strong>全双工</strong>，两个方向要分别关；被动方可能还有数据没发完，ACK 和 FIN 分开发</li>
+              <li>TIME_WAIT 多：主动关闭方产生，量大可开 <code>tcp_tw_reuse</code>；服务器出现大量 CLOSE_WAIT = <strong>程序没调用 close，代码 bug</strong></li>
+            </ul>
+            <span class="mnemonic">「三握确认双收发，四挥全双工分头关」；CLOSE_WAIT 多是代码没关，TIME_WAIT 多是主动关太多</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-tcpudp">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            TCP 和 UDP 的区别及使用场景？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>TCP</th><th>UDP</th></tr>
+                <tr><td>连接</td><td>面向连接（先握手）</td><td>无连接，拿来就发</td></tr>
+                <tr><td>可靠性</td><td>确认重传、有序、不丢不重</td><td>尽力而为，可能丢乱序</td></tr>
+                <tr><td>速度/开销</td><td>慢、头部 20 字节起</td><td>快、头部固定 8 字节</td></tr>
+                <tr><td>场景</td><td>HTTP、SSH、MySQL、文件传输</td><td>DNS 查询、视频直播、心跳、游戏</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「TCP 打电话要接通，UDP 寄明信片随手扔」；要可靠用 TCP，要实时用 UDP</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-dns">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            DNS 域名解析的完整过程？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>查<strong>本机缓存与 hosts</strong>（/etc/hosts）</li>
+              <li>问<strong>本地 DNS 服务器</strong>（/etc/resolv.conf 配的运营商或公司 DNS）</li>
+              <li>本地 DNS 递归查询：<strong>根 → 顶级域(.com) → 权威 DNS</strong>，逐级问下来</li>
+              <li>拿到 IP 后逐层缓存（TTL 控制），返回客户端</li>
+            </ol>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>dig www.example.com +trace    # 看完整递归过程
+nslookup www.example.com      # 简单查询
+dig www.example.com @8.8.8.8  # 指定 DNS 服务器</code></pre>
+            <p><strong>常见题</strong>：浏览器打不开但 ping IP 通 → DNS 问题，改 hosts 或换 <code>223.5.5.5</code> 验证；记录类型：A（IPv4）、AAAA（IPv6）、CNAME（别名）、MX（邮件）、PTR（反解）。</p>
+            <span class="mnemonic">「先本机后递归，根顶权逐级问」；IP 通域名不通，八成 DNS 的锅</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-http">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            常见 HTTP 状态码有哪些？HTTPS 加密过程简述？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>2xx 成功</strong>：200 OK、204 无内容</li>
+              <li><strong>3xx 重定向</strong>：301 永久、302 临时、304 缓存有效</li>
+              <li><strong>4xx 客户端错</strong>：401 未认证、403 禁止、404 不存在、<strong>499 客户端主动断开</strong>（nginx 特有，后端太慢客户跑了）</li>
+              <li><strong>5xx 服务端错</strong>：500 代码崩、<strong>502 上游挂了</strong>、503 不可用、<strong>504 上游超时</strong>（运维必背）</li>
+            </ul>
+            <p><strong>HTTPS</strong> = HTTP + TLS：TCP 握手 → 客户端验证<strong>证书</strong> → 协商出<strong>对称密钥</strong>（非对称加密交换）→ 之后用对称加密通信。既防窃听也防篡改，还验证服务器身份。</p>
+            <span class="mnemonic">「301 永久 302 临时，502 上游挂 504 上游慢，499 客户等不及」；HTTPS=证书验身 + 非对称换钥 + 对称加密跑</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-ping">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            服务器网络不通，你的排查思路？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>由近及远分层排查</strong>：</p>
+            <ol>
+              <li><strong>本机</strong>：<code>ip a</code> 看网卡与 IP、<code>ping 127.0.0.1</code> 协议栈、<code>ping 网关</code> 测二层</li>
+              <li><strong>DNS</strong>：<code>ping ip通 ping 域名不通</code> → <code>dig/nslookup</code> 查解析</li>
+              <li><strong>路由</strong>：<code>traceroute 目标</code> 看断在哪一跳</li>
+              <li><strong>端口</strong>：<code>telnet ip 80 / curl -v</code> 区分网络通但服务不通</li>
+              <li><strong>防火墙/安全组</strong>：本机 firewalld、路径上iptables、云平台安全组逐层放行</li>
+              <li><strong>对方</strong>：服务起没起（ss -tlnp）、监听 0.0.0.0 还是 127.0.0.1</li>
+            </ol>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>ping -c3 baidu.com; traceroute baidu.com; curl -v telnet://10.0.0.1:80</code></pre>
+            <span class="mnemonic">「先本机后远端，先 IP 后域名，先 ping 后 telnet」；断点定位靠 traceroute，三层防火墙别忘安全组</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-ip">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            给个 IP 和掩码，怎么算网络地址和可用主机数？
+          </div>
+          <div class="qa-a">
+            <p>例：<code>192.168.10.130/26</code></p>
+            <ol>
+              <li>掩码 26 = 255.255.255.<strong>192</strong>，借了 2 位主机位</li>
+              <li>块大小 = 256 - 192 = <strong>64</strong>，子网按 64 切：0、64、128、192</li>
+              <li>130 落在 <strong>128–191</strong> 段 → 网络地址 192.168.10.<strong>128</strong>，广播 .191</li>
+              <li>可用主机 = 64 - 2（去网络地址和广播）= <strong>62</strong></li>
+            </ol>
+            <p>私网地址三段：A 类 10.0.0.0/8、B 类 172.16.0.0/12、C 类 192.168.0.0/16。</p>
+            <span class="mnemonic">「256 减掩码得块大小，主机数再减 2」；/24=254 台，/26=62 台，/30=2 台（点对点）</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-nat">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            NAT 的原理是什么？
+          </div>
+          <div class="qa-a">
+            <p><strong>NAT</strong>（网络地址转换）：出口路由器把<strong>内网私有 IP:端口 映射为公网 IP:端口</strong>，回程按映射表还原——一个公网 IP 背后可以藏整个内网。</p>
+            <ul>
+              <li><strong>SNAT</strong>：改源地址（内网上网：出方向）</li>
+              <li><strong>DNAT</strong>：改目标地址（公网访问内网服务/端口映射：进方向）</li>
+              <li>价值：缓解 IPv4 短缺 + 隐藏内网结构（附带安全）</li>
+            </ul>
+            <span class="mnemonic">「出网改源 SNAT，进网改目 DNAT」；一张映射表，进出两不改就丢</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-tcpdump">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            tcpdump 抓包怎么用？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>tcpdump -i eth0 -nn port 80 -c 1000 -w http.pcap
+# -i 网卡  -nn 不解析域名端口  port 按端口  -c 抓多少包  -w 存文件
+tcpdump -i any host 10.0.0.5 and port 443    # 只看与某主机的 https
+tcpdump -i eth0 'tcp[tcpflags] &amp; tcp-syn != 0'   # 只看 SYN 包
+# 常配 wireshark 深入分析；抓包是定位「到底发没发、回没回」的终极大招</code></pre>
+            <span class="mnemonic">「-i 选网卡 -nn 免解析，port/host 过滤，-w 存包给 wireshark」；扯皮谁丢包，抓包见真章</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-07">
+        <h2><span class="num">07</span>Nginx 与负载均衡</h2>
+
+        <div class="qa hot" id="ops-nginx-arch">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Nginx 为什么快（高性能原理）？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>epoll 事件驱动</strong>：一个 worker 用 epoll 同时监听几万连接，就绪回调；对比 select 每次全量轮询（1024 上限）</li>
+              <li><strong>master-worker 多进程</strong>：master 管配置与 fork，worker 干活互相独立，一个崩了不影响其他</li>
+              <li><strong>异步非阻塞 IO</strong>：worker 不傻等磁盘/后端，事件就绪再处理，<strong>不因慢客户端拖死</strong></li>
+              <li>内存池 + 连接池，避免频繁 malloc 和握手</li>
+              <li>锁竞争少：worker 进程各管各的连接（accept_mutex / SO_REUSEPORT）</li>
+            </ul>
+            <span class="mnemonic">「epoll 多路复用 + 多进程 + 异步非阻塞」三板斧；能扛 C10K 到 C100K 全靠不阻塞</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-nginx-conf">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Nginx 配置结构？location 匹配优先级？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>nginx.conf:  main（全局）→ events → http {
+  server { listen 80; server_name a.com;
+    location /api { proxy_pass http://backend; }
+  }
+  upstream backend { server 10.0.0.1:8080; server 10.0.0.2:8080; }
+}
+nginx -t &amp;&amp; nginx -s reload      # 改完必测再平滑重载</code></pre>
+            <p><strong>location 优先级</strong>（从高到低）：</p>
+            <ol>
+              <li><code>= /login</code> 精确匹配</li>
+              <li><code>^~ /static/</code> 前缀匹配，命中后不再查正则</li>
+              <li><code>~ \.php$</code> / <code>~*</code> 正则（区分/不区分大小写）</li>
+              <li><code>/static/</code> 普通前缀（<strong>最长</strong>的赢）</li>
+            </ol>
+            <span class="mnemonic">「= 精确最优先，^~ 前缀免正则，~ 正则按顺序，普通前缀比长短」；改配置三连：-t 测试、reload、tail 错误日志</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-lb">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Nginx 负载均衡有哪些策略？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>策略</th><th>说明</th><th>适用</th></tr>
+                <tr><td>轮询（默认）</td><td>挨个来</td><td>机器相近</td></tr>
+                <tr><td>weight</td><td>按权重分配</td><td>配置不均</td></tr>
+                <tr><td>ip_hash</td><td>同一 IP 恒定去同一台</td><td>会话保持（但有状态倾斜风险）</td></tr>
+                <tr><td>least_conn</td><td>发给连接数最少的</td><td>长连接/耗时不均</td></tr>
+                <tr><td>一致性哈希</td><td>按 key 环形映射</td><td>缓存代理</td></tr>
+              </table>
+            </div>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>upstream web {
+  server 10.0.0.1:8080 weight=3;
+  server 10.0.0.2:8080 max_fails=3 fail_timeout=30s;  # 健康检查
+  server 10.0.0.3:8080 backup;                        # 备机
+}</code></pre>
+            <span class="mnemonic">「轮询最公平，weight 看配置，ip_hash 保会话，least_conn 看闲忙」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-l4l7">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            四层负载均衡和七层负载均衡的区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>四层（LVS、F5）</th><th>七层（Nginx、HAProxy）</th></tr>
+                <tr><td>工作层</td><td>传输层，改 IP/端口转发</td><td>应用层，解析 HTTP 内容</td></tr>
+                <tr><td>性能</td><td>高（不解析内容）</td><td>相对低一点</td></tr>
+                <tr><td>功能</td><td>只能按地址转发</td><td>按 URL/Header/Cookie 路由、改写、限流、缓存</td></tr>
+                <tr><td>典型组合</td><td colspan="2">LVS 抗量 → Nginx 做业务分发（lvs+keepalived）</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「四层看地址跑得快，七层懂内容玩得花」；大流量 LVS 打头，精细化 Nginx 收尾</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-proxy">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            正向代理和反向代理的区别？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>正向代理</strong>：代理<strong>客户端</strong>，服务器不知道真实客户端是谁（翻墙、内网出口、缓存加速）</li>
+              <li><strong>反向代理</strong>：代理<strong>服务端</strong>，客户端不知道真实后端是谁（负载均衡、SSL 终结、防护、静态缓存）</li>
+            </ul>
+            <p>一句话：<strong>正向隐藏客户端，反向隐藏服务端</strong>。</p>
+            <span class="mnemonic">「正代瞒服务器，反代瞒客户端」；背对用户护后端，这是运维天天打的工</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-502">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            线上出现 502 / 504，怎么排查？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>本质</strong>：都是「Nginx 这个中间人联系不上后端」——502 是<strong>联系不上（连接被拒/进程挂了）</strong>，504 是<strong>联系上了但等超时</strong>。</p>
+            <p><strong>502 排查</strong>：</p>
+            <ol>
+              <li>后端进程在不在：<code>ss -tlnp | grep 8080</code>、<code>systemctl status</code></li>
+              <li>后端崩没崩：看应用日志、OOM 记录（被杀也会 502）</li>
+              <li>php-fpm 场景：进程数打满（pm.max_children）、socket 文件权限</li>
+            </ol>
+            <p><strong>504 排查</strong>：</p>
+            <ol>
+              <li>后端慢查询/死锁：看慢日志、<code>show processlist</code></li>
+              <li>调超时：<code>proxy_read_timeout 60s</code>（默认 60s）</li>
+              <li>上游阻塞：连接池耗尽、依赖的下游（第三方接口）慢</li>
+            </ol>
+            <span class="mnemonic">「502 进程挂，504 进程慢」；先看后端活不活，再查慢在哪一环</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-php-fpm">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Nginx 和 PHP-FPM 是怎么配合工作的？
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>Nginx 收到 .php 请求，按 location 交给 <strong>FastCGI 协议</strong>转发给 php-fpm</li>
+              <li>php-fpm 的 worker 进程执行 PHP 脚本（连接数据库、渲染页面）</li>
+              <li>结果经 FastCGI 返回 Nginx，Nginx 包成 HTTP 响应给用户</li>
+              <li>两种对接方式：<strong>TCP（127.0.0.1:9000）</strong>或 <strong>unix socket</strong>（同机更快）</li>
+            </ol>
+            <p><strong>常见调优</strong>：pm = dynamic，pm.max_children 按内存算 = 可用内存 / 单进程内存；502 常见原因就是 max_children 打满或进程崩。</p>
+            <span class="mnemonic">「Nginx 收发快递，php-fpm 车间干活，FastCGI 是传菜口」；同机用 socket，跨机用 9000</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-opt">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Nginx 有哪些性能优化手段？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>worker_processes auto;            # CPU 几核开几个
+worker_connections 10240;         # 单 worker 连接数（events 块）
+keepalive_timeout 65;             # 长连接，减少握手
+gzip on; gzip_comp_level 5;       # 压缩文本（css/js/html）
+gzip_types text/css application/javascript application/json;
+open_file_cache max=10000 inactive=60s;   # 静态文件元数据缓存
+sendfile on; tcp_nopush on;       # 零拷贝发送
+client_body_buffer_size 128k;     # 请求体缓冲
+# 系统层：ulimit -n 65535、somaxconn、tcp_tw_reuse</code></pre>
+            <span class="mnemonic">「进程核数定、连接万级开、压缩开 gzip、静态走 sendfile、长连 keepalive」；worker_connections × worker 数 = 总容量</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-keepalive">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Keepalived + VIP 是怎么实现高可用的？
+          </div>
+          <div class="qa-a">
+            <p><strong>原理</strong>：两台 Nginx 配 <strong>VRRP 协议</strong>，Keepalived 抢一个<strong>虚拟 IP（VIP）</strong>；主挂了，备<strong>秒级接管 VIP</strong>，客户端无感。</p>
+            <ul>
+              <li>master 优先级 100，backup 90；心跳失败 → backup 抢 VIP 并发 ARP 通告</li>
+              <li><strong>脑裂</strong>：双方都认为自己是主（网络抖动）→ 两台都持有 VIP，可加仲裁/检测脚本降低概率</li>
+              <li>常与 LVS 组合：Keepalived 管 HA，LVS 管 LB（lvs+keepalived 经典架构）</li>
+            </ul>
+            <span class="mnemonic">「VIP 一漂，服务不断」；主备心跳抢 IP，防脑裂要双线检测</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-08">
+        <h2><span class="num">08</span>数据库运维</h2>
+
+        <div class="qa hot" id="ops-mysql-backup">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            MySQL 备份方案怎么设计？mysqldump 和 xtrabackup 区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>mysqldump</th><th>xtrabackup</th></tr>
+                <tr><td>类型</td><td>逻辑备份（SQL 文本）</td><td>物理备份（拷数据文件）</td></tr>
+                <tr><td>锁表</td><td>InnoDB 单库转储可一致性快照</td><td>几乎不锁（热备）</td></tr>
+                <tr><td>速度/体量</td><td>慢，适合小库（&lt; 20G）</td><td>快，大库首选</td></tr>
+                <tr><td>恢复</td><td>重放 SQL，较慢</td><td>拷回文件 + recover，快</td></tr>
+              </table>
+            </div>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>mysqldump -uroot -p --single-transaction --triggers --routines \
+  --all-databases | gzip &gt; all_$(date +%F).sql.gz
+# --single-transaction：InnoDB 一致性快照不锁表</code></pre>
+            <p><strong>方案设计</strong>：每日全备 + binlog 增量（可恢复到任意秒）+ <strong>异地存储</strong> + <strong>定期演练恢复</strong>（没验证过的备份等于没有）。</p>
+            <span class="mnemonic">「小库 dump 逻辑备，大库 xtra 物理热备」；全备 + binlog = 秒级恢复；备份不演练，等于没备份</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-mysql-master">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            MySQL 主从复制的原理？主从延迟怎么处理？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>复制流程（三线程）</strong>：</p>
+            <ol>
+              <li>主库提交事务写入 <strong>binlog</strong>，Dump 线程推送给从库</li>
+              <li>从库 <strong>IO 线程</strong>拉取 binlog 写入本地<strong>中继日志 relay log</strong></li>
+              <li>从库 <strong>SQL 线程</strong>重放 relay log，数据达成一致</li>
+            </ol>
+            <p><strong>主从延迟原因与对策</strong>：从库单线程重放慢、大事务、从库机器差 → 半同步复制、并行复制（MTS）、拆大事务、读写分离时「写后读走主库」。</p>
+            <span class="mnemonic">「主写 binlog，IO 拉中继，SQL 来重放」；延迟三大招：并行复制、拆事务、关键读走主</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-mysql-slow">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            MySQL 慢了怎么排查和优化？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>排查链路</strong>：开慢查询日志 → <code>explain</code> 分析 → 看索引/type/rows → 优化。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>SET GLOBAL slow_query_log=ON;
+SET GLOBAL long_query_time=1;     # 超过 1 秒记日志
+mysqldumpslow -s t -t 10 slow.log # 按耗时取 Top10
+EXPLAIN SELECT ...                 # 重点看 type/key/rows/Extra</code></pre>
+            <p><strong>优化要点</strong>：慢 SQL 加合适索引（type 到 ref/range 以上）；<strong>Extra 出现 Using filesort / Using temporary</strong> 说明排序临时表要治；避免 select *、深度分页用游标；单表过大考虑分库分表归档；参数层调 buffer_pool（物理内存 50–70%）。</p>
+            <span class="mnemonic">「慢日志抓现行，explain 定病因，索引治排序，分页防深翻」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-mysql-index">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            哪些情况索引会失效？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>对索引列<strong>做函数或运算</strong>：<code>WHERE YEAR(create_time)=2026</code> → 改范围查询</li>
+              <li><strong>最左前缀</strong>被跳过：联合索引 (a,b,c) 只查 b、c</li>
+              <li><strong>隐式类型转换</strong>：字符串列用数字查 <code>phone=13800000000</code></li>
+              <li><strong>前导模糊</strong>：<code>LIKE '%xx'</code> 失效（<code>'xx%'</code> 可用）</li>
+              <li><code>OR</code> 两侧有非索引列</li>
+              <li><code>!= / NOT IN / IS NULL</code> 视数据分布可能放弃索引</li>
+            </ul>
+            <span class="mnemonic">「函数运算、左缀断裂、类型隐转、前置百分号」四大坑；联合索引像查字典，从第一个字母翻起</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-mysql-lock">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            MySQL 死锁怎么排查和处理？
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>看错误日志：<code>SHOW ENGINE INNODB STATUS</code> 的 LATEST DETECTED DEADLOCK 段，能看到两个事务持锁与等待的 SQL</li>
+              <li>实时观察：<code>SELECT * FROM information_schema.INNODB_TRX;</code>（ trx_state=LOCK WAIT 的）</li>
+              <li>处理：<strong>死锁会被自动检测，回滚代价小的事务</strong>，应用侧重试即可</li>
+              <li>根治：事务<strong>小而快</strong>、多表按<strong>相同顺序</strong>加锁、索引齐全（锁行而非锁全表扫描）、必要时降低隔离级别 RC</li>
+            </ol>
+            <span class="mnemonic">「死锁自动解，重试保平安」；治本三招：事务短、顺序同、索引全</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-redis-arch">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Redis 为什么这么快？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>纯内存</strong>操作，没有磁盘 IO 的硬延迟</li>
+              <li><strong>单线程命令执行</strong>（6.0 前 IO 也单线程）：无锁竞争、无上下文切换</li>
+              <li><strong>IO 多路复用 epoll</strong>：单线程监听海量连接</li>
+              <li><strong>高效数据结构</strong>：跳表、ziplist、intset 等按数据规模特化</li>
+              <li>6.0 后引入<strong>多线程 IO</strong>（读写网络包并行，命令仍串行）</li>
+            </ul>
+            <p><strong>追问：单线程为什么还快</strong>——瓶颈在内存与网络而非 CPU，避免锁与切换反而更快；<strong>切记禁用 keys *</strong>（会阻塞所有请求）。</p>
+            <span class="mnemonic">「内存打底、epoll 帮忙、单线程免锁」；keys 是大杀器，线上要用 scan</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-redis-persist">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Redis 持久化 RDB 和 AOF 的区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>RDB</th><th>AOF</th></tr>
+                <tr><td>内容</td><td>某时刻<strong>全量快照</strong>（二进制）</td><td>追加<strong>写命令</strong>日志（文本）</td></tr>
+                <tr><td>性能影响</td><td>fork 子进程，平时无感</td><td>每次写都要记，fsync 有开销</td></tr>
+                <tr><td>恢复速度</td><td>快（直接加载）</td><td>慢（重放命令）</td></tr>
+                <tr><td>丢失程度</td><td>两次快照间的数据丢</td><td>最多丢 1 秒（everysec）</td></tr>
+                <tr><td>文件大小</td><td>小、紧凑</td><td>大，靠 rewrite 压缩</td></tr>
+              </table>
+            </div>
+            <p><strong>生产建议</strong>：两者混开（RDB 做备份冷备，AOF 保数据）；4.0+ 混合持久化（aof-use-rdb-preamble）兼两家之长。</p>
+            <span class="mnemonic">「RDB 拍照片恢复快丢得多，AOF 记流水丢得少恢复慢」；混合持久化 = 照片打底 + 流水补漏</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-redis-cache">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            缓存穿透、击穿、雪崩分别是什么？怎么防？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>问题</th><th>现象</th><th>解法</th></tr>
+                <tr><td><strong>穿透</strong></td><td>查<strong>不存在</strong>的 key，每次都打到 DB</td><td>缓存空值（短 TTL）/ 布隆过滤器挡 / 参数校验</td></tr>
+                <tr><td><strong>击穿</strong></td><td>某<strong>热点 key 过期瞬间</strong>，海量请求砸向 DB</td><td>互斥锁重建 / 热点不过期 / 逻辑过期</td></tr>
+                <tr><td><strong>雪崩</strong></td><td><strong>大量 key 同时过期</strong>或 Redis 整个挂了</td><td>TTL 加随机 / 多级缓存 / 集群高可用 / 限流降级</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「穿透查没有、击穿热过期、雪崩一大片」；对策：「空值布隆、锁住重建、随机 TTL」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-redis-ha">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Redis 高可用方案有哪些？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>主从复制</strong>：一主多从，读写分离；主挂需<strong>手动</strong>切，不自动</li>
+              <li><strong>哨兵 Sentinel</strong>：哨兵盯着主库，挂了<strong>自动选主切换</strong>（推荐至少 3 个奇数哨兵）；解决可用性但容量没扩展</li>
+              <li><strong>Cluster 集群</strong>：16384 个 slot 分片到多主，<strong>既高可用又水平扩容</strong>；客户端按 slot 路由，多 key 操作受限</li>
+            </ul>
+            <span class="mnemonic">「主从只备份，哨兵管切换，Cluster 又扩又切」；小规模哨兵够，大规模上 Cluster</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-09">
+        <h2><span class="num">09</span>Docker 与 Kubernetes</h2>
+
+        <div class="qa hot" id="ops-docker-vm">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            容器和虚拟机的区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>容器（Docker）</th><th>虚拟机（KVM/VMware）</th></tr>
+                <tr><td>隔离级别</td><td>进程级（共享宿主内核）</td><td>硬件级（独立内核）</td></tr>
+                <tr><td>体量</td><td>MB 级、秒级启动</td><td>GB 级、分钟级启动</td></tr>
+                <tr><td>密度</td><td>单机成百上千</td><td>单机几十</td></tr>
+                <tr><td>隔离性</td><td>较弱（内核共享）</td><td>强（更安全）</td></tr>
+                <tr><td>典型用途</td><td>微服务、CI/CD、快速伸缩</td><td>多租户、异构 OS、强隔离</td></tr>
+              </table>
+            </div>
+            <p><strong>容器靠什么隔离</strong>：Linux <strong>Namespace</strong>（隔离视图：pid/net/mnt/uts/ipc/user）+ <strong>Cgroups</strong>（限制资源：CPU/内存/IO）。</p>
+            <span class="mnemonic">「VM 连内核一起虚拟，容器只圈地不换内核」；Namespace 隔视图，Cgroup 限口粮</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-docker-arch">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Docker 镜像为什么是分层的？容器运行时镜像是怎么工作的？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>镜像 = 多层只读文件系统叠加（UnionFS/overlay2）</strong>，每条 Dockerfile 指令生成一层，<strong>层可被多镜像共享</strong>，拉取和存储都省</li>
+              <li><strong>容器 = 镜像 + 一层可写层（container layer）</strong>：写时复制（COW），改动落在可写层，删容器即丢可写层</li>
+              <li>所以「改配置」要么改镜像重新 build，要么用 <strong>volume 挂载</strong>持久化</li>
+              <li>架构：client（docker CLI）→ daemon（dockerd）→ registry（镜像仓库）</li>
+            </ul>
+            <span class="mnemonic">「镜像千层饼只读，容器顶上加层可写」；删容器丢增量，要持久化靠 volume</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-docker-cmd">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Docker 常用命令有哪些？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>docker ps -a                          # 查容器（含停止的）
+docker run -d --name web -p 80:80 -v /data:/usr/share/nginx/html nginx
+docker exec -it web bash              # 进容器排障（首选）
+docker logs -f --tail 100 web         # 看日志
+docker stats                          # 资源占用
+docker inspect web                    # 元数据（IP/挂载/环境变量）
+docker cp web:/etc/nginx/nginx.conf . # 容器内外拷文件
+docker images / docker rmi / docker system prune -a   # 清理</code></pre>
+            <span class="mnemonic">「run 起来 exec 进去，logs 看话 stats 看饭量」；排障三板斧：logs → exec → inspect</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-dockerfile">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            写一个规范的生产级 Dockerfile？怎么给镜像瘦身？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>FROM node:20-alpine            # 1. 小基础镜像
+WORKDIR /app
+COPY package*.json ./           # 2. 先拷依赖清单
+RUN npm ci --omit=dev           # 3. 装依赖（依赖层可缓存）
+COPY . .                        # 4. 再拷代码（代码常变放最后）
+RUN npm run build &amp;&amp; rm -rf src  # 5. 同层清理
+EXPOSE 3000
+USER node                       # 6. 非 root 运行
+HEALTHCHECK CMD wget -qO- http://localhost:3000/health || exit 1
+CMD ["node", "dist/main.js"]</code></pre>
+            <p><strong>瘦身要点</strong>：alpine/slim 基础镜像；多阶段构建（builder 编译 → distroless/alpine 运行）；合并 RUN 并同层清理缓存；.dockerignore 排除 node_modules/.git；用非 root 用户。</p>
+            <span class="mnemonic">「底子小、依赖先、代码后、层要并、非 root」；变越勤的层放越下面，缓存才不失效</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-docker-net">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Docker 有哪几种网络模式？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>bridge（默认）</strong>：docker0 网桥 + NAT，容器经宿主出网；<code>-p</code> 映射端口</li>
+              <li><strong>host</strong>：与宿主<strong>共享网络栈</strong>，性能最好但端口冲突要自己管</li>
+              <li><strong>none</strong>：无网络，彻底隔离</li>
+              <li><strong>container</strong>：与指定容器共享网络（sidecar 场景）</li>
+              <li><strong>自定义 bridge</strong>：同网络容器<strong>用名字互访</strong>（内置 DNS），微服务必备</li>
+            </ul>
+            <span class="mnemonic">「bridge 搭桥 NAT，host 直接蹭，none 光秃秃」；跨容器通信用自定义网络 + 服务名</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-docker-data">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            容器数据怎么持久化？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>bind mount</strong>：<code>-v /host/path:/container/path</code>，直接挂宿主目录，开发调试方便</li>
+              <li><strong>named volume</strong>：<code>-v dbdata:/var/lib/mysql</code>，docker 托管、可复用、好备份（<strong>数据库首选</strong>）</li>
+              <li><strong>tmpfs</strong>：挂内存，放临时敏感数据</li>
+            </ul>
+            <p>原则：<strong>容器无状态化</strong>，数据一律外置到 volume / 远端存储（NFS、对象存储、数据库）。</p>
+            <span class="mnemonic">「bind 挂目录，volume 托管，tmpfs 进内存」；数据不进容器，删了容器心不慌</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-k8s-arch">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Kubernetes 核心组件有哪些？各自干什么？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>控制平面（master）</strong>：</p>
+            <ul>
+              <li><strong>kube-apiserver</strong>：唯一入口，所有操作的 REST 网关</li>
+              <li><strong>etcd</strong>：集群的「大脑数据库」，存全部状态（<strong>备份就是备它</strong>）</li>
+              <li><strong>scheduler</strong>：决定 Pod 放到哪个节点（资源够、亲和性）</li>
+              <li><strong>controller-manager</strong>：各类控制器维持期望状态（副本数不对就补）</li>
+            </ul>
+            <p><strong>工作节点（node）</strong>：</p>
+            <ul>
+              <li><strong>kubelet</strong>：节点代理，保证容器按 PodSpec 运行</li>
+              <li><strong>kube-proxy</strong>：维护 Service 的转发规则（iptables/ipvs）</li>
+              <li><strong>容器运行时</strong>：containerd 等</li>
+            </ul>
+            <span class="mnemonic">「api 是门，etcd 是账本，sched 派活，controller 对账；node 上 kubelet 干活，proxy 引流」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-k8s-pod">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Pod 的生命周期和重启策略？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>状态：<strong>Pending</strong>（调度中/等镜像）→ <strong>Running</strong> → <strong>Succeeded/Failed</strong>；异常态 <strong>CrashLoopBackOff</strong>（反复崩）、<strong>ImagePullBackOff</strong>（拉不下镜像）、<strong>Evicted</strong>（被资源挤走）</li>
+              <li><strong>重启策略 restartPolicy</strong>：Always（默认，Deployment 用）、OnFailure、Never（Job 用）</li>
+              <li><strong>探针三兄弟</strong>：startup（先等起）→ <strong>liveness</strong>（不健康就<strong>重启</strong>容器）、<strong>readiness</strong>（没就绪就<strong>摘除流量</strong>，不重启）</li>
+              <li>初始化容器 initContainers：先跑完才起主容器（等依赖、初始化）</li>
+            </ul>
+            <span class="mnemonic">「live 挂了重启，ready 没好摘流量」；Pending 查调度与镜像，CrashLoop 先看 logs</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-k8s-svc">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Service 有哪几种类型？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>ClusterIP（默认）</strong>：集群内虚拟 IP，供内部互访</li>
+              <li><strong>NodePort</strong>：每个节点开一个端口（30000–32767）对外，底层是 ClusterIP</li>
+              <li><strong>LoadBalancer</strong>：调云厂商 LB 自动对外（收费但省事），底层是 NodePort</li>
+              <li><strong>ExternalName</strong>：DNS CNAME 指向外部域名</li>
+              <li>入口流量通常再加 <strong>Ingress</strong>（七层路由，按域名/路径转发到 Service）</li>
+            </ul>
+            <p>转发链路：<code>Ingress → Service(ClusterIP) → EndPoints → Pod</code>。</p>
+            <span class="mnemonic">「ClusterIP 内用，NodePort 开门，LB 云进口，Ingress 是聪明门卫」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-k8s-deploy">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Deployment 滚动更新是怎么做的？怎么回滚？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>原理</strong>：新版 ReplicaSet 逐个扩、旧版逐个缩（maxSurge / maxUnavailable 控制），期间新老并存，流量慢慢切，全程不停机。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>kubectl set image deploy/web web=nginx:1.27    # 触发更新
+kubectl rollout status deploy/web                # 看进度
+kubectl rollout history deploy/web               # 看历史
+kubectl rollout undo deploy/web                  # 一键回滚上一版
+kubectl rollout undo deploy/web --to-revision=2  # 回到指定版本</code></pre>
+            <span class="mnemonic">「新扩旧缩慢慢换，max 两参数控节奏」；出事不慌 rollout undo 一秒回到从前</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-k8s-debug">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Pod 起不来（Pending / CrashLoopBackOff）怎么排查？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>kubectl get pod web-xxx -o wide
+kubectl describe pod web-xxx      # 事件区（Events）是第一线索
+kubectl logs web-xxx --previous   # 上一次崩溃的日志（关键！）
+kubectl exec -it web-xxx -- sh    # 进去看看</code></pre>
+            <p><strong>对症下药</strong>：</p>
+            <ul>
+              <li><strong>Pending</strong>：资源不够（节点满）→ describe 看 FailedScheduling；或 PVC 没绑定、亲和性不满足</li>
+              <li><strong>ImagePullBackOff</strong>：镜像名/标签错、仓库没权限 → 配 imagePullSecrets</li>
+              <li><strong>CrashLoopBackOff</strong>：<code>logs --previous</code> 看崩溃原因——配置错、依赖连不上、探针太严</li>
+              <li><strong>Evicted</strong>：节点内存压力驱逐 → 调 requests/limits 或加节点</li>
+            </ul>
+            <span class="mnemonic">「describe 看 Events，previous 看死因」；Pending 没地放，Crash 看日志，Pull 查镜像</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-k8s-res">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            requests 和 limits 有什么区别？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>requests</strong>：调度依据，<strong>承诺值</strong>——调度器保证节点至少有这么多资源</li>
+              <li><strong>limits</strong>：上限，<strong>天花板</strong>——CPU 超了被<strong>节流（throttle）</strong>，内存超了被 <strong>OOMKill</strong></li>
+              <li>QoS 等级：requests=limits → <strong>Guaranteed</strong>（最稳）；都不设 → BestEffort（最先被驱逐）；中间 → Burstable</li>
+              <li>经验：内存 requests=limits 防 OOM 波动；CPU 可 limits 略高于 requests 提利用率</li>
+            </ul>
+            <span class="mnemonic">「requests 是订票，limits 是天花板」；CPU 超限被限流，内存超限直接杀</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-10">
+        <h2><span class="num">10</span>CI/CD 与自动化</h2>
+
+        <div class="qa hot" id="ops-git">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Git 常用命令？merge 和 rebase 区别？冲突怎么解决？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>git pull = git fetch + git merge
+git checkout -b feature/x     # 建并切分支
+git stash / git stash pop     # 暂存现场
+git reset --soft HEAD^        # 撤销提交保留改动
+git revert &lt;commit&gt;            # 生成反向提交（公共分支安全）
+git cherry-pick &lt;commit&gt;       # 摘一个提交过来
+git reflog                    # 后悔药：找所有 HEAD 移动记录</code></pre>
+            <ul>
+              <li><strong>merge</strong>：保留分叉历史，产生合并提交，历史真实但图乱</li>
+              <li><strong>rebase</strong>：把提交搬到目标分支后面，历史成一条直线，整洁但<strong>改写了公共历史（危险）</strong>——本地同步用 rebase，合入主干用 merge</li>
+            </ul>
+            <p><strong>解冲突</strong>：编辑冲突文件（&lt;&lt;&lt;&lt;&lt;&lt;&lt;/=======/&gt;&gt;&gt;&gt;&gt;&gt;&gt; 标记）→ <code>git add</code> → <code>git rebase --continue</code> 或完成 merge。</p>
+            <span class="mnemonic">「merge 保历史，rebase 拉直线」；公共分支别 rebase，reflog 是后悔药</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-gitflow">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            团队的分支管理模型是怎样的？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Git Flow</strong>（重流程）：main（生产）+ develop（开发）+ feature/* + release/* + hotfix/*</li>
+              <li><strong>GitHub Flow</strong>（轻量）：main + feature 分支 + PR 合并，配 CI 卡点</li>
+              <li><strong>Trunk-Based</strong>（最激进）：所有人小步直推 main + feature flag，配强大 CI/CD（云原生主流）</li>
+              <li>实践：<strong>分支短命</strong>、PR 必须过流水线与 review、hotfix 走独立通道并回灌 develop</li>
+            </ul>
+            <span class="mnemonic">「重走 GitFlow，轻走 GitHub Flow，云原生主干开发」；分支活得越久，合并越痛苦</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-jenkins">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Jenkins 流水线怎么设计？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p>典型 <strong>Jenkinsfile（声明式 Pipeline）</strong>阶段：</p>
+            <ol>
+              <li><strong>拉代码</strong>：checkout SCM</li>
+              <li><strong>构建</strong>：mvn package / npm run build</li>
+              <li><strong>测试与扫描</strong>：单测、代码质量（SonarQube）、安全扫描</li>
+              <li><strong>构建镜像</strong>：docker build + push 到 Harbor</li>
+              <li><strong>部署</strong>：按环境审批后 kubectl apply / helm upgrade</li>
+              <li><strong>通知</strong>：钉钉/企微机器人播报结果</li>
+            </ol>
+            <p><strong>要点</strong>：凭据放 Credentials 不落代码；多环境用 when 分支 + 手动 input 卡点；agent 用容器保持构建环境一致。</p>
+            <span class="mnemonic">「拉、编、测、像、部、报」六段流水线；凭据进保险柜，上线加人工卡点</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-ansible">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Ansible 的工作原理和核心概念？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>原理</strong>：<strong>无 Agent</strong>，管理机通过 SSH 连目标机推 Playbook（实际是推 Python 临时脚本执行后删除）。</p>
+            <ul>
+              <li><strong>Inventory</strong>：主机清单（分组）</li>
+              <li><strong>Module</strong>：干活的最小单元（yum、copy、service、template）</li>
+              <li><strong>Playbook</strong>：YAML 剧本，把模块按顺序编排</li>
+              <li><strong>Role</strong>：Playbook 的目录化封装，可复用</li>
+              <li><strong>幂等性</strong>：重复执行结果一致——自动化的灵魂</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>ansible web -m ping                 # 连通性测试
+ansible-playbook deploy.yml -l web   # 执行剧本
+# 剧本示例
+- hosts: web
+  tasks:
+    - name: 安装 nginx
+      yum: name=nginx state=present   # 已装则跳过 = 幂等</code></pre>
+            <span class="mnemonic">「SSH 免代理，模块拼剧本，重复执行不变形（幂等）」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-cicd">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            描述一条从提交代码到上线的完整 CI/CD 流程？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li>开发 <code>git push</code> 到 feature 分支 → 触发 <strong>CI</strong></li>
+              <li>自动：<strong>编译 → 单元测试 → 代码扫描</strong>（SonarQube 质量门禁）→ 构建镜像 → 推 Harbor</li>
+              <li>提 PR → <strong>代码 review</strong> + 流水线全绿 → 合入 develop/main</li>
+              <li><strong>CD</strong>：自动部署 dev → 自动化验收测试</li>
+              <li><strong>审批</strong>后发 staging 预发 → 人工验证</li>
+              <li><strong>生产发布</strong>：滚动/灰度策略 + 健康检查 + <strong>自动回滚开关</strong></li>
+              <li>发布后<strong>监控盯盘</strong>（指标正常才扩大流量）→ 通知归档</li>
+            </ol>
+            <span class="mnemonic">「提交即构建，全绿才准入；预发人把关，生产灰度走，监控不好秒回滚」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-release">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            蓝绿发布、灰度发布、滚动发布有什么区别？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>方式</th><th>做法</th><th>优点</th><th>缺点</th></tr>
+                <tr><td>蓝绿</td><td>新旧两套环境整体切换</td><td>回滚最快（切回即回）</td><td>双倍资源</td></tr>
+                <tr><td>灰度/金丝雀</td><td>新版先放 <strong>1% → 10% → 50%</strong> 流量</td><td>风险最小、可观察</td><td>周期长、需路由能力</td></tr>
+                <tr><td>滚动（K8s 默认）</td><td>分批替换实例</td><td>省资源、自动化好</td><td>新老并存要兼容</td></tr>
+              </table>
+            </div>
+            <p>选择：核心交易<strong>金丝雀</strong>稳为先；常规业务<strong>滚动</strong>性价比高；大版本重构用<strong>蓝绿</strong>整体切换。</p>
+            <span class="mnemonic">「蓝绿整切换，灰度慢慢放，滚动分批换」；金丝雀先放一只，炸了也只炸一小撮</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-artif">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            制品仓库和镜像仓库怎么管理？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>制品仓库</strong>：Nexus / Artifactory 管 jar、npm 包（配国内代理源加速）</li>
+              <li><strong>镜像仓库</strong>：<strong>Harbor</strong>（私有首选，带漏洞扫描、签名、复制同步）；docker hub / 云厂商 registry</li>
+              <li>规范：<strong>镜像 tag 用版本号或 git sha，禁 latest 上生产</strong>；按 环境/项目 分项目分仓</li>
+              <li>治理：保留策略清旧 tag、漏洞扫描卡点（trivy）、多机房 P2P 分发（dragonfly）</li>
+            </ul>
+            <span class="mnemonic">「制品进仓，版本可追，latest 不上生产」；Harbor 三件套：扫描、签名、同步</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-11">
+        <h2><span class="num">11</span>监控告警与日志</h2>
+
+        <div class="qa hot" id="ops-prom">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Prometheus 的架构和工作原理？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Pull 拉模型</strong>：Prometheus 周期性主动抓取目标的 <strong>/metrics</strong> 接口（ exporter 暴露指标），而非被推送——简单可靠、易排查</li>
+              <li><strong>组件</strong>：Prometheus Server（抓取+TSDB 存储）→ Alertmanager（分组、抑制、路由告警）→ Grafana（可视化）；服务发现对接 K8s/consul</li>
+              <li><strong>Exporter</strong>：node_exporter（机器）、mysqld_exporter（数据库）、blackbox_exporter（拨测）</li>
+              <li><strong>PromQL</strong>：<code>rate(http_requests_total[5m])</code> 常用于算速率</li>
+              <li><strong>局限</strong>：存 15 天左右即定位短期监控；超长期下推 Thanos / VictoriaMetrics</li>
+            </ul>
+            <span class="mnemonic">「PULL 拉指标，metrics 出口，Alertmanager 告警，Grafana 看图」；短存本地长存 Thanos</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-metric">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            监控要看哪些指标？（USE / RED / 黄金四信号）<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>USE 法则（看资源）</strong>：每个资源看 <strong>U</strong>tilization 使用率、<strong>S</strong>aturation 饱和度（排队）、<strong>E</strong>rrors 错误——CPU、内存、磁盘、网络挨个过</li>
+              <li><strong>RED 法则（看服务）</strong>：每个服务看 <strong>R</strong>ate 请求量、<strong>E</strong>rrors 错误率、<strong>D</strong>uration 耗时分布</li>
+              <li><strong>Google 黄金四信号</strong>：延迟、流量、错误、饱和度</li>
+              <li>经验：CPU/内存/磁盘/网络四件套 + 服务 QPS/RT/错误率 + 业务指标（下单量）<strong>三层都要有</strong></li>
+            </ul>
+            <span class="mnemonic">「资源 USE，服务 RED」；机器看余量，服务看快慢，业务看涨跌</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-grafana">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Grafana 上的告警怎么设计才合理？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>告警规则放 <strong>Alertmanager / Grafana 统一管理</strong>，按<strong>严重级别分级</strong>：P0 电话+短信、P1 IM 群、P2 邮件日报</li>
+              <li><strong>for 持续时间</strong>：连续 2–5 分钟异常才告，避免毛刺误报</li>
+              <li><strong>分组与抑制</strong>：同机房故障聚合成一条；上游挂了抑制下游衍生告警</li>
+              <li>每条告警必带：现象、影响的业务、runbook 链接（<strong>告警要可执行</strong>）</li>
+            </ul>
+            <span class="mnemonic">「分级、持续、聚合、抑制」八字；告警带 runbook，收到就知道点哪</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-elk">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            ELK 的原理和链路？日志太多怎么优化？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>链路</strong>：应用日志 → <strong>Filebeat</strong>（轻量采集）→ <strong>Kafka</strong>（削峰缓冲）→ <strong>Logstash</strong>（解析/grok 切字段）→ <strong>Elasticsearch</strong>（存储索引）→ <strong>Kibana</strong>（查询看板）。</p>
+            <ul>
+              <li>排查套路：先 grep 定位单机 → Kibana 全局检索（按 trace_id 串联）</li>
+              <li><strong>日志量大优化</strong>：索引生命周期 ILM（热 7 天/冷 30 天/删 90 天）、按天建索引、调副本数、必要字段才分词、采样 DEBUG 日志</li>
+              <li><strong>日志规范</strong>：JSON 格式 + trace_id 贯穿全链路，检索效率天差地别</li>
+            </ul>
+            <span class="mnemonic">「Filebeat 收、Kafka 缓、Logstash 切、ES 存、Kibana 查」；日志 JSON 化，检索带 trace_id</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-log">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            线上出问题，你怎么用日志快速定位？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>tail -f app.log | grep --line-buffered ERROR      # 实时盯错误
+grep -c "ERROR" app.log                           # 数一数规模
+grep "10:1[0-5]" app.log | grep -i timeout        # 按时间段+关键字
+journalctl -u nginx --since "1 hour ago" -p err   # 系统服务日志
+dmesg -T | tail -20                               # 内核层（OOM/磁盘）</code></pre>
+            <p><strong>思路</strong>：先定时间窗（监控图找出错起点）→ 按<strong>时间 + 关键字 + trace_id</strong> 收窄 → 对照同一时刻的<strong>变更记录</strong>（80% 故障源于变更）。</p>
+            <span class="mnemonic">「先锁时间，再串 trace，最后对变更」；出问题先问：最近改了什么？</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-alert">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            告警风暴怎么治理？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>分级</strong>：按影响面定 P0–P3，不同级别不同通道与响应 SLA</li>
+              <li><strong>聚合</strong>：同一根因的告警分组为一条（Alertmanager group_by）</li>
+              <li><strong>抑制</strong>：网络设备挂了就抑制其上所有主机的失联告警</li>
+              <li><strong>静默</strong>：变更维护窗口主动静默</li>
+              <li><strong>复盘收敛</strong>：每周盘告警——误报改阈值、漏报加规则、无动作的告警直接删</li>
+            </ul>
+            <span class="mnemonic">「分聚合、抑静默、周复盘」；没人看的告警是噪音，不是保障</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-zabbix">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            Zabbix 和 Prometheus 怎么选型？
+          </div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>Zabbix</th><th>Prometheus</th></tr>
+                <tr><td>模型</td><td>Agent 推送，关系库存储</td><td>Pull 拉取，时序库 TSDB</td></tr>
+                <tr><td>生态</td><td>传统 IDC、网络设备、Agent 生态成熟</td><td><strong>云原生/K8s 标配</strong>，exporter 生态爆发</td></tr>
+                <tr><td>查询</td><td>SQL，可视化一般</td><td><strong>PromQL 强大</strong>，Grafana 天作之合</td></tr>
+                <tr><td>适合</td><td>机房物理机、网络、硬件</td><td>容器、微服务、动态目标</td></tr>
+              </table>
+            </div>
+            <p>现实常见：混合用——Zabbix 管传统基础设施，Prometheus 管云原生。</p>
+            <span class="mnemonic">「传统机房 Zabbix，云原生 Prom」；动态目标（Pod 生死频繁）必须 Pull + 服务发现</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-sla">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            什么是 SLA、SLO、SLI 和错误预算？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>SLI</strong>：指标（如成功率、P99 延迟）——量出来的</li>
+              <li><strong>SLO</strong>：内部目标（如成功率 ≥ 99.9%）——自己定的</li>
+              <li><strong>SLA</strong>：对客户的协议（含赔款条款）——写合同的</li>
+              <li><strong>错误预算</strong> = 1 − SLO（99.9% 即每月允许约 <strong>43 分钟</strong>故障）；预算花完就冻结发布只做稳定性——<strong>用数据平衡快与稳</strong></li>
+            </ul>
+            <span class="mnemonic">「SLI 是尺子，SLO 是目标，SLA 是合同，错误预算是油门」；三个 9 每月 43 分钟，四个 9 只剩 4 分半</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-12">
+        <h2><span class="num">12</span>故障排查与场景题</h2>
+
+        <div class="qa hot" id="ops-trouble">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            服务器响应变慢，说下你的排查思路？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>总纲：USE 法则，CPU → 内存 → 磁盘 IO → 网络，逐项排除</strong>：</p>
+            <ol>
+              <li><strong>先看全局</strong>：<code>top / uptime</code>——load 对比核数、%wa、swap si/so</li>
+              <li><strong>CPU 高</strong>：top 找进程 → <code>pidstat -p PID 1</code> 看是 us 还是 sy；Java 用 <code>top -Hp</code> + jstack 抓线程栈</li>
+              <li><strong>内存紧</strong>：available 低、swap 换入换出 → 找内存大户，判断泄漏还是容量</li>
+              <li><strong>磁盘慢</strong>：<code>iostat -x 1</code> 看 %util / await；<code>iotop</code> 找元凶进程（常见：日志刷爆、备份任务撞高峰）</li>
+              <li><strong>网络</strong>：<code>sar -n DEV</code> 看带宽打满没；<code>ss -s</code> 看连接数；curl 计时 <code>-w "%{time_total}"</code> 分解耗时在哪段</li>
+              <li><strong>应用层</strong>：慢日志、线程池满、锁等待、下游依赖慢</li>
+              <li><strong>别忘了问</strong>：什么时候开始？之前改了什么？（变更即嫌疑）</li>
+            </ol>
+            <span class="mnemonic">「先 top 后分层：CPU 内存盘网挨个过；wa 高查盘，si/so 高查内存，最后查变更」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-down">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            用户反馈网站打不开，怎么办？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>先确认范围</strong>：监控大盘还在吗？是个别用户还是全部？<strong>影响面决定级别</strong></li>
+              <li><strong>入口链路查</strong>：域名解析（dig）→ 入口 LB / CDN → 防火墙安全组</li>
+              <li><strong>应用层</strong>：<code>curl -v http://localhost</code> 本机通不通 → Nginx 502/504？后端进程活着吗</li>
+              <li><strong>资源层</strong>：负载是否打满、连接数是否爆、是否被打（CC/ syn flood）</li>
+              <li><strong>数据层</strong>：数据库连接池满、锁等待、Redis 挂了导致依赖雪崩</li>
+              <li><strong>止损优先</strong>：先重启/扩容/回滚恢复业务，<strong>再慢慢找根因</strong>（保留现场：日志、dump）</li>
+              <li>同步上报：现象、影响、进展、预计恢复时间</li>
+            </ol>
+            <span class="mnemonic">「先定面、再顺链、先止血、后验尸」；恢复优先于定位，保留现场再复盘</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-diskfull">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            磁盘使用率告警 90%+，怎么处理？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>应急（先腾空间）</strong>：</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>df -h                                              # 确认哪个分区
+du -xh --max-depth=2 /  2&gt;/dev/null | sort -rh | head   # 找大目录
+journalctl --vacuum-size=500M                      # 收 journald 日志
+find /var/log -name "*.gz" -mtime +30 -delete      # 删旧压缩日志</code></pre>
+            <p><strong>定位（为什么涨）</strong>：日志没轮转（上 logrotate）？大文件被删未释放（lsof | grep deleted → 重载进程）？Docker 镜像堆积（docker system prune）？数据库 binlog/临时表？</p>
+            <p><strong>根治</strong>：logrotate + 监控提前告警（80% 黄线）+ 容量规划 + 挂新盘/LVM 扩容。</p>
+            <span class="mnemonic">「df 定分区，du 找大户，删前先备份」；应急清日志，根治上轮转</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-hacked">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            发现服务器疑似被入侵（异常流量/陌生进程），怎么办？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>隔离优先</strong>：先断网/摘流量（防火墙封 IP、安全组全断），<strong>别急着重启——内存痕迹会没</strong></li>
+              <li><strong>保留证据</strong>：ps、ss、crontab -l、~/.ssh/authorized_keys、history、/var/log/secure 打包留存</li>
+              <li><strong>排查入口</strong>：last / lastb 看登录记录；新异常用户（/etc/passwd）；可疑计划任务（/var/spool/cron）；可疑 SUID 文件；开放端口对未知 IP</li>
+              <li><strong>确认影响</strong>：对外扫描是否变成肉鸡；数据是否被拖</li>
+              <li><strong>恢复</strong>：<strong>重装系统最稳</strong>；改所有密码与密钥；补漏洞（弱口令、未授权 Redis、过期组件）</li>
+              <li><strong>复盘加固</strong>：密钥登录、最小端口、fail2ban、HIDS 入侵检测</li>
+            </ol>
+            <span class="mnemonic">「一断二存三查四改五重装」；别手贱重启，证据在内存里</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-sqlslow">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            数据库服务器 CPU 飙到 100%，怎么排查？
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li><code>top</code> 确认是 mysqld 在吃 CPU（而不是别的进程）</li>
+              <li><code>show processlist;</code> 看当前正在跑什么——大量耗时 SQL 一目了然</li>
+              <li>慢查询日志 + <code>explain</code> 定位烂 SQL（缺索引/全表扫描）</li>
+              <li>常见根因：<strong>缺索引的慢查询、大事务、深分页、缓存失效打穿 DB、锁等待自旋</strong></li>
+              <li>应急：kill 掉肇事 SQL → 限流应用 → 补索引；根治看第 08 章慢查询方案</li>
+            </ol>
+            <span class="mnemonic">「processlist 抓现行，慢日志定惯犯」；缓存挂了会打穿，索引缺了会扫全表</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-incident">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            讲一次你处理线上故障的完整经历（STAR）？故障复盘怎么做？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <p><strong>答题框架（STAR）</strong>：背景（业务与规模）→ 告警现象 → 你的<strong>排查路径</strong>（每一步用什么工具排除什么）→ 止血动作 → 根因 → 长效改进。<strong>重点讲思路不是结局</strong>。</p>
+            <p><strong>复盘原则（无责复盘 blameless）</strong>：</p>
+            <ul>
+              <li>聚焦<strong>流程与系统</strong>漏洞，不追责个人（人才会说真话）</li>
+              <li>产出三问：<strong>为什么没拦住（事前）？为什么发现慢（监控）？为什么恢复慢（预案）？</strong></li>
+              <li>行动项落到人落到期，下次同类故障必须更早发现/自愈</li>
+            </ul>
+            <span class="mnemonic">「止血、定位、根因、改进」四段；复盘三连问：拦住没？发现快吗？恢复快吗？</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-case-night">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            凌晨 3 点收到 P0 告警，你如何行动？
+          </div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>快速判断影响面</strong>：看大盘与告警内容，P0 确认则立即响应并拉起应急群</li>
+              <li><strong>同步值班链</strong>：上报主管、拉相关同学（DBA/开发）</li>
+              <li><strong>按 runbook 止血</strong>：预案优先——重启/切主/扩容/回滚，<strong>不慌乱试错</strong></li>
+              <li><strong>边处置边播报</strong>：每 15 分钟同步进展（现象、动作、结果）</li>
+              <li><strong>恢复后</strong>：确认监控正常、留档现场、次日复盘</li>
+            </ol>
+            <span class="mnemonic">「确认、上报、按预案止血、持续播报」；半夜靠的是 runbook，不是临场发挥</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-dr">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            容灾和备份策略怎么设计？
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>备份 3-2-1 原则</strong>：3 份数据、2 种介质、<strong>1 份异地</strong></li>
+              <li><strong>层次</strong>：冷备（磁带/归档）→ 热备（主从实时）→ <strong>同城双活</strong>（两机房同时服务）→ <strong>异地多活</strong>（两地三中心，单元化路由）</li>
+              <li><strong>RTO / RPO</strong>：RTO 恢复耗时、RPO 丢多少数据——先和业务定指标再选方案</li>
+              <li><strong>演练</strong>：每季度真实切换演练；<strong>没演练过的容灾是纸面容灾</strong></li>
+            </ul>
+            <span class="mnemonic">「3-2-1 备三份，冷热双活往上加」；RTO 多久能活、RPO 丢多少数据，演练见真章</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sec-13">
+        <h2><span class="num">13</span>手写命令与脚本</h2>
+
+        <div class="qa hot" id="ops-code-logs">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：统计 access.log 中访问量最高的 10 个 IP？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>awk '{print $1}' access.log | sort | uniq -c | sort -rn | head
+# 拆解：awk 取第一列(IP) → sort 排序聚合 → uniq -c 计数
+#      → sort -rn 按数字倒序 → head 取前 10
+
+# 加强版：顺带看这些 IP 都在干嘛
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head | awk '{print $2}' \
+  | while read ip; do grep "^$ip" access.log | awk '{print $7}' | sort | uniq -c | sort -rn | head -3; done</code></pre>
+            <span class="mnemonic">「awk 取列、sort 让路、uniq -c 计数、sort -rn 排名、head 收尾」——五连是日志统计万能模板</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-code-monitor">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：磁盘使用率超 80% 就告警的脚本？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#!/bin/bash
+set -euo pipefail
+THRESHOLD=80
+# df -P 保证单行输出；去掉表头和 tmpfs
+df -P -x tmpfs -x devtmpfs | tail -n +2 | while read line; do
+  partition=$(echo "$line" | awk '{print $6}')
+  usage=$(echo "$line" | awk '{print $5}' | tr -d '%')
+  if [ "$usage" -ge "$THRESHOLD" ]; then
+    echo "$(date '+%F %T') 告警: $partition 已用 ${usage}% 超过 ${THRESHOLD}%" \
+      | tee -a /var/log/disk_alert.log
+    # 此处可接 curl 钉钉/企微 webhook
+  fi
+done</code></pre>
+            <p>要点：<code>df -P</code> 防 POSIX 长设备名换行；<code>tr -d '%'</code> 去百分号；配 cron 每 5 分钟跑一次即可上岗。</p>
+            <span class="mnemonic">「df -P 拿数据，awk 拆两列，超阈值就喊人」；-P 是防换行的关键</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-code-batch">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：批量创建用户并设置随机密码？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#!/bin/bash
+# 用法: ./batch_user.sh user1 user2 user3
+for user in "$@"; do
+  if id "$user" &amp;&gt;/dev/null; then
+    echo "跳过: $user 已存在"; continue
+  fi
+  pass=$(tr -dc 'A-Za-z0-9' &lt; /dev/urandom | head -c 12)
+  useradd -m "$user"
+  echo "$user:$pass" | chpasswd
+  echo "$user  $pass" &gt;&gt; /root/user_passwords.txt   # 记得 chmod 600
+  echo "已创建: $user"
+done
+# chpasswd 支持批量改密码：cat user.txt | chpasswd</code></pre>
+            <span class="mnemonic">「循环 + useradd + chpasswd」；随机密码 urandom 造，密码文件要 600</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-code-nginx">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：Nginx 日志常用分析命令？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>LOG=access.log     # 默认格式：$remote_addr ... $status $body_bytes_sent ...
+# 1. 各状态码分布
+awk '{print $9}' $LOG | sort | uniq -c | sort -rn
+# 2. 请求量按小时分布（找流量高峰）
+awk '{print substr($4,14,2)}' $LOG | sort | uniq -c
+# 3. 平均响应大小与总流量
+awk '{s+=$10} END{print "total_bytes:", s, "avg:", s/NR}' $LOG
+# 4. 抓 5xx 的 URL Top10（找报错集中点）
+awk '$9&gt;=500 {print $7}' $LOG | sort | uniq -c | sort -rn | head
+# 5. 慢请求：大于 10 秒的（日志需配 $request_time 字段）
+awk '$NF&gt;10 {print $7, $NF}' $LOG | sort -k2 -rn | head</code></pre>
+            <span class="mnemonic">「状态码看 $9，URL 看 $7，流量看 $10」；列号背下来，awk 直接起飞</span>
+          </div>
+        </div>
+
+        <div class="qa" id="ops-code-docker">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：Docker 空间清理脚本？
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#!/bin/bash
+set -euo pipefail
+echo "=== 清理前磁盘 ==="; df -h /var/lib/docker | tail -1
+# 1. 删除已停止的容器
+docker ps -aq --filter "status=exited" | xargs -r docker rm
+# 2. 删除无用的悬空镜像（dangling）
+docker images -f "dangling=true" -q | xargs -r docker rmi
+# 3. 删除未被使用的卷（危险！确认无重要数据再执行）
+# docker volume ls -qf dangling=true | xargs -r docker volume rm
+# 4. 一把梭（保留运行中容器相关资源）
+docker system prune -f --volumes 2&gt;/dev/null || docker system prune -f
+echo "=== 清理后磁盘 ==="; df -h /var/lib/docker | tail -1
+# 配 cron 每周日 4 点执行；xargs -r 空输入不执行，防误删</code></pre>
+            <span class="mnemonic">「rm 停容器、rmi 悬空镜像、prune 一把梭」；删卷前三思，xargs -r 防空删</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-code-backup">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：带日期归档、自动清理过期备份的脚本？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#!/bin/bash
+set -euo pipefail
+SRC="/data/app"
+DEST="/backup"
+KEEP_DAYS=7
+DATE=$(date +%F)
+BACKUP_FAIL=0
+
+tar czf "$DEST/app_${DATE}.tar.gz" -C "$(dirname $SRC)" "$(basename $SRC)" \
+  || BACKUP_FAIL=1
+
+# 校验 + 清理过期备份
+if [ "$BACKUP_FAIL" -eq 0 ]; then
+  echo "$(date '+%F %T') 备份成功: app_${DATE}.tar.gz ($(du -h ${DEST}/app_${DATE}.tar.gz | awk '{print $1}'))" &gt;&gt; $DEST/backup.log
+  find $DEST -name "app_*.tar.gz" -mtime +${KEEP_DAYS} -delete
+else
+  echo "$(date '+%F %T') 备份失败！" &gt;&gt; $DEST/backup.log
+  exit 1
+fi
+# 远端同步（可选）：rsync -az $DEST/app_${DATE}.tar.gz backup@remote:/backup/</code></pre>
+            <p>要点：变量集中顶部好维护；<code>set -euo pipefail</code> 兜错；备份结果<strong>写日志</strong>；find -mtime 清理；异地用 rsync。</p>
+            <span class="mnemonic">「tar 带日期，find 删过期，日志记成败，rsync 传异地」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="ops-code-check">
+          <div class="q-mark">Q</div>
+          <div class="qa-q">
+            手写：检测服务存活，挂了自动拉起并告警？<span class="hot-badge">🔥 高频</span>
+          </div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#!/bin/bash
+set -uo pipefail
+SERVICE="nginx"
+WEBHOOK="https://oapi.dingtalk.com/robot/send?access_token=xxx"
+MAX_RETRY=3
+
+check_and_restart() {
+  systemctl is-active --quiet "$SERVICE" &amp;&amp; return 0
+  echo "$(date '+%F %T') $SERVICE 已停止，尝试重启..."
+  for i in $(seq 1 $MAX_RETRY); do
+    systemctl restart "$SERVICE"
+    sleep 3
+    systemctl is-active --quiet "$SERVICE" &amp;&amp; {
+      curl -s -X POST "$WEBHOOK" -H 'Content-Type: application/json' \
+        -d "{\"msgtype\":\"text\",\"text\":{\"content\":\"$SERVICE 曾宕机，已自动拉起(第${i}次)\"}}"
+      return 0
+    }
+  done
+  curl -s -X POST "$WEBHOOK" -H 'Content-Type: application/json' \
+    -d "{\"msgtype\":\"text\",\"text\":{\"content\":\"紧急：$SERVICE 重启${MAX_RETRY}次仍失败，需人工介入!\"}}"
+  return 1
+}
+
+check_and_restart
+# 更优雅：配 systemd Restart=on-failure 或 K8s livenessProbe，脚本只做兜底</code></pre>
+            <p>要点：先判断再动手（幂等）；重试 + 告警两级；提醒面试官「生产上首选 systemd/K8s 自愈，脚本兜底」是加分项。</p>
+            <span class="mnemonic">「查活、重启、重试、告警」四步；高级答案是让 K8s 探针自愈，脚本只兜底</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      style="
+        text-align: center;
+        padding: 40px 0 20px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      ">
+      <p>
+        🛠️ 运维工程师面试题总结 · 100+ 高频考点 &nbsp;|&nbsp;
+        <a
+          href="indexInterview.html"
+          style="color: var(--link-blue); text-decoration: none"
+          >返回面试题目录</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      function copyCode(btn) {
+        const pre = btn.parentElement
+        const code = pre.querySelector('code').innerText
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '已复制 ✓'
+          setTimeout(() => {
+            btn.textContent = '复制'
+          }, 1500)
+        })
+      }
+
+      // 侧边栏当前章节高亮
+      const sections = document.querySelectorAll('.section')
+      const navLinks = document.querySelectorAll('.toc li a')
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              navLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === `#${id}`,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-10% 0px -70% 0px' },
+      )
+      sections.forEach((s) => observer.observe(s))
+
+      // 移动端点击链接关闭侧边栏
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          document.querySelector('.sidebar').classList.remove('open')
+        })
+      })
+
+      document.addEventListener('pointerdown', (event) => {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(event.target) &&
+          !menuToggle.contains(event.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>
