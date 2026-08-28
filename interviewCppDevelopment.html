@@ -1,0 +1,2590 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>C++ 开发工程师面试题总结 · 高频考点速记</title>
+    <style>
+      :root {
+        --bg: #12151a;
+        --panel: #1a1f26;
+        --panel-hover: #242b34;
+        --text: #e9edf3;
+        --text-secondary: #b3bcc9;
+        --border: #313a45;
+        --accent: #94a3b8;
+        --accent-soft: rgba(148, 163, 184, 0.12);
+        --hot: #fb7185;
+        --hot-soft: rgba(251, 113, 133, 0.1);
+        --code-green: #aebfd4;
+        --link-blue: #93c5fd;
+        --warn: #ffd166;
+        --sidebar-w: 300px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3d4855;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+      .toc .hot-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--hot);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e9edf3 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-legend span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-legend .hot-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot-soft);
+        color: var(--hot);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+
+      /* Q&A Card */
+      .qa {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .qa:hover {
+        border-color: rgba(148, 163, 184, 0.3);
+      }
+      .qa.hot {
+        border-left: 3px solid var(--hot);
+        background: linear-gradient(
+          90deg,
+          var(--hot-soft) 0%,
+          var(--panel) 30%
+        );
+      }
+      .qa.hot:hover {
+        border-color: var(--hot);
+      }
+
+      .qa-q {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .qa-q .q-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+      }
+      .qa.hot .q-mark {
+        background: var(--hot-soft);
+        color: var(--hot);
+      }
+      .hot-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot);
+        color: #fff;
+        padding: 1px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+        white-space: nowrap;
+        animation: hotPulse 2s ease-in-out infinite;
+      }
+      @keyframes hotPulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .qa-a {
+        color: var(--text-secondary);
+        font-size: 0.93rem;
+      }
+      .qa-a ul,
+      .qa-a ol {
+        margin: 6px 0 6px 20px;
+      }
+      .qa-a li {
+        margin-bottom: 5px;
+      }
+      .qa-a strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .qa-a .key {
+        color: var(--code-green);
+        font-weight: 600;
+      }
+      .qa-a p {
+        margin-bottom: 8px;
+      }
+      .qa-a .mnemonic {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: rgba(174, 191, 212, 0.06);
+        border-left: 3px solid var(--code-green);
+        border-radius: 0 6px 6px 0;
+        font-size: 0.85rem;
+        color: var(--code-green);
+      }
+      .qa-a .mnemonic::before {
+        content: '🧠 速记：';
+        font-weight: 700;
+      }
+
+      pre {
+        background: #0b0e12;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        overflow-x: auto;
+        margin: 10px 0 14px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #aebfd4;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn {
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid;
+        font-size: 0.88rem;
+      }
+      .tip {
+        background: rgba(174, 191, 212, 0.06);
+        border-color: var(--code-green);
+        color: var(--text-secondary);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+        color: var(--text-secondary);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn,
+        .back-home {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        .qa {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .hot-badge {
+          background: #ccc;
+          color: #000;
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">⚙️</span> C++ 开发工程师面试指南</h2>
+        <p>高频考点 · 速记答案 · 100+ 题</p>
+      </div>
+      <ul class="toc">
+        <li><a href="indexInterview.html">← 返回面试题目录</a></li>
+        <li class="toc-section-title">语言基础与编译链接</li>
+        <li><a href="#cpp-compile"><span class="hot-dot"></span>编译链接四阶段</a></li>
+        <li><a href="#cpp-oop-c"><span class="hot-dot"></span>C 与 C++ 区别</a></li>
+        <li><a href="#cpp-std">标准版本演进</a></li>
+        <li><a href="#cpp-static"><span class="hot-dot"></span>static 四种用法</a></li>
+        <li><a href="#cpp-const"><span class="hot-dot"></span>const 用法大全</a></li>
+        <li><a href="#cpp-constexpr">const vs constexpr</a></li>
+        <li><a href="#cpp-define-vs-const">#define vs const/inline</a></li>
+        <li><a href="#cpp-extern"><span class="hot-dot"></span>extern "C" 的作用</a></li>
+        <li><a href="#cpp-inline"><span class="hot-dot"></span>inline 与宏函数</a></li>
+
+        <li class="toc-section-title">数据类型与内存模型</li>
+        <li><a href="#cpp-memory-layout"><span class="hot-dot"></span>程序内存分区</a></li>
+        <li><a href="#cpp-sizeof"><span class="hot-dot"></span>sizeof 空类与虚类</a></li>
+        <li><a href="#cpp-align"><span class="hot-dot"></span>内存对齐</a></li>
+        <li><a href="#cpp-biglittle">大小端判断</a></li>
+        <li><a href="#cpp-int-overflow">整型溢出与隐式转换</a></li>
+        <li><a href="#cpp-float"><span class="hot-dot"></span>浮点数精度</a></li>
+        <li><a href="#cpp-char-types">char* / char[] / string</a></li>
+        <li><a href="#cpp-union-struct"><span class="hot-dot"></span>struct vs class vs union</a></li>
+        <li><a href="#cpp-enum">enum vs enum class</a></li>
+
+        <li class="toc-section-title">指针与引用</li>
+        <li><a href="#cpp-ptr-ref"><span class="hot-dot"></span>指针 vs 引用</a></li>
+        <li><a href="#cpp-wild"><span class="hot-dot"></span>野指针与悬垂指针</a></li>
+        <li><a href="#cpp-smart-raw">为什么还要学裸指针</a></li>
+        <li><a href="#cpp-ptr-array">指针数组 vs 数组指针</a></li>
+        <li><a href="#cpp-const-ptr"><span class="hot-dot"></span>const 与指针组合</a></li>
+        <li><a href="#cpp-func-ptr">函数指针与回调</a></li>
+        <li><a href="#cpp-this">this 指针</a></li>
+        <li><a href="#cpp-null">NULL vs nullptr</a></li>
+        <li><a href="#cpp-void-star">void* 与类型强转</a></li>
+
+        <li class="toc-section-title">面向对象基础</li>
+        <li><a href="#cpp-ctor"><span class="hot-dot"></span>构造函数种类</a></li>
+        <li><a href="#cpp-copy"><span class="hot-dot"></span>深拷贝 vs 浅拷贝</a></li>
+        <li><a href="#cpp-dtor"><span class="hot-dot"></span>析构与虚析构</a></li>
+        <li><a href="#cpp-explicit">explicit 关键字</a></li>
+        <li><a href="#cpp-init-list"><span class="hot-dot"></span>初始化列表</a></li>
+        <li><a href="#cpp-static-member">静态成员</a></li>
+        <li><a href="#cpp-friend">友元</a></li>
+        <li><a href="#cpp-obj-life">对象生命周期</a></li>
+
+        <li class="toc-section-title">封装继承多态</li>
+        <li><a href="#cpp-three"><span class="hot-dot"></span>三大特性</a></li>
+        <li><a href="#cpp-inherit">继承方式与访问权限</a></li>
+        <li><a href="#cpp-diamond"><span class="hot-dot"></span>菱形继承与虚继承</a></li>
+        <li><a href="#cpp-poly"><span class="hot-dot"></span>多态实现原理</a></li>
+        <li><a href="#cpp-virtual"><span class="hot-dot"></span>虚函数 vtable 机制</a></li>
+        <li><a href="#cpp-virtual-func">哪些函数不能是虚函数</a></li>
+        <li><a href="#cpp-override">override / final</a></li>
+        <li><a href="#cpp-rtti">dynamic_cast 与 RTTI</a></li>
+        <li><a href="#cpp-hiding"><span class="hot-dot"></span>隐藏 vs 重写 vs 重载</a></li>
+
+        <li class="toc-section-title">内存管理</li>
+        <li><a href="#cpp-new-malloc"><span class="hot-dot"></span>new vs malloc</a></li>
+        <li><a href="#cpp-new-fail">new 失败处理</a></li>
+        <li><a href="#cpp-memleak"><span class="hot-dot"></span>内存泄漏检测预防</a></li>
+        <li><a href="#cpp-overflow">栈溢出 vs 堆溢出</a></li>
+        <li><a href="#cpp-allocators">内存池原理</a></li>
+        <li><a href="#cpp-raii"><span class="hot-dot"></span>RAII 思想</a></li>
+        <li><a href="#cpp-move-semantics"><span class="hot-dot"></span>左值右值与移动语义</a></li>
+        <li><a href="#cpp-forward"><span class="hot-dot"></span>完美转发</a></li>
+
+        <li class="toc-section-title">智能指针</li>
+        <li><a href="#cpp-smart-intro"><span class="hot-dot"></span>为什么需要智能指针</a></li>
+        <li><a href="#cpp-unique-ptr"><span class="hot-dot"></span>unique_ptr</a></li>
+        <li><a href="#cpp-shared-ptr"><span class="hot-dot"></span>shared_ptr 原理</a></li>
+        <li><a href="#cpp-weak-ptr"><span class="hot-dot"></span>weak_ptr 与循环引用</a></li>
+        <li><a href="#cpp-auto-ptr">auto_ptr 为何废弃</a></li>
+        <li><a href="#cpp-make-shared"><span class="hot-dot"></span>make_shared vs new</a></li>
+        <li><a href="#cpp-smart-thread">智能指针与多线程</a></li>
+
+        <li class="toc-section-title">STL 容器与算法</li>
+        <li><a href="#cpp-stl-comp"><span class="hot-dot"></span>STL 六大组件</a></li>
+        <li><a href="#cpp-vector"><span class="hot-dot"></span>vector 扩容机制</a></li>
+        <li><a href="#cpp-list"><span class="hot-dot"></span>vector vs list</a></li>
+        <li><a href="#cpp-map"><span class="hot-dot"></span>map vs unordered_map</a></li>
+        <li><a href="#cpp-iterator"><span class="hot-dot"></span>迭代器失效</a></li>
+        <li><a href="#cpp-erase">erase-remove 惯用法</a></li>
+        <li><a href="#cpp-string">string 与 COW</a></li>
+        <li><a href="#cpp-emplace"><span class="hot-dot"></span>emplace_back vs push_back</a></li>
+        <li><a href="#cpp-sort">std::sort 严格弱序陷阱</a></li>
+        <li><a href="#cpp-deque">deque 与 priority_queue</a></li>
+
+        <li class="toc-section-title">模板与泛型</li>
+        <li><a href="#cpp-template">函数模板 vs 类模板</a></li>
+        <li><a href="#cpp-template-instant"><span class="hot-dot"></span>模板实例化与代码膨胀</a></li>
+        <li><a href="#cpp-specialization">特化与偏特化</a></li>
+        <li><a href="#cpp-sfinae">SFINAE 与 constexpr if</a></li>
+        <li><a href="#cpp-typedef">using vs typedef</a></li>
+        <li><a href="#cpp-concepts">C++20 concepts</a></li>
+
+        <li class="toc-section-title">现代 C++ 新特性</li>
+        <li><a href="#cpp-auto"><span class="hot-dot"></span>auto 与 decltype</a></li>
+        <li><a href="#cpp-lambda"><span class="hot-dot"></span>lambda 表达式</a></li>
+        <li><a href="#cpp-bind">std::function 与 std::bind</a></li>
+        <li><a href="#cpp-optional">optional / variant / any</a></li>
+        <li><a href="#cpp-string-view"><span class="hot-dot"></span>string_view 悬垂陷阱</a></li>
+        <li><a href="#cpp-structured">结构化绑定</a></li>
+        <li><a href="#cpp-coro">协程与 ranges 简介</a></li>
+
+        <li class="toc-section-title">并发编程</li>
+        <li><a href="#cpp-thread">std::thread 基础</a></li>
+        <li><a href="#cpp-mutex"><span class="hot-dot"></span>mutex 与锁守卫</a></li>
+        <li><a href="#cpp-deadlock"><span class="hot-dot"></span>死锁四条件</a></li>
+        <li><a href="#cpp-condvar"><span class="hot-dot"></span>条件变量与虚假唤醒</a></li>
+        <li><a href="#cpp-atomic"><span class="hot-dot"></span>atomic 与 CAS</a></li>
+        <li><a href="#cpp-memory-order">内存序 memory_order</a></li>
+        <li><a href="#cpp-call-once">call_once 单例</a></li>
+        <li><a href="#cpp-future">future / async</a></li>
+
+        <li class="toc-section-title">场景与调优</li>
+        <li><a href="#cpp-debug-crash"><span class="hot-dot"></span>段错误排查</a></li>
+        <li><a href="#cpp-obj-size-optim">空类优化 EBO</a></li>
+        <li><a href="#cpp-perf"><span class="hot-dot"></span>性能优化思路</a></li>
+        <li><a href="#cpp-code-review">Code Review 关注点</a></li>
+        <li><a href="#cpp-crossplat">跨平台与编译器差异</a></li>
+        <li><a href="#cpp-read-big">如何读大型项目</a></li>
+
+        <li class="toc-section-title">手写代码题</li>
+        <li><a href="#cpp-write-string"><span class="hot-dot"></span>手写 String 类</a></li>
+        <li><a href="#cpp-write-singleton"><span class="hot-dot"></span>线程安全单例</a></li>
+        <li><a href="#cpp-write-sharedptr">手写简版 shared_ptr</a></li>
+        <li><a href="#cpp-write-vector">手写简版 vector</a></li>
+        <li><a href="#cpp-write-raii">手写 RAII 锁守卫</a></li>
+        <li><a href="#cpp-write-prodcons"><span class="hot-dot"></span>生产者消费者</a></li>
+        <li><a href="#cpp-write-lru"><span class="hot-dot"></span>LRU 缓存</a></li>
+        <li><a href="#cpp-write-observer">观察者模式</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <a class="back-home" href="indexInterview.html">← 返回面试题目录</a>
+
+      <header class="hero">
+        <span class="hero-badge">开发方向 · 面试题库</span>
+        <h1>C++ 开发工程师面试题总结</h1>
+        <p>
+          覆盖编译链接、内存模型、指针引用、面向对象、虚函数机制、智能指针、STL、模板泛型、现代 C++ 新特性、并发编程与手写代码题，答案均为「要点 + 速记口诀」易背诵格式。
+        </p>
+        <div class="hero-legend">
+          <span>📚 104 道高频题</span>
+          <span>🔥 <span class="hot-tag">53 道必考题</span></span>
+          <span>🧠 每题附速记口诀</span>
+          <span>⚙️ 含手写代码题</span>
+        </div>
+      </header>
+
+      <section class="section" id="cpp-ch1">
+        <h2><span class="num">01</span>语言基础与编译链接</h2>
+
+        <div class="qa hot" id="cpp-compile">
+          <div class="qa-q"><span class="q-mark">Q1</span>C++ 从源码到可执行文件经历哪几个阶段？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>四阶段：<strong>预处理 → 编译 → 汇编 → 链接</strong>。</p>
+            <ul>
+              <li><strong>预处理</strong>（gcc -E）：处理 <span class="key">#include / #define / #ifdef</span>，展开宏与头文件，生成 <span class="key">.i</span> 文件</li>
+              <li><strong>编译</strong>（-S）：词法/语法/语义分析 + 优化，生成汇编代码 <span class="key">.s</span></li>
+              <li><strong>汇编</strong>（-c）：汇编代码转机器码，生成目标文件 <span class="key">.o</span>（含符号表、重定位信息）</li>
+              <li><strong>链接</strong>：合并各 .o 与库，<strong>符号解析 + 重定位</strong>，生成可执行文件</li>
+            </ul>
+            <p>常见链接错误：<span class="key">undefined reference</span>（符号未定义）、<span class="key">multiple definition</span>（重复定义，头文件里定义非 inline 函数/变量是典型原因）。</p>
+            <span class="mnemonic">「预编汇链」四部曲；头文件只放声明，定义放 .cpp 就不重定义</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-oop-c">
+          <div class="qa-q"><span class="q-mark">Q2</span>C 和 C++ 有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>C</th><th>C++</th></tr>
+                <tr><td>范式</td><td>面向过程</td><td>面向过程 + <strong>面向对象 + 泛型</strong></td></tr>
+                <tr><td>类型检查</td><td>较弱（void* 随意转）</td><td><strong>更严格</strong>（强类型、函数必须声明）</td></tr>
+                <tr><td>内存</td><td>malloc/free</td><td>new/delete + <strong>智能指针 RAII</strong></td></tr>
+                <tr><td>函数</td><td>不支持重载</td><td><strong>支持重载</strong>（名字修饰 name mangling）</td></tr>
+                <tr><td>标准库</td><td>精简（stdio/stdlib）</td><td><strong>STL</strong> 容器算法流</td></tr>
+                <tr><td>异常</td><td>无（错误码/setjmp）</td><td>try/catch 异常机制</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>C++ 几乎<strong>完全兼容</strong> C 语法，但思维范式不同</li>
+              <li>C++ 依旧保留高性能系统级能力，同时提供<strong>抽象不损失性能</strong>（zero-overhead）</li>
+            </ul>
+            <span class="mnemonic">「C 是刀，C++ 是瑞士军刀」：面向过程升级为 OOP + 泛型</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-std">
+          <div class="qa-q"><span class="q-mark">Q3</span>C++ 标准版本如何演进？各版本核心特性？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>C++98/03</strong>：第一个正式标准；STL、string、auto_ptr</li>
+              <li><strong>C++11（现代 C++ 起点）</strong>：auto、lambda、智能指针、右值引用/移动语义、nullptr、range-for、thread、constexpr、enum class</li>
+              <li><strong>C++14</strong>：小版本修补——泛型 lambda、auto 返回值、make_unique</li>
+              <li><strong>C++17</strong>：结构化绑定、if constexpr、optional/variant/string_view、并行算法、折叠表达式</li>
+              <li><strong>C++20（四大件）</strong>：<strong>concepts、ranges、coroutines、modules</strong>，还有三路比较 &lt;=&gt;</li>
+            </ul>
+            <span class="mnemonic">「98 打底，11 革命，14 修补，17 实用，20 四大件」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-static">
+          <div class="qa-q"><span class="q-mark">Q4</span>static 关键字有哪几种用法？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>静态局部变量</strong>：存放在<strong>全局/静态区</strong>，只初始化一次，函数退出仍保留值（C++11 保证初始化线程安全）</li>
+              <li><strong>静态全局变量/函数</strong>：<strong>内部链接</strong>，仅本编译单元（.cpp）可见，避免命名冲突</li>
+              <li><strong>类静态成员变量</strong>：所有对象共享一份，须在类外定义（C++17 可 inline 声明）</li>
+              <li><strong>类静态成员函数</strong>：无 this 指针，只能访问静态成员，可用「类名::」直接调用</li>
+            </ul>
+            <span class="mnemonic">「局部保命、全局限本、成员共享、函数无 this」四用法</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-const">
+          <div class="qa-q"><span class="q-mark">Q5</span>const 关键字有哪些用法？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>修饰变量</strong>：只读，定义时必须初始化</li>
+              <li><strong>修饰指针</strong>：指针常量与常量指针（详见指针章节，口诀「左定值右定针」）</li>
+              <li><strong>修饰函数参数</strong>：<span class="key">const std::string&amp;</span> 传参避免拷贝又防修改</li>
+              <li><strong>修饰成员函数</strong>：不修改成员变量（mutable 例外），const 对象只能调 const 函数</li>
+              <li><strong>修饰返回值</strong>：防止返回值被当左值修改</li>
+            </ul>
+            <span class="mnemonic">「变针参函返」五处 const；成员函数尾 const = 只读承诺</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-constexpr">
+          <div class="qa-q"><span class="q-mark">Q6</span>const 和 constexpr 有什么区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>const</strong>：运行期只读承诺——「初始化后不能改」，但初始值可以是运行期变量</li>
+              <li><strong>constexpr</strong>：编译期常量/常量表达式——「编译期就能算出」，可用于数组大小、模板参数</li>
+              <li><strong>constexpr 函数</strong>：传编译期常量则在编译期求值（可当内联用），传运行期变量退化为普通函数</li>
+            </ul>
+            <span class="mnemonic">「const 只读，constexpr 编译期」；要进模板/数组维度必须 constexpr</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-define-vs-const">
+          <div class="qa-q"><span class="q-mark">Q7</span>#define、const、inline 各适合什么场景？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>#define 宏</strong>：预处理文本替换——<strong>无类型检查、不进符号表、有副作用陷阱</strong>（如 MAX(i++, j) 展开出错），仅适合条件编译与简单常量</li>
+              <li><strong>const/constexpr</strong>：有类型、有作用域、可调试，定义常量首选</li>
+              <li><strong>inline 函数 / 模板</strong>：替代宏函数，有类型检查且避免副作用</li>
+            </ul>
+            <span class="mnemonic">「常量用 const，函数用 inline，宏只留给条件编译」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-extern">
+          <div class="qa-q"><span class="q-mark">Q8</span>extern "C" 的作用是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>C++ 支持函数重载，编译器会对函数名做<strong>名字修饰（name mangling）</strong>（如 <span class="key">foo(int)</span> 变成 <span class="key">_Z3fooi</span>）；C 不修饰，直接用原名。</p>
+            <ul>
+              <li><strong>extern "C"</strong>：告诉 C++ 编译器「这段代码按 C 方式修饰符号」——让 C++ 能<strong>链接 C 编译的库</strong>（反之亦然）</li>
+              <li>典型用法：C 头文件中被 C/C++ 共用时加条件宏包裹</li>
+              <li>被 extern "C" 修饰的函数<strong>不能重载</strong>（C 无重载）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>#ifdef __cplusplus
+extern "C" {        // C++ 编译器才认识这段
+#endif
+void c_api_init();  // 按 C 规则生成符号，不参与重载
+#ifdef __cplusplus
+}
+#endif</code></pre>
+            <span class="mnemonic">「C++ 名字会变装，extern "C" 卸妆再链接」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-inline">
+          <div class="qa-q"><span class="q-mark">Q9</span>inline 关键字的本质是什么？一定会被内联吗？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>本质是对链接器的建议</strong>（ODR 豁免）：允许多个编译单元中出现同一函数定义而不报重复定义</li>
+              <li>是否真正<strong>内联展开</strong>由编译器决定——递归、循环、函数体大都不展开；优化选项（-O2）也影响</li>
+              <li>类内定义的成员函数<strong>隐式 inline</strong></li>
+              <li>现代 C++ 更推荐 <span class="key">inline</span> 表达「头文件可安全重复定义」（如 inline 变量、模板）</li>
+            </ul>
+            <span class="mnemonic">「inline 是建议不是命令；防重定义比内联更重要」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch2">
+        <h2><span class="num">02</span>数据类型与内存模型</h2>
+
+        <div class="qa hot" id="cpp-memory-layout">
+          <div class="qa-q"><span class="q-mark">Q10</span>C++ 程序的内存分区是怎样的？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>代码区（text）</strong>：机器指令，只读共享</li>
+              <li><strong>全局/静态区</strong>：全局变量、static 变量；C++11 后细分为<strong>已初始化 .data 与未初始化 .bss</strong>（bss 不占文件体积）</li>
+              <li><strong>常量区</strong>：字符串字面量等只读数据（rodata）</li>
+              <li><strong>堆（heap）</strong>：new/malloc 手动管理，<strong>向高地址增长</strong>，分配慢但空间大</li>
+              <li><strong>栈（stack）</strong>：局部变量、函数参数、返回地址，<strong>向低地址增长</strong>，自动回收、快但有限（默认 1~8MB）</li>
+            </ul>
+            <span class="mnemonic">「代码、全局、常量、堆、栈」五区；栈快而小，堆大而慢</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-sizeof">
+          <div class="qa-q"><span class="q-mark">Q11</span>sizeof(空类)、sizeof(含虚函数的类) 是多少？为什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>空类 sizeof = 1</strong>：保证每个对象有<strong>唯一地址</strong>（两个对象不能同址）</li>
+              <li><strong>含虚函数的类 = 指针大小</strong>（64 位为 8）：对象里存一个 <span class="key">vptr</span> 指向虚函数表</li>
+              <li><strong>继承空基类</strong>：空基类优化（EBO）下可为 0</li>
+              <li>静态成员、成员函数不占对象空间；成员函数在代码区共享</li>
+            </ul>
+            <span class="mnemonic">「空类为 1 保地址，虚类多一个 vptr 8 字节」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-align">
+          <div class="qa-q"><span class="q-mark">Q12</span>什么是内存对齐？为什么需要？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>规则</strong>：成员偏移须是其自身对齐数（min(成员大小, #pragma pack 值)）的整数倍；结构体总大小是最大对齐数的整数倍</li>
+              <li><strong>为什么</strong>：CPU 按字长（如 8 字节）取数，<strong>未对齐访问</strong>在 x86 上变慢、在 ARM 上直接崩溃；对齐还能保证原子访问</li>
+              <li><strong>优化技巧</strong>：按成员大小<strong>从大到小排列</strong>可减少填充</li>
+              <li><span class="key">#pragma pack(1)</span> 取消填充——网络协议/文件格式场景用，代价是访问变慢</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>struct Bad {           // sizeof = 16（填充 6+2 字节）
+    char  c;           // 偏移 0，填充 1~7
+    double d;          // 偏移 8
+    short s;           // 偏移 16，尾部填充 2
+};
+struct Good {          // sizeof = 16 但只填充 1 字节
+    double d;
+    short  s;
+    char   c;          // 尾部填充 5（保证数组连续时也对齐）
+};</code></pre>
+            <span class="mnemonic">「对齐是 CPU 的口味」：成员大到小排，体积更紧凑</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-biglittle">
+          <div class="qa-q"><span class="q-mark">Q13</span>如何判断机器是大端还是小端？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>小端</strong>：低字节放低地址（x86、主流 ARM 默认）；<strong>大端</strong>：高字节放低地址（网络字节序）</li>
+              <li>判断：用指针或联合体看首字节</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>int x = 1;
+bool little = *(char*)&amp;x == 1;  // 首字节是 1 → 小端</code></pre>
+            <ul>
+              <li>网络传输用 <span class="key">htonl/ntohl</span> 系列统一为大端（网络字节序）</li>
+            </ul>
+            <span class="mnemonic">「小端低低、大端高低」；x86 全家都是小端</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-int-overflow">
+          <div class="qa-q"><span class="q-mark">Q14</span>整型溢出与隐式转换有哪些坑？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>有符号溢出是未定义行为（UB）</strong>，编译器可能直接优化掉你的溢出检查</li>
+              <li><strong>无符号回绕</strong>是良定义的：<span class="key">0u - 1</span> 得到 4294967295</li>
+              <li>经典坑：<strong>无符号与有符号混算会整体提升为无符号</strong>，<span class="key">for (unsigned i = n-1; i &gt;= 0; --i)</span> 永远循环</li>
+              <li>隐式转换链：bool → char → int → long → double，<strong>窄化转换</strong>丢精度（列表初始化 {} 会直接报错，= 不报）</li>
+              <li>安全写法：溢出前先判断（如 <span class="key">a &gt; INT_MAX - b</span>），或用更宽类型</li>
+            </ul>
+            <span class="mnemonic">「有符号溢出是 UB，无符号回绕是规定，混合运算变无符号」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-float">
+          <div class="qa-q"><span class="q-mark">Q15</span>为什么浮点数不能用 == 直接比较？怎么判断 NaN？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>浮点数按 IEEE754 用<strong>二进制科学计数法</strong>存储，0.1 无法精确表示（0.1 + 0.2 != 0.3）</li>
+              <li>正确比较：差值小于容差 <span class="key">fabs(a - b) &lt; 1e-9</span>；同数量级才可比，量级悬殊要相对误差</li>
+              <li><strong>NaN 不等于任何值包括自己</strong>：<span class="key">x != x</span> 为真即 NaN（标准库 <span class="key">std::isnan</span> 更清晰）</li>
+              <li>±0 相等但符号位不同；inf 参与运算的规则要了解</li>
+            </ul>
+            <span class="mnemonic">「浮点无精确，比差不比值；NaN 六亲不认连自己都不等」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-char-types">
+          <div class="qa-q"><span class="q-mark">Q16</span>char*、char[]、std::string 有什么区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>char* p = "abc"</strong>：指向常量区字符串，<strong>修改 p[0] 是 UB</strong>（应声明为 const char*）</li>
+              <li><strong>char a[] = "abc"</strong>：数组在<strong>栈上拷贝</strong>一份，内容可修改，sizeof = 4（含 '\0'）</li>
+              <li><strong>std::string</strong>：自动管理内存、可变长、含长度字段（O(1) 取 size），c_str() 暴露 C 接口</li>
+              <li>string 内部小字符串优化（SSO）：短字符串直接存对象内，不分配堆</li>
+            </ul>
+            <span class="mnemonic">「字面量在常量区别改，数组是拷贝随便改，string 全自动」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-union-struct">
+          <div class="qa-q"><span class="q-mark">Q17</span>struct 和 class 有什么区别？union 是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>唯一语法区别</strong>：struct 默认 public 继承与成员，class 默认 private</li>
+              <li><strong>习惯约定</strong>：struct 表示纯数据聚合（POD），class 表示有行为封装的对象</li>
+              <li><strong>union</strong>：所有成员<strong>共享同一块内存</strong>，大小 = 最大成员；同一时刻只有一个成员有效；带构造函数的成员让 union 变复杂（C++11 起需手动管理生命周期）</li>
+              <li>union 典型场景：协议字段复用、类型双关（但严格来说双关应走 memcpy）</li>
+            </ul>
+            <span class="mnemonic">「struct 默认公，class 默认私；union 共床不同房」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-enum">
+          <div class="qa-q"><span class="q-mark">Q18</span>enum 和 enum class 有什么区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>旧 enum</strong>：枚举值泄漏到外层作用域、隐式转 int、无法指定底层类型</li>
+              <li><strong>enum class（C++11）</strong>：作用域限定（<span class="key">Color::Red</span>）、<strong>不隐式转整型</strong>、可指定底层类型（enum class Color : uint8_t）</li>
+              <li>新代码一律用 enum class，防命名冲突与误转换</li>
+            </ul>
+            <span class="mnemonic">「枚举类有三宝：限作用域、禁隐转、定底层」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch3">
+        <h2><span class="num">03</span>指针与引用</h2>
+
+        <div class="qa hot" id="cpp-ptr-ref">
+          <div class="qa-q"><span class="q-mark">Q19</span>指针和引用的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>指针</th><th>引用</th></tr>
+                <tr><td>本质</td><td>存地址的变量（占 8 字节）</td><td>对象的<strong>别名</strong>（语法层面不是对象）</td></tr>
+                <tr><td>可否为空</td><td>可 nullptr</td><td><strong>必须初始化且不能为空</strong></td></tr>
+                <tr><td>可否重指向</td><td>可改变指向</td><td><strong>绑定后不可换目标</strong></td></tr>
+                <tr><td>多级</td><td>有多级指针 int**</td><td>无「引用的引用」</td></tr>
+                <tr><td>运算</td><td>可 ++/-- 做指针算术</td><td>无算术</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>底层实现上引用通常也是指针，但<strong>语义上编译器可优化</strong></li>
+              <li>选择：<strong>可空用指针、不可空用引用</strong>；输出参数两者皆可，现代 C++ 倾向引用</li>
+            </ul>
+            <span class="mnemonic">「指针自由可为空，引用忠心不变节」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-wild">
+          <div class="qa-q"><span class="q-mark">Q20</span>什么是野指针和悬垂指针？如何避免？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>野指针</strong>：未初始化的指针，指向随机地址——<strong>定义指针必须立即初始化</strong>（nullptr）</li>
+              <li><strong>悬垂指针（dangling）</strong>：指向的内存已被释放（delete 后继续用、返回局部变量地址、容器扩容后旧迭代器）</li>
+              <li><strong>避免三板斧</strong>：① delete 后置 nullptr；② 不返回局部对象地址；③ 用<strong>智能指针 + RAII</strong> 让所有权显式化</li>
+              <li>工具：AddressSanitizer（-fsanitize=address）可当场抓到 use-after-free</li>
+            </ul>
+            <span class="mnemonic">「未初始化是野，释放后是垂；置空、别返回局部、智能指针保平安」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-smart-raw">
+          <div class="qa-q"><span class="q-mark">Q21</span>有了智能指针，为什么还要懂裸指针？</div>
+          <div class="qa-a">
+            <ul>
+              <li>智能指针<strong>本身内部就是裸指针</strong>，性能热点（游戏引擎、嵌入式）常刻意用裸指针 + 明确生命周期</li>
+              <li>大量<strong>历史代码库与 C 接口</strong>（操作系统、驱动、第三方库）全是裸指针</li>
+              <li><strong>非拥有场景</strong>：观察指针（不管理生命周期）用裸指针或引用更轻量、语义更清楚</li>
+              <li>面试考察的本质：内存模型与生命周期理解</li>
+            </ul>
+            <span class="mnemonic">「拥有用智能，观察用裸/引用」——所有权思维</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-ptr-array">
+          <div class="qa-q"><span class="q-mark">Q22</span>指针数组与数组指针的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>int* a[10]</strong>：指针数组——<strong>数组</strong>，10 个 int* 元素</li>
+              <li><strong>int (*a)[10]</strong>：数组指针——<strong>指针</strong>，指向「含 10 个 int 的数组」（常用作二维数组参数）</li>
+              <li>读法：跟优先级走，<span class="key">[]</span> 优先级高于 <span class="key">*</span>，括号改变结合</li>
+              <li>同理区分：<strong>函数指针 int (*f)(int)</strong> 与指针函数 int* f(int)</li>
+            </ul>
+            <span class="mnemonic">「名先跟谁就是谁」：先跟 [] 是数组，先跟 * 是指针</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-const-ptr">
+          <div class="qa-q"><span class="q-mark">Q23</span>const int*、int* const、const int* const 分别是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>const int* p</strong>（常量指针）：指向常量的指针，<strong>不能通过 p 改值</strong>，但 p 可换指向</li>
+              <li><strong>int* const p</strong>（指针常量）：指针本身是常量，<strong>指向不能换</strong>，值可通过 p 修改</li>
+              <li><strong>const int* const p</strong>：两者都锁死</li>
+              <li>记忆法：<span class="key">const 在 * 左边修饰值，在 * 右边修饰指针</span></li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>int a = 1, b = 2;
+const int* p1 = &amp;a;   // *p1 只读，p1 可改
+int* const p2 = &amp;a;   // p2 只读，*p2 可改
+const int* const p3 = &amp;a;  // 全只读
+p1 = &amp;b;              // OK
+// p2 = &amp;b;           // 编译错误</code></pre>
+            <span class="mnemonic">「左定值、右定针、左右都定全锁死」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-func-ptr">
+          <div class="qa-q"><span class="q-mark">Q24</span>函数指针是什么？回调怎么写？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>函数指针</strong>：指向函数入口地址的变量，用于把「行为」当参数传</li>
+              <li>回调三件套：typedef 简化声明 → 注册 → 触发时调用</li>
+              <li>现代替代：<strong>std::function + lambda</strong> 类型安全且能携带状态</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>void onEvent(int code) { /* ... */ }
+
+void registerCallback(void (*cb)(int)) { cb(42); }
+
+int main() {
+    registerCallback(onEvent);          // C 风格
+    registerCallback([](int c) {        // lambda 隐式转函数指针
+        // 无捕获 lambda 可转
+    });
+}</code></pre>
+            <span class="mnemonic">「函数名即地址，回调传行为」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-this">
+          <div class="qa-q"><span class="q-mark">Q25</span>this 指针是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>隐含于每个非静态成员函数</strong>的指针参数，指向调用者对象，编译器把 <span class="key">obj.f()</span> 转成 <span class="key">f(&amp;obj)</span></li>
+              <li><strong>静态成员函数没有 this</strong>，因此不能访问非静态成员</li>
+              <li>const 成员函数里 this 是 <span class="key">const T*</span>，这就是它只读的原因</li>
+              <li>*this 解引用得到对象本身；返回 *this 支持链式调用</li>
+            </ul>
+            <span class="mnemonic">「谁调用，this 指谁；static 无 this」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-null">
+          <div class="qa-q"><span class="q-mark">Q26</span>NULL 和 nullptr 的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li>NULL 在 C++ 里是<strong>整数 0</strong>：重载 <span class="key">f(int)</span> 与 <span class="key">f(char*)</span> 时，f(NULL) 会调 int 版本——违背直觉</li>
+              <li><strong>nullptr 是独立类型 std::nullptr_t</strong>，只能转成指针类型，重载解析永远选指针版本</li>
+              <li>C++11 起一律用 nullptr，代码里出现 NULL 视为待改进</li>
+            </ul>
+            <span class="mnemonic">「NULL 是 0 会走错门，nullptr 是真空指针」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-void-star">
+          <div class="qa-q"><span class="q-mark">Q27</span>void* 有什么用？C++ 的四种 cast？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>void*</strong>：通用指针——可存任何地址但不能解引用/做指针算术，是 C 风格接口（malloc、线程参数）的通用货币</li>
+              <li><strong>static_cast</strong>：普通相关类型转换（int→double、void*→T*），编译期检查</li>
+              <li><strong>dynamic_cast</strong>：多态类型向下安全转换，失败返回 nullptr（指针）或抛异常（引用）</li>
+              <li><strong>const_cast</strong>：增删 const（小心 UB）</li>
+              <li><strong>reinterpret_cast</strong>：位模式重解释，最危险，只用于底层</li>
+            </ul>
+            <span class="mnemonic">「静态算术、动态多态、const 管 const、reinterpret 重解释」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch4">
+        <h2><span class="num">04</span>面向对象基础</h2>
+
+        <div class="qa hot" id="cpp-ctor">
+          <div class="qa-q"><span class="q-mark">Q28</span>构造函数有哪几种？默认构造、拷贝构造、移动构造的触发时机？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>默认构造</strong>：无参构造；成员有默认值初始化时用</li>
+              <li><strong>拷贝构造</strong>：<span class="key">T(const T&amp;)</span>——以值传参、以值返回、用已有对象初始化新对象时触发</li>
+              <li><strong>移动构造</strong>：<span class="key">T(T&amp;&amp;)</span>（C++11）——用<strong>将亡值</strong>（std::move 结果、临时对象）初始化时触发，<strong>窃取资源不深拷贝</strong></li>
+              <li><strong>委托构造</strong>：C++11 允许构造函数调用另一个构造函数复用逻辑</li>
+              <li>编译器生成规则：<strong>Rule of Five</strong>——你定义了析构/拷贝/移动任一个，其余默认版本通常被删除或不合适，需一起处理</li>
+            </ul>
+            <span class="mnemonic">「值传递触发拷贝，move 触发移动」；Rule of Five 五件套一起管</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-copy">
+          <div class="qa-q"><span class="q-mark">Q29</span>深拷贝与浅拷贝的区别？会带来什么问题？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>浅拷贝</strong>：逐位复制指针值——两个对象指向<strong>同一块堆内存</strong></li>
+              <li>后果：析构时<strong>双重释放</strong>崩溃；一方修改另一方跟着变</li>
+              <li><strong>深拷贝</strong>：复制指针的同时<strong>再申请内存复制内容</strong>，两对象完全独立</li>
+              <li>编译器默认生成的拷贝构造/赋值是浅拷贝；<strong>类持有裸资源（指针/文件句柄）时必须自定义</strong>（或直接用 string/vector/智能指针，让成员自己管自己——Rule of Zero）</li>
+            </ul>
+            <span class="mnemonic">「浅拷共享必双删，深拷独立各管各」；能 Rule of Zero 就别 Rule of Five</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-dtor">
+          <div class="qa-q"><span class="q-mark">Q30</span>为什么基类析构函数要声明为虚函数？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>用<strong>基类指针 delete 派生类对象</strong>时：析构非虚 → 只调基类析构 → <strong>派生类新增资源泄漏</strong>（UB）</li>
+              <li>虚析构 → 从最派生类开始<strong>逐层正确析构</strong></li>
+              <li>经验法则：<strong>类要作为基类被多态使用 → 析构函数 public virtual；不作为基类 → 析构不虚且类可加 final</strong></li>
+              <li>protected 非虚析构：允许派生但不允许通过基类指针删除（接口隔离场景）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class Base {
+public:
+    virtual ~Base() = default;  // 基类必备
+};
+class Derived : public Base {
+    std::vector&lt;int&gt; data;       // 100MB
+};
+Base* p = new Derived;
+delete p;   // 虚析构：先 ~Derived 再 ~Base，data 正确释放</code></pre>
+            <span class="mnemonic">「基类析构必虚，否则 delete 半途而废」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-explicit">
+          <div class="qa-q"><span class="q-mark">Q31</span>explicit 关键字有什么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>禁止隐式转换</strong>：单参构造函数默认可用作隐式转换符，容易造成意外构造</li>
+              <li>如 <span class="key">void f(MyStr s)</span>，f("abc") 能编译——若 MyStr 构造加了 explicit 就必须显式 f(MyStr("abc"))</li>
+              <li>现代建议：<strong>单参构造一律加 explicit</strong>（C++20 起甚至推荐多参构造也加）</li>
+            </ul>
+            <span class="mnemonic">「explicit 挡住隐式换乘」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-init-list">
+          <div class="qa-q"><span class="q-mark">Q32</span>为什么用初始化列表？成员初始化顺序由什么决定？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>必须在列表初始化的成员</strong>：const 成员、引用成员、无默认构造的成员、基类构造</li>
+              <li><strong>效率</strong>：列表直接<strong>构造</strong>；构造体内赋值是「先默认构造再赋值」两步，多一次开销</li>
+              <li><strong>顺序陷阱</strong>：初始化顺序由<strong>成员声明顺序</strong>决定，与列表书写顺序无关——列表里用前一个成员初始化后一个时要小心</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class T {
+    int a;
+    int b;
+public:
+    T(int v) : b(v), a(b) {}   // 危险！实际先 a(b)，此时 b 未初始化
+};</code></pre>
+            <span class="mnemonic">「声明定顺序，列表只是名单」；const/引用/无默认构造必须走列表</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-static-member">
+          <div class="qa-q"><span class="q-mark">Q33</span>类的静态成员有什么特点？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>静态成员变量</strong>：类外共享一份，须类外定义（C++17 可 <span class="key">inline static</span> 在类内定义）</li>
+              <li><strong>静态成员函数</strong>：无 this，只能访问静态成员；<span class="key">类名::函数()</span> 直接调用</li>
+              <li>静态成员<strong>不占对象空间</strong>，不计入 sizeof</li>
+              <li>用途：对象计数器、全局单例句柄、工厂注册表</li>
+            </ul>
+            <span class="mnemonic">「静态成员类共有，函数没有 this 手」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-friend">
+          <div class="qa-q"><span class="q-mark">Q34</span>友元（friend）是什么？友元函数、友元类、友元成员函数？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>友元函数</strong>：非成员函数却能访问类私有成员——典型用于 <span class="key">operator&lt;&lt;</span> 打印（左边是 ostream 不能写成成员）</li>
+              <li><strong>友元类</strong>：整个类的成员函数都可访问本类私有成员</li>
+              <li><strong>特点</strong>：单向、不传递、不继承、不受 public/private 位置影响</li>
+              <li>使用原则：为<strong>运算符重载与紧耦合协作类</strong>使用，不做后门</li>
+            </ul>
+            <span class="mnemonic">「友元是单恋：我给你开门，你不用给我开」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-obj-life">
+          <div class="qa-q"><span class="q-mark">Q35</span>讲一下 C++ 对象的完整生命周期？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>构造顺序</strong>：虚基类 → 基类（声明序）→ 成员（声明序）→ 自身构造函数体</li>
+              <li><strong>析构顺序</strong>：完全相反（构造函数体 → 成员逆序 → 基类逆序）——栈式回退</li>
+              <li><strong>作用域结束 / delete / 异常展开</strong>时析构自动执行（RAII 的根基）</li>
+              <li>临时对象（如函数返回值）在完整表达式结束处析构</li>
+              <li>成员析构顺序与初始化列表写法无关，只看<strong>声明顺序</strong></li>
+            </ul>
+            <span class="mnemonic">「构造披外套，析构脱外套」——顺序严格互逆</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch5">
+        <h2><span class="num">05</span>封装继承多态</h2>
+
+        <div class="qa hot" id="cpp-three">
+          <div class="qa-q"><span class="q-mark">Q36</span>C++ 三大特性是什么？分别解决什么问题？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>封装</strong>：public/private/protected 控制访问，<strong>隐藏实现、暴露接口</strong>，降低耦合（get/set、不变量保护）</li>
+              <li><strong>继承</strong>：代码复用 + 建立 <strong>is-a</strong> 关系，派生类扩展/特化基类（优先组合而非继承）</li>
+              <li><strong>多态</strong>：同一接口、不同行为——<strong>编译期多态</strong>（重载/模板）与<strong>运行期多态</strong>（虚函数）</li>
+              <li>三者配合：封装守住边界，继承搭起层次，多态实现「一处调用，处处扩展」</li>
+            </ul>
+            <span class="mnemonic">「封装藏、继承传、多态变」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-inherit">
+          <div class="qa-q"><span class="q-mark">Q37</span>三种继承方式对成员访问权限有什么影响？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>基类成员</th><th>public 继承</th><th>protected 继承</th><th>private 继承</th></tr>
+                <tr><td>public</td><td>public</td><td>protected</td><td>private</td></tr>
+                <tr><td>protected</td><td>protected</td><td>protected</td><td>private</td></tr>
+                <tr><td>private</td><td>不可见</td><td>不可见</td><td>不可见</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>规则：<strong>继承方式是访问权限的「上限」</strong>，取两者更严的</li>
+              <li>基类 private 成员派生类<strong>永远不可直接访问</strong>，但会被继承（占空间），可用 protected 接口间接访问</li>
+              <li>实践：面向对象设计基本只用 <strong>public 继承</strong>；private 继承表达「用基类实现」可换成组合</li>
+            </ul>
+            <span class="mnemonic">「上限取更严，private 三代不可见」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-diamond">
+          <div class="qa-q"><span class="q-mark">Q38</span>什么是菱形继承？虚继承如何解决？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>菱形继承</strong>：B、C 都继承 A，D 再同时继承 B、C——D 里含有<strong>两份 A</strong>，访问 A 成员产生二义性。</p>
+            <ul>
+              <li><strong>虚继承</strong>（B、C 声明 <span class="key">virtual public A</span>）：D 中只保留<strong>一份 A 子对象</strong>，由虚基类表/指针机制保证共享</li>
+              <li>代价：虚基类对象大小增加、<strong>最派生类负责构造虚基类</strong>、访问多一次间接寻址</li>
+              <li>工程建议：<strong>接口（纯虚类）多继承没问题</strong>；带状态的多重继承容易踩菱形坑，优先「单继承 + 多接口」</li>
+            </ul>
+            <span class="mnemonic">「菱形两份打架，虚继承凑一份」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-poly">
+          <div class="qa-q"><span class="q-mark">Q39</span>多态的实现原理？静态多态与动态多态的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>静态多态（编译期）</th><th>动态多态（运行期）</th></tr>
+                <tr><td>手段</td><td>函数重载、模板</td><td>虚函数 + 基类指针/引用</td></tr>
+                <tr><td>绑定时机</td><td>编译期确定</td><td>运行期查虚表</td></tr>
+                <tr><td>开销</td><td>无（可内联）</td><td>一次间接调用，难内联</td></tr>
+                <tr><td>典型</td><td>std::max、模板容器</td><td>Shape::draw() 派生类各自实现</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>动态多态三要素：<strong>虚函数 + 继承 + 基类指针/引用调用</strong>，缺一不可</li>
+              <li>模板是「编译期生成不同函数」——零运行时开销，但代码膨胀</li>
+            </ul>
+            <span class="mnemonic">「重载模板编译定，虚函数运行查表定」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-virtual">
+          <div class="qa-q"><span class="q-mark">Q40</span>讲讲虚函数机制：vtable 和 vptr 是怎么工作的？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>虚函数表（vtable）</strong>：每个「含虚函数的类」一张，编译期生成，存放在只读数据区，表项是各虚函数入口地址（派生类覆盖后表项指向自己的实现）</li>
+              <li><strong>虚表指针（vptr）</strong>：每个对象里一个隐藏指针（构造时由编译器写入），指向所属类的 vtable</li>
+              <li><strong>调用过程</strong>：<span class="key">p-&gt;f()</span> → 取 p 的 vptr → 查表得到 f 地址 → 间接调用</li>
+              <li><strong>多继承</strong>时对象内可能有多个 vptr；<strong>虚继承</strong>再加虚基类表指针</li>
+              <li>代价：对象 +8 字节、调用间接一层、阻碍内联与去虚化（devirtualization 优化）</li>
+            </ul>
+            <span class="mnemonic">「一类一表，一对象一针；调函数先查表再跳转」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-virtual-func">
+          <div class="qa-q"><span class="q-mark">Q41</span>哪些函数不能是虚函数？为什么构造函数不能是虚的？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>构造函数不能虚</strong>：虚函数调用依赖对象里的 vptr，而 <strong>vptr 正是构造函数运行时才写入的</strong>——鸡生蛋问题；且构造时静态类型明确无需多态</li>
+              <li><strong>静态成员函数不能虚</strong>：没有 this，没有对象可查表</li>
+              <li><strong>普通函数/友元不能虚</strong>：不在类作用域内</li>
+              <li>内联函数理论上可虚但<strong>多态调用时内联失效</strong>；模板成员函数可以虚（有实体即可）</li>
+              <li>「虚构造」的替代：<strong>克隆函数 clone()</strong>（虚函数返回自身拷贝）——原型模式</li>
+            </ul>
+            <span class="mnemonic">「构造无虚因为先有对象才有表；想虚构造用 clone」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-override">
+          <div class="qa-q"><span class="q-mark">Q42</span>override 和 final 关键字有什么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>override</strong>（C++11）：显式声明「我要覆盖基类虚函数」——签名写错（const 丢了、参数不同）直接<strong>编译报错</strong>，否则会默默变成新函数埋下 bug</li>
+              <li><strong>final</strong>：修饰虚函数禁止进一步覆盖；修饰类禁止继承（利于去虚化优化）</li>
+              <li>规范：<strong>所有覆盖函数都写 override</strong>，不再被继承的类/函数加 final</li>
+            </ul>
+            <span class="mnemonic">「override 防手滑，final 封棺」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-rtti">
+          <div class="qa-q"><span class="q-mark">Q43</span>dynamic_cast 和 RTTI 是什么？typeid 有什么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>RTTI</strong>（运行时类型识别）：编译器在 vtable 附近存类型信息（type_info）支撑动态转型</li>
+              <li><strong>dynamic_cast</strong>：多态类型间安全向下转型——失败时指针得 nullptr、引用抛 <span class="key">std::bad_cast</span>；<strong>要求基类至少有一个虚函数</strong></li>
+              <li><strong>typeid</strong>：返回 type_info，可比较是否同类型、取名字（.name() 输出因编译器而异）</li>
+              <li>设计提示：大量 dynamic_cast 往往说明<strong>多态设计有问题</strong>，应把差异下沉为虚函数</li>
+            </ul>
+            <span class="mnemonic">「dynamic_cast 摸底，失败指针空引用抛」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-hiding">
+          <div class="qa-q"><span class="q-mark">Q44</span>重载、重写（覆盖）、隐藏的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>概念</th><th>发生位置</th><th>条件</th><th>绑定</th></tr>
+                <tr><td><strong>重载 Overload</strong></td><td>同一作用域</td><td>函数名同、参数不同</td><td>编译期</td></tr>
+                <tr><td><strong>重写 Override</strong></td><td>派生类覆盖基类</td><td>虚函数 + 签名相同</td><td>运行期（虚表）</td></tr>
+                <tr><td><strong>隐藏 Hiding</strong></td><td>派生类 vs 基类</td><td>同名即隐藏（非虚或签名不同）</td><td>编译期按静态类型</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>隐藏最坑：派生类只要出现<strong>同名函数</strong>（哪怕参数不同），基类所有同名重载版本全部被隐藏；用 <span class="key">using Base::f;</span> 引入恢复</li>
+              <li>区分口诀：看<strong>作用域 + 是否虚 + 签名</strong></li>
+            </ul>
+            <span class="mnemonic">「同名同域是重载，虚同签名是重写，跨域同名全隐藏」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch6">
+        <h2><span class="num">06</span>内存管理</h2>
+
+        <div class="qa hot" id="cpp-new-malloc">
+          <div class="qa-q"><span class="q-mark">Q45</span>new/delete 与 malloc/free 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>malloc/free</th><th>new/delete</th></tr>
+                <tr><td>性质</td><td>C 库函数</td><td>C++ <strong>运算符</strong>（可重载）</td></tr>
+                <tr><td>类型</td><td>返回 void*，手动转型</td><td>返回<strong>具体类型指针</strong>，类型安全</td></tr>
+                <tr><td>构造析构</td><td>不调用</td><td><strong>自动调用构造/析构</strong></td></tr>
+                <tr><td>大小计算</td><td>手动 sizeof</td><td>编译器自动算</td></tr>
+                <tr><td>失败行为</td><td>返回 NULL</td><td>抛 <span class="key">std::bad_alloc</span></td></tr>
+                <tr><td>数组</td><td>需自己记住元素数</td><td>new[]/delete[] 配对，调用 n 次构造</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>底层：new 通常<strong>调用 malloc</strong> 要内存再执行构造；delete 先析构再 free</li>
+              <li><strong>配对铁律</strong>：new↔delete、new[]↔delete[]、malloc↔free 不可混用（混用是 UB）</li>
+            </ul>
+            <span class="mnemonic">「malloc 只给地，new 还盖房」；四件配对不能乱</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-new-fail">
+          <div class="qa-q"><span class="q-mark">Q46</span>new 失败怎么处理？nothrow new 是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>默认：分配失败抛 <span class="key">std::bad_alloc</span>，用 try/catch 捕获</li>
+              <li><strong>nothrow new</strong>：<span class="key">new (std::nothrow) T</span> 失败返回 nullptr（老代码/嵌入式风格）</li>
+              <li>构造函数内 new 失败：构造未完成、析构<strong>不会执行</strong>——已构造的成员会析构，裸指针成员泄漏 → 又一个用智能指针的理由</li>
+              <li>new[] 内部会额外存元素个数（多分配 4/8 字节）供 delete[] 用——这就是不能 delete 释放 new[] 的原因</li>
+            </ul>
+            <span class="mnemonic">「默认抛异常，nothrow 返空；构造半途而废靠智能指针兜底」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-memleak">
+          <div class="qa-q"><span class="q-mark">Q47</span>如何检测和预防内存泄漏？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>预防优先</strong>：智能指针管所有权、RAII 封装资源、容器代替裸数组（Rule of Zero）</li>
+              <li><strong>检测工具</strong>：
+                <ul>
+                  <li>Linux：<strong>valgrind --leak-check=full</strong>（精确但慢 10~30 倍）</li>
+                  <li>编译期插桩：<strong>AddressSanitizer / LeakSanitizer</strong>（-fsanitize=address,leak，快，CI 友好）</li>
+                  <li>Windows：CRT 调试堆 _CrtDumpMemoryLeaks、VLD、Dr.Memory</li>
+                </ul>
+              </li>
+              <li><strong>常见泄漏点</strong>：异常路径漏 delete、智能指针循环引用、容器缓存无限增长、回调注册未注销</li>
+              <li>「只增不减」的内存曲线 + 长跑压测是最直接的泄漏信号</li>
+            </ul>
+            <span class="mnemonic">「预防靠 RAII，检测靠 valgrind/ASan」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-overflow">
+          <div class="qa-q"><span class="q-mark">Q48</span>栈溢出和堆溢出分别是什么？怎么排查？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>栈溢出</strong>：递归太深、大局部数组（如 int a[10*1024*1024]）、默认栈 1~8MB 用尽 → 段错误 SIGSEGV；对策：改迭代/尾递归、大对象放堆、ulimit -s 调栈（治标）</li>
+              <li><strong>堆溢出</strong>两种含义：① 写越界破坏堆元数据（malloc 元信息被踩，报 "corrupted double-linked list"）；② 内存耗尽（bad_alloc / OOM killer）</li>
+              <li>排查：<strong>ASan 一抓一个准</strong>；堆破坏可用 electric fence / _CrtCheckMemory 定位</li>
+            </ul>
+            <span class="mnemonic">「栈溢看递归，堆溢查越界」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-allocators">
+          <div class="qa-q"><span class="q-mark">Q49</span>内存池是什么？为什么能提升性能？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>原理</strong>：一次性向系统申请大块内存，之后分配从池里<strong>切分/复用</strong>，避免频繁走 malloc（用户态↔内核态切换、锁竞争）</li>
+              <li><strong>固定大小块</strong>：所有块同尺寸，用<strong>空闲链表</strong> O(1) 分配回收，且天然解决碎片</li>
+              <li><strong>适用</strong>：高频小对象（网络连接、节点、消息）； STL 有 <span class="key">std::pmr::memory_resource</span>（C++17）可插拔分配器</li>
+              <li>注意：内存池自己也要防泄漏与线程安全（thread_local 池可免锁）</li>
+            </ul>
+            <span class="mnemonic">「一次批发，零售免谈」——空闲链表 O(1)</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-raii">
+          <div class="qa-q"><span class="q-mark">Q50</span>什么是 RAII？为什么说它是 C++ 最重要的思想？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>RAII（Resource Acquisition Is Initialization）</strong>：把资源（内存、文件、锁、连接）的生命周期<strong>绑定到栈对象</strong>——构造获取、析构释放。</p>
+            <ul>
+              <li>好处：<strong>异常安全</strong>（栈展开必调析构）、<strong>忘不了释放</strong>、代码无 goto cleanup</li>
+              <li>标准库全是 RAII：string/vector（内存）、fstream（文件）、lock_guard（锁）、智能指针（对象所有权）</li>
+              <li>思想推广：<strong>ScopeGuard</strong>、defer 语义、事务回滚对象，几乎所有「确定性释放」都源于它</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>void f() {
+    std::lock_guard&lt;std::mutex&gt; lk(mtx);  // 构造即加锁
+    do_work();                           // 抛异常也不怕
+}                                        // 离开作用域自动解锁</code></pre>
+            <span class="mnemonic">「资源跟着栈对象走，构造拿析构还，异常也不漏」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-move-semantics">
+          <div class="qa-q"><span class="q-mark">Q51</span>什么是左值、右值？移动语义解决什么问题？std::move 做了什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>左值</strong>：有名字、可取地址（变量）；<strong>右值</strong>：临时值/字面量（将亡值、纯右值）</li>
+              <li><strong>移动语义</strong>（C++11）：对将亡对象<strong>窃取内部资源</strong>（指针交换）而非深拷贝——vector 传值从 O(n) 拷贝变 O(1) 搬家</li>
+              <li><strong>std::move 不移动任何东西</strong>！只是<strong>把左值强制转成右值引用</strong>（无条件 static_cast&lt;T&amp;&amp;&gt;），真正的移动发生在<strong>移动构造/移动赋值</strong>里</li>
+              <li>移动后的对象处于<strong>有效但未指定</strong>状态，只能重新赋值或析构</li>
+              <li>搭配：<strong>noexcept 移动构造</strong> 才能让 vector 扩容时用移动（否则为保证强异常安全退回拷贝）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>std::string a = "很长的字符串....";
+std::string b = std::move(a);   // a 内部指针直接给 b，O(1)
+// 此后 a 为空壳，可重新赋值使用</code></pre>
+            <span class="mnemonic">「move 只是改名挂牌，真正搬家在移动构造」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-forward">
+          <div class="qa-q"><span class="q-mark">Q52</span>什么是完美转发？std::forward 与 std::move 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>完美转发</strong>：模板函数把参数<strong>原样（保持左/右值属性）传给下一层</strong>，不产生多余拷贝</li>
+              <li>关键：<strong>万能引用 T&amp;&amp;</strong>（模板参数推导时）既能绑左值也能绑右值；但具名参数本身是左值，需还原</li>
+              <li><strong>std::forward&lt;T&gt;(arg)</strong>：<strong>有条件转换</strong>——原来是右值就转回右值，是左值保持左值</li>
+              <li><strong>std::move</strong>：无条件转右值；<strong>forward 用在模板转发，move 用在明确要移动</strong></li>
+              <li>典型：emplace_back、make_shared、工厂函数都靠它实现零拷贝传递</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>template &lt;typename T, typename... Args&gt;
+std::unique_ptr&lt;T&gt; make(Args&amp;&amp;... args) {
+    return std::unique_ptr&lt;T&gt;(
+        new T(std::forward&lt;Args&gt;(args)...));  // 保持实参的值类别
+}</code></pre>
+            <span class="mnemonic">「move 无条件，forward 看情况（条件转换）」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch7">
+        <h2><span class="num">07</span>智能指针</h2>
+
+        <div class="qa hot" id="cpp-smart-intro">
+          <div class="qa-q"><span class="q-mark">Q53</span>为什么需要智能指针？C++11 提供了哪几种？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>裸指针三大痛点：<strong>忘记释放（泄漏）、重复释放、异常路径漏释放</strong></li>
+              <li>智能指针 = <strong>RAII 包装的指针</strong>：析构自动释放，所有权语义显式</li>
+              <li><strong>unique_ptr</strong>：独占所有权（零开销，默认首选）</li>
+              <li><strong>shared_ptr</strong>：共享所有权（引用计数）</li>
+              <li><strong>weak_ptr</strong>：不拥有的观察者（打破循环引用）</li>
+              <li>选择顺序：<strong>能用栈/值就用值 → 独占用 unique → 真要共享才 shared</strong></li>
+            </ul>
+            <span class="mnemonic">「独占 unique、共享 shared、观望 weak」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-unique-ptr">
+          <div class="qa-q"><span class="q-mark">Q54</span>unique_ptr 的特点？为什么说它零开销？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>独占</strong>：同一时刻只有一个 unique_ptr 拥有对象，<strong>禁止拷贝、只允许移动</strong></li>
+              <li><strong>零开销</strong>：不存引用计数，大小 = 裸指针（无自定义删除器时），<strong>Release 模式下与裸指针等价</strong></li>
+              <li>数组特化：<span class="key">unique_ptr&lt;T[]&gt;</span> 自动调用 delete[]</li>
+              <li>自定义删除器：unique_ptr&lt;FILE, decltype(&amp;fclose)&gt; —— 函数指针类型会进类型、影响大小</li>
+              <li>传参规则：转移所有权用 <strong>by value + std::move</strong>；只使用不转移用裸指针/引用</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>auto p = std::make_unique&lt;Widget&gt;();  // C++14
+auto q = std::move(p);                // 转移后 p == nullptr
+Widget* raw = q.get();                // 观察不接管
+q.reset();                            // 立即释放并置空</code></pre>
+            <span class="mnemonic">「独占可移不可拷，默认首选零开销」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-shared-ptr">
+          <div class="qa-q"><span class="q-mark">Q55</span>shared_ptr 的实现原理？引用计数是线程安全的吗？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>控制块（control block）</strong>：堆上独立结构，存<strong>强引用计数 + 弱引用计数 + 删除器</strong>；所有 shared_ptr/weak_ptr 共享它</li>
+              <li>拷贝 shared_ptr → 计数<strong>原子 +1</strong>；析构 → 原子 -1，<strong>减到 0 释放对象</strong>，弱计数归零再释放控制块</li>
+              <li><strong>线程安全范围</strong>：<strong>计数本身是原子的</strong>（多线程拷贝/析构不同 shared_ptr 实例安全）；但<strong>同一个 shared_ptr 对象的读写不安全</strong>，指向的对象访问也要自己加锁</li>
+              <li>大小 16 字节（对象指针 + 控制块指针），拷贝有原子开销——<strong>热路径按 const 引用传</strong></li>
+            </ul>
+            <span class="mnemonic">「控制块记双账（强弱），计数原子但对象不加锁」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-weak-ptr">
+          <div class="qa-q"><span class="q-mark">Q56</span>什么是循环引用？weak_ptr 如何解决？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>A 持有 shared_ptr&lt;B&gt;、B 持有 shared_ptr&lt;A&gt; → 两计数永远 ≥1 → <strong>谁也释放不了</strong>（典型：观察者、双向链表、父子节点）。</p>
+            <ul>
+              <li>解法：把「弱的一方」（子指向父、观察者、缓存）改为 <strong>weak_ptr</strong>——只观察不增加强计数</li>
+              <li>使用前 <span class="key">lock()</span> 升级为 shared_ptr：对象还活着得到有效指针，已死得到 nullptr（<strong>判活标准姿势</strong>）</li>
+              <li>weak_ptr 也常用于<strong>缓存</strong>与<strong>观察者模式</strong>，避免延长生命周期</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>struct Child; 
+struct Parent {
+    std::vector&lt;std::shared_ptr&lt;Child&gt;&gt; kids;  // 强持有
+};
+struct Child {
+    std::weak_ptr&lt;Parent&gt; parent;             // 弱回指，破循环
+    void use() {
+        if (auto p = parent.lock()) { /* 父还在 */ }
+    }
+};</code></pre>
+            <span class="mnemonic">「强持有弱回指，lock 判活再使用」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-auto-ptr">
+          <div class="qa-q"><span class="q-mark">Q57</span>auto_ptr 为什么被废弃？</div>
+          <div class="qa-a">
+            <ul>
+              <li>C++98 的 auto_ptr 拷贝语义是<strong>「拷贝即转移」</strong>——与直觉相悖：拷贝后源变空</li>
+              <li>灾难场景：<strong>把 auto_ptr 放进容器</strong>，容器内部拷贝导致元素悄悄失效</li>
+              <li>且无移动语义支撑、不支持数组</li>
+              <li>C++11 用 <strong>unique_ptr（显式 move）</strong> 取代，C++17 正式删除 auto_ptr</li>
+            </ul>
+            <span class="mnemonic">「拷贝却偷家，容器都害怕」——unique_ptr 显式接管</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-make-shared">
+          <div class="qa-q"><span class="q-mark">Q58</span>make_shared 和 shared_ptr&lt;T&gt;(new T) 有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>一次分配</strong>：make_shared 把<strong>对象和控制块合并在一块内存</strong>，少一次堆分配、缓存更友好</li>
+              <li><strong>异常安全</strong>：C++17 前 <span class="key">f(shared_ptr&lt;T&gt;(new T), g())</span> 可能因求值顺序泄漏；make 版不会</li>
+              <li>缺点：对象与控制块同块内存，<strong>有 weak_ptr 存活时对象内存无法提前释放</strong>（要等弱计数归零）——大对象 + 长命 weak_ptr 场景注意</li>
+              <li>私有构造函数的类 make_shared 无法访问（make 系列缺陷）</li>
+            </ul>
+            <span class="mnemonic">「make 一次分配更高效，代价是 weak 赖着不放内存」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-smart-thread">
+          <div class="qa-q"><span class="q-mark">Q59</span>多线程下使用智能指针要注意什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>区分两层：<strong>控制块线程安全（原子计数）</strong> ≠ <strong>指向的对象线程安全</strong> ≠ <strong>同一个 shared_ptr 实例线程安全</strong></li>
+              <li>多线程写同一个 shared_ptr 变量：用 <span class="key">std::atomic&lt;std::shared_ptr&lt;T&gt;&gt;</span>（C++20）或加锁</li>
+              <li>线程间传递：按值拷贝传（各自持实例）+ 对象内部自己同步</li>
+              <li>注意 <strong>shared_from_this</strong> 必须在对象已被 shared_ptr 管理后调用（enable_shared_from_this）</li>
+            </ul>
+            <span class="mnemonic">「计数安全、对象和实例不安全」——分三层看</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch8">
+        <h2><span class="num">08</span>STL 容器与算法</h2>
+
+        <div class="qa hot" id="cpp-stl-comp">
+          <div class="qa-q"><span class="q-mark">Q60</span>STL 六大组件是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>容器</strong>：vector、list、map、unordered_map…（数据的家）</li>
+              <li><strong>算法</strong>：sort、find、accumulate…（通用操作，与容器解耦）</li>
+              <li><strong>迭代器</strong>：连接容器与算法的「胶水」，泛化指针</li>
+              <li><strong>仿函数/函数对象</strong>：重载 operator() 的类，可携带状态的「函数」</li>
+              <li><strong>适配器</strong>：stack、queue、priority_queue（容器适配器）；bind/包装器（函数适配器）</li>
+              <li><strong>分配器</strong>：内存分配策略（allocator，一般不碰，pmr 时有戏）</li>
+            </ul>
+            <span class="mnemonic">「容算迭仿适分」六件套；算法不认识容器，只认迭代器</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-vector">
+          <div class="qa-q"><span class="q-mark">Q61</span>vector 的扩容机制？为什么是成倍增长？reserve/resize 区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>扩容</strong>：size == capacity 时，申请新内存（GCC 2 倍、MSVC 1.5 倍）→ <strong>搬移元素</strong>（有 noexcept 移动则移动，否则拷贝）→ 释放旧内存</li>
+              <li><strong>为什么倍增</strong>：均摊分析下 push_back 均摊 O(1)；定长增长（+1）会退化成 O(n)</li>
+              <li><strong>扩容副作用</strong>：所有迭代器/指针/引用<strong>全部失效</strong>——扩容后使用旧指针是经典崩溃</li>
+              <li><strong>reserve(n)</strong>：只改 capacity（预留空间防多次扩容）；<strong>resize(n)</strong>：改 size（会构造/删除元素）</li>
+              <li>已知大小时 <strong>提前 reserve</strong> 是最直接的性能优化</li>
+            </ul>
+            <span class="mnemonic">「倍增均摊 O(1)，扩容旧针全作废；reserve 借地，resize 造房」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-list">
+          <div class="qa-q"><span class="q-mark">Q62</span>vector 和 list 怎么选？deque 的结构？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>vector</th><th>list（双向链表）</th></tr>
+                <tr><td>内存</td><td>连续（缓存友好）</td><td>节点分散 + 前后指针开销</td></tr>
+                <tr><td>随机访问</td><td>O(1)</td><td>O(n)</td></tr>
+                <tr><td>中间插删</td><td>O(n) 搬移</td><td>O(1)（已定位时）</td></tr>
+                <tr><td>迭代器失效</td><td>插入/扩容全失效</td><td>只有被删节点失效</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>实践：<strong>95% 场景 vector 更快</strong>（缓存局部性碾压链表），list 只在「频繁中间插删且不能随机访问失效」时考虑</li>
+              <li><strong>deque</strong>：分段连续（map 指向多个固定块），头尾两端 O(1) 插删，中间 O(n)；是 stack/queue 的默认底座</li>
+            </ul>
+            <span class="mnemonic">「默认 vector，两头操作 deque，list 几乎不用」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-map">
+          <div class="qa-q"><span class="q-mark">Q63</span>map 和 unordered_map 的底层与选型？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>map（红黑树）</th><th>unordered_map（哈希表）</th></tr>
+                <tr><td>查找/插入</td><td>O(log n)</td><td>平均 O(1)，最坏 O(n)</td></tr>
+                <tr><td>有序性</td><td><strong>按 key 有序遍历</strong></td><td>无序</td></tr>
+                <tr><td>key 要求</td><td>可比较（operator&lt;）</td><td>可哈希 + 可等值比较</td></tr>
+                <tr><td>迭代器稳定性</td><td>插入不失效</td><td>rehash 后失效</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>红黑树是<strong>自平衡二叉搜索树</strong>：增删查 O(log n)，最坏可控</li>
+              <li>unordered_map：<strong>开链法</strong>处理冲突，负载因子超 max_load_factor 触发 <strong>rehash</strong>（桶数约翻倍）</li>
+              <li>选型：<strong>要有序/范围查询用 map，纯查找用 unordered_map</strong>；key 是自定义类型需提供 hash 特化与 ==</li>
+            </ul>
+            <span class="mnemonic">「红黑树有序稳定，哈希表平均最快」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-iterator">
+          <div class="qa-q"><span class="q-mark">Q64</span>迭代器失效的规则？如何安全删除元素？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>vector/deque/string</strong>：插入点之后全失效（扩容则全失效）；删除点<strong>之后</strong>失效</li>
+              <li><strong>list</strong>：仅被删元素失效，其他不动</li>
+              <li><strong>map/set</strong>（红黑树）：插入不失效；删除仅被删节点失效</li>
+              <li><strong>unordered_*</strong>：插入可能触发 rehash 全失效；删除仅被删节点失效</li>
+              <li><strong>安全删除姿势</strong>：<span class="key">it = c.erase(it)</span>（erase 返回下一个有效迭代器），不要 erase 后 ++it</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>for (auto it = v.begin(); it != v.end(); ) {
+    if (*it % 2 == 0) it = v.erase(it);  // 接住下一个
+    else               ++it;
+}
+// 批量删除首选惯用法：
+v.erase(std::remove_if(v.begin(), v.end(),
+                       [](int x){ return x % 2 == 0; }),
+        v.end());</code></pre>
+            <span class="mnemonic">「erase 返回下一站，接住再走不越轨」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-erase">
+          <div class="qa-q"><span class="q-mark">Q65</span>为什么有 erase-remove 惯用法？remove 真的删除了吗？</div>
+          <div class="qa-a">
+            <ul>
+              <li><span class="key">std::remove</span> 只是把「要保留的元素前移」并返回新逻辑末尾，<strong>容器大小不变</strong>（算法层碰不到容器大小）</li>
+              <li>必须再 <span class="key">erase(逻辑末尾, end())</span> 才真正删掉，两步合称 <strong>erase-remove idiom</strong></li>
+              <li>复杂度 O(n) 一次搬移，优于循环 erase（每次 O(n) 搬移）</li>
+              <li>C++20 可直接 <span class="key">std::erase_if(v, pred)</span> 一步到位</li>
+            </ul>
+            <span class="mnemonic">「remove 只搬家不砍树，erase 才砍」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-string">
+          <div class="qa-q"><span class="q-mark">Q66</span>std::string 的实现了解吗？什么是 SSO 和 COW？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>SSO（小字符串优化）</strong>：短字符串（通常 ≤15/22 字节）直接存对象内部缓冲区，<strong>不分配堆</strong>——大多数字符串都在栈上解决</li>
+              <li><strong>COW（写时复制）</strong>：多个 string 共享一份数据，写时再拷贝——GCC 5 之前采用，<strong>C++11 因线程安全与 operator[] 语义已禁止</strong>，现在主流实现都是 SSO</li>
+              <li>string 与 char* 互转：<span class="key">c_str()</span>（只读）；拼接查找都有成熟接口；注意 C++20 加入了 starts_with/ends_with</li>
+            </ul>
+            <span class="mnemonic">「短串在栈（SSO），COW 已进博物馆」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-emplace">
+          <div class="qa-q"><span class="q-mark">Q67</span>emplace_back 和 push_back 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>push_back(T(args))</strong>：先构造临时对象 → <strong>再拷贝/移动</strong>进容器（两步）</li>
+              <li><strong>emplace_back(args...)</strong>：<strong>参数完美转发到容器内存上原地构造</strong>（一步，零临时对象）</li>
+              <li>对 int 等平凡类型两者无差；对 pair/string/大对象 emplace 省一次构造搬运</li>
+              <li>注意：emplace_back(10, 20) 对 vector&lt;Point&gt; 是调用 Point(10,20)——<strong>会「贪婪匹配」任何构造函数</strong>，意外调用 explicit 构造时不如 push_back 直白</li>
+              <li>map 的 <strong>try_emplace / insert_or_assign</strong> 同理按语义选择</li>
+            </ul>
+            <span class="mnemonic">「push 先造再搬，emplace 原地开工」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-sort">
+          <div class="qa-q"><span class="q-mark">Q68</span>std::sort 用的什么算法？比较函数为什么要严格弱序？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>内省排序 introsort</strong>：快排为主，递归过深（log n 层）切<strong>堆排序</strong>，区间小于 16 切<strong>插入排序</strong>——兼顾平均与最坏 O(n log n)</li>
+              <li>比较器必须满足<strong>严格弱序</strong>：comp(a,a) == false、反对称、传递；<strong>用 &lt;= 会直接段错误</strong>（越界访问）</li>
+              <li>std::sort 要求<strong>随机访问迭代器</strong>（list 不能用，要用成员函数 list::sort，归并实现稳定）</li>
+              <li>stable_sort 稳定但需额外内存；partial_sort 只要前 K 名 O(n log k)</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>std::sort(v.begin(), v.end(),
+            [](const P&amp; a, const P&amp; b){ return a.x &lt; b.x; });
+// 千万别写 a.x &lt;= b.x —— 违反严格弱序</code></pre>
+            <span class="mnemonic">「快排 + 堆 + 插入 = 内省」；比较器只准用 &lt;</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-deque">
+          <div class="qa-q"><span class="q-mark">Q69</span>priority_queue 是什么？如何自定义比较？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>堆（默认 vector 底座 + std::push_heap 系列）</strong>的容器适配器；默认 <strong>less → 大顶堆</strong>，top() 是最大值</li>
+              <li>小顶堆：<span class="key">priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt;</span></li>
+              <li>自定义类型：传 lambda（C++20 前要 decltype 包裹）或重载 operator&lt;</li>
+              <li>push/pop 均 O(log n)，top O(1)；TopK 问题常客（维护大小为 K 的堆）</li>
+            </ul>
+            <span class="mnemonic">「默认大顶堆，greater 变小顶」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch9">
+        <h2><span class="num">09</span>模板与泛型</h2>
+
+        <div class="qa" id="cpp-template">
+          <div class="qa-q"><span class="q-mark">Q70</span>函数模板和类模板的区别？模板参数推导规则？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>函数模板</strong>：调用时可<strong>自动推导</strong>参数类型（显式指定也行）；<strong>类模板</strong>必须显式指定（C++17 前），C++17 起有 CTAD 构造推导</li>
+              <li>推导不考：返回类型、非推导上下文（如 T::type）</li>
+              <li>模板定义通常放<strong>头文件</strong>（实例化需要看到完整定义）</li>
+              <li>全特化版本参与<strong>重载决议</strong>，匹配优先：非模板 &gt; 特化 &gt; 主模板</li>
+            </ul>
+            <span class="mnemonic">「函数模板能推导，类模板要指名（CTAD 除外）」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-template-instant">
+          <div class="qa-q"><span class="q-mark">Q71</span>什么是模板实例化？代码膨胀是怎么回事？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>实例化</strong>：编译器按用到的类型<strong>生成一份具体代码</strong>（vector&lt;int&gt; 和 vector&lt;string&gt; 是两个不同的类）</li>
+              <li><strong>隐式实例化</strong>（用了才生成）vs <strong>显式实例化</strong>（extern template 声明「别处已生成」，减少重复编译）</li>
+              <li><strong>代码膨胀</strong>：每种类型组合一份机器码 → <strong>二进制变大、编译变慢、icache 局部性变差</strong></li>
+              <li>治理：公共逻辑抽出<strong>非模板基类/void* 底座</strong>（如 vector&lt;bool&gt; 特化、boost.proxy），模板只在薄壳层</li>
+            </ul>
+            <span class="mnemonic">「一套模板 N 份实例」；瘦身靠非模板底座 + extern template</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-specialization">
+          <div class="qa-q"><span class="q-mark">Q72</span>模板特化与偏特化的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>全特化</strong>：所有模板参数都定死（template&lt;&gt; struct Hash&lt;std::string&gt;）——针对特定类型定制实现</li>
+              <li><strong>偏特化</strong>：只定死部分参数或参数模式（如 <span class="key">vector&lt;T*&gt;</span>、<span class="key">tuple&lt;T, Rest...&gt;</span>）——只对类模板有效，函数模板不能偏特化（用重载代替）</li>
+              <li>典型应用：traits（is_pointer、iterator_traits）按类型族提供不同行为</li>
+            </ul>
+            <span class="mnemonic">「全特化点对点，偏特化类专属；函数模板想偏特化？用重载」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-sfinae">
+          <div class="qa-q"><span class="q-mark">Q73</span>SFINAE 是什么？if constexpr 解决了什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>SFINAE</strong>（替换失败不是错误）：模板参数替换失败时<strong>静默移出候选集</strong>而非报错——用 enable_if 按条件启用/禁用重载</li>
+              <li>痛点：enable_if 写法晦涩、报错信息天书</li>
+              <li><strong>if constexpr（C++17）</strong>：编译期选择分支，<strong>未选中的分支不实例化</strong>——模板分支逻辑从「元编程黑话」变普通代码</li>
+              <li>C++20 <strong>concepts</strong> 进一步替代大部分 SFINAE：约束可读、报错可懂</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>template &lt;typename T&gt;
+auto serialize(const T&amp; v) {
+    if constexpr (std::is_integral_v&lt;T&gt;) {
+        return std::to_string(v);        // T 是浮点时不编译
+    } else {
+        return std::string(v);           // T 是整型时不编译
+    }
+}</code></pre>
+            <span class="mnemonic">「替换失败不算错；constexpr if 分支只编一半」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-typedef">
+          <div class="qa-q"><span class="q-mark">Q74</span>using 与 typedef 的区别？什么是变参模板？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>using 别名</strong>（C++11）与 typedef 等价，但<strong>可模板化</strong>（alias template），typedef 做不到；对函数指针等复杂类型更易读</li>
+              <li><strong>变参模板</strong>：template&lt;typename... Args&gt; 接受任意个参数，配合<strong>折叠表达式</strong>（C++17）(args + ...) 一行求和</li>
+              <li>sizeof...(args) 取参数个数；递归展开是 C++14 前的姿势</li>
+            </ul>
+            <span class="mnemonic">「using 能带模板，typedef 只是老别名」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-concepts">
+          <div class="qa-q"><span class="q-mark">Q75</span>C++20 concepts 是什么？比 SFINAE 好在哪？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>概念</strong>：对模板参数的一组命名约束（<span class="key">template&lt;std::integral T&gt;</span>）</li>
+              <li><strong>好处</strong>：①报错直说「不满足约束 X」而非一千行实例化栈；②约束可<strong>组合、可重载</strong>（更约束的优先）；③requires 表达式可直接检测表达式有效性</li>
+              <li>标准库自带：std::integral、std::ranges::range、std::same_as 等</li>
+            </ul>
+            <span class="mnemonic">「concepts = 类型约束白话文」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch10">
+        <h2><span class="num">10</span>现代 C++ 新特性</h2>
+
+        <div class="qa hot" id="cpp-auto">
+          <div class="qa-q"><span class="q-mark">Q76</span>auto 和 decltype 的推导规则？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>auto</strong>：按初始化表达式推导，<strong>丢弃引用与顶层 const</strong>（想保留写 auto&amp; / const auto&amp;）</li>
+              <li>auto&amp;&amp; 是<strong>万能引用</strong>：绑左值推导为左值引用，绑右值为右值引用</li>
+              <li><strong>decltype(expr)</strong>：推导表达式<strong>声明类型但不求值</strong>——保留引用与 const；decltype(变量) 与 decltype((变量)) 不同：双括号得到引用！</li>
+              <li><strong>auto 返回值（C++14）</strong> 与 <strong>decltype(auto)</strong> 用于完美转发返回类型</li>
+              <li>使用规范：类型冗长（迭代器、lambda）用 auto；<strong>auto 掩盖值拷贝陷阱</strong>（auto x = map["k"] 拷贝）要警惕</li>
+            </ul>
+            <span class="mnemonic">「auto 去引用丢 const；decltype 原样拍照不求值」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-lambda">
+          <div class="qa-q"><span class="q-mark">Q77</span>lambda 表达式的本质？捕获方式有哪些坑？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>lambda 是编译器生成的<strong>匿名仿函数对象</strong>（闭包类实例），捕获的变量是它的<strong>成员</strong>。</p>
+            <ul>
+              <li><strong>捕获方式</strong>：[=] 值捕获（拷贝一份）、[&amp;] 引用捕获、[x]、[x, &amp;y] 混合、[=, &amp;x]、[this]（捕获 this 指针！）</li>
+              <li><strong>大坑 1：[&amp;] 悬垂引用</strong>——lambda 活得比局部变量久（异步回调、存进容器）时引用捕获爆炸</li>
+              <li><strong>大坑 2：[this]</strong> 捕获的是指针，对象析构后回调即悬垂（C++20 用 [*this] 拷贝整个对象）</li>
+              <li><strong>大坑 3：[=] 隐式捕获 this</strong>（C++20 已废弃该写法），成员访问其实是经 this 指针</li>
+              <li>无捕获 lambda 可转函数指针；<strong>有捕获的不能</strong>（有状态）</li>
+              <li>mutable：去掉 operator() 的 const，允许修改值捕获的副本（不影响外界）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>int x = 10;
+auto byVal = [x]   { return x + 1; };  // 拷贝一份 x
+auto byRef = [&amp;x] { ++x; };           // 真修改 x
+auto gen = [x]() mutable { return ++x; };  // 改的是副本
+// 异步场景别 [&amp;]：
+auto task = std::async(std::launch::async,
+                       [x]{ return x * 2; });  // 值捕获才安全</code></pre>
+            <span class="mnemonic">「lambda 是无名仿函数；异步别引用捕获，[this] 记得判活」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-bind">
+          <div class="qa-q"><span class="q-mark">Q78</span>std::function 是什么？和函数指针、lambda 什么关系？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>std::function&lt;R(Args...)&gt;</strong>：类型擦除的「任何可调用物」容器——函数指针、lambda、仿函数、bind 结果都能装</li>
+              <li><strong>代价</strong>：可能堆分配（捕获太多）、调用多一层间接，热路径慎用</li>
+              <li><strong>std::bind</strong>：C++11 绑定参数的旧姿势，现代代码<strong>几乎都可用 lambda 替代</strong>（更清晰更快）；placeholders _1/_2</li>
+              <li>回调/事件系统接口用 function，模板参数传递可调用物优先用<strong>模板 + auto/lambda</strong>（零开销）</li>
+            </ul>
+            <span class="mnemonic">「function 万能但有税；bind 已过气，lambda 走天下」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-optional">
+          <div class="qa-q"><span class="q-mark">Q79</span>optional、variant、any 分别解决什么问题？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>optional&lt;T&gt;</strong>：值可能不存在——替代「magic 值 -1 / 出参 bool」；has_value()/value_or(默认)</li>
+              <li><strong>variant&lt;A, B, C&gt;</strong>：类型安全的联合体——同一时刻是其中之一，visit + 重载 lambda 模式匹配</li>
+              <li><strong>any</strong>：能装任何可拷贝类型，any_cast 取回（类型错了抛异常）——只在真不知道类型集合时用</li>
+              <li>三者共同点：<strong>把「约定」编码进类型</strong>，替代裸指针 + 约定/错误码</li>
+            </ul>
+            <span class="mnemonic">「可能没有用 optional，多选一是 variant，完全未知才 any」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-string-view">
+          <div class="qa-q"><span class="q-mark">Q80</span>string_view 是什么？有什么悬垂陷阱？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>非拥有的字符串切片</strong>：只有 (指针, 长度)，<strong>零拷贝</strong>传参/切子串，读接口参数首选</li>
+              <li><strong>陷阱 1：悬垂</strong>——绑定临时 string 后临时对象析构，view 成野指针（<strong>不要存 string_view 成员</strong>、不要作为返回值指向局部）</li>
+              <li><strong>陷阱 2：不保证 '\0' 结尾</strong>——传给 C API（需要 c_str）前必须先转 string</li>
+              <li><strong>陷阱 3：remove_prefix/split 操作</strong>后原字符串生命周期必须仍覆盖 view</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>void print(std::string_view sv);      // 只读参数，零拷贝
+
+// 反例：
+std::string_view sv = std::string("temp");  // 临时串析构 → sv 悬垂
+std::string_view bad() {
+    std::string s = "local";
+    return s;                                // 返回悬垂 view
+}</code></pre>
+            <span class="mnemonic">「view 只看不带走；临时串、局部串、C 接口三个坑」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-structured">
+          <div class="qa-q"><span class="q-mark">Q81</span>结构化绑定是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>C++17：<span class="key">auto [k, v] = *map.begin();</span> 一次解包 pair/tuple/结构体/数组</li>
+              <li>配 range-for 最顺手：<span class="key">for (auto&amp; [id, user] : users)</span></li>
+              <li>绑定的是引用语义按 auto 规则决定；还可用于 get&lt;i&gt; 定制的类型</li>
+            </ul>
+            <span class="mnemonic">「一对多值一口闷」——auto [a, b] = pair</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-coro">
+          <div class="qa-q"><span class="q-mark">Q82</span>C++20 协程和 ranges 了解吗？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>协程（co_await / co_yield / co_return）</strong>：函数可<strong>暂停与恢复</strong>——同步写法获得异步性能；语言级机制，库（cppcoro、libunifex）提供实用类型</li>
+              <li>适用：IO 密集、生成器、状态机；careful：协程帧有堆分配（可 HALO 优化）、悬垂引用比 lambda 更隐蔽</li>
+              <li><strong>ranges</strong>：惰性求值的管道式算法——<span class="key">v | filter(...) | take(5) | transform(...)</span>，无中间容器；配合 concepts 约束</li>
+              <li>回答策略：说出机制 + 场景 + 自己的了解程度即可，别不懂装懂</li>
+            </ul>
+            <span class="mnemonic">「协程能暂停，ranges 会偷懒（惰性）」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch11">
+        <h2><span class="num">11</span>并发编程</h2>
+
+        <div class="qa" id="cpp-thread">
+          <div class="qa-q"><span class="q-mark">Q83</span>std::thread 基本用法？不 join 会怎样？</div>
+          <div class="qa-a">
+            <ul>
+              <li>构造即启动；<strong>join() 等待收尸，detach() 分离放养</strong>（二选一，否则程序终止时 std::terminate）</li>
+              <li>传参默认<strong>拷贝</strong>；要引用需 std::ref 显式包一层（防止隐式悬垂的坑）</li>
+              <li>异常安全：join 要放 RAII 守卫（jthread C++20 自动 join）</li>
+              <li>获取结果别用共享变量轮询——用 <strong>future/promise</strong> 或消息队列</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>int x = 0;
+std::thread t([&amp;x]{ ++x; });   // 引用捕获 OK（t 存活期内 x 有效）
+t.join();                        // 必须 join 或 detach
+// C++20: std::jthread 离开作用域自动 join</code></pre>
+            <span class="mnemonic">「线程要么收尸（join）要么放养（detach），不管就 crash」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-mutex">
+          <div class="qa-q"><span class="q-mark">Q84</span>mutex、lock_guard、unique_lock 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>std::mutex</strong>：裸锁——必须手动配对 lock/unlock，异常路径必漏</li>
+              <li><strong>lock_guard</strong>：构造加锁、析构解锁，<strong>最轻量、不可中途解锁</strong>——默认选它</li>
+              <li><strong>unique_lock</strong>：可延迟锁（defer_lock）、中途 unlock/再 lock、可移动、<strong>能配合条件变量</strong>——更灵活略有开销</li>
+              <li><strong>scoped_lock（C++17）</strong>：<strong>一次锁多把锁</strong>，内部死锁避免算法——多锁场景必用</li>
+              <li>其他：shared_mutex 读写锁、recursive_mutex 递归锁（设计坏味道）、timed_mutex 带超时</li>
+            </ul>
+            <span class="mnemonic">「默认 lock_guard，配条件变量用 unique_lock，多把锁用 scoped_lock」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-deadlock">
+          <div class="qa-q"><span class="q-mark">Q85</span>死锁产生的四个必要条件？如何预防？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>四条件（缺一不可）：<strong>互斥、持有并等待、不可剥夺、循环等待</strong></li>
+              <li><strong>预防（工程三板斧）</strong>：
+                <ul>
+                  <li>①<strong>全局锁序</strong>：所有线程按相同顺序加锁（破循环等待）</li>
+                  <li>②<strong>std::scoped_lock / std::lock</strong> 一次性原子获取多锁</li>
+                  <li>③<strong>try_lock + 退避重试</strong>（拿不到就放掉已有锁重来，破持有并等待）</li>
+                </ul>
+              </li>
+              <li>辅助：<strong>减小锁粒度、锁外调用、避免嵌套锁</strong>；TSan（-fsanitize=thread）可检测</li>
+            </ul>
+            <span class="mnemonic">「互斥、持有等、不可抢、循环等」；破环用 scoped_lock，统一顺序最稳</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-condvar">
+          <div class="qa-q"><span class="q-mark">Q86</span>条件变量为什么要用 while 循环等待？什么是虚假唤醒？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>标准姿势</strong>：<span class="key">unique_lock</span> 加锁 → <strong>while(!条件) cv.wait(lk)</strong> → 处理 → 解锁</li>
+              <li><strong>为什么 while 不 if</strong>：①<strong>虚假唤醒</strong>——OS 允许无 notify 也醒；②被唤醒到拿回锁之间条件可能<strong>又被别的线程消费掉</strong>（多消费者）</li>
+              <li><strong>wait 内部</strong>：原子地「解锁 + 睡眠」，被唤醒后「重新加锁」再返回</li>
+              <li>notify 前是否持锁：notify_one 可不持（效率高）；唤醒后条件变量仍由 while 重新校验兜底</li>
+              <li>等待带超时用 wait_for/ until；丢失唤醒的根因是「先 notify 后 wait」——条件本身要用状态变量（谓词）表达</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>std::mutex m;
+std::condition_variable cv;
+bool ready = false;
+
+// 消费者
+std::unique_lock&lt;std::mutex&gt; lk(m);
+while (!ready) cv.wait(lk);        // 必须 while！
+// 生产者
+{ std::lock_guard&lt;std::mutex&gt; lk(m);
+  ready = true; }
+cv.notify_all();</code></pre>
+            <span class="mnemonic">「wait 必裹 while，醒来重查条件再干活」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-atomic">
+          <div class="qa-q"><span class="q-mark">Q87</span>atomic 的原理？什么是 CAS？和 mutex 怎么选？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>std::atomic&lt;T&gt;</strong>：底层用 CPU <strong>原子指令</strong>（lock cmpxchg 等），免锁完成读改写</li>
+              <li><strong>CAS（compare_exchange_weak/strong）</strong>：比较并交换——「期望值没变才写入，变了返回失败重试」，是<strong>无锁数据结构与自旋的基石</strong>；weak 允许伪失败（循环里用 weak，单次用 strong）</li>
+              <li>常用：fetch_add（计数器）、exchange、compare_exchange；is_lock_free 查询是否真无锁</li>
+              <li><strong>选型</strong>：单变量计数/标志 → atomic（快）；<strong>多变量一致性复合操作 → mutex</strong>；用 atomic 组合多个状态是并发 bug 高发区</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>std::atomic&lt;int&gt; cnt{0};
+++cnt;  // 原子自增，无锁
+
+// CAS 自旋：无锁更新
+int expected = cnt.load();
+int desired;
+do {
+    desired = expected + 1;
+} while (!cnt.compare_exchange_weak(expected, desired));
+// expected 会被失败时刷新，循环重试</code></pre>
+            <span class="mnemonic">「一个变量 atomic，多个变量 mutex」；CAS 失败就重试</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-memory-order">
+          <div class="qa-q"><span class="q-mark">Q88</span>内存序 memory_order 了解吗？</div>
+          <div class="qa-a">
+            <ul>
+              <li>背景：编译器与 CPU 都会<strong>重排指令</strong>，多核间需要同步约定</li>
+              <li><strong>memory_order_seq_cst（默认）</strong>：全局全序，最稳最慢——<strong>不确定就用默认</strong></li>
+              <li><strong>acquire（读）/ release（写）配对</strong>：release 前的写在 acquire 后都可见——实现自旋锁、发布订阅的主流选择</li>
+              <li><strong>relaxed</strong>：只保证原子性不保证顺序——纯计数器可用</li>
+              <li>acquire/release 类似「写屏障 + 读屏障」；面试能讲清为什么需要屏障（可见性 + 重排）即可</li>
+            </ul>
+            <span class="mnemonic">「默认最稳，acquire 读 release 写，relaxed 只计数」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-call-once">
+          <div class="qa-q"><span class="q-mark">Q89</span>call_once 是什么？和静态局部变量初始化什么关系？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>std::call_once + once_flag</strong>：多线程并发调用也保证函数<strong>恰好执行一次</strong>（其余线程阻塞等它）</li>
+              <li>C++11 起<strong>静态局部变量初始化自带线程安全</strong>（魔法静态）——这是 Meyers 单例线程安全的依据</li>
+              <li>两者都能做一次性初始化；静态局部变量更简洁，call_once 适合「时机由外部控制」的初始化</li>
+            </ul>
+            <span class="mnemonic">「call_once 全局一次，静态局变量天生安全」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-future">
+          <div class="qa-q"><span class="q-mark">Q90</span>future、promise、async、packaged_task 的关系？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>future</strong>：读端——get() 阻塞取结果（只能取一次），wait/wait_for 轮询</li>
+              <li><strong>promise</strong>：写端——set_value 传结果给配对的 future（一诺一期的信道）</li>
+              <li><strong>packaged_task</strong>：把「可调用物」打包，执行时结果自动进 future（任务与结果解耦）</li>
+              <li><strong>async</strong>：最上层糖——直接「异步执行函数并返回 future」；<strong>launch::deferred 惰性 / async 真并发</strong>；坑：默认策略的 future 析构可能阻塞等任务</li>
+              <li>线程池方案常为：任务队列 + packaged_task + future（C++ 标准库暂无线程池，自研或用第三方）</li>
+            </ul>
+            <span class="mnemonic">「promise 写 future 读，packaged_task 打包活，async 全包了」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch12">
+        <h2><span class="num">12</span>场景与调优</h2>
+
+        <div class="qa hot" id="cpp-debug-crash">
+          <div class="qa-q"><span class="q-mark">Q91</span>线上程序段错误（core dumped），怎么排查？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>第一步</strong>：确认 core 生成（ulimit -c unlimited + core_pattern 路径）</li>
+              <li><strong>gdb ./app core</strong>：bt 看崩溃栈 → frame N 进帧 → print 变量 → 定位非法地址来源</li>
+              <li>无 core 时：dmesg 查 SIGSEGV 地址、用 strace/ltrace 跟踪、重跑 + ASan 复现</li>
+              <li><strong>段错误常见根因</strong>：空指针/野指针解引用、越界、栈溢出（递归）、双重释放、对齐错误（ARM）</li>
+              <li>预防：核心路径开 ASan/UBSan 跑 CI；assert 检查前置条件；崩溃自动收集（breakpad）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>ulimit -c unlimited
+gdb ./myapp core
+(gdb) bt          # 崩溃调用栈
+(gdb) frame 3     # 跳到可疑帧
+(gdb) info locals # 查看局部变量
+(gdb) p *ptr      # 大概率看到 0x0 或乱地址</code></pre>
+            <span class="mnemonic">「有 core 上 gdb，没 core 上 ASan」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-obj-size-optim">
+          <div class="qa-q"><span class="q-mark">Q92</span>什么是空基类优化（EBO）？有什么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li>空类大小 1（保唯一地址），但<strong>作为基类时可占 0 字节</strong>——EBO</li>
+              <li>应用：STL 的<strong>分配器/比较器/删除器</strong>多为空类，通过继承（EBO）而非成员存放 → <span class="key">unique_ptr 默认与裸指针同大小</span>，list&lt;int&gt; 节点不因空比较器变大</li>
+              <li>自己写泛型组件时，空的可定制参数建议 <strong>私有继承压缩</strong>（或 [[no_unique_address]]，C++20 用成员实现同样效果）</li>
+            </ul>
+            <span class="mnemonic">「空类作基类白住不占房」——EBO 是 unique_ptr 零开销的功臣</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-perf">
+          <div class="qa-q"><span class="q-mark">Q93</span>C++ 性能优化的整体思路？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>先测量再优化</strong>：perf（火焰图）、 profiler、benchmark（Google Benchmark）；「最热 20% 代码占 80% 时间」</li>
+              <li><strong>算法与数据结构</strong>优先：O(n²)→O(n log n)，换容器（链表换 vector 缓存友好）</li>
+              <li><strong>内存</strong>：减少分配（reserve、内存池、对象复用）、避免拷贝（move、string_view、span）、SSO、紧凑布局（对齐、SoA）</li>
+              <li><strong>并发</strong>：并行化（parallel algorithms）、降低锁竞争（细粒度/无锁/shard）、伪共享 padding</li>
+              <li><strong>编译器</strong>：-O2/-O3、LTO、PGO；查看是否内联/去虚化（编译报告/汇编）</li>
+              <li><strong>I/O</strong>：批量读写、缓冲、异步、零拷贝（sendfile/mmap）</li>
+            </ul>
+            <span class="mnemonic">「一测二代三内存，四锁五编六 IO」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-code-review">
+          <div class="qa-q"><span class="q-mark">Q94</span>C++ 代码 Review 你重点看什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>内存与所有权</strong>：裸 new/delete？所有权是否清晰（智能指针选型）？是否 Rule of Five 完整？</li>
+              <li><strong>正确性</strong>：迭代器失效、悬垂引用/指针、越界、未初始化、整数溢出、UB（符号溢出/严格别名）</li>
+              <li><strong>异常与错误处理</strong>：异常安全等级（基本/强/noexcept 正确标注）、资源泄漏路径</li>
+              <li><strong>并发</strong>：共享数据是否加锁、锁序、锁粒度、data race（TSan）</li>
+              <li><strong>接口设计</strong>：const 正确性、参数传递方式（值/引用/view）、explicit、API 最小暴露</li>
+              <li><strong>现代风格</strong>：override/final、nullptr、enum class、结构化绑定、避免 using namespace std</li>
+            </ul>
+            <span class="mnemonic">「内存看所有权，正确看失效，并发看锁，接口看 const」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-crossplat">
+          <div class="qa-q"><span class="q-mark">Q95</span>跨平台开发要注意什么？GCC/Clang/MSVC 差异？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>编译器差异</strong>：两阶段名字查找（模板依赖名 typename/template）、MSVC 的怪癖（/permissive- 收敛）、扩展关键字差异</li>
+              <li><strong>平台差异</strong>：路径分隔符/大小写敏感、字节序、wchar_t 大小（Linux 4 字节 vs Windows 2）、long 大小（LP64 vs LLP64）</li>
+              <li><strong>ABI</strong>：不同标准库实现（libstdc++/libc++/MSVC STL）<strong>不能混链</strong>；so 边界慎传 STL 类型</li>
+              <li><strong>对策</strong>：CI 多平台矩阵构建、固定标准版本（-std=c++17）、抽象平台层、避免依赖编译器扩展</li>
+            </ul>
+            <span class="mnemonic">「名字查找、字节序、ABI 三座山」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-read-big">
+          <div class="qa-q"><span class="q-mark">Q96</span>给你一个陌生的大型 C++ 项目，怎么快速上手？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>先跑起来</strong>：构建（CMake/Bazel）、跑测试与示例——环境不通寸步难行</li>
+              <li><strong>看目录与构建脚本</strong>：模块划分、依赖关系一目了然（CMakeLists 是最好的架构图）</li>
+              <li><strong>找入口</strong>：main/初始化流程 → 沿一次完整请求/调用链走通（打断点或日志）</li>
+              <li><strong>抓核心抽象</strong>：基类/接口/工厂在哪，通常 3~5 个核心类撑起全局</li>
+              <li><strong>工具</strong>：clangd 跳转、include 依赖图、grep 定位、git log -p 看演进</li>
+              <li>改一个小 bug / 小 feature 练手，比读十遍代码有效</li>
+            </ul>
+            <span class="mnemonic">「跑通、看图（构建脚本）、走链、抓抽象、小改动练手」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cpp-ch13">
+        <h2><span class="num">13</span>手写代码题</h2>
+
+        <div class="qa hot" id="cpp-write-string">
+          <div class="qa-q"><span class="q-mark">Q97</span>手写一个 String 类（Rule of Three/Five）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>考点：<strong>深拷贝、自赋值、异常安全、移动语义</strong>。要点：copy-and-swap 惯用法可同时优雅解决赋值三问题。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class String {
+public:
+    String(const char* s = "")                     // 构造
+        : data_(new char[strlen(s) + 1]) {
+        std::memcpy(data_, s, strlen(s) + 1);
+    }
+    ~String() { delete[] data_; }                  // 析构
+
+    String(const String&amp; o)                        // 拷贝构造（深拷贝）
+        : data_(new char[o.size() + 1]) {
+        std::memcpy(data_, o.data_, o.size() + 1);
+    }
+    String&amp; operator=(String o) noexcept {         // 传值 + swap：自赋值/异常安全全解
+        std::swap(data_, o.data_);
+        return *this;
+    }
+    String(String&amp;&amp; o) noexcept                    // 移动构造
+        : data_(o.data_) { o.data_ = nullptr; }
+
+    size_t size() const { return std::strlen(data_); }
+    const char* c_str() const { return data_; }
+private:
+    char* data_;
+};</code></pre>
+            <span class="mnemonic">「深拷贝防双删，copy-and-swap 保平安，移动要 noexcept」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-write-singleton">
+          <div class="qa-q"><span class="q-mark">Q98</span>手写线程安全的单例模式（Meyers' Singleton）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>考点：<strong>懒加载、线程安全、禁止拷贝</strong>。C++11 静态局部变量初始化自带线程安全，是标准答案。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class Singleton {
+public:
+    static Singleton&amp; instance() {
+        static Singleton inst;     // C++11 起线程安全（魔法静态）
+        return inst;
+    }
+    Singleton(const Singleton&amp;) = delete;            // 禁拷贝
+    Singleton&amp; operator=(const Singleton&amp;) = delete;
+private:
+    Singleton() = default;                          // 私有构造
+};</code></pre>
+            <ul>
+              <li>追问「为什么线程安全」：标准保证并发首调初始化只执行一次（内部类似 call_once）</li>
+              <li>若要求返回 shared_ptr（便于配合 weak_ptr）：用 call_once + 静态 once_flag</li>
+              <li>注意单例是<strong>全局状态</strong>，测试不友好——能注入就别单例</li>
+            </ul>
+            <span class="mnemonic">「静态局部变量一行单例，删拷贝、锁构造」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-write-sharedptr">
+          <div class="qa-q"><span class="q-mark">Q99</span>手写一个简版 shared_ptr</div>
+          <div class="qa-a">
+            <p>考点：<strong>引用计数、拷贝/移动/析构语义</strong>。核心：堆上计数块 + 原子操作。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>template &lt;typename T&gt;
+class SharedPtr {
+public:
+    explicit SharedPtr(T* p = nullptr)
+        : ptr_(p), cnt_(p ? new std::atomic&lt;int&gt;(1) : nullptr) {}
+
+    SharedPtr(const SharedPtr&amp; o) : ptr_(o.ptr_), cnt_(o.cnt_) {
+        if (cnt_) cnt_-&gt;fetch_add(1);              // 计数 +1
+    }
+    SharedPtr(SharedPtr&amp;&amp; o) noexcept : ptr_(o.ptr_), cnt_(o.cnt_) {
+        o.ptr_ = nullptr; o.cnt_ = nullptr;        // 偷家
+    }
+    SharedPtr&amp; operator=(const SharedPtr&amp; o) {
+        if (this != &amp;o) { release(); ptr_ = o.ptr_; cnt_ = o.cnt_;
+                          if (cnt_) cnt_-&gt;fetch_add(1); }
+        return *this;
+    }
+    ~SharedPtr() { release(); }
+    T&amp; operator*()  const { return *ptr_; }
+    T* operator-&gt;() const { return ptr_; }
+    int use_count() const { return cnt_ ? cnt_-&gt;load() : 0; }
+private:
+    void release() {
+        if (cnt_ &amp;&amp; cnt_-&gt;fetch_sub(1) == 1) {     // 减到 0 才释放
+            delete ptr_;
+            delete cnt_;
+        }
+        ptr_ = nullptr; cnt_ = nullptr;
+    }
+    T* ptr_;
+    std::atomic&lt;int&gt;* cnt_;
+};</code></pre>
+            <span class="mnemonic">「拷贝加一，析构减一，归零放人」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-write-vector">
+          <div class="qa-q"><span class="q-mark">Q100</span>手写一个简版 vector（push_back 与扩容）</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>template &lt;typename T&gt;
+class Vector {
+public:
+    ~Vector() { delete[] data_; }
+    size_t size() const { return size_; }
+    size_t capacity() const { return cap_; }
+    T&amp; operator[](size_t i) { return data_[i]; }
+
+    void push_back(const T&amp; v) {
+        if (size_ == cap_) reserve(cap_ ? cap_ * 2 : 4);  // 倍增扩容
+        data_[size_++] = v;
+    }
+    void reserve(size_t newCap) {
+        if (newCap &lt;= cap_) return;
+        T* fresh = new T[newCap];          // 简版：构造分配
+        for (size_t i = 0; i &lt; size_; ++i) fresh[i] = data_[i];
+        delete[] data_;
+        data_ = fresh; cap_ = newCap;
+    }
+private:
+    T* data_ = nullptr;
+    size_t size_ = 0, cap_ = 0;
+};</code></pre>
+            <ul>
+              <li>加分项：说明真实实现用 <strong>placement new + uninitialized_move</strong>（未构造内存上原位构造），以及 noexcept 移动对扩容方式的影响</li>
+            </ul>
+            <span class="mnemonic">「满了翻倍，搬完再拆旧房」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-write-raii">
+          <div class="qa-q"><span class="q-mark">Q101</span>手写一个 RAII 锁守卫（LockGuard）</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>template &lt;typename Mutex&gt;
+class LockGuard {
+public:
+    explicit LockGuard(Mutex&amp; m) : m_(m) { m_.lock(); }   // 构造即锁
+    ~LockGuard() { m_.unlock(); }                          // 析构必解锁
+    LockGuard(const LockGuard&amp;) = delete;                 // 禁拷贝
+    LockGuard&amp; operator=(const LockGuard&amp;) = delete;
+private:
+    Mutex&amp; m_;
+};
+// 用法：
+// { LockGuard&lt;std::mutex&gt; lk(mtx); shared_data.push(x); }</code></pre>
+            <p>考点：删除拷贝（守卫不可复制）、<strong>引用成员</strong>、异常路径安全性。可扩展：adopt_lock（已持有锁只接管解锁）、支持提前 unlock。</p>
+            <span class="mnemonic">「生来上锁，死前解锁，不许复制」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-write-prodcons">
+          <div class="qa-q"><span class="q-mark">Q102</span>手写生产者-消费者模型（条件变量版）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>考点：<strong>条件变量 + while 谓词 + unique_lock</strong> 的标准配合，是最经典的并发手写题。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>std::queue&lt;int&gt; q;
+std::mutex m;
+std::condition_variable cv;
+bool done = false;
+
+void producer(int n) {
+    for (int i = 0; i &lt; n; ++i) {
+        { std::lock_guard&lt;std::mutex&gt; lk(m);
+          q.push(i); }
+        cv.notify_one();               // 唤醒一个消费者
+    }
+    { std::lock_guard&lt;std::mutex&gt; lk(m); done = true; }
+    cv.notify_all();                   // 收工广播
+}
+
+void consumer() {
+    while (true) {
+        std::unique_lock&lt;std::mutex&gt; lk(m);
+        cv.wait(lk, []{ return !q.empty() || done; });  // 谓词版 wait
+        while (!q.empty()) {           // 醒来尽量多干（持锁期间）
+            int v = q.front(); q.pop();
+            lk.unlock();               // 处理时放锁
+            process(v);
+            lk.lock();
+        }
+        if (done) return;
+    }
+}</code></pre>
+            <ul>
+              <li>追问点：为什么 notify 前可以先解锁（谓词兜底）；为什么处理数据要放锁（减小临界区）；有界队列用<strong>两个条件变量</strong>（not_full / not_empty）</li>
+            </ul>
+            <span class="mnemonic">「谓词 wait、醒来多干、干活放锁」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="cpp-write-lru">
+          <div class="qa-q"><span class="q-mark">Q103</span>手写 LRU 缓存（哈希 + 双向链表）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>考点：<strong>数据结构组合</strong>。unordered_map O(1) 定位 + list 维护访问顺序，get/put 均 O(1)。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class LRUCache {
+public:
+    explicit LRUCache(size_t cap) : cap_(cap) {}
+
+    int get(int key) {
+        auto it = map_.find(key);
+        if (it == map_.end()) return -1;
+        // 命中：挪到队头（最近使用）
+        order_.splice(order_.begin(), order_, it-&gt;second);
+        return it-&gt;second-&gt;second;
+    }
+
+    void put(int key, int value) {
+        auto it = map_.find(key);
+        if (it != map_.end()) {                     // 已存在：更新 + 提前
+            it-&gt;second-&gt;second = value;
+            order_.splice(order_.begin(), order_, it-&gt;second);
+            return;
+        }
+        if (map_.size() == cap_) {                  // 淘汰队尾（最久未用）
+            map_.erase(order_.back().first);
+            order_.pop_back();
+        }
+        order_.emplace_front(key, value);
+        map_[key] = order_.begin();
+    }
+private:
+    size_t cap_;
+    std::list&lt;std::pair&lt;int, int&gt;&gt; order_;          // 头=最新，尾=最旧
+    std::unordered_map&lt;int,
+        std::list&lt;std::pair&lt;int,int&gt;&gt;::iterator&gt; map_;
+};</code></pre>
+            <span class="mnemonic">「map 管定位，list 管顺序；命中提前，满了砍尾」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="cpp-write-observer">
+          <div class="qa-q"><span class="q-mark">Q104</span>手写观察者模式（weak_ptr 防悬垂）</div>
+          <div class="qa-a">
+            <p>考点：多态回调 + <strong>weak_ptr 判活</strong>（观察者可能先死）+ 回调时避免死锁。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>struct Observer {
+    virtual ~Observer() = default;
+    virtual void onEvent(int) = 0;
+};
+
+class Subject {
+public:
+    void subscribe(std::shared_ptr&lt;Observer&gt; o) {
+        observers_.push_back(o);               // 存 weak：不延长生命周期
+    }
+    void notify(int ev) {
+        for (auto it = observers_.begin(); it != observers_.end(); ) {
+            if (auto sp = it-&gt;lock()) {       // 判活
+                sp-&gt;onEvent(ev);
+                ++it;
+            } else {
+                it = observers_.erase(it);     // 顺手清理尸体
+            }
+        }
+    }
+private:
+    std::vector&lt;std::weak_ptr&lt;Observer&gt;&gt; observers_;
+};</code></pre>
+            <ul>
+              <li>加分点：指出回调里若再加锁要防<strong>死锁</strong>；onEvent 里修改 observers_ 的重入问题（可拷贝一份再遍历）</li>
+            </ul>
+            <span class="mnemonic">「订阅存 weak，通知先判活，尸体顺手清」</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      style="
+        text-align: center;
+        padding: 40px 0 20px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      ">
+      <p>
+        ⚙️ C++ 开发工程师面试题总结 · 100+ 高频考点 &nbsp;|&nbsp;
+        <a
+          href="indexInterview.html"
+          style="color: var(--link-blue); text-decoration: none"
+          >返回面试题目录</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      function copyCode(btn) {
+        const pre = btn.parentElement
+        const code = pre.querySelector('code').innerText
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '已复制 ✓'
+          setTimeout(() => {
+            btn.textContent = '复制'
+          }, 1500)
+        })
+      }
+
+      // 侧边栏当前章节高亮
+      const sections = document.querySelectorAll('.section')
+      const navLinks = document.querySelectorAll('.toc li a')
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              navLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === `#${id}`,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-10% 0px -70% 0px' },
+      )
+      sections.forEach((s) => observer.observe(s))
+
+      // 移动端点击链接关闭侧边栏
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          document.querySelector('.sidebar').classList.remove('open')
+        })
+      })
+
+      document.addEventListener('pointerdown', (event) => {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(event.target) &&
+          !menuToggle.contains(event.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>

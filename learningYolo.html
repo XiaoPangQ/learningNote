@@ -1,0 +1,2064 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YOLO 目标识别与边缘检测实战指南 · Zinx的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #42b883;
+        --accent-soft: rgba(66, 184, 131, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #42b883 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🎯</span> YOLO 实战指南</h2>
+        <p>目标识别 + 边缘检测，从零跑通</p>
+      </div>
+      <a class="home-link" href="indexCourse.html">← 返回教程目录</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">准备篇</li>
+        <li><a href="#ch01">1. 概念澄清与版本选型</a></li>
+        <li><a href="#ch02">2. 环境搭建（CPU/GPU）</a></li>
+        <li class="toc-section-title">实战篇</li>
+        <li><a href="#ch03">3. 图像目标检测</a></li>
+        <li><a href="#ch04">4. 图像边缘检测</a></li>
+        <li><a href="#ch05">5. 摄像头实时目标检测</a></li>
+        <li><a href="#ch06">6. 摄像头实时边缘检测</a></li>
+        <li><a href="#ch07">7. 参数调优与结果解读</a></li>
+        <li><a href="#ch08">8. 常见报错速查表</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch09">9. 按项目需求改代码</a></li>
+        <li><a href="#ch10">10. 训练自己的数据集</a></li>
+        <li><a href="#ch11">11. 性能优化与部署</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🚀 实战指南 · 跟着做就能跑起来</span>
+        <h1>YOLO 目标识别与边缘检测实战指南</h1>
+        <p>
+          从零开始跑通 YOLO：环境搭建、图像检测、摄像头实时检测、边缘检测，
+          再到按项目需求改代码、训练自己的数据集。每一步都附常见问题与解决方法，
+          跟着操作一定能跑起来。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>11 个章节</span>
+          <span><span class="dot"></span>图像 + 摄像头双场景</span>
+          <span><span class="dot"></span>40+ 常见问题</span>
+          <span><span class="dot"></span>以 YOLOv8 / ultralytics 为准</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 概念澄清与版本选型</h2>
+
+        <h3>先分清：目标检测 ≠ 边缘检测</h3>
+        <p>
+          很多人把"边缘检测"和"目标检测"混为一谈，这是上手前<strong
+            >必须掰开的第一件事</strong
+          >——它们回答的是完全不同的两个问题：
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>对比项</th>
+                <th>边缘检测（Canny / Sobel）</th>
+                <th>目标检测（YOLO）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>回答的问题</strong></td>
+                <td>"轮廓线条在哪"</td>
+                <td>"是什么东西、在哪、有多少个"</td>
+              </tr>
+              <tr>
+                <td><strong>输出</strong></td>
+                <td>二值图（白线=边缘，黑=背景）</td>
+                <td>框 + 类别 + 置信度（person 0.92）</td>
+              </tr>
+              <tr>
+                <td><strong>是否需要训练</strong></td>
+                <td>不需要，纯数学算法</td>
+                <td>需要（用现成模型或自己训）</td>
+              </tr>
+              <tr>
+                <td><strong>是否理解语义</strong></td>
+                <td>不理解，只看像素梯度变化</td>
+                <td>理解，能区分手和猫</td>
+              </tr>
+              <tr>
+                <td><strong>典型用途</strong></td>
+                <td>轮廓提取、缺陷检测、图像预处理</td>
+                <td>安防监控、自动驾驶、人数统计</td>
+              </tr>
+              <tr>
+                <td><strong>用什么库</strong></td>
+                <td>OpenCV（cv2.Canny）</td>
+                <td>ultralytics（YOLO）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 本指南的定位</div>
+          YOLO 本身<strong>不做边缘检测</strong>，它是目标检测模型。本指南按「目标检测
+          YOLO」和「边缘检测 OpenCV Canny」两条线讲，最后再讲两者如何结合使用（比如
+          "YOLO 框出人 → 只对这个区域做边缘检测"）。
+        </div>
+
+        <h3>YOLO 是怎么工作的（30 秒版）</h3>
+        <p>
+          YOLO = <strong>Y</strong>ou <strong>O</strong>nly <strong>L</strong>ook
+          <strong>O</strong>nce。传统算法把图片切成几千个小块分别判断，YOLO
+          则是把整张图<strong>一次</strong>送进神经网络，直接输出所有目标的框、类别和置信度，所以快——快到能实时处理视频流。
+        </p>
+        <div class="diagram">
+          <pre>
+ 输入图像 ──► 缩放到 640×640 ──► 神经网络一次前向推理 ──► 输出所有检测结果
+ (任意尺寸)      (letterbox)         (backbone+neck+head)      │
+                                                              ▼
+                                              [x1,y1,x2,y2] + class + conf
+                                              例: person 0.92, car 0.87
+                                                              │
+                                                              ▼
+                                                    NMS 去掉重复框 ──► 最终结果
+</pre
+          >
+        </div>
+
+        <h3>版本怎么选</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>版本</th>
+                <th>发布方</th>
+                <th>状态</th>
+                <th>结论</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>YOLOv3 / v4</td>
+                <td>原作者 / 社区</td>
+                <td>老项目在用</td>
+                <td>新项目别选，仅读旧代码时了解</td>
+              </tr>
+              <tr>
+                <td><strong>YOLOv5</strong></td>
+                <td>Ultralytics</td>
+                <td>生态最成熟</td>
+                <td>大量老教程基于它，API 与 v8 类似</td>
+              </tr>
+              <tr>
+                <td><strong>YOLOv8 / YOLO11</strong></td>
+                <td>Ultralytics</td>
+                <td>当前主流</td>
+                <td><strong>新项目首选</strong>，本指南以此为准</td>
+              </tr>
+              <tr>
+                <td>YOLOX / RT-DETR</td>
+                <td>其他团队</td>
+                <td>各有优势</td>
+                <td>有特殊需求再研究</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 为什么选 ultralytics 这个库</div>
+          不管是 YOLOv8 还是 YOLO11，都来自同一个团队
+          Ultralytics，安装同一个包 <code>ultralytics</code>，API 完全一致——学会一套代码，两个版本随便切换。网上 99%
+          的最新教程也都基于它。
+        </div>
+
+        <h3>模型规格怎么选（n / s / m / l / x）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>模型</th>
+                <th>体积</th>
+                <th>速度</th>
+                <th>精度 mAP</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>yolov8n</code>（nano）</td>
+                <td>~6MB</td>
+                <td>最快</td>
+                <td>最低</td>
+                <td><strong>入门学习、CPU、边缘设备</strong></td>
+              </tr>
+              <tr>
+                <td><code>yolov8s</code>（small）</td>
+                <td>~22MB</td>
+                <td>快</td>
+                <td>中</td>
+                <td>实时检测常用</td>
+              </tr>
+              <tr>
+                <td><code>yolov8m</code>（medium）</td>
+                <td>~50MB</td>
+                <td>中</td>
+                <td>高</td>
+                <td>有 GPU 的常规项目</td>
+              </tr>
+              <tr>
+                <td><code>yolov8l / x</code></td>
+                <td>84MB+</td>
+                <td>慢</td>
+                <td>最高</td>
+                <td>精度优先、离线分析</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          口诀：<strong>学习用 n，实时用 s，GPU 富余用 m，离线跑用 x</strong>。先用
+          <code>yolov8n.pt</code> 把流程跑通，再换大模型提升精度。
+        </p>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 环境搭建（CPU / GPU）</h2>
+
+        <h3>整体路线</h3>
+        <ol class="steps">
+          <li>确认 Python 版本（3.8+，推荐 3.10）</li>
+          <li>创建独立虚拟环境（conda 或 venv）</li>
+          <li>安装 ultralytics（自动带上 torch / opencv）</li>
+          <li>下载官方测试图，跑第一条命令验证</li>
+          <li>（可选）安装 GPU 版 torch 加速</li>
+        </ol>
+
+        <h3>Step 1：确认 Python 版本</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">D:\&gt;</span> <span class="cmd">python --version</span>
+<span class="comment"># 期望输出 Python 3.8 ~ 3.12 之间，推荐 3.10</span>
+<span class="comment"># 若低于 3.8，先去 python.org 装新版再继续</span></code></pre>
+        </div>
+
+        <h3>Step 2：创建独立虚拟环境</h3>
+        <p>
+          YOLO 依赖 torch、opencv 等一堆大包，<strong>务必用独立环境</strong>，避免污染系统
+          Python。
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 方式 A：conda（推荐，去 anaconda.com 下载 Miniconda）</span>
+<span class="cmd">conda create -n yolo python=3.10 -y</span>
+<span class="cmd">conda activate yolo</span>
+
+<span class="comment"># 方式 B：系统 Python 自带 venv</span>
+<span class="cmd">python -m venv D:\yolo-env</span>
+<span class="cmd">D:\yolo-env\Scripts\activate</span>     <span class="comment"># Windows</span>
+<span class="cmd">source /opt/yolo-env/bin/activate</span>  <span class="comment"># Linux/Mac</span></code></pre>
+        </div>
+
+        <h3>Step 3：安装 ultralytics（含 PyTorch）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 国内先切镜像源，避免下载超时（torch 有 2GB+）</span>
+<span class="cmd">pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/</span>
+
+<span class="comment"># 安装（CPU 版 torch，一次装齐 ultralytics + torch + opencv）</span>
+<span class="cmd">pip install ultralytics -i https://mirrors.aliyun.com/pypi/simple/</span>
+
+<span class="comment"># 验证安装</span>
+<span class="cmd">yolo version</span>
+<span class="cmd">python -c "import ultralytics; print(ultralytics.__version__)"</span></code></pre>
+        </div>
+        <p>
+          看到 <code>8.3.x</code>（或更高）版本号，说明装好了。
+        </p>
+
+        <h3>Step 4：跑第一条命令验证</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 在任意目录执行（首次运行会自动下载 yolov8n.pt，约 6MB）</span>
+<span class="cmd">yolo predict model=yolov8n.pt source='https://ultralytics.com/images/bus.jpg'</span>
+
+<span class="comment"># 期望输出末尾：</span>
+<span class="comment"># image 1/1 ...bus.jpg: 640x480 4 persons, 1 bus, 79.5ms</span>
+<span class="comment"># Results saved to runs\detect\predict   &lt;-- 结果图在这里</span></code></pre>
+        </div>
+        <p>
+          打开 <code>runs/detect/predict/</code> 目录里的图片，看到画了框的公交车和行人，<strong
+            >恭喜，你已经完成了第一次目标检测</strong>。
+        </p>
+
+        <h3>Step 5（可选）：GPU 加速</h3>
+        <p>
+          CPU 跑得动，但实时视频只有几帧。有 NVIDIA 显卡就装 GPU 版（前提：显卡驱动已装好）：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 查看驱动支持的 CUDA 版本</span>
+<span class="cmd">nvidia-smi</span>   <span class="comment"># 右上角显示 CUDA Version: 12.x 即可</span>
+
+<span class="comment"># 安装 GPU 版 torch（CUDA 12.1 示例，会覆盖 CPU 版）</span>
+<span class="cmd">pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121</span>
+
+<span class="comment"># 验证 GPU 是否可用 —— 必须输出 True</span>
+<span class="cmd">python -c "import torch; print(torch.cuda.is_available())"</span>
+
+<span class="comment"># True  → 成功；False → 见下方排查表</span></code></pre>
+        </div>
+
+        <h3>安装阶段常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>pip 下载超时 / Read timed out</td>
+                <td>默认源在国外，torch 太大</td>
+                <td>换国内镜像（上面 aliyun 命令），或加 <code>-i</code> 参数</td>
+              </tr>
+              <tr>
+                <td><code>torch.cuda.is_available()</code> 为 False</td>
+                <td>装的还是 CPU 版 torch</td>
+                <td>先 <code>pip uninstall torch torchvision</code>，再用上面 cu121 命令重装</td>
+              </tr>
+              <tr>
+                <td>False 且重装后仍 False</td>
+                <td>驱动太老，不支持的 CUDA 版本</td>
+                <td><code>nvidia-smi</code> 看 CUDA Version，装对应版本（cu118/cu121）；驱动太旧去官网升级</td>
+              </tr>
+              <tr>
+                <td>Windows 报 <code>DLL load failed</code></td>
+                <td>缺 VC++ 运行库</td>
+                <td>安装 Microsoft Visual C++ Redistributable 2015-2022</td>
+              </tr>
+              <tr>
+                <td><code>ImportError: libGL.so.1</code>（Linux）</td>
+                <td>opencv 依赖图形库，服务器没装</td>
+                <td><code>sudo apt install libgl1-mesa-glx libglib2.0-0</code>，或换 <code>opencv-python-headless</code></td>
+              </tr>
+              <tr>
+                <td>首次运行卡在下载 yolov8n.pt</td>
+                <td>GitHub 下载被墙/慢</td>
+                <td>浏览器手动下载 <code>yolov8n.pt</code> 放到脚本同目录（模型放 GitHub release 和 ultralytics 官网 assets 里）</td>
+              </tr>
+              <tr>
+                <td>conda activate 报 conda init</td>
+                <td>首次使用未初始化</td>
+                <td><code>conda init cmd.exe</code> 或 <code>conda init powershell</code> 后重开终端</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 图像目标检测（Python 代码版）</h2>
+
+        <p>
+          CLI 一行命令虽然爽，但做项目必须会写代码——拿到每个框的坐标，才能做告警、计数、区域判断。
+        </p>
+
+        <h3>detect_image.py：完整可运行代码</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># detect_image.py —— 图像目标检测</span>
+<span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+
+<span class="comment"># 1. 加载模型（首次自动下载；yolov8n.pt 若已手动下载放同目录则直接用）</span>
+model = <span class="var">YOLO</span>(<span class="str">"yolov8n.pt"</span>)
+
+<span class="comment"># 2. 推理一张图片</span>
+results = model(<span class="str">"bus.jpg"</span>, conf=<span class="var">0.5</span>)  <span class="comment"># conf: 置信度阈值，低于 0.5 的框丢弃</span>
+
+<span class="comment"># 3. 遍历检测结果</span>
+<span class="kw">for</span> result <span class="kw">in</span> results:
+    boxes = result.boxes          <span class="comment"># 所有检测框</span>
+    <span class="kw">for</span> box <span class="kw">in</span> boxes:
+        cls_id   = <span class="var">int</span>(box.cls[<span class="var">0</span>])              <span class="comment"># 类别编号，如 0 = person</span>
+        cls_name = model.names[cls_id]        <span class="comment"># 类别名，如 "person"</span>
+        conf     = <span class="var">float</span>(box.conf[<span class="var">0</span>])         <span class="comment"># 置信度，如 0.92</span>
+        x1, y1, x2, y2 = box.xyxy[<span class="var">0</span>].tolist() <span class="comment"># 框坐标（左上角 x1,y1 + 右下角 x2,y2，像素）</span>
+        <span class="var">print</span>(<span class="str">f"{cls_name} 置信度={conf:.2f} 坐标=({x1:.0f},{y1:.0f})-({x2:.0f},{y2:.0f})"</span>)
+
+<span class="comment"># 4. 保存画了框的结果图</span>
+annotated = results[<span class="var">0</span>].plot()   <span class="comment"># 返回 numpy 图像（BGR），已画好框和标签</span>
+<span class="kw">import</span> cv2
+cv2.imwrite(<span class="str">"result.jpg"</span>, annotated)
+<span class="var">print</span>(<span class="str">"结果已保存到 result.jpg"</span>)</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">D:\&gt;</span> <span class="cmd">python detect_image.py</span>
+<span class="comment"># 期望输出：</span>
+<span class="comment"># bus 置信度=0.89 坐标=(23,230)-(797,486)</span>
+<span class="comment"># person 置信度=0.92 坐标=(67,88)-(118,254)</span>
+<span class="comment"># ...（共 5 个目标）</span>
+<span class="comment"># 结果已保存到 result.jpg</span></code></pre>
+        </div>
+
+        <h3>结果对象详解（做项目必懂）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>属性</th>
+                <th>含义</th>
+                <th>示例值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>box.xyxy</code></td>
+                <td>框坐标 [x1, y1, x2, y2]，像素单位</td>
+                <td>[67.0, 88.0, 118.0, 254.0]</td>
+              </tr>
+              <tr>
+                <td><code>box.xywh</code></td>
+                <td>中心点 + 宽高 [cx, cy, w, h]</td>
+                <td>算区域中心时用它更方便</td>
+              </tr>
+              <tr>
+                <td><code>box.cls</code></td>
+                <td>类别编号（COCO 共 80 类）</td>
+                <td>0 = person, 5 = bus</td>
+              </tr>
+              <tr>
+                <td><code>box.conf</code></td>
+                <td>置信度 0~1</td>
+                <td>0.92</td>
+              </tr>
+              <tr>
+                <td><code>model.names</code></td>
+                <td>编号 → 类名字典</td>
+                <td>{0:'person', 1:'bicycle', ...}</td>
+              </tr>
+              <tr>
+                <td><code>results[0].plot()</code></td>
+                <td>返回画好框的图（numpy 数组）</td>
+                <td>直接 cv2.imwrite 保存</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>图像检测常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>中文路径读不到图 / 报错</td>
+                <td>OpenCV 不支持中文路径</td>
+                <td>用 <code>cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_COLOR)</code> 读，<code>cv2.imencode + tofile</code> 写（见第 4 章代码）</td>
+              </tr>
+              <tr>
+                <td>什么都没检测到</td>
+                <td>目标太小 / 置信度阈值过高 / 图像模糊</td>
+                <td>把 <code>conf</code> 降到 0.25 试试；小目标把 <code>imgsz</code> 调大到 1280</td>
+              </tr>
+              <tr>
+                <td>同一目标框了好几个框</td>
+                <td>NMS 阈值过松</td>
+                <td>推理时加 <code>iou=0.45</code>（默认 0.7，越小去重越狠）</td>
+              </tr>
+              <tr>
+                <td>检测到 80 类之外的东西</td>
+                <td>预训练模型只认识 COCO 80 类</td>
+                <td>自定义类别需要训练自己的模型（见第 10 章）</td>
+              </tr>
+              <tr>
+                <td><code>result.plot()</code> 中文显示乱码</td>
+                <td>cv2 画框默认字体不含中文</td>
+                <td>自己用 <code>cv2.putText</code> 画英文，或用 PIL 的 <code>ImageDraw</code> 配合中文字体</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 图像边缘检测（Canny）</h2>
+
+        <h3>原理一句话 + 三步流程</h3>
+        <p>
+          边缘 = 像素值发生剧烈变化的地方。Canny 算法流程：
+          <strong>灰度化 → 高斯模糊去噪 → 计算梯度 → 双阈值筛选出边缘</strong>。
+          你只需要记住两个可调参数：<code>threshold1</code>（低于它的梯度被丢弃）和
+          <code>threshold2</code>（高于它的算强边缘，两者之间的看是否与强边缘相连）。
+        </p>
+        <div class="diagram">
+          <pre>
+ 原图 ──► cvtColor 转灰度 ──► GaussianBlur 模糊 ──► Canny(t1, t2) ──► 边缘二值图
+ 彩色       3 通道→1 通道       去掉噪点细纹理        提取梯度变化         白线=边缘
+</pre
+          >
+        </div>
+
+        <h3>edge_image.py：完整可运行代码</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># edge_image.py —— 图像边缘检测（兼容中文路径）</span>
+<span class="kw">import</span> cv2
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="var">imread_zh</span>(path):
+    <span class="comment"># OpenCV 原生 imread 不认中文路径，用 imdecode 绕过（Windows 必备）</span>
+    <span class="kw">return</span> cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_COLOR)
+
+<span class="comment"># 1. 读图并转灰度</span>
+img = <span class="var">imread_zh</span>(<span class="str">"bus.jpg"</span>)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+<span class="comment"># 2. 高斯模糊（核大小必须是奇数；模糊越强噪点越少，细节也越少）</span>
+blur = cv2.GaussianBlur(gray, (<span class="var">5</span>, <span class="var">5</span>), <span class="var">0</span>)
+
+<span class="comment"># 3. Canny 边缘检测</span>
+edges = cv2.Canny(blur, threshold1=<span class="var">50</span>, threshold2=<span class="var">150</span>)
+
+<span class="comment"># 4. 保存（中文路径同样要用 imencode + tofile）</span>
+cv2.imencode(<span class="str">".jpg"</span>, edges)[<span class="var">1</span>].tofile(<span class="str">"边缘结果.jpg"</span>)
+<span class="var">print</span>(<span class="str">"已保存 边缘结果.jpg（白线即边缘）"</span>)
+
+<span class="comment"># 附：把边缘叠加回原图看效果（边缘染红叠回去）</span>
+overlay = img.copy()
+overlay[edges &gt; <span class="var">0</span>] = (<span class="var">0</span>, <span class="var">0</span>, <span class="var">255</span>)   <span class="comment"># 边缘像素涂成红色</span>
+cv2.imencode(<span class="str">".jpg"</span>, overlay)[<span class="var">1</span>].tofile(<span class="str">"边缘叠加.jpg"</span>)</code></pre>
+        </div>
+
+        <h3>阈值怎么调</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>调法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>边缘太碎、噪点满天飞</td>
+                <td>调高两个阈值（如 100/300），或加大模糊核（5→7）</td>
+              </tr>
+              <tr>
+                <td>边缘断断续续、缺失严重</td>
+                <td>调低两个阈值（如 30/100），或减小模糊</td>
+              </tr>
+              <tr>
+                <td>经验法则</td>
+                <td><code>t2 : t1 ≈ 2:1 到 3:1</code>，先定 t2 再配 t1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>三种边缘算子对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>算子</th>
+                <th>调用</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Canny</strong></td>
+                <td><code>cv2.Canny(img, 50, 150)</code></td>
+                <td>最常用，边缘细且连续，自带双阈值筛选</td>
+              </tr>
+              <tr>
+                <td>Sobel</td>
+                <td><code>cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)</code></td>
+                <td>分 X / Y 方向求梯度，可算方向</td>
+              </tr>
+              <tr>
+                <td>Laplacian</td>
+                <td><code>cv2.Laplacian(img, cv2.CV_64F)</code></td>
+                <td>对噪声敏感，通常配模糊用</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 记忆口诀</div>
+          边缘检测三板斧：<strong>先灰度、再模糊、后 Canny</strong>；阈值二比一，碎加高、断调低。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> 摄像头实时目标检测</h2>
+
+        <h3>detect_camera.py：完整可运行代码</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># detect_camera.py —— 摄像头实时目标检测（按 q 退出）</span>
+<span class="kw">import</span> cv2
+<span class="kw">import</span> time
+<span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+
+model = <span class="var">YOLO</span>(<span class="str">"yolov8n.pt"</span>)
+
+<span class="comment"># 0 = 笔记本内置摄像头；外接 USB 摄像头试 1、2；网络摄像头用 rtsp 地址</span>
+cap = cv2.VideoCapture(<span class="var">0</span>)
+
+<span class="kw">if</span> <span class="kw">not</span> cap.isOpened():
+    <span class="kw">raise</span> RuntimeError(<span class="str">"摄像头打开失败，见本章末尾排查表"</span>)
+
+<span class="comment"># 可选：限制分辨率降低延迟（摄像头支持才行）</span>
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, <span class="var">1280</span>)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, <span class="var">720</span>)
+
+prev = time.time()
+<span class="kw">while</span> <span class="kw">True</span>:
+    ok, frame = cap.read()
+    <span class="kw">if not</span> ok:
+        <span class="var">print</span>(<span class="str">"读取帧失败，摄像头可能被占用"</span>)
+        <span class="kw">break</span>
+
+    <span class="comment"># 推理（verbose=False 关掉每帧的刷屏日志）</span>
+    results = model(frame, conf=<span class="var">0.4</span>, verbose=<span class="kw">False</span>)
+
+    <span class="comment"># 拿到画好框的帧</span>
+    annotated = results[<span class="var">0</span>].plot()
+
+    <span class="comment"># 计算并显示 FPS</span>
+    now = time.time()
+    fps = <span class="var">1</span> / (now - prev)
+    prev = now
+    cv2.putText(annotated, <span class="str">f"FPS: {fps:.1f}"</span>, (<span class="var">10</span>, <span class="var">30</span>),
+                cv2.FONT_HERSHEY_SIMPLEX, <span class="var">1</span>, (<span class="var">0</span>, <span class="var">255</span>, <span class="var">0</span>), <span class="var">2</span>)
+
+    <span class="comment"># 显示画面</span>
+    cv2.imshow(<span class="str">"YOLO Detection - press q to quit"</span>, annotated)
+    <span class="kw">if</span> cv2.waitKey(<span class="var">1</span>) &amp; <span class="var">0xFF</span> == ord(<span class="str">'q'</span>):  <span class="comment"># 按 q 退出</span>
+        <span class="kw">break</span>
+
+cap.release()
+cv2.destroyAllWindows()</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">D:\&gt;</span> <span class="cmd">python detect_camera.py</span>
+<span class="comment"># 弹出窗口，你出现在画面里，身上画着 person 框，左上角显示 FPS</span></code></pre>
+        </div>
+
+        <h3>换网络摄像头（监控 / RTSP）</h3>
+        <p>
+          海康、大华等网络摄像头都会提供 RTSP 地址，把 <code>VideoCapture(0)</code>
+          换成地址即可（用户名/密码/IP 按实际改）：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>cap = cv2.VideoCapture(<span class="str">"rtsp://admin:密码@192.168.1.64:554/h264/ch1/main/av_stream"</span>)
+
+<span class="comment"># RTSP 延迟高时：关掉缓冲区，让程序始终读最新帧</span>
+cap.set(cv2.CAP_PROP_BUFFERSIZE, <span class="var">1</span>)</code></pre>
+        </div>
+
+        <h3>实时检测常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>摄像头打不开 / isOpented() 为 False</td>
+                <td>索引不对 / 被占用 / 权限</td>
+                <td>索引依次试 <code>0、1、2、-1</code>；关掉微信/腾讯会议/其他占用程序；Windows 检查隐私设置里的摄像头权限；Linux 用户加 <code>sudo usermod -aG video $USER</code></td>
+              </tr>
+              <tr>
+                <td>窗口黑屏但没报错</td>
+                <td>读取了空帧</td>
+                <td>打印 <code>frame.shape</code> 确认；索引换 <code>cv2.CAP_DSHOW</code> 后端：<code>VideoCapture(0, cv2.CAP_DSHOW)</code></td>
+              </tr>
+              <tr>
+                <td>FPS 只有 2~3，画面卡成PPT</td>
+                <td>CPU 跑不动 / 模型太大</td>
+                <td>① 换 <code>yolov8n</code>；② <code>imgsz=320</code> 减小输入；③ 有 GPU 装第 2 章的 GPU 版 torch；④ 隔帧检测（见第 11 章）</td>
+              </tr>
+              <tr>
+                <td>RTSP 画面延迟好几秒</td>
+                <td>OpenCV 缓冲区堆积</td>
+                <td><code>CAP_PROP_BUFFERSIZE=1</code>；用子线程单独取帧；或改用摄像头子码流</td>
+              </tr>
+              <tr>
+                <td>窗口无响应 / 关不掉</td>
+                <td>waitKey 没写或参数为 0</td>
+                <td>必须有 <code>cv2.waitKey(1)</code>（参数是毫秒，写 0 会永久等待按键）</td>
+              </tr>
+              <tr>
+                <td>Mac 上报权限错误</td>
+                <td>终端没拿到摄像头授权</td>
+                <td>系统设置 → 隐私与安全 → 摄像头 → 勾选你的终端 / VS Code / Python</td>
+              </tr>
+              <tr>
+                <td>报 <code>cv2.error</code> 画面尺寸相关</td>
+                <td>frame 为 None 仍送进推理</td>
+                <td>在推理前加 <code>if not ok: continue</code> 判断（上面代码已包含）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 高频坑：摄像头被占用</div>
+          <code>cap.isOpened()</code> 为 False 的第一嫌疑永远是<strong
+            >别的程序占着摄像头</strong
+          >——微信、QQ、腾讯会议、浏览器标签页（某个网页开着摄像头）。全部关掉再试。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 摄像头实时边缘检测</h2>
+
+        <p>同一套路：读帧 → 处理 → 显示。这次加一个<strong>滑动条实时调阈值</strong>，你能直观感受两个阈值的作用。</p>
+
+        <h3>edge_camera.py：完整可运行代码</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># edge_camera.py —— 摄像头实时边缘检测 + 滑动条调阈值（按 q 退出）</span>
+<span class="kw">import</span> cv2
+
+cap = cv2.VideoCapture(<span class="var">0</span>)
+<span class="kw">if not</span> cap.isOpened():
+    <span class="kw">raise</span> RuntimeError(<span class="str">"摄像头打开失败"</span>)
+
+cv2.namedWindow(<span class="str">"Edge"</span>)
+<span class="kw">def</span> <span class="var">nothing</span>(x):
+    <span class="kw">pass</span>
+
+<span class="comment"># 创建两个滑动条：低阈值、高阈值（初始 50 / 150）</span>
+cv2.createTrackbar(<span class="str">"t1 (low)"</span>,  <span class="str">"Edge"</span>, <span class="var">50</span>,  <span class="var">500</span>, nothing)
+cv2.createTrackbar(<span class="str">"t2 (high)"</span>, <span class="str">"Edge"</span>, <span class="var">150</span>, <span class="var">500</span>, nothing)
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    ok, frame = cap.read()
+    <span class="kw">if not</span> ok:
+        <span class="kw">break</span>
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (<span class="var">5</span>, <span class="var">5</span>), <span class="var">0</span>)
+
+    t1 = cv2.getTrackbarPos(<span class="str">"t1 (low)"</span>, <span class="str">"Edge"</span>)
+    t2 = cv2.getTrackbarPos(<span class="str">"t2 (high)"</span>, <span class="str">"Edge"</span>)
+    edges = cv2.Canny(blur, t1, t2)
+
+    <span class="comment"># 边缘是单通道图，转回 BGR 才能正常显示（想彩色就取消下面注释）</span>
+    show = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+
+    cv2.imshow(<span class="str">"Edge"</span>, show)
+    <span class="kw">if</span> cv2.waitKey(<span class="var">1</span>) &amp; <span class="var">0xFF</span> == ord(<span class="str">'q'</span>):
+        <span class="kw">break</span>
+
+cap.release()
+cv2.destroyAllWindows()</code></pre>
+        </div>
+        <p>
+          拖动滑动条：阈值调到很低时边缘又多又碎，调很高时画面几乎全黑——这就是 Canny
+          两个参数的全部秘密。
+        </p>
+
+        <h3>YOLO + 边缘检测结合：只对"人"做边缘检测</h3>
+        <p>
+          一个非常实用的组合技：先用 YOLO 找到人，再<strong>只在人的框内</strong>做 Canny
+          ——背景的边缘全部消失，只剩目标轮廓。
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># yolo_edge_camera.py —— YOLO 框出人 + 只对框内做边缘检测</span>
+<span class="kw">import</span> cv2
+<span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+
+model = <span class="var">YOLO</span>(<span class="str">"yolov8n.pt"</span>)
+cap = cv2.VideoCapture(<span class="var">0</span>)
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    ok, frame = cap.read()
+    <span class="kw">if not</span> ok:
+        <span class="kw">break</span>
+
+    results = model(frame, classes=[<span class="var">0</span>], conf=<span class="var">0.4</span>, verbose=<span class="kw">False</span>)  <span class="comment"># classes=[0] 只检测 person</span>
+
+    <span class="kw">for</span> box <span class="kw">in</span> results[<span class="var">0</span>].boxes:
+        x1, y1, x2, y2 = [<span class="var">int</span>(v) <span class="kw">for</span> v <span class="kw">in</span> box.xyxy[<span class="var">0</span>]]
+        x1, y1 = max(x1, <span class="var">0</span>), max(y1, <span class="var">0</span>)                <span class="comment"># 防止越界</span>
+        x2, y2 = min(x2, frame.shape[<span class="var">1</span>]), min(y2, frame.shape[<span class="var">0</span>])
+
+        roi = frame[y1:y2, x1:x2]                     <span class="comment"># 裁出人所在的区域</span>
+        gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(cv2.GaussianBlur(gray, (<span class="var">5</span>, <span class="var">5</span>), <span class="var">0</span>), <span class="var">50</span>, <span class="var">150</span>)
+
+        roi[edges &gt; <span class="var">0</span>] = (<span class="var">0</span>, <span class="var">255</span>, <span class="var">0</span>)                 <span class="comment"># 人区域内的边缘涂绿</span>
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (<span class="var">0</span>, <span class="var">255</span>, <span class="var">0</span>), <span class="var">2</span>)   <span class="comment"># 画 YOLO 框</span>
+
+    cv2.imshow(<span class="str">"YOLO + Edge"</span>, frame)
+    <span class="kw">if</span> cv2.waitKey(<span class="var">1</span>) &amp; <span class="var">0xFF</span> == ord(<span class="str">'q'</span>):
+        <span class="kw">break</span>
+
+cap.release()
+cv2.destroyAllWindows()</code></pre>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 参数调优与结果解读</h2>
+
+        <h3>推理时可调的核心参数</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>参数</th>
+                <th>默认</th>
+                <th>作用</th>
+                <th>调整建议</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>conf</code></td>
+                <td>0.25</td>
+                <td>置信度阈值，低于它的框直接丢弃</td>
+                <td>误检多→调高；漏检多→调低。实时检测建议 0.4~0.5</td>
+              </tr>
+              <tr>
+                <td><code>iou</code></td>
+                <td>0.7</td>
+                <td>NMS 去重的重叠阈值</td>
+                <td>一个目标出现多个框→调低到 0.45</td>
+              </tr>
+              <tr>
+                <td><code>imgsz</code></td>
+                <td>640</td>
+                <td>推理前缩放到的尺寸</td>
+                <td>小目标检不到→调大到 1280（更慢）；提速→降到 320/448</td>
+              </tr>
+              <tr>
+                <td><code>classes</code></td>
+                <td>None</td>
+                <td>只保留指定类别</td>
+                <td><code>classes=[0]</code> 只留 person；<code>[2,5,7]</code> 只留 car/bus-truck</td>
+              </tr>
+              <tr>
+                <td><code>device</code></td>
+                <td>auto</td>
+                <td>用哪个设备推理</td>
+                <td><code>device='cuda:0'</code> 指定第一块 GPU，<code>'cpu'</code> 强制 CPU</td>
+              </tr>
+              <tr>
+                <td><code>half</code></td>
+                <td>False</td>
+                <td>半精度推理（GPU 专属）</td>
+                <td>GPU 上设 <code>half=True</code>，速度翻倍精度几乎不变</td>
+              </tr>
+              <tr>
+                <td><code>max_det</code></td>
+                <td>300</td>
+                <td>单张图最多保留的框数</td>
+                <td>密集人群场景可调大</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>漏检 vs 误检：一张表定方向</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>症状</th>
+                <th>第一步</th>
+                <th>第二步</th>
+                <th>第三步</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>漏检</strong>（目标没框出来）</td>
+                <td>conf 降到 0.2 看是否出现</td>
+                <td>还漏 → imgsz 加倍</td>
+                <td>还漏 → 换更大模型（n→s→m）或自己训练</td>
+              </tr>
+              <tr>
+                <td><strong>误检</strong>（把别的东西框成目标）</td>
+                <td>conf 升到 0.6</td>
+                <td>还误检 → 加 classes 过滤</td>
+                <td>还误检 → 训练自己的数据集（第 10 章）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>看懂速度日志</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>0: 480x640 4 persons, 1 bus, 1.2ms preprocess, 15.8ms inference, 1.1ms postprocess
+
+<span class="comment"># preprocess  = 图像缩放等预处理耗时</span>
+<span class="comment"># inference   = 神经网络计算耗时（大头，GPU 加速主要加速它）</span>
+<span class="comment"># postprocess = NMS 去重等后处理耗时</span>
+<span class="comment"># 1000 / (inference+前后处理) ≈ 理论最高 FPS</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 常见报错速查表</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>报错信息（关键词）</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ModuleNotFoundError: No module named 'ultralytics'</code></td>
+                <td>没装 / 装到别的环境了</td>
+                <td><code>pip install ultralytics</code>；确认当前终端在 yolo 环境里（conda activate yolo）</td>
+              </tr>
+              <tr>
+                <td><code>FileNotFoundError: yolov8n.pt</code></td>
+                <td>离线机器自动下载失败</td>
+                <td>联网机器下载 .pt 文件，拷到脚本同目录</td>
+              </tr>
+              <tr>
+                <td><code>torch.cuda.is_available() == False</code></td>
+                <td>装的 CPU 版 torch</td>
+                <td>见第 2 章 Step 5，uninstall 后装 cu121 版</td>
+              </tr>
+              <tr>
+                <td><code>CUDA out of memory</code></td>
+                <td>显存不够</td>
+                <td>换小模型（m→s→n）、<code>imgsz=416</code>、关闭其他占显存程序</td>
+              </tr>
+              <tr>
+                <td><code>cv2.error: ... in function 'cv::imshow'</code></td>
+                <td>传了空图 / 中文窗口名</td>
+                <td>推理前判空；窗口名不要用中文</td>
+              </tr>
+              <tr>
+                <td><code>error: (-215:Assertion failed)</code> 读图相关</td>
+                <td>imread 路径错误返回 None</td>
+                <td>检查路径斜杠；中文路径用第 4 章的 imdecode 方案</td>
+              </tr>
+              <tr>
+                <td><code>ImportError: libGL.so.1</code></td>
+                <td>Linux 服务器缺图形库</td>
+                <td><code>apt install libgl1-mesa-glx libglib2.0-0</code></td>
+              </tr>
+              <tr>
+                <td><code>[Errno 2] No such file or directory: 'runs/detect/...'</code></td>
+                <td>结果目录被移动 / 无写权限</td>
+                <td>指定 <code>save_dir</code>，或确认当前目录可写</td>
+              </tr>
+              <tr>
+                <td>pip 安装 <code>ERROR: metadata generation failed</code></td>
+                <td>Python 版本过新/过旧</td>
+                <td>换 Python 3.10/3.11 环境重装</td>
+              </tr>
+              <tr>
+                <td>Mac Apple 芯片跑得慢</td>
+                <td>默认 CPU 推理</td>
+                <td>装 MPS 版：<code>device='mps'</code>（ultralytics 支持 Apple 加速）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 排错三板斧</div>
+          <strong
+            >① 报什么错 → 贴报错关键词到本表搜 → ② 环境对不对 →
+            python/pip/conda 是否指向同一环境 → ③ 最小复现 →
+            用官方 bus.jpg 和纯 CPU 跑一遍，排除数据和环境因素再回头查代码</strong
+          >。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 按项目需求改代码</h2>
+
+        <p>
+          真实项目从来不是"检测出框就完事"。下面是六个最常见的需求改造，每个都给出<strong
+            >可直接粘贴的代码片段</strong
+          >（接在第 5 章 detect_camera.py 的推理循环里）。
+        </p>
+
+        <h3>需求 1：只检测特定类别（如只统计人）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 方式 A：推理参数过滤（推荐，不浪费算力在别的类别上）</span>
+results = model(frame, classes=[<span class="var">0</span>], verbose=<span class="kw">False</span>)   <span class="comment"># 0 = person</span>
+
+<span class="comment"># 方式 B：拿到结果后再过滤（灵活，可多类）</span>
+wanted = {<span class="str">"person"</span>, <span class="str">"car"</span>}
+<span class="kw">for</span> box <span class="kw">in</span> results[<span class="var">0</span>].boxes:
+    <span class="kw">if</span> model.names[<span class="var">int</span>(box.cls[<span class="var">0</span>])] <span class="kw">in</span> wanted:
+        <span class="var">print</span>(<span class="str">"命中目标"</span>, box.conf[<span class="var">0</span>])</code></pre>
+        </div>
+        <p>
+          COCO 80 类常用编号速记：<code>0 person</code>、<code>1 bicycle</code>、<code>2 car</code>、<code>3 motorcycle</code>、<code>5 bus</code>、<code>7 truck</code>、<code>16 cat</code>、<code>17 dog</code>、<code>39 bottle</code>、<code>56 chair</code>、<code>62 tv</code>。完整列表 <code>print(model.names)</code> 一行搞定。
+        </p>
+
+        <h3>需求 2：人数统计 / 超过 N 人触发告警</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>results = model(frame, classes=[<span class="var">0</span>], conf=<span class="var">0.5</span>, verbose=<span class="kw">False</span>)
+count = <span class="var">len</span>(results[<span class="var">0</span>].boxes)          <span class="comment"># 当前画面人数</span>
+
+<span class="kw">if</span> count &gt; <span class="var">3</span>:
+    <span class="comment"># 告警动作：响铃 / 截图存证 / 推送消息，按需替换</span>
+    ts = time.strftime(<span class="str">"%Y%m%d_%H%M%S"</span>)
+    cv2.imwrite(<span class="str">f"alarm_{ts}.jpg"</span>, frame)   <span class="comment"># 保存告警截图</span>
+    cv2.putText(frame, <span class="str">f"WARNING! {count} persons"</span>, (<span class="var">10</span>, <span class="var">60</span>),
+                cv2.FONT_HERSHEY_SIMPLEX, <span class="var">1</span>, (<span class="var">0</span>, <span class="var">0</span>, <span class="var">255</span>), <span class="var">2</span>)</code></pre>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">📌 防告警轰炸小技巧</div>
+          实时画面人数会抖动（16→17→16）。加<strong>冷却时间</strong>：告警后 30 秒内不再重复告警——一个
+          <code>last_alarm = 0</code> 时间戳 + <code>if now - last_alarm &gt; 30</code> 判断即可。
+        </div>
+
+        <h3>需求 3：电子围栏 / 区域入侵检测</h3>
+        <p>
+          只有目标<strong>进入指定多边形区域</strong>才告警——仓库、工地、机房场景标配。用
+          <code>cv2.pointPolygonTest</code> 判断目标中心点是否在区域内：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="comment"># 定义围栏多边形（顶点坐标按你画面里的实际位置改，可用鼠标点击取点）</span>
+zone = np.array([[(<span class="var">200</span>, <span class="var">150</span>), (<span class="var">550</span>, <span class="var">150</span>), (<span class="var">600</span>, <span class="var">450</span>), (<span class="var">150</span>, <span class="var">450</span>)]], dtype=np.int32)
+
+results = model(frame, classes=[<span class="var">0</span>], verbose=<span class="kw">False</span>)
+<span class="kw">for</span> box <span class="kw">in</span> results[<span class="var">0</span>].boxes:
+    cx, cy, w, h = box.xywh[<span class="var">0</span>].tolist()          <span class="comment"># 中心点 + 宽高</span>
+    <span class="kw">if</span> cv2.pointPolygonTest(zone, (cx, cy), <span class="kw">False</span>) &gt;= <span class="var">0</span>:  <span class="comment"># 中心点在区域内</span>
+        <span class="var">print</span>(<span class="str">"!! 有人闯入围栏区域"</span>)
+
+<span class="comment"># 把围栏画出来（半透明红色警示区）</span>
+overlay = frame.copy()
+cv2.fillPoly(overlay, zone, (<span class="var">0</span>, <span class="var">0</span>, <span class="var">255</span>))
+frame = cv2.addWeighted(overlay, <span class="var">0.2</span>, frame, <span class="var">0.8</span>, <span class="var">0</span>)
+cv2.polylines(frame, zone, <span class="kw">True</span>, (<span class="var">0</span>, <span class="var">0</span>, <span class="var">255</span>), <span class="var">2</span>)</code></pre>
+        </div>
+        <p>
+          <strong>取顶点坐标的小技巧</strong>：先显示一帧画面，绑定
+          <code>cv2.setMouseCallback</code> 在窗口里点击，把每次点击的坐标 print
+          出来，依次记录多边形顶点。
+        </p>
+
+        <h3>需求 4：目标越线计数（进出统计）</h3>
+        <p>
+          商场客流统计的核心：画一条虚拟线，目标中心<strong>从上穿到下</strong>记 +1，<strong
+            >从下穿到上</strong>记 -1。用中心点 y 坐标与上一帧的对比判断方向：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>LINE_Y = <span class="var">300</span>                      <span class="comment"># 计数线的 y 坐标</span>
+counter = <span class="var">0</span>
+prev_cy = {}                        <span class="comment"># 简化演示：按帧粗略追踪（生产建议用追踪器，见下）</span>
+
+results = model(frame, classes=[<span class="var">0</span>], verbose=<span class="kw">False</span>)
+<span class="kw">for</span> box <span class="kw">in</span> results[<span class="var">0</span>].boxes:
+    cx, cy, _, _ = box.xywh[<span class="var">0</span>].tolist()
+    <span class="kw">if</span> prev_cy <span class="kw">and</span> prev_cy &lt; LINE_Y &lt;= cy:   <span class="comment"># 从线上方穿到下方</span>
+        counter += <span class="var">1</span>
+    prev_cy = cy
+
+cv2.line(frame, (<span class="var">0</span>, LINE_Y), (frame.shape[<span class="var">1</span>], LINE_Y), (<span class="var">255</span>, <span class="var">0</span>, <span class="var">0</span>), <span class="var">2</span>)
+cv2.putText(frame, <span class="str">f"Count: {counter}"</span>, (<span class="var">10</span>, <span class="var">30</span>),
+            cv2.FONT_HERSHEY_SIMPLEX, <span class="var">1</span>, (<span class="var">255</span>, <span class="var">0</span>, <span class="var">0</span>), <span class="var">2</span>)</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 想做得准，用追踪器</div>
+          只看坐标会重复计数（同一个人走两步算两次）。ultralytics 自带 BoT-SORT 追踪：<code>results = model.track(frame, persist=True, verbose=False)</code>，然后 <code>box.id</code> 就是每个人的固定编号——按 id 只在第一次越线时 +1。
+        </div>
+
+        <h3>需求 5：检测结果推送 / 存数据库</h3>
+        <p>
+          检测到目标时调接口或写库（以最常见的"推送到 Web 接口"为例）：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">import</span> requests, base64, time
+
+<span class="kw">def</span> <span class="var">send_alert</span>(frame, cls_name, conf):
+    <span class="comment"># 截图转 base64 随请求带上</span>
+    _, buf = cv2.imencode(<span class="str">'.jpg'</span>, frame)
+    b64 = base64.b64encode(buf).decode()
+    requests.post(<span class="str">"http://your-server/api/alert"</span>, json={
+        <span class="str">"type"</span>: cls_name,
+        <span="str">"conf"</span>: round(conf, <span class="var">2</span>),
+        <span class="str">"time"</span>: time.strftime(<span class="str">"%Y-%m-%d %H:%M:%S"</span>),
+        <span class="str">"image_b64"</span>: b64,
+    }, timeout=<span class="var">3</span>)   <span class="comment"># 务必设超时，别让网络卡死检测循环</span>
+
+<span class="comment"># 在推理循环里：检测到 person 就推一条（配合冷却时间防轰炸）</span>
+<span class="kw">if</span> <span class="str">"person"</span> <span class="kw">in</span> [model.names[<span class="var">int</span>(b.cls[<span class="var">0</span>])] <span class="kw">for</span> b <span class="kw">in</span> results[<span class="var">0</span>].boxes]:
+    send_alert(frame, <span class="str">"person"</span>, <span class="var">0.9</span>)</code></pre>
+        </div>
+
+        <h3>需求 6：批量处理视频文件 / 文件夹</h3>
+        <p>视频文件直接把 source 换成路径，检测结果视频自动存到 runs 目录：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 方式 A：CLI 一行搞定（视频/文件夹/摄像头通吃）</span>
+<span class="cmd">yolo predict model=yolov8n.pt source=video.mp4 conf=0.4 save=True</span>
+<span class="cmd">yolo predict model=yolov8n.pt source=./images_folder/ save=True</span>
+
+<span class="comment"># 方式 B：代码里控制更细</span>
+model = <span class="var">YOLO</span>(<span class="str">"yolov8n.pt"</span>)
+results = model.predict(<span class="str">"video.mp4"</span>, conf=<span class="var">0.4</span>, save=<span class="kw">True</span>)   <span class="comment"># save=True 存结果视频</span></code></pre>
+        </div>
+
+        <h3>改造思路总结</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>项目需求</th>
+                <th>核心 API</th>
+                <th>关键点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>只看某几类</td>
+                <td><code>classes=[0]</code></td>
+                <td>编号查 <code>model.names</code></td>
+              </tr>
+              <tr>
+                <td>数量告警</td>
+                <td><code>len(results[0].boxes)</code></td>
+                <td>加冷却时间防抖</td>
+              </tr>
+              <tr>
+                <td>区域入侵</td>
+                <td><code>cv2.pointPolygonTest</code></td>
+                <td>判断中心点，画 fillPoly 可视化</td>
+              </tr>
+              <tr>
+                <td>越线计数</td>
+                <td><code>model.track(persist=True)</code></td>
+                <td>用 id 防重复计数</td>
+              </tr>
+              <tr>
+                <td>推送/存库</td>
+                <td><code>requests.post</code></td>
+                <td>设 timeout，别阻塞主循环</td>
+              </tr>
+              <tr>
+                <td>批量处理</td>
+                <td><code>source=路径</code></td>
+                <td><code>save=True</code> 自动保存结果</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 训练自己的数据集（进阶）</h2>
+
+        <p>
+          预训练模型只认识 COCO 80 类。要检测"安全帽""钢卷""裂纹"这类自定义目标，就得自己训练。整体流程五步：
+        </p>
+        <div class="diagram">
+          <pre>
+ ① 收集图片 ──► ② 标注（labelImg / Roboflow）──► ③ 组织目录 + data.yaml
+   每类 100+ 张       画框给类别标签                    告诉模型有哪些类、图片在哪
+                                                          │
+    评估 mAP ◄── ⑤ 导出部署 ◄──────── ④ 训练 ────────────┘
+                  yolo train 命令        runs/detect/train/weights/best.pt
+</pre
+          >
+        </div>
+
+        <h3>Step 1~2：收集与标注</h3>
+        <ul>
+          <li>每类目标至少 <strong>100~1500 张</strong>，场景、角度、光照越多样越好</li>
+          <li>标注工具：<strong>LabelImg</strong>（<code>pip install labelimg</code> 后运行 <code>labelimg</code>，选 YOLO 格式）或在线的 <strong>Roboflow</strong></li>
+          <li>每张图得到一个同名 <code>.txt</code>，每行一个框：<code>类别编号 x中心 y中心 宽 高</code>（都是 0~1 的比例值）</li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 标注文件示例 images/001.txt —— 一张图里一个"安全帽"(类别0)、一个"人"(类别1)</span>
+0 0.512345 0.301234 0.104567 0.091234
+1 0.500123 0.552345 0.184567 0.481234</code></pre>
+        </div>
+
+        <h3>Step 3：组织目录 + 写 data.yaml</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 数据集目录结构（train:val 建议 8:2）</span>
+helmet_dataset/
+├── images/
+│   ├── train/   (训练图片)
+│   └── val/     (验证图片)
+├── labels/
+│   ├── train/   (对应 txt)
+│   └── val/
+└── data.yaml
+
+<span class="comment"># data.yaml 内容</span>
+<span class="str">path: D:/datasets/helmet_dataset</span>
+<span class="str">train: images/train</span>
+<span class="str">val: images/val</span>
+<span class="str">names:</span>
+<span class="str">  0: helmet</span>
+<span class="str">  1: person</span></code></pre>
+        </div>
+
+        <h3>Step 4：训练（一行命令）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 基于 yolov8n 微调（推荐：预训练权重起步，收敛快、数据需求少）</span>
+<span class="cmd">yolo detect train model=yolov8n.pt data=D:/datasets/helmet_dataset/data.yaml epochs=100 imgsz=640 batch=16</span>
+
+<span class="comment"># 关键参数：</span>
+<span class="comment">#   epochs   轮数，小数据集 100~200 足够</span>
+<span class="comment">#   batch    显存不够就减半（16→8→4），CPU 训练请先放弃，去租 GPU</span>
+<span class="comment">#   device   默认自动选 GPU；指定 device=0</span>
+
+<span class="comment"># 训练完模型在 runs/detect/train/weights/best.pt（最优）和 last.pt（最后一轮）</span></code></pre>
+        </div>
+
+        <h3>Step 5：用训练好的模型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 代码里换成 best.pt，其余一切照旧</span>
+model = <span class="var">YOLO</span>(<span class="str">"runs/detect/train/weights/best.pt"</span>)
+results = model(<span class="str">"test.jpg"</span>, conf=<span class="var">0.4</span>)
+
+<span class="comment"># 看 <code>results.csv</code> 里 mAP50 是否还在涨决定要不要加 epochs；</span>
+<span class="comment"># train_batch*.jpg 是训练样本可视化，可检查标注是否正确</span></code></pre>
+        </div>
+
+        <h3>训练常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>mAP 很低（&lt;0.3）</td>
+                <td>数据太少 / 标注质量差</td>
+                <td>加数据、逐张检查标注漏框错框——数据质量 &gt; 一切调参</td>
+              </tr>
+              <tr>
+                <td>训练集很好，验证集很差</td>
+                <td>过拟合</td>
+                <td>加数据增强、加数据、减少 epochs；训练集验证集要同分布</td>
+              </tr>
+              <tr>
+                <td>CUDA out of memory</td>
+                <td>显存不足</td>
+                <td><code>batch</code> 减半、<code>imgsz=416</code>，或用官方 <code>yolov8n.pt</code> 小模型</td>
+              </tr>
+              <tr>
+                <td>loss 剧烈震荡不收敛</td>
+                <td>学习率过大 / 标注格式错</td>
+                <td>默认 lr 不用动；检查 txt 是否 5 个值、坐标是否 0~1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 性能优化与部署</h2>
+
+        <h3>提速四板斧（按性价比排序）</h3>
+        <ol class="steps">
+          <li><strong>用小模型</strong>：m → s → n，精度换速度最直接的手段</li>
+          <li><strong>降输入尺寸</strong>：<code>imgsz=320</code>，速度约翻倍，小目标会漏</li>
+          <li><strong>GPU 半精度</strong>：<code>half=True</code>（仅 GPU），白捡近一倍速度</li>
+          <li><strong>隔帧检测</strong>：每 2~3 帧推理一次，中间帧复用上一次的框——摄像头不怎么动的场景效果拔群</li>
+        </ol>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 隔帧检测示例：每 3 帧推理一次，速度约 ×3</span>
+frame_id = <span class="var">0</span>
+last_annotated = <span class="kw">None</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    ok, frame = cap.read()
+    <span class="kw">if not</span> ok: <span class="kw">break</span>
+    <span class="kw">if</span> frame_id % <span class="var">3</span> == <span class="var">0</span>:                    <span class="comment"># 只在 0, 3, 6... 帧推理</span>
+        results = model(frame, verbose=<span class="kw">False</span>)
+        last_annotated = results[<span class="var">0</span>].plot()
+    cv2.imshow(<span class="str">"demo"</span>, last_annotated)
+    frame_id += <span class="var">1</span></code></pre>
+        </div>
+
+        <h3>导出部署格式</h3>
+        <p>
+          生产环境不装整套 PyTorch，把模型导出成 ONNX / TensorRT，体更小跑更快：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 导出 ONNX（跨平台通用，Windows/Linux 都能跑）</span>
+<span class="cmd">yolo export model=best.pt format=onnx</span>
+<span class="comment"># 得到 best.onnx，用 onnxruntime 推理，机器上不用装 torch</span>
+
+<span class="comment"># 导出 TensorRT（NVIDIA 显卡极限提速，Linux 为主）</span>
+<span class="cmd">yolo export model=best.pt format=engine</span>
+
+<span class="comment"># 用 ultralytics 加载 onnx 同样一行（格式自动识别）</span>
+model = <span class="var">YOLO</span>(<span class="str">"best.onnx"</span>)</code></pre>
+        </div>
+
+        <h3>什么场景选什么方案</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>推荐方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>学习 / 原型验证</td>
+                <td>yolov8n + CPU 直接跑，零成本</td>
+              </tr>
+              <tr>
+                <td>桌面实时应用</td>
+                <td>yolov8s + GPU + half=True</td>
+              </tr>
+              <tr>
+                <td>Jetson / 树莓派等边缘设备</td>
+                <td>导出 TensorRT（Jetson）/ NCNN（树莓派）+ n 模型 + 隔帧检测</td>
+              </tr>
+              <tr>
+                <td>服务器批量离线分析</td>
+                <td>大模型 x + 视频批量 predict，精度优先</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>全指南口诀总结</h3>
+        <div class="callout tip">
+          <div class="callout-title">💡 十句口诀带走全部</div>
+          <strong>
+          ① 目标检测 YOLO，边缘检测 Canny，一个认"是什么"一个认"轮廓线"；<br />
+          ② 学习用 n 实时用 s，模型选小不选大；<br />
+          ③ 环境独立用 conda，pip 记得换国内源；<br />
+          ④ GPU 要装 cu 版 torch，is_available 必须 True；<br />
+          ⑤ 结果三件套：xyxy 坐标、cls 类别、conf 置信度；<br />
+          ⑥ 漏检降 conf，误检升 conf，多框调 iou，小目标加 imgsz；<br />
+          ⑦ 边缘三板斧：先灰度、再模糊、后 Canny，阈值二比一；<br />
+          ⑧ 摄像头打不开，先查占用再换索引；<br />
+          ⑨ 改代码三板斧：classes 过滤、点在不在区里、track 防重复计数；<br />
+          ⑩ 自训模型看数据，标注质量大于一切调参。</strong>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>YOLO 目标识别与边缘检测实战指南 · 教程与实操指南</p>
+        <p style="margin-top: 8px; font-size: 0.8rem">
+          Detect, Track, Deploy. 🎯
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>

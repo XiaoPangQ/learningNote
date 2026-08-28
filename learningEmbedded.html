@@ -1,0 +1,2676 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>嵌入式开发从入门到精通 · 学习笔记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #14b8a6;
+        --accent-soft: rgba(20, 184, 166, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #14b8a6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🔧</span> 嵌入式开发学习笔记</h2>
+        <p>从入门到精通 · 完整路径</p>
+      </div>
+      <a class="home-link" href="indexLearning.html">← 返回首页</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. 嵌入式系统概述</a></li>
+        <li><a href="#ch02">2. 硬件基础与开发板</a></li>
+        <li><a href="#ch03">3. 嵌入式 C 语言核心</a></li>
+        <li><a href="#ch04">4. 开发环境与交叉编译</a></li>
+        <li><a href="#ch05">5. GPIO 与中断</a></li>
+        <li><a href="#ch06">6. 定时器与 PWM</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. 串行通信 UART/I2C/SPI</a></li>
+        <li><a href="#ch08">8. ADC/DAC 与传感器</a></li>
+        <li><a href="#ch09">9. RTOS 与 FreeRTOS</a></li>
+        <li><a href="#ch10">10. 存储器与 OTA 升级</a></li>
+        <li><a href="#ch11">11. 低功耗设计</a></li>
+        <li><a href="#ch12">12. 通信协议进阶 CAN/USB/以太网</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch13">13. 嵌入式 Linux 基础</a></li>
+        <li><a href="#ch14">14. 设备驱动开发</a></li>
+        <li><a href="#ch15">15. 调试与性能优化</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch16">16. 系统构建 U-Boot/内核/Yocto</a></li>
+        <li><a href="#ch17">17. 项目实战拆解</a></li>
+        <li><a href="#ch18">18. 学习路线与资源</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🔩 完整学习手册</span>
+        <h1>嵌入式开发从入门到精通</h1>
+        <p>
+          一份系统化的嵌入式开发学习笔记，覆盖硬件基础、嵌入式 C、单片机外设、RTOS、通信协议、嵌入式
+          Linux、驱动开发到项目实战的完整路径。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>100+ 代码示例</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 嵌入式系统概述</h2>
+
+        <h3>什么是嵌入式系统</h3>
+        <p>
+          嵌入式系统是<strong>嵌入到设备内部、为特定功能设计的专用计算机系统</strong>。
+          它以应用为中心，以计算机技术为基础，软硬件可裁剪，对功能、可靠性、成本、体积、功耗有严格要求。
+        </p>
+
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          通用电脑（PC）是「什么都能干的瑞士军刀」，嵌入式系统是「只会一招但练到极致的专才」——洗衣机、电饭煲、汽车、无人机里跑的都是它。
+        </div>
+
+        <h3>嵌入式系统的组成</h3>
+        <div class="diagram">
+          <pre>
+              嵌入式系统架构
+┌─────────────────────────────────────┐
+│           应用层（App）               │
+│      业务逻辑 · 算法 · 用户界面        │
+├─────────────────────────────────────┤
+│  中间层：文件系统 · 协议栈 · GUI      │
+├─────────────────────────────────────┤
+│  系统层：RTOS / 嵌入式 Linux / 裸机   │
+├─────────────────────────────────────┤
+│  硬件层：MCU/MPU · 存储器 · 外设接口  │
+└─────────────────────────────────────┘
+</pre
+          >
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>层次</th>
+                <th>包含内容</th>
+                <th>典型例子</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>硬件层</td>
+                <td>处理器、存储器、电源、接口电路</td>
+                <td>STM32、ESP32、i.MX6</td>
+              </tr>
+              <tr>
+                <td>系统层</td>
+                <td>裸机 / RTOS / 嵌入式 Linux</td>
+                <td>FreeRTOS、RT-Thread、Linux</td>
+              </tr>
+              <tr>
+                <td>中间层</td>
+                <td>驱动抽象、协议栈、组件库</td>
+                <td>LwIP、FatFs、LVGL</td>
+              </tr>
+              <tr>
+                <td>应用层</td>
+                <td>业务逻辑与交互</td>
+                <td>温控算法、电机控制</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>裸机、RTOS、嵌入式 Linux 怎么选</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>裸机（前后台）</th>
+                <th>RTOS</th>
+                <th>嵌入式 Linux</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>硬件要求</td>
+                <td>几 KB RAM 即可</td>
+                <td>几 KB～几十 KB RAM</td>
+                <td>MB 级 RAM + MMU</td>
+              </tr>
+              <tr>
+                <td>实时性</td>
+                <td>最好（但任务多了乱）</td>
+                <td>好（微秒级响应）</td>
+                <td>差（毫秒级抖动）</td>
+              </tr>
+              <tr>
+                <td>多任务</td>
+                <td>手工状态机</td>
+                <td>任务调度器原生支持</td>
+                <td>进程线程完整生态</td>
+              </tr>
+              <tr>
+                <td>网络/文件系统</td>
+                <td>难</td>
+                <td>可移植组件</td>
+                <td>原生完整</td>
+              </tr>
+              <tr>
+                <td>典型芯片</td>
+                <td>51、STM8</td>
+                <td>STM32、ESP32</td>
+                <td>i.MX、全志、树莓派</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>裸机简单实时强，RTOS 多任务帮忙，Linux 生态大而全，按需选型不慌张</strong>」
+        </div>
+
+        <h3>应用领域</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>消费电子</h4>
+            <p>智能手表、耳机、家电、玩具——量大、成本敏感、低功耗。</p>
+          </div>
+          <div class="card">
+            <h4>工业控制</h4>
+            <p>PLC、变频器、传感器——强调可靠性与实时性。</p>
+          </div>
+          <div class="card">
+            <h4>汽车电子</h4>
+            <p>ECU、BMS、ADAS——功能安全（ISO 26262）要求极高。</p>
+          </div>
+          <div class="card">
+            <h4>物联网</h4>
+            <p>智能门锁、网关、环境监测——低功耗 + 联网是核心。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 硬件基础与开发板</h2>
+
+        <h3>MCU 与 MPU 的区别</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>MCU（单片机）</th>
+                <th>MPU（微处理器）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>集成度</td>
+                <td>CPU+RAM+Flash+外设全集成</td>
+                <td>只有 CPU，外挂存储与外设</td>
+              </tr>
+              <tr>
+                <td>RAM/Flash</td>
+                <td>KB 级</td>
+                <td>MB～GB 级</td>
+              </tr>
+              <tr>
+                <td>是否跑 Linux</td>
+                <td>一般不跑（无 MMU）</td>
+                <td>跑 Linux/Android</td>
+              </tr>
+              <tr>
+                <td>功耗</td>
+                <td>μA～mA 级</td>
+                <td>百 mA 级以上</td>
+              </tr>
+              <tr>
+                <td>代表</td>
+                <td>STM32、ESP32、NXP LPC</td>
+                <td>Cortex-A 系列、i.MX、RK3568</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>MCU 一片全搞定，MPU 外挂才能行；要跑 Linux 找 A 核，省电实时 M 核赢</strong>」
+        </div>
+
+        <h3>常见 ARM Cortex 内核</h3>
+        <ul>
+          <li><strong>Cortex-M0/M0+</strong>：超低功耗入门核，M0+ 是史上能效比最高的核之一</li>
+          <li><strong>Cortex-M3</strong>：经典主流，全 Thumb-2 指令</li>
+          <li><strong>Cortex-M4</strong>：带 DSP 指令，可选单精度 FPU</li>
+          <li><strong>Cortex-M7</strong>：高性能，6 级流水线，带 Cache 与双精度 FPU</li>
+          <li><strong>Cortex-A 系列</strong>：应用处理器，带 MMU，跑 Linux/Android</li>
+          <li><strong>Cortex-R 系列</strong>：实时处理器，用于硬盘控制器、汽车安全件</li>
+        </ul>
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          M = Microcontroller（单片机）、A = Application（应用/Linux）、R = Real-time（实时硬核）。M 系列是嵌入式入门主线。
+        </div>
+
+        <h3>必须懂的硬件常识</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>术语</th>
+                <th>含义</th>
+                <th>为什么重要</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>高电平/低电平</td>
+                <td>3.3V/5V 为高，0V 为低</td>
+                <td>数字世界的 1 和 0</td>
+              </tr>
+              <tr>
+                <td>上拉/下拉电阻</td>
+                <td>把引脚默认拉到高/低电平</td>
+                <td>防止引脚悬空「乱漂」</td>
+              </tr>
+              <tr>
+                <td>开漏输出</td>
+                <td>只能拉低，靠上拉输出高</td>
+                <td>I2C 总线就是开漏 + 上拉</td>
+              </tr>
+              <tr>
+                <td>推挽输出</td>
+                <td>高低都能主动驱动</td>
+                <td>GPIO 默认输出模式</td>
+              </tr>
+              <tr>
+                <td> datasheet / 参考手册</td>
+                <td>芯片数据手册 / 外设详解</td>
+                <td>嵌入式的「武功秘籍」，先查再问</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>入门开发板推荐</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>STM32F103C8T6</h4>
+            <p>「最小系统板」几十元，资料全网最多，学 Cortex-M 标准起点。</p>
+          </div>
+          <div class="card">
+            <h4>ESP32</h4>
+            <p>自带 WiFi/蓝牙，适合物联网方向，ESP-IDF + Arduino 双生态。</p>
+          </div>
+          <div class="card">
+            <h4>树莓派</h4>
+            <p>嵌入式 Linux 入门神器，学驱动、系统构建的首选。</p>
+          </div>
+          <div class="card">
+            <h4>正点原子/野火</h4>
+            <p>国内教程配套齐全的 STM32 全系开发板，例程丰富适合跟学。</p>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          不要陷入「收集开发板」的怪圈。一块 STM32 最小系统板 + 面包板 + 杜邦线 + 几个传感器（不到 100 元）足以完成入门阶段 90% 的练习。<strong>买十块板不如吃透一块板</strong>。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 嵌入式 C 语言核心</h2>
+
+        <h3>嵌入式 C 与普通 C 的区别</h3>
+        <p>
+          嵌入式 C 直接操作<strong>寄存器和内存地址</strong>，对资源极度敏感：没有充裕的堆、没有操作系统兜底、
+          每个字节都要精打细算。以下知识点是嵌入式面试与实战的绝对核心。
+        </p>
+
+        <h4>① volatile——嵌入式第一关键字</h4>
+        <p>
+          告诉编译器「这个变量随时可能被意想不到地改变，每次都去内存读，别优化」。三大使用场景：
+        </p>
+        <ul>
+          <li><strong>外设寄存器</strong>（硬件随时改写）</li>
+          <li><strong>中断服务程序与主循环共享的变量</strong></li>
+          <li><strong>多任务共享的全局变量</strong></li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">volatile</span> <span class="kw">uint32_t</span> *reg = (<span class="kw">uint32_t</span> *)<span class="str">0x40020014</span>;  <span class="comment">// 指向 GPIO 寄存器</span>
+
+<span class="comment">// 不加 volatile 时，编译器可能把 while 循环优化成
+// "读一次后死循环"，加上后每次都真正读内存</span>
+<span class="kw">while</span> (*reg &amp; <span class="str">0x01</span>) {          <span class="comment">// 等待标志位置零</span>
+    <span class="comment">// busy wait</span>
+}</code></pre>
+        </div>
+
+        <h4>② 位操作——寄存器的手术刀</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 置位第 3 位（其它位不动）</span>
+REG |= (<span class="str">1</span> &lt;&lt; <span class="str">3</span>);
+
+<span class="comment">// 清零第 3 位</span>
+REG &amp;= ~(<span class="str">1</span> &lt;&lt; <span class="str">3</span>);
+
+<span class="comment">// 翻转第 3 位</span>
+REG ^= (<span class="str">1</span> &lt;&lt; <span class="str">3</span>);
+
+<span class="comment">// 判断第 3 位是否为 1</span>
+<span class="kw">if</span> (REG &amp; (<span class="str">1</span> &lt;&lt; <span class="str">3</span>)) { ... }
+
+<span class="comment">// 清零低 4 位再赋值（配置寄存器常用）</span>
+REG = (REG &amp; ~(<span class="str">0xF</span> &lt;&lt; <span class="str">4</span>)) | (val &lt;&lt; <span class="str">4</span>);</code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>置 1 用或，清 0 用与取反，翻转用异或，判断用与</strong>」——|、&amp;~、^、&amp; 四兄弟记牢。
+        </div>
+
+        <h4>③ static 与 extern</h4>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>用法</th>
+                <th>作用域</th>
+                <th>生命周期</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>static 全局变量/函数</td>
+                <td>仅本 .c 文件</td>
+                <td>整个程序</td>
+                <td>模块私有，防止命名污染</td>
+              </tr>
+              <tr>
+                <td>static 局部变量</td>
+                <td>仅本函数</td>
+                <td>整个程序</td>
+                <td>函数内记忆状态</td>
+              </tr>
+              <tr>
+                <td>extern 变量</td>
+                <td>跨文件共享</td>
+                <td>整个程序</td>
+                <td>在 .h 声明、.c 定义</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>④ 结构体对齐与 sizeof</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">struct</span> Bad {
+    <span class="kw">char</span>  a;    <span class="comment">// 1 字节 + 3 字节填充</span>
+    <span class="kw">int</span>   b;    <span class="comment">// 4 字节</span>
+    <span class="kw">char</span>  c;    <span class="comment">// 1 字节 + 3 字节填充</span>
+};              <span class="comment">// sizeof = 12！浪费 6 字节</span>
+
+<span class="kw">struct</span> Good {
+    <span class="kw">int</span>   b;    <span class="comment">// 4 字节</span>
+    <span class="kw">char</span>  a;    <span class="comment">// 1 + 1 + 填充 2</span>
+    <span class="kw">char</span>  c;
+};              <span class="comment">// sizeof = 8，省 1/3</span></code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          对齐规则：成员偏移必须是其自身大小（或 pack 值）的整数倍，总大小是最大成员的整数倍。RAM 只有几十 KB 时，「<strong>大成员在前、小成员在后</strong>」能实打实省内存；通信协议结构体慎用 <code>#pragma pack</code> 压缩（性能与原子性会受影响）。
+        </div>
+
+        <h4>⑤ 指针与内存分区</h4>
+        <div class="diagram">
+          <pre>
+STM32 典型内存布局（Flash 高地址 → 低地址）
+┌──────────────┬──────────────────────────┐
+│  .data       │ 已初始化全局/静态变量      │
+│  .bss        │ 未初始化全局/静态变量(清零)│
+│  堆 Heap ↑   │ malloc 从这里向上长       │
+│      ...     │ 自由空间                  │
+│  栈 Stack ↓  │ 局部变量从 RAM 顶向下长    │
+├──────────────┼──────────────────────────┤
+│  .text       │ 代码（在 Flash 中）       │
+│  .rodata     │ const 常量、字符串         │
+└──────────────┴──────────────────────────┘
+</pre
+          >
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">🚨 经典错误</div>
+          ① 返回局部变量地址（栈帧已销毁）；② 中断里 malloc/printf（不可重入）；③ 数组越界写穿栈；④ 忘记 volatile 导致轮询死循环。嵌入式没有段错误提示，往往直接 <strong>HardFault</strong> 或复位，排查更难。
+        </div>
+
+        <h4>⑥ 回调函数与状态机</h4>
+        <p>
+          嵌入式没有丰富的框架，<strong>回调 + 状态机</strong>就是最常用的「设计模式」：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 状态机：按键消抖</span>
+<span class="kw">typedef enum</span> { KEY_UP, KEY_DOWN } key_state_t;
+
+<span class="kw">void</span> key_scan(<span class="kw">void</span>) {
+    <span class="kw">static</span> key_state_t st = KEY_UP;
+    <span class="kw">static</span> <span class="kw">uint8_t</span> cnt = <span class="str">0</span>;
+
+    <span class="kw">switch</span> (st) {
+    <span class="kw">case</span> KEY_UP:
+        <span class="kw">if</span> (read_pin() == <span class="str">0</span>) {          <span class="comment">// 检测到按下</span>
+            <span class="kw">if</span> (++cnt &gt;= <span class="str">5</span>) st = KEY_DOWN;  <span class="comment">// 连续 5 次才确认</span>
+        } <span class="kw">else</span> cnt = <span class="str">0</span>;
+        <span class="kw">break</span>;
+    <span class="kw">case</span> KEY_DOWN:
+        <span class="kw">if</span> (read_pin() == <span class="str">1</span>) { st = KEY_UP; cnt = <span class="str">0</span>; }
+        <span class="kw">break</span>;
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 开发环境与交叉编译</h2>
+
+        <h3>什么是交叉编译</h3>
+        <p>
+          在 x86 的 PC 上编译出 ARM 平台能运行的代码，就叫<strong>交叉编译</strong>。
+          因为目标板资源太少（可能没有屏幕、键盘、甚至跑不动编译器），编译必须在宿主机（Host）完成，产物下载到目标机（Target）运行。
+        </p>
+
+        <div class="diagram">
+          <pre>
+┌─────────────┐  交叉编译器    ┌─────────────┐
+│ 宿主机 Host │ ───────────→ │ 目标机 Target│
+│ PC (x86)    │  arm-gcc ...  │ STM32 / 开发板│
+│             │ ←───────────  │ 串口打印日志  │
+└─────────────┘  串口/SWD调试  └─────────────┘
+</pre
+          >
+        </div>
+
+        <h3>两条主流工具链</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>路线</th>
+                <th>IDE / 工具</th>
+                <th>编译器</th>
+                <th>适合人群</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MCU 图形化</td>
+                <td>Keil MDK / STM32CubeIDE</td>
+                <td>armcc / arm-none-eabi-gcc</td>
+                <td>初学者，点按钮就能编译烧录</td>
+              </tr>
+              <tr>
+                <td>Makefile / CMake</td>
+                <td>VSCode + GCC 工具链</td>
+                <td>arm-none-eabi-gcc</td>
+                <td>进阶玩家，工程化、可版本管理</td>
+              </tr>
+              <tr>
+                <td>嵌入式 Linux</td>
+                <td>Ubuntu + SDK</td>
+                <td>aarch64-linux-gnu-gcc</td>
+                <td>系统层开发</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>GCC 交叉编译常用命令</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 编译单个文件（Cortex-M4，软浮点）</span>
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=soft \
+    -O2 -Wall main.c -o main.o -c
+
+<span class="comment"># 链接 + 生成 hex/bin</span>
+arm-none-eabi-gcc main.o startup.o -T stm32.ld -o firmware.elf
+arm-none-eabi-objcopy -O ihex firmware.elf firmware.hex
+arm-none-eabi-objcopy -O binary firmware.elf firmware.bin
+
+<span class="comment"># 查看 ELF 信息</span>
+arm-none-eabi-readelf -h firmware.elf     <span class="comment"># 读头</span>
+arm-none-eabi-nm firmware.elf             <span class="comment"># 看符号与地址</span>
+arm-none-eabi-size firmware.elf           <span class="comment"># text/data/bss 大小</span></code></pre>
+        </div>
+
+        <h3>编译到运行的完整流程</h3>
+        <ol class="steps">
+          <li><strong>预处理</strong>（.i）：展开 #include、#define——「文本替换」</li>
+          <li><strong>编译</strong>（.s）：C → 汇编</li>
+          <li><strong>汇编</strong>（.o）：汇编 → 机器码目标文件</li>
+          <li><strong>链接</strong>（.elf）：按链接脚本（.ld）分配地址，合并段</li>
+          <li><strong>格式转换</strong>（.hex/.bin）：生成烧录文件</li>
+          <li><strong>烧录</strong>：ST-Link / J-Link / DAP-Link 下载到 Flash</li>
+          <li><strong>调试</strong>：SWD/JTAG 在线断点调试</li>
+        </ol>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>预编汇链转烧调，七步成环不能少；hex 记地址 bin 纯数据，elf 调试是王道</strong>」
+        </div>
+
+        <h3>烧录与调试器</h3>
+        <ul>
+          <li><strong>ST-Link</strong>：STM32 官方，便宜（十几元），够用</li>
+          <li><strong>J-Link</strong>：支持芯片最全、速度快，贵但强</li>
+          <li><strong>DAP-Link / CMSIS-DAP</strong>：开源方案，VSCode 生态友好</li>
+          <li><strong>串口 ISP</strong>：不用调试器，Bootloader 进下载模式（出厂最常用）</li>
+        </ul>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          「芯片连不上」排查三板斧：① 调试器驱动装了吗；② SWDIO/SWCLK/RESET 接线对吗（还共地了吗）；③ 芯片被低功耗或复用关掉了 SWD 引脚吗（用「连接复位模式 Under Reset」救砖）。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> GPIO 与中断</h2>
+
+        <h3>GPIO 八种模式（以 STM32 为例）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>模式</th>
+                <th>缩写</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>推挽输出</td>
+                <td>OUTPUT_PP</td>
+                <td>驱动 LED、控制信号（默认输出）</td>
+              </tr>
+              <tr>
+                <td>开漏输出</td>
+                <td>OUTPUT_OD</td>
+                <td>I2C 总线、电平转换、线与</td>
+              </tr>
+              <tr>
+                <td>复用推挽</td>
+                <td>AF_PP</td>
+                <td>USART/SPI 等外设引脚</td>
+              </tr>
+              <tr>
+                <td>复用开漏</td>
+                <td>AF_OD</td>
+                <td>I2C 外设复用</td>
+              </tr>
+              <tr>
+                <td>浮空输入</td>
+                <td>INPUT_FLOATING</td>
+                <td>外部信号已确定电平</td>
+              </tr>
+              <tr>
+                <td>上拉输入</td>
+                <td>INPUT_PULLUP</td>
+                <td>按键检测（默认高，按下低）</td>
+              </tr>
+              <tr>
+                <td>下拉输入</td>
+                <td>INPUT_PULLDOWN</td>
+                <td>按键（默认低）</td>
+              </tr>
+              <tr>
+                <td>模拟输入</td>
+                <td>ANALOG</td>
+                <td>ADC 采样、低功耗</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>输出推挽最常用，开漏线与配 I2C；输入按键上拉接，模拟采样选 AN</strong>」
+        </div>
+
+        <h4>寄存器点亮 LED（标准库/HAL 之前先懂原理）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 1. 开 GPIOA 时钟（RCC 寄存器置位）</span>
+RCC-&gt;AHB1ENR |= (<span class="str">1</span> &lt;&lt; <span class="str">0</span>);
+
+<span class="comment">// 2. 配置 PA5 为输出模式（MODER 第 10~11 位 = 01）</span>
+GPIOA-&gt;MODER = (GPIOA-&gt;MODER &amp; ~(<span class="str">3</span> &lt;&lt; <span class="str">10</span>)) | (<span class="str">1</span> &lt;&lt; <span class="str">10</span>);
+
+<span class="comment">// 3. 输出低电平点亮 LED（BSRR 写 0 清零对应位）</span>
+GPIOA-&gt;BSRR = (<span class="str">1</span> &lt;&lt; (<span class="str">5</span> + <span class="str">16</span>));  <span class="comment">// 置低</span>
+<span class="comment">// GPIOA-&gt;BSRR = (1 &lt;&lt; 5);  // 置高</span></code></pre>
+        </div>
+
+        <h3>中断：嵌入式的心跳</h3>
+        <h4>中断处理完整流程</h4>
+        <ol class="steps">
+          <li>外设产生事件 → 中断控制器（NVIC）收到请求</li>
+          <li>CPU 执行完当前指令，保存现场（自动压栈 xPSR/PC/LR 等）</li>
+          <li>查<strong>中断向量表</strong>找到对应服务函数（ISR）入口</li>
+          <li>执行 ISR（越短越好）</li>
+          <li>恢复现场，回到被打断处继续执行</li>
+        </ol>
+
+        <h4>外部中断按键（HAL 库风格）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 初始化：PA0 上升沿中断，带下拉</span>
+GPIO_InitTypeDef g = { .Pin = GPIO_PIN_0, .Mode = GPIO_MODE_IT_RISING,
+                       .Pull = GPIO_PULLDOWN };
+HAL_GPIO_Init(GPIOA, &amp;g);
+HAL_NVIC_SetPriority(EXTI0_IRQn, <span class="str">2</span>, <span class="str">0</span>);
+HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+<span class="comment">// 中断服务函数：HAL 回调统一入口</span>
+<span class="kw">void</span> HAL_GPIO_EXTI_Callback(<span class="kw">uint16_t</span> pin) {
+    <span class="kw">if</span> (pin == GPIO_PIN_0) {
+        flag_key = <span class="str">1</span>;          <span class="comment">// 只置标志，不做耗时操作！</span>
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 中断三大铁律</div>
+          ① <strong>ISR 越短越好</strong>——只置标志/拷数据，业务放主循环；② <strong>不要在 ISR 里用 printf、malloc、delay</strong>（不可重入/阻塞）；③ <strong>共享变量必须 volatile</strong>，多字节共享要关中断保护。
+        </div>
+
+        <h3>NVIC 优先级：抢占与子优先级</h3>
+        <ul>
+          <li><strong>抢占优先级（Preempt）</strong>：数值越小越优先，可以打断正在执行的低优先级中断——「嵌套」</li>
+          <li><strong>子优先级（Sub）</strong>：同时挂起时谁先执行，但不能嵌套</li>
+          <li>STM32 用 4 位分组，常用「全部给抢占」（NVIC_PRIORITYGROUP_4）</li>
+        </ul>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>抢占能嵌套，子级排排队；数字越小事越急，现场保存不能亏</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 定时器与 PWM</h2>
+
+        <h3>定时器是什么</h3>
+        <p>
+          定时器本质是一个<strong>按固定节拍自增的计数器</strong>，数到设定值（ARR 自动重装载）就产生更新事件/中断。
+          它是嵌入式里最重要的外设：延时、PWM、输入捕获、编码器、时间片轮转全靠它。
+        </p>
+
+        <h4>定时时间计算（必考必用）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 定时时间 T = (ARR + 1) × (PSC + 1) / TIMxCLK</span>
+<span class="comment">// 例：72MHz 主频，想 1ms 中断一次</span>
+<span class="comment">// 72MHz / (PSC+1) = 计数频率；取 PSC = 71 → 1MHz（1μs 数一次）</span>
+<span class="comment">// 1ms = 1000 次 → ARR = 999</span>
+
+TIM2-&gt;PSC = <span class="str">71</span>;    <span class="comment">// 预分频：72MHz/72 = 1MHz</span>
+TIM2-&gt;ARR = <span class="str">999</span>;   <span class="comment">// 计 1000 次溢出 → 1ms</span>
+TIM2-&gt;CR1 |= <span class="str">1</span>;     <span class="comment">// 使能计数器</span></code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>PSC 分频定节奏，ARR 装满就溢出；周期等于两者积，除以时钟别记错</strong>」——T = (ARR+1)(PSC+1)/f。
+        </div>
+
+        <h3>PWM：脉宽调制</h3>
+        <p>
+          PWM 用<strong>固定频率、可变占空比</strong>的方波「模拟」出连续效果：调光、调速、舵机、蜂鸣器、开关电源全靠它。
+        </p>
+        <div class="diagram">
+          <pre>
+占空比 = CCR / (ARR + 1)
+CCR=750 → 75% 占空比
+        ┌──────┐      ┌──────┐
+───────┘      └──────┘      └──  1000 次计数（ARR=999）
+|←  750 →|←250 →|
+
+占空比越大 → LED 越亮 / 电机越快 / 平均电压越高
+</pre
+          >
+        </div>
+
+        <h4>PWM 呼吸灯示例</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// TIM3 CH1 (PA6) 输出 20kHz PWM</span>
+TIM_OC_InitTypeDef oc = { .OCMode = TIM_OCMODE_PWM1,
+                          .Pulse  = <span class="str">0</span>,
+                          .OCPolarity = TIM_OCPOLARITY_HIGH };
+HAL_TIM_PWM_ConfigChannel(&amp;htim3, &amp;oc, TIM_CHANNEL_1);
+HAL_TIM_PWM_Start(&amp;htim3, TIM_CHANNEL_1);
+
+<span class="comment">// 主循环：0→999→0 来回扫，实现呼吸效果</span>
+<span class="kw">int</span> d = <span class="str">0</span>, dir = <span class="str">1</span>;
+<span class="kw">while</span> (<span class="str">1</span>) {
+    d += dir;
+    <span class="kw">if</span> (d &gt;= <span class="str">999</span> || d &lt;= <span class="str">0</span>) dir = -dir;
+    __HAL_TIM_SET_COMPARE(&amp;htim3, TIM_CHANNEL_1, d);
+    HAL_Delay(<span class="str">2</span>);
+}</code></pre>
+        </div>
+
+        <h3>定时器家族分工</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>特点</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>基本定时器</td>
+                <td>只能定时中断</td>
+                <td>时基、DAC 触发</td>
+              </tr>
+              <tr>
+                <td>通用定时器</td>
+                <td>PWM、输入捕获、编码器</td>
+                <td>电机、测频、超声波</td>
+              </tr>
+              <tr>
+                <td>高级定时器</td>
+                <td>带死区互补输出、刹车</td>
+                <td>三相电机、H 桥</td>
+              </tr>
+              <tr>
+                <td>SysTick</td>
+                <td>Cortex-M 内核自带 24 位</td>
+                <td>RTOS 心跳、HAL_Delay</td>
+              </tr>
+              <tr>
+                <td>看门狗 IWDG</td>
+                <td>独立时钟，不复位就咬死</td>
+                <td>程序跑飞自救</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 高级定时器输出 PWM 必须<strong>同时使能主输出</strong>（MOE 位 / HAL_TIMEx_...）；② HAL_Delay 依赖 SysTick 中断，<strong>在 SysTick 优先级更低的中断里调用会死锁</strong>；③ 看门狗要在主循环「喂」，不要在定时器中断里喂（否则程序卡在中断里也饿不死狗）。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 串行通信 UART/I2C/SPI</h2>
+
+        <h3>三大总线一览</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>UART</th>
+                <th>I2C</th>
+                <th>SPI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>线数</td>
+                <td>2（TX/RX）</td>
+                <td>2（SCL/SDA）</td>
+                <td>4（SCK/MOSI/MISO/CS）</td>
+              </tr>
+              <tr>
+                <td>速率</td>
+                <td>≤ 1Mbps 常见 115200</td>
+                <td>100k/400k/3.4M</td>
+                <td>几十 Mbps</td>
+              </tr>
+              <tr>
+                <td>拓扑</td>
+                <td>点对点</td>
+                <td>一主多从（地址寻址）</td>
+                <td>一主多从（片选选中）</td>
+              </tr>
+              <tr>
+                <td>典型器件</td>
+                <td>调试串口、GPS、模块</td>
+                <td>传感器、EEPROM、OLED</td>
+                <td>Flash、屏幕、SD 卡</td>
+              </tr>
+              <tr>
+                <td>硬件要求</td>
+                <td>电平匹配即可</td>
+                <td>开漏 + 上拉电阻</td>
+                <td>推挽直连</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>串口两点一对一，I2C 两线带地址，SPI 四线片选快，慢速省线高速 SPI</strong>」
+        </div>
+
+        <h3>UART：万能调试口</h3>
+        <ul>
+          <li><strong>帧格式</strong>：起始位(1) + 数据位(8) + 校验位(可选) + 停止位(1)</li>
+          <li><strong>常见坑</strong>：波特率不匹配 → 乱码；TX/RX <strong>交叉连接</strong>；共地！</li>
+          <li><strong>printf 重定向</strong>：重写 fputc（Keil）或 _write（GCC）即可用 printf 调试</li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 串口中断接收：收到就存环形缓冲区</span>
+<span class="kw">void</span> USART1_IRQHandler(<span class="kw">void</span>) {
+    <span class="kw">if</span> (__HAL_UART_GET_FLAG(&amp;huart1, UART_FLAG_RXNE)) {
+        <span class="kw">uint8_t</span> ch = huart1.Instance-&gt;DR &amp; <span class="str">0xFF</span>;
+        ringbuf_put(&amp;rb, ch);          <span class="comment">// 环形缓冲，防丢包</span>
+    }
+}
+
+<span class="comment">// 通用帧解析：帧头 0xAA + len + data + 校验和</span>
+<span class="kw">int</span> frame_parse(<span class="kw">uint8_t</span> byte) {
+    <span class="kw">static</span> <span class="kw">uint8_t</span> buf[64], idx = <span class="str">0</span>, len = <span class="str">0</span>;
+    <span class="kw">if</span> (idx == <span class="str">0</span> &amp;&amp; byte != <span class="str">0xAA</span>) <span class="kw">return</span> -<span class="str">1</span>;  <span class="comment">// 等帧头</span>
+    buf[idx++] = byte;
+    <span class="kw">if</span> (idx == <span class="str">2</span>) len = byte;
+    <span class="kw">if</span> (idx == len + <span class="str">3</span>) {              <span class="comment">// 收满一帧</span>
+        idx = <span class="str">0</span>;
+        <span class="kw">return</span> check_sum(buf, idx) ? <span class="str">0</span> : -<span class="str">1</span>;
+    }
+    <span class="kw">return</span> -<span class="str">1</span>;
+}</code></pre>
+        </div>
+
+        <h3>I2C：两线带地址</h3>
+        <h4>通信时序四步曲</h4>
+        <ol class="steps">
+          <li><strong>起始条件</strong>：SCL 高时 SDA 由高拉低</li>
+          <li><strong>寻址</strong>：主发 7 位地址 + 读/写位，从机回 ACK</li>
+          <li><strong>数据传输</strong>：每字节后跟 ACK/NACK，SCL 高时 SDA 必须稳定</li>
+          <li><strong>停止条件</strong>：SCL 高时 SDA 由低拉高</li>
+        </ol>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 上拉电阻必须有（4.7kΩ 常用），否则总线拉不高；② 地址 7 位 vs 8 位写法要分清（8 位地址 = 7 位左移一位 + R/W）；③ 总线卡死（从机拉死 SDA）的救法：<strong>手动发 9 个 SCL 时钟</strong>让从机释放 SDA 再发 STOP。
+        </div>
+
+        <h3>SPI：四线跑得快</h3>
+        <ul>
+          <li><strong>CPOL</strong>：空闲时钟电平；<strong>CPHA</strong>：第 1 还是第 2 个边沿采样 → 组成 4 种模式（Mode 0~3）</li>
+          <li>主从<strong> CS 拉低</strong>选中，传输是<strong>全双工</strong>（发一个字节同时收一个字节）</li>
+          <li>读 Flash 状态寄存器等场景要发 dummy 字节「换」数据</li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// SPI 读 W25Q128 Flash 的 JEDEC ID（模式 0，软 CS）</span>
+<span class="kw">uint8_t</span> spi_rw(<span class="kw">uint8_t</span> tx) {
+    <span class="kw">while</span> (!(SPI1-&gt;SR &amp; SPI_SR_TXE));   <span class="comment">// 等发送空</span>
+    SPI1-&gt;DR = tx;
+    <span class="kw">while</span> (!(SPI1-&gt;SR &amp; SPI_SR_RXNE)); <span class="comment">// 等接收满</span>
+    <span class="kw">return</span> SPI1-&gt;DR;
+}
+
+CS_LOW();
+spi_rw(<span class="str">0x9F</span>);                    <span class="comment">// 读 ID 命令</span>
+<span class="kw">uint8_t</span> mid  = spi_rw(<span class="str">0xFF</span>);    <span class="comment">// dummy 换回数据</span>
+<span class="kw">uint8_t</span> type = spi_rw(<span class="str">0xFF</span>);
+CS_HIGH();</code></pre>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> ADC/DAC 与传感器</h2>
+
+        <h3>ADC 核心概念</h3>
+        <ul>
+          <li><strong>分辨率</strong>：12 位 ADC → 4096 档；量化电压 = Vref / 4096</li>
+          <li><strong>采样时间</strong>：信号源内阻大就加长采样时间，让采样电容充满</li>
+          <li><strong>参考电压 Vref</strong>：精度天花板，最好用独立基准芯片（如 TL431）</li>
+          <li><strong>采样定理</strong>：采样率 ≥ 2 倍信号最高频率（工程上留 5~10 倍）</li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 12 位 ADC 读电压（HAL 轮询方式）</span>
+HAL_ADC_Start(&amp;hadc1);
+HAL_ADC_PollForConversion(&amp;hadc1, <span class="str">100</span>);
+<span class="kw">uint16_t</span> raw = HAL_ADC_GetValue(&amp;hadc1);        <span class="comment">// 0~4095</span>
+<span class="kw">float</span> voltage = raw * <span class="str">3.3f</span> / <span class="str">4095.0f</span>;     <span class="comment">// 换算电压</span>
+
+<span class="comment">// 过采样 16 次求平均，滤掉毛刺</span>
+<span class="kw">uint32_t</span> sum = <span class="str">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="str">0</span>; i &lt; <span class="str">16</span>; i++) sum += adc_read();
+<span class="kw">uint16_t</span> avg = sum &gt;&gt; <span class="str">4</span>;</code></pre>
+        </div>
+
+        <h3>软件滤波四件套</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>滤波方法</th>
+                <th>原理</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>限幅滤波</td>
+                <td>新值与上次差值超阈值就丢弃</td>
+                <td>消除脉冲干扰</td>
+              </tr>
+              <tr>
+                <td>中位值滤波</td>
+                <td>取 N 个采样的中间值</td>
+                <td>温度等缓变信号</td>
+              </tr>
+              <tr>
+                <td>滑动平均</td>
+                <td>队列 N 个值求平均</td>
+                <td>通用平滑</td>
+              </tr>
+              <tr>
+                <td>一阶互补/卡尔曼</td>
+                <td>加权融合历史与新值</td>
+                <td>IMU 姿态融合</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 一阶低通滤波（α 越小越平滑，响应越慢）</span>
+<span class="kw">float</span> lpf(<span class="kw">float</span> x) {
+    <span class="kw">static</span> <span class="kw">float</span> y = <span class="str">0</span>;
+    y = y + <span class="str">0.2f</span> * (x - y);    <span class="comment">// α = 0.2</span>
+    <span class="kw">return</span> y;
+}</code></pre>
+        </div>
+
+        <h3>常用传感器接口套路</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>DHT11/DHT22 温湿度</h4>
+            <p>单总线时序协议，读取按位计时判断 0/1，严格 us 级延时。</p>
+          </div>
+          <div class="card">
+            <h4>DS18B20 温度</h4>
+            <p>单总线 + ROM 搜索命令，支持一挂多，注意 4.7k 上拉。</p>
+          </div>
+          <div class="card">
+            <h4>MPU6050 六轴</h4>
+            <p>I2C 读原始数据 + 互补/Kalman 滤波解算姿态。</p>
+          </div>
+          <div class="card">
+            <h4>HC-SR04 超声波</h4>
+            <p>Trig 触发 + Echo 高电平宽度即距离（340m/s 换算，回波捕获测宽）。</p>
+          </div>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>模拟量走 ADC，数字量看时序；先读裸值再滤波，标定换算不能离</strong>」——传感器 = 读原始值 + 滤波 + 标定三步。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> RTOS 与 FreeRTOS</h2>
+
+        <h3>为什么需要 RTOS</h3>
+        <p>
+          裸机的「大 while 循环 + 中断」在任务变多后会陷入<strong>回调地狱</strong>：任务间时序耦合、
+          阻塞操作拖垮全局。RTOS 用<strong>任务 + 优先级抢占调度</strong>把每个业务独立成任务，
+          实时性由调度器保证——「系统永远在运行最高优先级的就绪任务」。
+        </p>
+
+        <h3>核心概念</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>概念</th>
+                <th>一句话理解</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>任务（Task）</td>
+                <td>独立函数 + 私有栈，各有优先级</td>
+              </tr>
+              <tr>
+                <td>调度器</td>
+                <td>抢占式：高优先级就绪立刻抢 CPU</td>
+              </tr>
+              <tr>
+                <td>时间片</td>
+                <td>同优先级任务轮流执行（可关）</td>
+              </tr>
+              <tr>
+                <td>信号量</td>
+                <td>计数器，用于同步与互斥</td>
+              </tr>
+              <tr>
+                <td>互斥锁</td>
+                <td>带优先级继承的二元信号量，保护共享资源</td>
+              </tr>
+              <tr>
+                <td>队列</td>
+                <td>线程安全的消息管道（生产者-消费者）</td>
+              </tr>
+              <tr>
+                <td>事件组</td>
+                <td>多个 bit 的事件标志，可多条件等待</td>
+              </tr>
+              <tr>
+                <td>任务通知</td>
+                <td>轻量级定向通知，比信号量快 45%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>多任务数据采集（FreeRTOS 实战模板）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 队列：传感器任务 → 显示任务</span>
+QueueHandle_t xQueueTemp;
+
+<span class="kw">void</span> task_sensor(<span class="kw">void</span> *arg) {
+    <span class="kw">float</span> t;
+    <span class="kw">for</span> (;;) {
+        t = read_temperature();
+        xQueueSend(xQueueTemp, &amp;t, <span class="str">0</span>);      <span class="comment">// 发队列</span>
+        vTaskDelay(pdMS_TO_TICKS(<span class="str">500</span>));        <span class="comment">// 500ms 周期</span>
+    }
+}
+
+<span class="kw">void</span> task_display(<span class="kw">void</span> *arg) {
+    <span class="kw">float</span> t;
+    <span class="kw">for</span> (;;) {
+        <span class="kw">if</span> (xQueueReceive(xQueueTemp, &amp;t, portMAX_DELAY)) {
+            oled_show_temp(t);                   <span class="comment">// 阻塞等数据，不空转</span>
+        }
+    }
+}
+
+<span class="kw">int</span> main(<span class="kw">void</span>) {
+    hardware_init();
+    xQueueTemp = xQueueCreate(<span class="str">8</span>, <span class="kw">sizeof</span>(<span class="kw">float</span>));
+    xTaskCreate(task_sensor,  <span class="str">"sensor"</span>,  <span class="str">256</span>, NULL, <span class="str">2</span>, NULL);
+    xTaskCreate(task_display, <span class="str">"display"</span>, <span class="str">512</span>, NULL, <span class="str">1</span>, NULL);
+    vTaskStartScheduler();                       <span class="comment">// 永不返回</span>
+}</code></pre>
+        </div>
+
+        <h3>优先级翻转与优先级继承</h3>
+        <p>
+          经典场景：低优先级任务持有锁 → 高优先级任务等锁 → 中优先级任务抢占低任务 →
+          <strong>高任务反被中任务间接卡住</strong>。解决方案：互斥锁（Mutex）自带<strong>优先级继承</strong>——
+          持有者临时继承等锁最高任务的优先级，尽快跑完释放。
+        </p>
+        <div class="callout danger">
+          <div class="callout-title">🚨 RTOS 三大死法</div>
+          ① <strong>在中断里调用非 FromISR API</strong>（必须用 xQueueSendFromISR 等）；② <strong>互斥锁不能在 ISR 用</strong>（优先级继承依赖任务上下文）；③ <strong>栈溢出</strong>——开 configCHECK_FOR_STACK_OVERFLOW = 2 + 钩子函数捕获。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>任务优先级抢占忙，队列传信锁护乡；中断要用 FromISR，栈溢出钩子来帮忙</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 存储器与 OTA 升级</h2>
+
+        <h3>存储器全家福</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>特点</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SRAM</td>
+                <td>快、贵、断电丢</td>
+                <td>MCU 内部 RAM（变量/栈/堆）</td>
+              </tr>
+              <tr>
+                <td>Flash NOR</td>
+                <td>随机读快、按块擦写</td>
+                <td>存代码（片内 Flash / W25Q 系列）</td>
+              </tr>
+              <tr>
+                <td>EEPROM</td>
+                <td>字节级改写、寿命长</td>
+                <td>配置参数（AT24C02）</td>
+              </tr>
+              <tr>
+                <td>SD/NAND</td>
+                <td>容量大、便宜</td>
+                <td>日志、媒体文件</td>
+              </tr>
+              <tr>
+                <td>FRAM</td>
+                <td>读写快、寿命近乎无限</td>
+                <td>高频写入的计量数据</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Flash 读写铁律：先擦后写、按页写</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// STM32 内部 Flash：擦除 Sector → 编程（写入前必须擦）</span>
+HAL_FLASH_Unlock();
+
+FLASH_EraseInitTypeDef e = {
+    .TypeErase = FLASH_TYPEERASE_SECTORS,
+    .Sector    = FLASH_SECTOR_11,
+    .NbSectors = <span class="str">1</span>,
+    .VoltageRange = FLASH_VOLTAGE_RANGE_3,
+};
+<span class="kw">uint32_t</span> err;
+HAL_FLASHEx_Erase(&amp;e, &amp;err);                 <span class="comment">// 整块擦成 0xFF</span>
+
+HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,
+                  <span class="str">0x080E0000</span>, <span class="str">0x12345678</span>);  <span class="comment">// 按字写入</span>
+HAL_FLASH_Lock();</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① Flash 只能把 1 写成 0，<strong>改写必须先擦</strong>；擦的最小单位是页/扇区，写是页/字；② 写参数别用「每次直接写」，用<strong>追加 + 标记</strong>或磨损均衡（EEPROM 模拟）；③ STM32 运行中擦写自己的 Flash，若代码在同一个 Bank 会停住总线——把擦写代码放 RAM 或双 Bank。
+        </div>
+
+        <h3>OTA：固件在线升级</h3>
+        <h4>双分区（A/B）方案流程</h4>
+        <ol class="steps">
+          <li>设备运行在 <strong>App 分区 A</strong>，检查服务器版本</li>
+          <li>下载新固件到 <strong>备份分区 B</strong>，边收边校验 CRC</li>
+          <li>写入<strong>升级标志</strong>到 EEPROM/备份寄存器，复位</li>
+          <li><strong>Bootloader</strong> 检查标志：有效则搬 B → A（或直接跳 B）</li>
+          <li>新固件自检 + 上报版本；失败则回滚旧分区</li>
+        </ol>
+        <div class="diagram">
+          <pre>
+Flash 布局（双分区方案）
+┌───────────────┐ 0x08000000
+│  Bootloader   │  负责校验、搬运、跳转
+├───────────────┤
+│  App 分区 A    │  当前运行固件
+├───────────────┤
+│  App 分区 B    │  下载暂存区
+├───────────────┤
+│  参数区        │  标志位、版本、配置
+└───────────────┘
+</pre
+          >
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>双区轮流坐庄，下载先校验，标志定去留，失败能回滚</strong>」——OTA 四要素：双分区、校验、标志、回滚。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 低功耗设计</h2>
+
+        <h3>功耗从哪来</h3>
+        <ul>
+          <li><strong>动态功耗</strong> ∝ 电压² × 频率 × 翻转率——降频降压最有效</li>
+          <li><strong>静态/漏电流</strong>——休眠时主导，与温度、工艺相关</li>
+          <li><strong>外设功耗</strong>——传感器、无线模块往往比 MCU 本体耗电大得多</li>
+        </ul>
+
+        <h3>STM32 低功耗模式对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>模式</th>
+                <th>CPU</th>
+                <th>典型电流</th>
+                <th>唤醒方式</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sleep</td>
+                <td>停</td>
+                <td>几 mA</td>
+                <td>任意中断</td>
+              </tr>
+              <tr>
+                <td>Stop</td>
+                <td>停，1.8V 域保留</td>
+                <td>几十 μA</td>
+                <td>EXTI 外部中断</td>
+              </tr>
+              <tr>
+                <td>Standby</td>
+                <td>停，RAM 丢</td>
+                <td>几 μA</td>
+                <td>WKUP 引脚/RTC/IWDG 复位</td>
+              </tr>
+              <tr>
+                <td>Shutdown</td>
+                <td>全断</td>
+                <td>几百 nA</td>
+                <td>WKUP/复位</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>电池供电的温度采集器（周期唤醒模板）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">while</span> (<span class="str">1</span>) {
+    <span class="comment">// ① 唤醒后干活</span>
+    sensor_power_on();
+    <span class="kw">float</span> t = read_temperature();
+    sensor_power_off();          <span class="comment">// 用完立刻断电！</span>
+
+    lora_send_frame(t);          <span class="comment">// 上报</span>
+
+    <span class="comment">// ② 配 RTC 闹钟 5 分钟后唤醒</span>
+    HAL_RTC_SetAlarm_IT(&amp;hrtc, &amp;alarm5min, RTC_FORMAT_BIN);
+
+    <span class="comment">// ③ 进 Stop 模式，等中断唤醒</span>
+    HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+
+    SystemClock_Config();        <span class="comment">// ④ 唤醒后恢复时钟（关键！）</span>
+}</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 低功耗五大坑</div>
+          ① Stop 唤醒后<strong>时钟回落到 HSI，必须重配</strong>；② 引脚悬空会「漏电」——未用引脚设<strong>模拟输入</strong>；③ 调试口 SWD 引脚开着也耗电；④ 上拉电阻上有电平差就有电流（电阻别乱加）；⑤ 万用表测 μA 级要用串联采样电阻 + 示波器看动态波形。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>降频降压砍动态，休眠断电治漏流；未用引脚设模拟，唤醒先把时钟修</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 通信协议进阶 CAN/USB/以太网</h2>
+
+        <h3>CAN 总线：汽车的血管</h3>
+        <ul>
+          <li><strong>差分两线</strong>（CAN_H/CAN_L），抗干扰强，最远 10km@5kbps</li>
+          <li><strong>多主竞争</strong>：显性 0 覆盖隐性 1，<strong>ID 越小优先级越高</strong>（仲裁）</li>
+          <li><strong>位填充</strong>：连续 5 个同位插入反位，保证跳变沿</li>
+          <li><strong>错误处理</strong>：CRC 校验 + 错误计数器，坏节点自动「离线」隔离</li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 经典 CAN 发送（扩展帧 ID）</span>
+CAN_TxHeaderTypeDef tx = {
+    .StdId = <span class="str">0x123</span>,
+    .ExtId = <span class="str">0</span>,
+    .IDE   = CAN_ID_STD,
+    .RTR   = CAN_RTR_DATA,
+    .DLC   = <span class="str">8</span>,                  <span class="comment">// 数据长度 0~8 字节</span>
+};
+<span class="kw">uint8_t</span> data[8] = { <span class="str">0x11</span>, <span class="str">0x22</span>, <span class="str">0</span>, <span class="str">0</span>, <span class="str">0</span>, <span class="str">0</span>, <span class="str">0</span>, <span class="str">0</span> };
+<span class="kw">uint32_t</span> mailbox;
+HAL_CAN_AddTxMessage(&amp;hcan1, &amp;tx, data, &amp;mailbox);
+
+<span class="comment">// 过滤器：只收 ID == 0x200 的报文（列表模式）</span>
+CAN_FilterTypeDef f = {
+    .FilterMode  = CAN_FILTERMODE_IDLIST,
+    .FilterIdHigh = <span class="str">0x200</span> &lt;&lt; <span class="str">5</span>,     <span class="comment">// StdId 左移 5 位对齐</span>
+    .FilterFIFOAssignment = CAN_RX_FIFO0,
+    .FilterActivation = ENABLE,
+};
+HAL_CAN_ConfigFilter(&amp;hcan1, &amp;f);</code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>差分两线抗干扰，ID 小者先说话；显性覆盖隐性位，仲裁失败自动退</strong>」
+        </div>
+
+        <h3>USB 与以太网速览</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>主题</th>
+                <th>要点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>USB 四线</td>
+                <td>VBUS、D+、D-、GND；高速靠 D+/D- 差分</td>
+              </tr>
+              <tr>
+                <td>枚举流程</td>
+                <td>复位 → 读描述符 → 设地址 → 配置端点</td>
+              </tr>
+              <tr>
+                <td>常用类</td>
+                <td>CDC 虚拟串口、HID 键鼠、MSC U盘、DFU 升级</td>
+              </tr>
+              <tr>
+                <td>以太网方案</td>
+                <td>MCU 内置 MAC + 外置 PHY（LAN8720），LwIP 轻量协议栈</td>
+              </tr>
+              <tr>
+                <td>TCP vs UDP</td>
+                <td>TCP 可靠有序三次握手；UDP 快但可能丢——看业务取舍</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>物联网协议选型</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>协议</th>
+                <th>层级</th>
+                <th>特点</th>
+                <th>场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MQTT</td>
+                <td>应用</td>
+                <td>发布/订阅、极简头部、QoS 0/1/2</td>
+                <td>物联网上报首选</td>
+              </tr>
+              <tr>
+                <td>CoAP</td>
+                <td>应用</td>
+                <td>类 REST 的 UDP 轻协议</td>
+                <td>受限设备</td>
+              </tr>
+              <tr>
+                <td>HTTP</td>
+                <td>应用</td>
+                <td>通用但头部重</td>
+                <td>配置下发、调试</td>
+              </tr>
+              <tr>
+                <td>Modbus</td>
+                <td>应用</td>
+                <td>主从问答、寄存器模型</td>
+                <td>工业 PLC 事实标准</td>
+              </tr>
+              <tr>
+                <td>LoRa/NB-IoT</td>
+                <td>传输</td>
+                <td>远距离低速率（km 级）</td>
+                <td>抄表、农业监测</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          MQTT 是物联网的「微信公众号」——设备只管「订阅主题」和「发布消息」，不用关心对方是谁在哪；Broker 负责转发。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 嵌入式 Linux 基础</h2>
+
+        <h3>从 MCU 到 Linux 的思维转变</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>MCU（裸机/RTOS）</th>
+                <th>嵌入式 Linux</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>操作硬件</td>
+                <td>直接读写寄存器</td>
+                <td>通过驱动 + 系统调用 + 设备文件</td>
+              </tr>
+              <tr>
+                <td>内存</td>
+                <td>物理地址直达</td>
+                <td>MMU 虚拟地址，用户态/内核态隔离</td>
+              </tr>
+              <tr>
+                <td>程序形态</td>
+                <td>一个无限循环固件</td>
+                <td>一堆进程，调度由内核管</td>
+              </tr>
+              <tr>
+                <td>开发方式</td>
+                <td>烧录调试</td>
+                <td>交叉编译 + NFS/SCP 传程序 + 网络调试</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>嵌入式 Linux 四大件</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>Bootloader（U-Boot）</h4>
+            <p>上电第一段代码：初始化 DDR、搬内核、传参、引导启动。</p>
+          </div>
+          <div class="card">
+            <h4>内核（Kernel）</h4>
+            <p>裁剪编译设备驱动，设备树描述硬件，负责调度与内存。</p>
+          </div>
+          <div class="card">
+            <h4>根文件系统（RootFS）</h4>
+            <p>BusyBox/buildroot 制作，提供 shell 与基本命令。</p>
+          </div>
+          <div class="card">
+            <h4>应用程序</h4>
+            <p>交叉编译的 user 程序，通过网络或挂载方式部署。</p>
+          </div>
+        </div>
+
+        <div class="diagram">
+          <pre>
+上电启动流程
+┌────────┐   ┌─────────┐   ┌────────┐   ┌─────────┐
+│ ROM 固化 │ → │ U-Boot  │ → │ Kernel │ → │ RootFS   │
+│(引导加载)│   │初始化DDR │   │挂载根fs │   │ init 进程 │
+└────────┘   │加载内核  │   │驱动初始化│   │ 运行APP  │
+             └─────────┘   └────────┘   └─────────┘
+</pre
+          >
+        </div>
+
+        <h3>设备树（Device Tree）</h3>
+        <p>
+          设备树是用<strong>一个文本文件描述「板子上有什么硬件」</strong>的机制，把「硬件信息」从内核代码中剥离出来——
+          同一个内核，换个板子只要换 DTS。
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">/* DTS 片段：描述一个挂在 I2C1 上的温湿度传感器 */</span>
+&amp;i2c1 {
+    status = <span class="str">"okay"</span>;
+    pinctrl-names = <span class="str">"default"</span>;
+    pinctrl-0 = &lt;&amp;pinctrl_i2c1&gt;;
+
+    sht30@44 {
+        compatible = <span class="str">"sensirion,sht30"</span>;
+        reg = &lt;<span class="str">0x44</span>&gt;;              <span class="comment">/* I2C 地址 */</span>
+    };
+};</code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>硬件长在设备树，驱动匹配 compatible；树里 status 要 okay，引脚占用 pinctrl</strong>」
+        </div>
+
+        <h3>常用开发环境命令</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 交叉编译应用程序</span>
+aarch64-linux-gnu-gcc app.c -o app --static
+
+<span class="comment"># 传到开发板</span>
+scp app root@192.168.1.100:/root/
+
+<span class="comment"># 板端 NFS 挂载宿主机目录（改代码秒生效）</span>
+mount -t nfs -o nolock 192.168.1.10:/home/user/nfsroot /mnt
+
+<span class="comment"># 查看内核已加载驱动 / 打印</span>
+dmesg | tail -20
+lsmod
+cat /proc/interrupts          <span class="comment"># 看中断占用</span>
+cat /sys/class/thermal/thermal_zone0/temp   <span class="comment"># 读温度</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 设备驱动开发</h2>
+
+        <h3>Linux 驱动的世界观</h3>
+        <p>
+          Linux 驱动的核心思想：<strong>「一切皆文件」</strong>。应用程序不管底层是 GPIO 还是传感器，
+          统一用 <code>open / read / write / ioctl / close</code> 系统调用访问设备文件，
+          驱动负责把系统调用「翻译」成硬件操作。
+        </p>
+
+        <h4>字符设备驱动骨架（内核模块）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">#include</span> &lt;linux/module.h&gt;
+<span class="kw">#include</span> &lt;linux/fs.h&gt;
+<span class="kw">#include</span> &lt;linux/cdev.h&gt;
+
+<span class="kw">static</span> dev_t devno;
+<span class="kw">static</span> <span class="kw">struct</span> cdev my_cdev;
+
+<span class="kw">static</span> <span class="kw">ssize_t</span> my_read(<span class="kw">struct</span> file *f, <span class="kw">char</span> __user *buf,
+                        <span class="kw">size_t</span> n, loff_t *off)
+{
+    <span class="kw">int</span> val = gpio_get_value(<span class="str">25</span>);      <span class="comment">// 读 GPIO 电平</span>
+    <span class="kw">if</span> (copy_to_user(buf, &amp;val, <span class="kw">sizeof</span>(val)))
+        <span class="kw">return</span> -EFAULT;                   <span class="comment">// 拷贝到用户空间</span>
+    <span class="kw">return</span> <span class="kw">sizeof</span>(val);
+}
+
+<span class="kw">static const struct</span> file_operations my_fops = {
+    .owner = THIS_MODULE,
+    .read  = my_read,
+};
+
+<span class="kw">static int</span> __init my_init(<span class="kw">void</span>)
+{
+    alloc_chrdev_region(&amp;devno, <span class="str">0</span>, <span class="str">1</span>, <span class="str">"mydev"</span>);  <span class="comment">// 申请设备号</span>
+    cdev_init(&amp;my_cdev, &amp;my_fops);
+    cdev_add(&amp;my_cdev, devno, <span class="str">1</span>);                    <span class="comment">// 注册字符设备</span>
+    <span class="kw">return</span> <span class="str">0</span>;
+}
+
+<span class="kw">static void</span> __exit my_exit(<span class="kw">void</span>)
+{
+    cdev_del(&amp;my_cdev);
+    unregister_chrdev_region(devno, <span class="str">1</span>);
+}
+
+module_init(my_init);
+module_exit(my_exit);
+MODULE_LICENSE(<span class="str">"GPL"</span>);</code></pre>
+        </div>
+
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 编译（Makefile 指向内核源码目录）</span>
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+
+<span class="comment"># 开发板上加载/卸载</span>
+insmod mydev.ko
+rmmod mydev
+
+<span class="comment"># 创建设备节点后即可当文件读</span>
+mknod /dev/mydev c 240 0
+cat /dev/mydev</code></pre>
+        </div>
+
+        <h3>驱动三大子系统速览</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>子系统</th>
+                <th>解决什么</th>
+                <th>关键接口</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>platform 总线</td>
+                <td>无总线设备（SoC 内外设）与驱动的匹配</td>
+                <td>probe / remove、of_match_table</td>
+              </tr>
+              <tr>
+                <td>GPIO 子系统</td>
+                <td>换芯片不用改代码</td>
+                <td>gpiod_get / gpiod_set_value</td>
+              </tr>
+              <tr>
+                <td>input 子系统</td>
+                <td>按键、触摸统一上报事件</td>
+                <td>input_report_key / input_sync</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 驱动开发避坑</div>
+          ① <strong>内核空间不能直接用用户态指针</strong>，必须 copy_to_user/copy_from_user；② 驱动崩溃会带崩整个内核（oops/panic），打印用 printk，级别要看 dmesg；③ 「先写用户态模拟，再下沉到内核」能大幅降低调试成本——能用 sysfs/libgpiod 就别急着写内核模块。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>一切设备皆文件，open read 就能玩；probe 匹配才上电，copy 用户保安全</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 调试与性能优化</h2>
+
+        <h3>硬件调试三件套</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>逻辑分析仪</h4>
+            <p>看数字时序（I2C/SPI/UART），几十元的 USB 8 通道足够入门。</p>
+          </div>
+          <div class="card">
+            <h4>示波器</h4>
+            <p>看模拟波形：电平、毛刺、上升沿、PWM 死区。</p>
+          </div>
+          <div class="card">
+            <h4>JTAG/SWD 调试器</h4>
+            <p>断点、单步、看寄存器与内存、HardFault 定位。</p>
+          </div>
+        </div>
+
+        <h3>HardFault 排查流程（MCU 必备技能）</h3>
+        <ol class="steps">
+          <li>调试器暂停，看 PC/LR 落在哪个函数附近</li>
+          <li>读 <strong>SCB-&gt;CFSR</strong>：区分总线错误/用法错误/存储错误</li>
+          <li>读 <strong>SCB-&gt;HFSR</strong>：FORCED 位说明下层异常升级而来</li>
+          <li>出栈看压栈的 PC（异常返回地址）定位出错指令</li>
+          <li>常见根因：野指针、栈溢出、未对齐访问、除零、函数指针为空</li>
+        </ol>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// HardFault 中断里：手动取压栈的 PC/LR（Cortex-M3/M4）</span>
+<span class="kw">void</span> HardFault_Handler(<span class="kw">void</span>) {
+    <span class="kw">volatile</span> <span class="kw">uint32_t</span> *stk;
+    __asm <span class="kw">volatile</span>(<span class="str">"tst lr, #4      \n"</span>
+                 <span class="str">"ite eq          \n"</span>
+                 <span class="str">"mrseq %0, msp   \n"</span>
+                 <span class="str">"mrsne %0, psp   \n"</span>
+                 : <span class="str">"=r"</span>(stk));
+    <span class="comment">// stk[6]=PC, stk[5]=LR, stk[7]=xPSR —— 打印/断点分析</span>
+    <span class="kw">while</span> (<span class="str">1</span>);
+}</code></pre>
+        </div>
+
+        <h3>性能优化三板斧</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方向</th>
+                <th>手段</th>
+                <th>效果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>代码体积</td>
+                <td>-Os、去 printf（用轻量 my_printf）、结构体对齐</td>
+                <td>Flash 省 30%+</td>
+              </tr>
+              <tr>
+                <td>运行速度</td>
+                <td>查表代替乘除、定点代替浮点、DMA 搬运、关键函数放 RAM</td>
+                <td>热路径数倍提升</td>
+              </tr>
+              <tr>
+                <td>实时性</td>
+                <td>查中断延迟（GPIO 翻转+示波器量）、优化长 ISR</td>
+                <td>响应 μs 级可控</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>翻转 IO 测量代码执行时间（最朴素的性能剖析）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 用示波器/逻辑分析仪测被测代码耗时</span>
+HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+foo();                                        <span class="comment">// 被测代码</span>
+HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+<span class="comment">// 示波器量高电平宽度 = foo() 的执行时间</span></code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>先测量再优化，莫凭感觉瞎忙活；printf 带走体积，DMA 释放 CPU；翻脚量化最朴素</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 系统构建 U-Boot/内核/Yocto</h2>
+
+        <h3>四大启动组件构建</h3>
+        <h4>U-Boot 编译与引导命令</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 编译 U-Boot（以某 ARM64 板为例）</span>
+make <span class="str">xxx_defconfig</span>
+make CROSS_COMPILE=aarch64-linux-gnu- -j8
+
+<span class="comment"># 常用 U-Boot 命令（串口交互）</span>
+<span class="cmd">printenv</span> / <span class="cmd">setenv</span> bootargs <span class="str">'console=ttyS0,115200 root=/dev/mmcblk1p2'</span>
+<span class="cmd">tftpboot</span> <span class="str">0x80800000</span> zImage        <span class="comment"># 从网络拉内核</span>
+<span class="cmd">bootz</span> <span class="str">0x80800000</span> - <span class="str">0x83000000</span>   <span class="comment"># 跳转执行</span>
+<span class="cmd">saveenv</span>                             <span class="comment"># 保存环境变量</span></code></pre>
+        </div>
+
+        <h4>内核裁剪编译</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>make ARCH=arm64 defconfig
+make ARCH=arm64 menuconfig       <span class="comment"># 图形化裁剪：按需勾选驱动/文件系统</span>
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8
+<span class="comment"># 产物：Image（+dtb 设备树）</span></code></pre>
+        </div>
+
+        <h3>根文件系统方案对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方案</th>
+                <th>特点</th>
+                <th>适合</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BusyBox 手工</td>
+                <td>极小（几 MB），学习原理</td>
+                <td>入门理解 RootFS</td>
+              </tr>
+              <tr>
+                <td>Buildroot</td>
+                <td>菜单化整体构建，上手快</td>
+                <td>中小型产品</td>
+              </tr>
+              <tr>
+                <td>Yocto</td>
+                <td>层与配方体系，可维护可复现</td>
+                <td>大型商业化项目</td>
+              </tr>
+              <tr>
+                <td>Debian/Ubuntu 镜像</td>
+                <td>生态完整 apt 直接用</td>
+                <td>算力充足的板子</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          Buildroot 是「一键套餐」，Yocto 是「中央厨房体系」——前者快速出餐，后者适合长生命周期产品线持续迭代。
+        </div>
+
+        <h3>init 进程与服务自启动</h3>
+        <ul>
+          <li>内核最后启动 <strong>/sbin/init</strong>（PID 1），读 /etc/inittab 或 systemd</li>
+          <li>BusyBox init：inittab 中 <code>::sysinit:/etc/init.d/rcS</code> 跑初始化脚本</li>
+          <li>systemd：<code>systemctl enable/disable</code> 管理服务单元</li>
+          <li>应用开机自启三招：rcS 脚本 / systemd service / inittab respawn（崩溃自动拉起）</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>U-Boot 搬内核，kernel 挂根fs；init 是 PID1，respawn 崩溃能回魂</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> 项目实战拆解</h2>
+
+        <h3>项目一：智能环境监测站（MCU + RTOS）</h3>
+        <h4>需求</h4>
+        <ul>
+          <li>采集温湿度（SHT30/I2C）、光照（BH1750/I2C）、PM2.5（UART）</li>
+          <li>OLED（SPI）本地显示 + 按键（EXTI）翻页</li>
+          <li>ESP32/4G 模块（UART AT 指令）MQTT 上报云端，5 分钟一报</li>
+          <li>市电供电 + 阈值蜂鸣器报警</li>
+        </ul>
+        <h4>架构设计（FreeRTOS 四任务）</h4>
+        <div class="diagram">
+          <pre>
+┌─────────────────────────────────────────┐
+│ task_sensor(P3)  500ms │→ 队列 → task_cloud(P2) 5min  │
+│ task_ui(P1)      50ms  ← 队列 ←─┘                    │
+│ task_alarm(P4)   阻塞等事件组（超阈值立即报）          │
+└─────────────────────────────────────────┘
+</pre
+          >
+        </div>
+        <h4>你会练到</h4>
+        <ul>
+          <li>I2C/SPI/UART 三种总线驱动传感器</li>
+          <li>队列解耦采集与上报、事件组做异步报警</li>
+          <li>AT 指令状态机（发送→等 OK→超时重试）</li>
+          <li>看门狗 + 数据缓存重传（弱网场景）</li>
+        </ul>
+
+        <h3>项目二：智能小车（电机控制闭环）</h3>
+        <h4>核心链路</h4>
+        <ol class="steps">
+          <li>编码器（输入捕获/正交解码）测轮速</li>
+          <li>定时器 PWM + H 桥驱动电机（高级定时器死区互补）</li>
+          <li>PID 闭环：目标速度与实测差 → PWM 输出</li>
+          <li>蓝牙/遥控（UART）+ 超声波避障（GPIO+定时器）</li>
+          <li>MPU6050 互补滤波做姿态保持（走直线）</li>
+        </ol>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// 位置式 PID：u = Kp*e + Ki*Σe + Kd*(e-e_last)</span>
+<span class="kw">typedef struct</span> { <span class="kw">float</span> kp, ki, kd, sum, last; } pid_t;
+
+<span class="kw">float</span> pid_calc(pid_t *p, <span class="kw">float</span> target, <span class="kw">float</span> actual) {
+    <span class="kw">float</span> err = target - actual;
+    p-&gt;sum += err;
+    <span class="kw">if</span> (p-&gt;sum &gt; <span class="str">500</span>) p-&gt;sum = <span class="str">500</span>;     <span class="comment">// 积分限幅（抗饱和）</span>
+    <span class="kw">float</span> out = p-&gt;kp * err + p-&gt;ki * p-&gt;sum
+               + p-&gt;kd * (err - p-&gt;last);
+    p-&gt;last = err;
+    <span class="kw">return</span> out;
+}</code></pre>
+        </div>
+
+        <h3>项目三：嵌入式 Linux 智能网关</h3>
+        <h4>核心链路</h4>
+        <ol class="steps">
+          <li>Buildroot/Yocto 构建系统镜像 + 应用交叉编译</li>
+          <li>RS485/Modbus 采集多路下位机数据（用户态 libmodbus）</li>
+          <li>SQLite 本地缓存 + MQTT 上云（断网续传）</li>
+          <li>写一个 platform 字符设备驱动（如继电器控制），DTS 绑定</li>
+          <li> systemd 服务管理 + OTA（swupdate / 双分区）</li>
+        </ol>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>MCU 项目练外设，Linux 项目练体系；一个闭环控电机，一个网关通协议</strong>」——简历上的两大杀器。
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 简历避坑</div>
+          不要写「点亮 LED、跑官方例程」当项目。面试官追问三连：<strong>「为什么这样设计？遇到什么坑？数据指标是多少？」</strong>——项目要有量化指标（功耗从 80mA 降到 12mA、上报成功率 99.5%）和踩坑复盘。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 学习路线与资源</h2>
+
+        <h3>四阶段成长路线</h3>
+        <ol class="steps">
+          <li><strong>筑基期（1~2 月）</strong>：C 语言强化（指针/位操作/volatile）+ 数电常识 + STM32 裸机外设逐个点亮</li>
+          <li><strong>进阶期（2~3 月）</strong>：FreeRTOS + 通信协议 + 做完 1~2 个完整项目 + 学会用示波器/逻辑分析仪</li>
+          <li><strong>分化期（3~6 月）</strong>：选方向深挖——电机控制（FOC）/ 低功耗物联网 / 嵌入式 Linux 驱动 / 汽车电子</li>
+          <li><strong>精通期（持续）</strong>：系统构建（Yocto）、性能优化、功能安全（MISRA C / ISO 26262）、架构设计能力</li>
+        </ol>
+
+        <h3>方向怎么选</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方向</th>
+                <th>核心技术</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>物联网</td>
+                <td>RTOS + 无线协议 + 低功耗 + 云平台</td>
+                <td>岗位多，门槛适中</td>
+              </tr>
+              <tr>
+                <td>电机/电源</td>
+                <td>PID/FOC、高级定时器、硬件理解</td>
+                <td>越老越吃香，门槛高</td>
+              </tr>
+              <tr>
+                <td>嵌入式 Linux</td>
+                <td>驱动、内核、BSP、系统构建</td>
+                <td>天花板高，需求旺盛</td>
+              </tr>
+              <tr>
+                <td>汽车电子</td>
+                <td>Autosar、CAN/LIN、功能安全</td>
+                <td>薪资高，流程重</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>推荐资源</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>正点原子 / 野火</h4>
+            <p>STM32 全套免费视频+开发板配套文档，国内入门首选。</p>
+          </div>
+          <div class="card">
+            <h4>《C和指针》《C专家编程》</h4>
+            <p>把 C 语言从「会用」到「真懂」的两本书。</p>
+          </div>
+          <div class="card">
+            <h4>《嵌入式实时操作系统 FreeRTOS》</h4>
+            <p>结合源码讲调度、队列、内存管理，RTOS 深入必读。</p>
+          </div>
+          <div class="card">
+            <h4>韦东山 / 正点原子 Linux</h4>
+            <p>嵌入式 Linux 驱动与系统开发主流教程。</p>
+          </div>
+          <div class="card">
+            <h4>LDD3 / 《Linux设备驱动开发详解》</h4>
+            <p>驱动开发经典，配新内核源码对照读。</p>
+          </div>
+          <div class="card">
+            <h4>ST 官方文档</h4>
+            <p>Reference Manual + Application Note，一手资料永远最准。</p>
+          </div>
+        </div>
+
+        <h3>学习方法论</h3>
+        <ul>
+          <li><strong>datasheet 先行</strong>：遇到外设问题，第一反应是查参考手册，而不是搜博客</li>
+          <li><strong>单元验证</strong>：每个外设先写最小可运行 demo（打印寄存器值），再集成进项目</li>
+          <li><strong>量化一切</strong>：周期、功耗、内存占用都量出来，优化有据可依</li>
+          <li><strong>版本管理</strong>：从第一个工程就上 Git，外设驱动封装成可复用模块</li>
+          <li><strong>写博客复盘</strong>：踩过的坑写下来，比看十篇教程记得牢</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 总口诀</div>
+          「<strong>C 语言打地基，寄存器外设练手感；RTOS 学调度，Linux 见天地；项目复盘加量化，嵌运高手就是你</strong>」
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 最后的话</div>
+          嵌入式的学习曲线前陡后缓：<strong>前 3 个月最痛苦</strong>（软硬件问题交织、资料分散），熬过去后每个新芯片、新协议都是「换汤不换药」。核心能力只有一条——<strong>面对黑盒问题时的系统性排查能力</strong>：分层定位（硬件？驱动？逻辑？），逐段验证，缩小包围圈。这比背 100 个 API 更值钱。
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>嵌入式开发从入门到精通 · 学习笔记 | 持续更新</p>
+        <p style="margin-top: 8px; font-size: 0.8rem">
+          Hardware + Software, Infinite Possibilities. 🔧
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>

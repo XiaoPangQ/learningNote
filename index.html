@@ -139,8 +139,6 @@
         transform: translate(2px, -2px);
       }
       .wallpaper-trigger {
-        margin-left: auto;
-        margin-right: 22px;
         padding: 0;
         border: 0;
         color: var(--green);
@@ -167,6 +165,17 @@
       .wallpaper-trigger:hover::after,
       .wallpaper-trigger:focus-visible::after {
         transform: translate(2px, -2px);
+      }
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-left: auto;
+      }
+      .top-actions > * {
+        display: inline-flex;
+        align-items: center;
+        height: 24px;
       }
       .intro {
         display: grid;
@@ -307,29 +316,49 @@
         display: grid;
         place-items: center;
         padding: 24px;
-        background: rgba(23, 33, 27, 0.76);
+        background: rgba(23, 33, 27, 0.78);
+        backdrop-filter: blur(5px);
       }
       .wallpaper-dialog {
         position: relative;
         width: min(940px, 100%);
         max-height: calc(100vh - 48px);
         overflow: auto;
-        padding: 18px;
+        padding: 28px;
+        border: 1px solid rgba(255, 253, 248, 0.65);
         background: var(--surface);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      }
+      .wallpaper-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        padding-right: 42px;
+        margin-bottom: 18px;
+      }
+      .wallpaper-kicker {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--orange);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
       }
       .wallpaper-dialog h2 {
-        margin-bottom: 12px;
-        color: var(--green-dark);
+        color: var(--green);
         font-family: var(--serif);
-        font-size: 1.35rem;
+        font-size: 1.55rem;
         font-weight: 500;
+        line-height: 1.2;
       }
       .wallpaper-image-wrap {
-        min-height: 220px;
+        min-height: 240px;
         display: grid;
         place-items: center;
+        overflow: hidden;
         background: #e8ebe4;
+        box-shadow: inset 0 0 0 1px rgba(23, 33, 27, 0.08);
       }
       .wallpaper-image {
         display: block;
@@ -338,38 +367,57 @@
         object-fit: contain;
       }
       .wallpaper-status {
-        padding: 28px;
+        padding: 48px 28px;
         color: var(--muted);
         text-align: center;
       }
       .wallpaper-controls {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto auto minmax(150px, 1fr) auto;
         align-items: center;
-        gap: 10px;
-        margin-top: 14px;
-        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
       }
       .wallpaper-controls label {
         color: var(--muted);
         font-size: 0.82rem;
       }
       .wallpaper-controls input {
+        width: 100%;
         min-width: 150px;
-        padding: 8px 10px;
+        padding: 9px 10px;
         border: 1px solid var(--line);
+        border-radius: 0;
         color: var(--ink);
         background: var(--paper);
         font: inherit;
         font-size: 0.82rem;
+        transition:
+          border-color 180ms ease,
+          box-shadow 180ms ease;
+      }
+      .wallpaper-controls input:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 2px var(--green-soft);
+        outline: none;
       }
       .wallpaper-controls button {
-        padding: 8px 12px;
+        padding: 9px 14px;
         border: 1px solid var(--green);
-        color: var(--green-dark);
+        color: var(--green);
         background: transparent;
         font: inherit;
         font-size: 0.82rem;
         cursor: pointer;
+        transition:
+          color 180ms ease,
+          background 180ms ease;
+      }
+      .wallpaper-controls .wallpaper-random {
+        color: var(--surface);
+        background: var(--green);
       }
       .wallpaper-controls button:hover,
       .wallpaper-controls button:focus-visible {
@@ -383,18 +431,213 @@
         right: 14px;
         width: 34px;
         height: 34px;
-        border: 1px solid var(--line);
+        border: 1px solid transparent;
         color: var(--ink);
-        background: var(--surface);
-        font-size: 1.25rem;
+        background: transparent;
+        font-size: 1.45rem;
         line-height: 1;
         cursor: pointer;
+      }
+      .wallpaper-fullscreen {
+        position: absolute;
+        top: 14px;
+        right: 56px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid transparent;
+        color: var(--ink);
+        background: transparent;
+        font-size: 1.2rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .wallpaper-download {
+        position: absolute;
+        top: 14px;
+        right: 98px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid transparent;
+        color: var(--ink);
+        background: transparent;
+        font-size: 1.15rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .wallpaper-download:disabled {
+        color: var(--line);
+        cursor: not-allowed;
+      }
+      .wallpaper-download:not(:disabled):hover,
+      .wallpaper-download:not(:disabled):focus-visible {
+        color: var(--surface);
+        background: var(--green);
+        outline: none;
+      }
+      .wallpaper-fullscreen:hover,
+      .wallpaper-fullscreen:focus-visible {
+        color: var(--surface);
+        background: var(--green);
+        outline: none;
+      }
+      .wallpaper-fullscreen-clock {
+        display: none;
+      }
+      .wallpaper-modal:fullscreen {
+        padding: 0;
+        background: #17211b;
+        user-select: none;
+      }
+      .wallpaper-modal:fullscreen * {
+        user-select: none;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-dialog {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        border: 0;
+        background: #17211b;
+        box-shadow: none;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-heading,
+      .wallpaper-modal:fullscreen .wallpaper-controls {
+        display: none;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-image-wrap {
+        flex: 1;
+        min-height: 0;
+        background: #17211b;
+        box-shadow: none;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-image {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-status {
+        color: rgba(255, 253, 248, 0.76);
+      }
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen,
+      .wallpaper-modal:fullscreen .wallpaper-close {
+        z-index: 1;
+        color: var(--surface);
+        background: rgba(23, 33, 27, 0.42);
+        border-color: rgba(255, 253, 248, 0.28);
+      }
+      .wallpaper-modal:fullscreen .wallpaper-close {
+        display: none;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-download {
+        display: none;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen {
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 180ms ease,
+          background 180ms ease;
+      }
+      .wallpaper-modal:fullscreen.wallpaper-top-active .wallpaper-fullscreen,
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen:hover,
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen:focus-visible {
+        background: var(--green);
+      }
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen-clock {
+        position: absolute;
+        left: clamp(20px, 5vw, 72px);
+        bottom: clamp(22px, 6vh, 64px);
+        display: block;
+        color: var(--surface);
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.48);
+        user-select: none;
+        transition:
+          transform 240ms ease,
+          text-shadow 240ms ease;
+      }
+      .wallpaper-modal:fullscreen .wallpaper-fullscreen-clock:hover {
+        transform: translateY(-5px);
+        text-shadow:
+          0 2px 18px rgba(0, 0, 0, 0.56),
+          0 0 28px rgba(240, 201, 106, 0.28);
+      }
+      .wallpaper-clock-date {
+        display: block;
+        margin-bottom: 2px;
+        color: #ffe7a3;
+        font-size: clamp(1rem, 1.5vw, 1.25rem);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.58);
+        transition:
+          color 180ms ease,
+          letter-spacing 180ms ease;
+      }
+      .wallpaper-modal:fullscreen
+        .wallpaper-fullscreen-clock:hover
+        .wallpaper-clock-date {
+        color: #fff4cf;
+        letter-spacing: 0.16em;
+      }
+      .wallpaper-clock-time {
+        display: block;
+        font-family: var(--serif);
+        font-size: clamp(2.8rem, 8vw, 6.5rem);
+        line-height: 0.95;
+        transition: color 180ms ease;
+      }
+      .wallpaper-modal:fullscreen
+        .wallpaper-fullscreen-clock:hover
+        .wallpaper-clock-time {
+        color: #fffdf8;
       }
       .wallpaper-close:hover,
       .wallpaper-close:focus-visible {
         color: var(--surface);
         background: var(--orange);
         outline: none;
+      }
+      @media (max-width: 560px) {
+        .wallpaper-modal {
+          place-items: end center;
+          padding: 0;
+        }
+        .wallpaper-dialog {
+          width: 100%;
+          max-height: 94vh;
+          padding: 22px 18px 18px;
+          border-width: 1px 0 0;
+        }
+        .wallpaper-heading {
+          margin-bottom: 14px;
+        }
+        .wallpaper-fullscreen {
+          right: 56px;
+        }
+        .wallpaper-download {
+          right: 98px;
+        }
+        .wallpaper-modal:fullscreen .wallpaper-fullscreen {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .wallpaper-image-wrap {
+          min-height: 190px;
+        }
+        .wallpaper-controls {
+          grid-template-columns: 1fr auto;
+        }
+        .wallpaper-controls .wallpaper-random,
+        .wallpaper-controls label {
+          grid-column: 1 / -1;
+        }
       }
       @media (max-width: 760px) {
         .shell {
@@ -425,27 +668,44 @@
         }
         .topbar {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) auto;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           align-items: center;
-          column-gap: 16px;
+          column-gap: 8px;
         }
         .identity {
           grid-column: 1 / -1;
           min-width: 0;
         }
-        .wallpaper-trigger {
-          grid-column: 1;
+        .top-actions {
+          grid-column: 1 / -1;
           grid-row: 2;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          width: 100%;
+          margin-top: 16px;
+        }
+        .wallpaper-trigger {
+          flex: 1;
           width: auto;
-          margin: 16px 0 0;
           white-space: nowrap;
           font-size: 0.8rem;
+          justify-content: center;
+        }
+        .game-link {
+          flex: 1;
+          white-space: nowrap;
+          font-size: 0.8rem;
+          text-align: center;
+          justify-content: center;
         }
         .top-link {
-          grid-column: 2;
-          grid-row: 2;
-          margin-top: 16px;
+          flex: 1;
           white-space: nowrap;
+          font-size: 0.8rem;
+          text-align: right;
+          justify-content: center;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -471,10 +731,11 @@
             ><small>记录学习，也记录问题的解决方法与过程</small></span
           ></a
         >
-        <button class="wallpaper-trigger" type="button">
-          休息一下，看看美景
-        </button>
-        <a class="top-link" href="resume.html">关于博主</a>
+        <nav class="top-actions" aria-label="快捷入口">
+          <button class="wallpaper-trigger" type="button">看看风景</button>
+          <a class="top-link game-link" href="snakeGame.html">玩玩游戏</a>
+          <a class="top-link" href="resume.html">关于博主</a>
+        </nav>
       </header>
       <section class="intro">
         <div>
@@ -577,10 +838,34 @@
         <button class="wallpaper-close" type="button" aria-label="关闭壁纸弹窗">
           ×
         </button>
-        <h2 id="wallpaper-title">Bing 每日壁纸</h2>
+        <button
+          class="wallpaper-fullscreen"
+          type="button"
+          aria-label="全屏查看壁纸"
+          title="全屏查看壁纸">
+          ⛶
+        </button>
+        <button
+          class="wallpaper-download"
+          type="button"
+          aria-label="下载当前壁纸"
+          title="下载当前壁纸"
+          disabled>
+          ↓
+        </button>
+        <div class="wallpaper-heading">
+          <div>
+            <span class="wallpaper-kicker">DAILY IMAGE / BING</span>
+            <h2 id="wallpaper-title">Bing 每日壁纸</h2>
+          </div>
+        </div>
         <div class="wallpaper-image-wrap">
           <img class="wallpaper-image" alt="Bing 壁纸" hidden />
-          <p class="wallpaper-status">正在加载壁纸...</p>
+          <p class="wallpaper-status" role="status">正在加载壁纸...</p>
+        </div>
+        <div class="wallpaper-fullscreen-clock" aria-live="off">
+          <span class="wallpaper-clock-date"></span>
+          <span class="wallpaper-clock-time"></span>
         </div>
         <div class="wallpaper-controls">
           <button class="wallpaper-random" type="button">换一张</button>
@@ -589,9 +874,9 @@
             id="wallpaper-date"
             type="text"
             inputmode="numeric"
-            placeholder="YYYY-MM-DD"
-            pattern="\d{4}-\d{2}-\d{2}" />
-          <button class="wallpaper-date-submit" type="button">查看日期</button>
+            placeholder="输入日期，如：20260801或2026年8月1日"
+            aria-label="输入日期，可用 YYYYMMDD、YYYY-MM-DD、YYYY.MM.DD 或 YYYY年M月D日格式" />
+          <button class="wallpaper-date-submit" type="button">查看壁纸</button>
         </div>
       </section>
     </div>
@@ -601,10 +886,86 @@
       const wallpaperImage = document.querySelector('.wallpaper-image')
       const wallpaperStatus = document.querySelector('.wallpaper-status')
       const wallpaperDate = document.querySelector('#wallpaper-date')
+      const wallpaperTrigger = document.querySelector('.wallpaper-trigger')
+      const wallpaperClose = document.querySelector('.wallpaper-close')
+      const wallpaperFullscreen = document.querySelector(
+        '.wallpaper-fullscreen',
+      )
+      const wallpaperDownload = document.querySelector('.wallpaper-download')
+      const wallpaperClockDate = document.querySelector('.wallpaper-clock-date')
+      const wallpaperClockTime = document.querySelector('.wallpaper-clock-time')
+      let wallpaperPreviousFocus
+      let wallpaperClockTimer
+      let wallpaperTopTimer
+
+      function updateWallpaperClock() {
+        const now = new Date()
+        wallpaperClockDate.textContent = now.toLocaleDateString('zh-CN', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long',
+        })
+        wallpaperClockTime.textContent = now.toLocaleTimeString('zh-CN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        })
+      }
+
+      function startWallpaperClock() {
+        updateWallpaperClock()
+        clearInterval(wallpaperClockTimer)
+        wallpaperClockTimer = setInterval(updateWallpaperClock, 1000)
+      }
+
+      function parseWallpaperDate(value) {
+        const input = value.trim()
+        let year
+        let month
+        let day
+
+        if (/^\d{4}年\d{1,2}月\d{1,2}日$/.test(input)) {
+          const parts = input.match(/^(\d{4})年(\d{1,2})月(\d{1,2})日$/)
+          year = Number(parts[1])
+          month = Number(parts[2])
+          day = Number(parts[3])
+        } else if (/^\d{4}[-.]\d{1,2}[-.]\d{1,2}$/.test(input)) {
+          const parts = input.split(/[-.]/).map(Number)
+          ;[year, month, day] = parts
+        } else if (/^\d{8}$/.test(input)) {
+          year = Number(input.slice(0, 4))
+          month = Number(input.slice(4, 6))
+          day = Number(input.slice(6, 8))
+        } else if (/^\d{6}$/.test(input)) {
+          year = Number(input.slice(0, 4))
+          month = Number(input.slice(4, 5))
+          day = Number(input.slice(5, 6))
+        } else {
+          return null
+        }
+
+        const date = new Date(Date.UTC(year, month - 1, day))
+        if (
+          year < 1 ||
+          date.getUTCFullYear() !== year ||
+          date.getUTCMonth() !== month - 1 ||
+          date.getUTCDate() !== day
+        ) {
+          return null
+        }
+
+        return `${year.toString().padStart(4, '0')}-${month
+          .toString()
+          .padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+      }
 
       function showWallpaper(options = {}) {
+        wallpaperPreviousFocus = document.activeElement
         wallpaperModal.hidden = false
         wallpaperImage.hidden = true
+        wallpaperDownload.disabled = true
         wallpaperStatus.hidden = false
         wallpaperStatus.textContent = '正在加载壁纸...'
         const params = new URLSearchParams({
@@ -616,18 +977,82 @@
       }
 
       function closeWallpaper() {
+        if (document.fullscreenElement) document.exitFullscreen()
         wallpaperModal.hidden = true
         wallpaperImage.removeAttribute('src')
+        clearInterval(wallpaperClockTimer)
+        clearTimeout(wallpaperTopTimer)
+        wallpaperModal.classList.remove('wallpaper-top-active')
+        if (wallpaperPreviousFocus) wallpaperPreviousFocus.focus()
       }
 
-      document
-        .querySelector('.wallpaper-trigger')
-        .addEventListener('click', () => {
-          showWallpaper()
-        })
-      document
-        .querySelector('.wallpaper-close')
-        .addEventListener('click', closeWallpaper)
+      wallpaperTrigger.addEventListener('click', () => {
+        showWallpaper()
+        wallpaperClose.focus()
+      })
+      wallpaperClose.addEventListener('click', closeWallpaper)
+      wallpaperDownload.addEventListener('click', async () => {
+        if (wallpaperDownload.disabled || !wallpaperImage.src) return
+        const filename = `bing-wallpaper-${new Date()
+          .toISOString()
+          .slice(0, 10)}.jpg`
+        try {
+          const response = await fetch(wallpaperImage.src)
+          if (!response.ok) throw new Error('download failed')
+          const blobUrl = URL.createObjectURL(await response.blob())
+          const link = document.createElement('a')
+          link.href = blobUrl
+          link.download = filename
+          link.click()
+          URL.revokeObjectURL(blobUrl)
+        } catch (error) {
+          const link = document.createElement('a')
+          link.href = wallpaperImage.src
+          link.target = '_blank'
+          link.rel = 'noopener'
+          link.click()
+        }
+      })
+      wallpaperFullscreen.addEventListener('click', async () => {
+        if (!document.fullscreenElement) {
+          try {
+            await wallpaperModal.requestFullscreen()
+            startWallpaperClock()
+          } catch (error) {
+            wallpaperStatus.hidden = false
+            wallpaperStatus.textContent = '当前浏览器不支持全屏显示。'
+          }
+        } else {
+          try {
+            await document.exitFullscreen()
+          } catch (error) {
+            wallpaperStatus.hidden = false
+            wallpaperStatus.textContent = '暂时无法退出全屏显示。'
+          }
+        }
+      })
+      document.addEventListener('fullscreenchange', () => {
+        const isFullscreen = document.fullscreenElement === wallpaperModal
+        wallpaperFullscreen.textContent = isFullscreen ? '×' : '⛶'
+        wallpaperFullscreen.setAttribute(
+          'aria-label',
+          isFullscreen ? '退出全屏' : '全屏查看壁纸',
+        )
+        wallpaperFullscreen.title = isFullscreen ? '退出全屏' : '全屏查看壁纸'
+        if (!isFullscreen) {
+          clearInterval(wallpaperClockTimer)
+          clearTimeout(wallpaperTopTimer)
+          wallpaperModal.classList.remove('wallpaper-top-active')
+        }
+      })
+      wallpaperModal.addEventListener('mousemove', (event) => {
+        if (!document.fullscreenElement || event.clientY > 96) return
+        wallpaperModal.classList.add('wallpaper-top-active')
+        clearTimeout(wallpaperTopTimer)
+        wallpaperTopTimer = setTimeout(() => {
+          wallpaperModal.classList.remove('wallpaper-top-active')
+        }, 2200)
+      })
       document
         .querySelector('.wallpaper-random')
         .addEventListener('click', () => {
@@ -636,10 +1061,11 @@
       document
         .querySelector('.wallpaper-date-submit')
         .addEventListener('click', () => {
-          const date = wallpaperDate.value.trim()
-          if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          const date = parseWallpaperDate(wallpaperDate.value)
+          if (!date) {
             wallpaperStatus.hidden = false
-            wallpaperStatus.textContent = '请输入 YYYY-MM-DD 格式的日期。'
+            wallpaperStatus.textContent =
+              '请输入有效日期，例如 20260806、2026-08-06、2026.08.06、202686 或 2026年8月6日。'
             wallpaperImage.hidden = true
             return
           }
@@ -648,9 +1074,11 @@
       wallpaperImage.addEventListener('load', () => {
         wallpaperStatus.hidden = true
         wallpaperImage.hidden = false
+        wallpaperDownload.disabled = false
       })
       wallpaperImage.addEventListener('error', () => {
         wallpaperImage.hidden = true
+        wallpaperDownload.disabled = true
         wallpaperStatus.hidden = false
         wallpaperStatus.textContent = '壁纸加载失败，请稍后重试。'
       })

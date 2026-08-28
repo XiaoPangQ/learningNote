@@ -1,0 +1,2083 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>桌面运维故障排查实战指南 · Zinx的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #42b883;
+        --accent-soft: rgba(66, 184, 131, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #42b883 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🧰</span> 桌面运维排障指南</h2>
+        <p>锁定原因，再谈解决</p>
+      </div>
+      <a class="home-link" href="indexCourse.html">← 返回教程目录</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">方法论</li>
+        <li><a href="#ch01">1. 排障思维：五步定位法</a></li>
+        <li><a href="#ch02">2. 工具与日志入口</a></li>
+        <li class="toc-section-title">网络故障</li>
+        <li><a href="#ch03">3. 上不了网排查</a></li>
+        <li><a href="#ch04">4. 网页打不开（DNS）</a></li>
+        <li><a href="#ch05">5. 局域网与共享</a></li>
+        <li class="toc-section-title">系统故障</li>
+        <li><a href="#ch06">6. 蓝屏（BSOD）排查</a></li>
+        <li><a href="#ch07">7. 黑屏与无法开机</a></li>
+        <li><a href="#ch08">8. 卡顿与资源 100%</a></li>
+        <li><a href="#ch09">9. 软件安装与运行异常</a></li>
+        <li class="toc-section-title">外设与硬件</li>
+        <li><a href="#ch10">10. 打印机故障排查</a></li>
+        <li><a href="#ch11">11. 其他外设问题</a></li>
+        <li><a href="#ch12">12. 硬件故障定位</a></li>
+        <li class="toc-section-title">实战收尾</li>
+        <li><a href="#ch13">13. 案例实战：完整排障记录</a></li>
+        <li><a href="#ch14">14. 排障总表与口诀</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🧰 实战指南 · 跟着步骤走，必能锁定原因</span>
+        <h1>桌面运维故障排查实战指南</h1>
+        <p>
+          面向桌面运维工程师的故障排查手册：网络、蓝屏、黑屏、打印机、系统卡顿、外设与硬件。
+          每一类故障都给出「按顺序执行、一步一判定」的排查路径，锁定原因后直接给解决方案。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>14 个章节</span>
+          <span><span class="dot"></span>6 大故障类别</span>
+          <span><span class="dot"></span>50+ 常见问题</span>
+          <span><span class="dot"></span>以 Windows 10 / 11 为准</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 排障思维：五步定位法</h2>
+
+        <h3>为什么修电脑总靠"运气"</h3>
+        <p>
+          新手修电脑是「看到什么症状就试什么方法」——蓝屏就重装，上不了网就重启路由器，结果有时好有时坏。
+          桌面运维工程师的核心能力不是会重装系统，而是<strong>能快速缩小故障范围、锁定根因</strong>。
+          故障原因通常只有一个，按正确顺序排查，10 分钟内就能定位。
+        </p>
+
+        <h3>五步定位法（任何故障都适用）</h3>
+        <div class="diagram">
+          <pre>
+  ① 收集信息 ── 什么时候开始？做了什么操作？报错原文/截图？别人电脑是否正常？
+      │
+      ▼
+  ② 复现故障 ── 当场重现一遍，确认是稳定复现还是偶发
+      │
+      ▼
+  ③ 提出假设 ── 按「最可能 → 最不可能」排出候选原因（先软后硬、先简单后复杂）
+      │
+      ▼
+  ④ 逐项验证 ── 隔离法 / 替换法 / 对比法，验证一个排除一个
+      │
+      ▼
+  ⑤ 解决 + 记录 ── 修复后复测确认，把原因和步骤记下来备查
+</pre
+          >
+        </div>
+
+        <h3>三大原则</h3>
+        <ul>
+          <li><strong>先软后硬</strong>：先查系统、驱动、设置，再动硬件。80% 的故障是软件层面。</li>
+          <li><strong>先简单后复杂</strong>：先重启、先看指示灯、先问「最近改了什么」，别一上来就拆机。</li>
+          <li><strong>先本机后网络</strong>：一台电脑出问题先查自己；多台同时出问题，优先怀疑公共设备（交换机、路由器、DNS）。</li>
+        </ul>
+
+        <div class="callout info">
+          <div class="callout-title">💡 最有价值的一句问话</div>
+          「<strong>故障前你做了什么？</strong>」——装了新软件、更新了驱动、插了新硬件、改了设置、清理了系统……
+          80% 的桌面故障都能从这句话里找到线索。先问这句话，再动手。
+        </div>
+
+        <h3>报错信息是线索，不是结论</h3>
+        <p>
+          蓝屏代码、错误弹窗、事件日志里的数字，指向的是「嫌疑方向」，不代表直接原因。
+          例如蓝屏 <code>0x000000D1</code> 常指向驱动，但到底是哪块驱动、为什么加载失败，需要结合
+          <strong>dump 文件 + 最近改动 + 事件日志</strong> 三方印证才能定论。
+        </p>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 工具与日志入口</h2>
+
+        <h3>Windows 自带的排障工具（先掌握这些）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>工具</th>
+                <th>打开方式</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>事件查看器</strong></td>
+                <td><code>eventvwr.msc</code></td>
+                <td>看系统/应用程序日志，故障时间点的红色错误是关键线索</td>
+              </tr>
+              <tr>
+                <td><strong>任务管理器</strong></td>
+                <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd></td>
+                <td>看 CPU/内存/磁盘占用，结束异常进程</td>
+              </tr>
+              <tr>
+                <td><strong>资源监视器</strong></td>
+                <td><code>resmon</code></td>
+                <td>定位是哪个进程在占资源、哪个进程在读写硬盘</td>
+              </tr>
+              <tr>
+                <td><strong>可靠性监视器</strong></td>
+                <td><code>perfmon /rel</code></td>
+                <td>按时间轴显示系统崩溃/软件停止响应，直观看到「哪天开始出问题」</td>
+              </tr>
+              <tr>
+                <td><strong>SFC</strong></td>
+                <td><code>sfc /scannow</code></td>
+                <td>扫描并修复受保护的系统文件</td>
+              </tr>
+              <tr>
+                <td><strong>DISM</strong></td>
+                <td><code>DISM /Online /Cleanup-Image /RestoreHealth</code></td>
+                <td>修复系统镜像，SFC 修不了时先跑它</td>
+              </tr>
+              <tr>
+                <td><strong>系统配置</strong></td>
+                <td><code>msconfig</code></td>
+                <td>诊断启动（最小化加载）、管理开机启动项</td>
+              </tr>
+              <tr>
+                <td><strong>Windows 内存诊断</strong></td>
+                <td><code>mdsched</code></td>
+                <td>重启后检测内存错误</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>第三方必备工具</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>CrystalDiskInfo</h4>
+            <p>硬盘健康检测：看 SMART 值（05 重映射、C5/C6 待映射），判断硬盘是否快挂了。</p>
+          </div>
+          <div class="card">
+            <h4>BlueScreenView</h4>
+            <p>直接打开 Minidump 蓝屏文件，列出导致蓝屏的驱动文件，比 WinDbg 上手快得多。</p>
+          </div>
+          <div class="card">
+            <h4>MemTest86 / TestMem5</h4>
+            <p>U 盘启动深度测内存，跑满 4 遍无错才算内存健康。</p>
+          </div>
+          <div class="card">
+            <h4>DDU（Display Driver Uninstaller）</h4>
+            <p>安全模式下彻底卸载显卡驱动，解决驱动残留导致的黑屏/花屏。</p>
+          </div>
+          <div class="card">
+            <h4>Everything</h4>
+            <p>秒级全盘文件搜索，找驱动、找文件、确认路径非常高效。</p>
+          </div>
+          <div class="card">
+            <h4>HWiNFO / OpenHardwareMonitor</h4>
+            <p>监控 CPU/显卡温度与电压，判断是否过热降频或重启。</p>
+          </div>
+        </div>
+
+        <h3>事件查看器的正确用法</h3>
+        <div class="steps">
+          <li>按 <kbd>Win</kbd>+<kbd>R</kbd> 输入 <code>eventvwr.msc</code> 回车，打开事件查看器。</li>
+          <li>展开「Windows 日志 → 系统」（软件问题看「应用程序」日志）。</li>
+          <li>点右侧「筛选当前日志」，勾选<strong>严重、错误</strong>，级别选「错误」以上。</li>
+          <li>按故障发生时间排序，找到对应时间点的错误记录，看「来源」和「事件 ID」。</li>
+          <li>把「事件 ID + 来源」复制去搜索，比看报错原文更有效（例如来源 <code>Kernel-Power</code> 事件 41 = 非正常断电/重启）。</li>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">✅ 排障前 30 秒清单</div>
+          问三件事：①故障前做了什么；②报错原文或截图；③别人电脑是否同样有问题。
+          再看三处：①任务管理器占用；②事件查看器错误；③设备管理器是否有黄色感叹号。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 上不了网排查</h2>
+
+        <h3>先给故障分级</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>优先怀疑</th>
+                <th>排查方向</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>完全断网（浏览器、软件全不通）</td>
+                <td>物理连接 / 网卡 / IP 配置</td>
+                <td>从物理层往下走命令序列</td>
+              </tr>
+              <tr>
+                <td>能上 QQ/微信，网页打不开</td>
+                <td>DNS / 代理 / hosts</td>
+                <td>跳转到第 4 章 DNS 专题</td>
+              </tr>
+              <tr>
+                <td>时断时续 / 频繁掉线</td>
+                <td>网线 / 无线信号 / 网卡节能</td>
+                <td>检查物理链路与电源管理</td>
+              </tr>
+              <tr>
+                <td>局域网内网不通，外网正常</td>
+                <td>共享 / 防火墙 / 网段</td>
+                <td>跳转到第 5 章局域网专题</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>标准命令序列（核心中的核心）</h3>
+        <p>打开 CMD（<kbd>Win</kbd>+<kbd>R</kbd> → <code>cmd</code>），按顺序执行下面命令，<strong>哪一步断了，问题就在哪一层</strong>：</p>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ① 查看本机 IP 配置：IP、子网掩码、网关、DNS、物理地址</span>
+<span class="cmd">ipconfig</span> /all
+
+<span class="comment"># ② 测试本机网卡/协议栈（回环地址，不通说明网卡驱动或协议损坏）</span>
+<span class="cmd">ping</span> 127.0.0.1
+
+<span class="comment"># ③ 测试网关（不通 = 内网链路问题：网线/路由器/网卡）</span>
+<span class="cmd">ping</span> <span class="var">&lt;网关IP&gt;</span>
+
+<span class="comment"># ④ 测试外网（IP 直连，不通 = 出口问题，通了 = 网络通、问题在 DNS）</span>
+<span class="cmd">ping</span> 223.5.5.5
+
+<span class="comment"># ⑤ 测试域名解析（解析失败 = DNS 问题）</span>
+<span class="cmd">nslookup</span> www.baidu.com
+
+<span class="comment"># ⑥ 查看端口与连接状态（排查端口被占、确认服务在听）</span>
+<span class="cmd">netstat</span> -ano</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">✅ 五步判定表：哪一步断了修哪一层</div>
+          <table>
+            <thead>
+              <tr><th>步骤</th><th>通则说明</th><th>不同 → 问题在</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ping 127.0.0.1</td><td>网卡协议栈正常</td><td>网卡驱动 / 协议损坏</td></tr>
+              <tr><td>ping 网关</td><td>内网链路正常</td><td>网线、Wi-Fi、路由器、网卡、IP 配置</td></tr>
+              <tr><td>ping 223.5.5.5</td><td>外网出口正常</td><td>路由器 WAN、运营商线路</td></tr>
+              <tr><td>nslookup 域名</td><td>DNS 解析正常</td><td>DNS 服务器、hosts、代理</td></tr>
+              <tr><td>浏览器访问</td><td>应用层正常</td><td>代理设置、浏览器插件、防火墙</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>常见原因与解决方案</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象 / 线索</th>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>任务栏网络图标显示红叉</td>
+                <td>网线未插好 / Wi-Fi 关闭 / 网卡被禁用</td>
+                <td>检查网线水晶头；<code>Win+X → 设备管理器 → 网络适配器 → 启用</code></td>
+              </tr>
+              <tr>
+                <td>IP 是 <code>169.254.x.x</code></td>
+                <td>没从路由器拿到 IP（DHCP 失败）</td>
+                <td>重启网卡；检查网线；重启路由器；手动指定 IP</td>
+              </tr>
+              <tr>
+                <td>设备管理器网卡有黄色感叹号</td>
+                <td>网卡驱动异常</td>
+                <td>重装驱动：右键网卡 → 卸载设备（勾选删除驱动）→ 重启自动重装，或去官网装</td>
+              </tr>
+              <tr>
+                <td>能连上 Wi-Fi 但上不了网</td>
+                <td>网关 / DNS / 信号弱</td>
+                <td>依次 ping 网关与 223.5.5.5 定位；忘掉网络重新连接；更新无线网卡驱动</td>
+              </tr>
+              <tr>
+                <td>只有这台电脑断网</td>
+                <td>本机配置 / 网卡</td>
+                <td>重点排查本机：驱动、IP、防火墙、代理</td>
+              </tr>
+              <tr>
+                <td>整个办公室集体断网</td>
+                <td>公共设备 / 运营商</td>
+                <td>查交换机指示灯、路由器 WAN 口、打电话问运营商</td>
+              </tr>
+              <tr>
+                <td>频繁掉线，ping 网关都丢包</td>
+                <td>网线 / 接口 / 网卡节能</td>
+                <td>换网线换口；设备管理器 → 网卡属性 → 电源管理 → 取消勾选「允许计算机关闭此设备以节约电源」</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>网络重置三板斧（驱动正常但怎么都不通时）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ① 刷新 DNS 缓存</span>
+<span class="cmd">ipconfig</span> /flushdns
+
+<span class="comment"># ② 重置 Winsock 目录（修复协议栈被软件改坏）</span>
+<span class="cmd">netsh</span> winsock reset
+
+<span class="comment"># ③ 重置 TCP/IP 协议栈 + 重新获取 IP（执行后重启电脑）</span>
+<span class="cmd">netsh</span> int ip reset
+<span class="cmd">ipconfig</span> /release
+<span class="cmd">ipconfig</span> /renew
+
+<span class="comment"># Windows 10/11 还可用图形化重置：设置 → 网络和 Internet → 高级网络设置 → 网络重置</span></code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 代理陷阱</div>
+          装了加速器、VPN、代理软件的电脑，关闭软件后代理设置可能残留，导致「所有网站都打不开，但 QQ 正常」。
+          检查：设置 → 网络和 Internet → 代理 → 关闭「使用代理服务器」；或用 <code>netsh winhttp reset proxy</code> 清系统代理。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 网页打不开（DNS 专题）</h2>
+
+        <h3>经典现象：能上 QQ/微信/游戏，但浏览器打不开网页</h3>
+        <p>
+          这类问题 90% 出在 <strong>DNS（域名解析）</strong>：聊天软件走的是固定 IP 服务器，浏览器需要先把域名翻译成 IP，
+          翻译这步失败，网页自然打不开。验证方法一句话：
+        </p>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ping 域名失败，但 ping IP 成功 → 100% 是 DNS 问题</span>
+<span class="cmd">ping</span> www.baidu.com        <span class="comment">← 失败</span>
+<span class="cmd">ping</span> 110.242.68.66        <span class="comment">← 成功</span>
+
+<span class="comment"># 看当前用的 DNS 服务器</span>
+<span class="cmd">ipconfig</span> /all | findstr DNS
+
+<span class="comment"># 用公共 DNS 测试解析是否正常（对比本机 DNS）</span>
+<span class="cmd">nslookup</span> www.baidu.com 223.5.5.5</code></pre>
+        </div>
+
+        <h3>排查步骤（按顺序执行）</h3>
+        <div class="steps">
+          <li>检查 <code>hosts</code> 文件是否被改：<code>C:\Windows\System32\drivers\etc\hosts</code>，用记事本打开，正常应只有 <code>#</code> 开头的注释行，若有多余的「IP 域名」映射先删掉（可能是流氓软件/挖矿程序改的）。</li>
+          <li>检查是否开了代理/VPN（见第 3 章代理陷阱）。</li>
+          <li>刷新 DNS 缓存：<code>ipconfig /flushdns</code>。</li>
+          <li>把 DNS 改成公共 DNS（见下表），再试。</li>
+          <li>换浏览器/无痕模式测试，排除浏览器插件（广告拦截、代理插件）问题。</li>
+          <li>还不行，<code>ping</code> 网关和 <code>223.5.5.5</code>，确认网络本身通。</li>
+        </div>
+
+        <h3>公共 DNS 推荐（改这里）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>服务商</th><th>首选 DNS</th><th>备用 DNS</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>阿里</td><td>223.5.5.5</td><td>223.6.6.6</td></tr>
+              <tr><td>腾讯</td><td>119.29.29.29</td><td>182.254.116.116</td></tr>
+              <tr><td>114 纯净</td><td>114.114.114.114</td><td>114.114.115.115</td></tr>
+              <tr><td>谷歌（备用）</td><td>8.8.8.8</td><td>8.8.4.4</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          修改方法：<code>Win+X → 网络连接 → 右键当前网卡 → 属性 → 双击「Internet 协议版本 4 (TCP/IPv4)」→
+          选择「使用下面的 DNS 服务器地址」→ 填入上表 IP → 确定 → 重新连接网络</code>。
+        </p>
+
+        <div class="callout tip">
+          <div class="callout-title">✅ 企业内网特别提醒</div>
+          公司电脑如果平时用<strong>内网域名</strong>（如访问 OA、ERP），不要随意改成公共 DNS，否则内网域名解析不了。
+          正确做法：DNS 保持公司分配值，仅把「外网域名解析慢/失败」时再临时测试公共 DNS，定位后改回。
+        </div>
+
+        <h3>网页打开慢 / 部分网站打不开</h3>
+        <ul>
+          <li><strong>个别网站打不开</strong>：可能是该网站服务器问题（用手机流量测试对比），或 hosts 被指向了错误 IP。</li>
+          <li><strong>全部网页都慢</strong>：DNS 慢 → 换公共 DNS；网络带宽被占 → 看任务管理器流量；路由器负载。</li>
+          <li><strong>HTTPS 证书报错（NET::ERR_CERT_*）</strong>：先查<strong>系统时间</strong>是否准确（时间不对会导致证书校验失败），再查是否有劫持软件。</li>
+        </ul>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> 局域网与共享问题</h2>
+
+        <h3>常见现象</h3>
+        <ul>
+          <li>网络里看不到其他电脑 / 别人看不到自己</li>
+          <li>访问共享文件夹提示「无法访问，你可能没有权限」</li>
+          <li>提示「找不到网络路径」（0x80070035）</li>
+          <li>输入 <code>\\IP</code> 打不开对方共享</li>
+        </ul>
+
+        <h3>排查路径（一步一判定）</h3>
+        <div class="steps">
+          <li><strong>确认在同一网段</strong>：双方 <code>ipconfig</code> 对比，IP 前三段要一致（如都是 192.168.1.x），网关相同。</li>
+          <li><strong>ping 对方 IP</strong>：不通 → 防火墙拦截或物理隔离；通 → 继续下一步。</li>
+          <li><strong>检查网络类型</strong>：当前网络必须设为「专用网络」，公用网络默认关闭网络发现和共享。设置 → 网络和 Internet → 属性 → 网络配置文件 → 专用。</li>
+          <li><strong>开启网络发现与文件共享</strong>：控制面板 → 网络和共享中心 → 高级共享设置 → 启用网络发现、启用文件和打印机共享。</li>
+          <li><strong>检查防火墙</strong>：Windows 防火墙 → 允许应用 → 勾选「文件和打印机共享」（专用网络）。第三方安全软件也要放行。</li>
+          <li><strong>访问测试</strong>：<kbd>Win</kbd>+<kbd>R</kbd> 输入 <code>\\对方IP</code> 回车，若提示输入凭据，用对方电脑的用户名密码登录。</li>
+        </div>
+
+        <h3>常见问题表</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>错误提示</th>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>找不到网络路径（0x80070035）</td>
+                <td>SMB 服务未开 / 防火墙拦截 / 不在同网段</td>
+                <td>「启用或关闭 Windows 功能」里勾选 SMB 1.0/CIFS 文件共享支持；检查防火墙；核对网段</td>
+              </tr>
+              <tr>
+                <td>没有权限访问，请联系管理员（0x80070005）</td>
+                <td>共享权限不足</td>
+                <td>对方电脑右键共享文件夹 → 属性 → 共享 → 添加 Everyone 并给读取权限；或改用有权限的账号</td>
+              </tr>
+              <tr>
+                <td>网络中发现不了电脑</td>
+                <td>网络发现关闭 / 网络类型是公用</td>
+                <td>打开网络发现；网络类型改为专用；开启 NetBIOS（网卡属性 → TCP/IPv4 → 高级 → WINS → 启用 NetBIOS）</td>
+              </tr>
+              <tr>
+                <td>能 ping 通但 \\ 访问超时</td>
+                <td>防火墙拦了 SMB（445 端口）</td>
+                <td>防火墙放行「文件和打印机共享」；检查 445 端口：<code>netstat -ano | findstr :445</code></td>
+              </tr>
+              <tr>
+                <td>要求输入密码但不知道密码</td>
+                <td>对方开启了密码保护共享</td>
+                <td>让共享方在高级共享设置里关闭「密码保护共享」（内部环境常用）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 多台电脑互访慢/卡顿</div>
+          先看有没有一台电脑装了迅雷、BT 等大量占用 445 端口的软件；内网机器尽量都设固定 IP，
+          避免 DHCP 分配导致 IP 频繁变化。排查顺序永远是「先 ping 通，再谈共享」。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 蓝屏（BSOD）排查</h2>
+
+        <h3>蓝屏的本质</h3>
+        <p>
+          蓝屏（Blue Screen of Death）是 Windows 检测到<strong>内核级致命错误</strong>后主动停止运行，防止数据损坏。
+          它是一次「系统自爆」，原因集中在四类：<strong>驱动问题（最高频）→ 内存问题 → 硬盘问题 → 系统文件损坏</strong>。
+          排查思路：先记录错误代码 → 问最近改了什么 → 查 dump 定位具体驱动 → 针对性解决。
+        </p>
+
+        <h3>排障顺序（背下来）</h3>
+        <div class="steps">
+          <li><strong>记下蓝屏代码</strong>：屏幕下方 <code>STOP: 0x000000D1</code> 这种十六进制代码，或新系统的大写英文描述（如 <code>DRIVER_IRQL_NOT_LESS_OR_EQUAL</code>）。拍照最保险。</li>
+          <li><strong>问最近改了什么</strong>：装了驱动/软件、更新了 Windows、插了新硬件？→ 先还原再排查。</li>
+          <li><strong>能否正常进系统</strong>：能进 → 直接看 dump；不能进 → 安全模式（强制关机 3 次后进恢复环境）→ 还原点/卸载驱动。</li>
+          <li><strong>分析 dump 文件</strong>：用 BlueScreenView 打开 <code>C:\Windows\Minidump\*.dmp</code>，看崩溃时加载的驱动文件名。</li>
+          <li><strong>按嫌疑对象修复</strong>：驱动 → 更新/回滚/重装；内存 → mdsched 检测；硬盘 → CrystalDiskInfo + chkdsk；系统 → sfc + DISM。</li>
+        </div>
+
+        <h3>蓝屏代码速查表（最常见 14 种）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>错误代码 / 描述</th>
+                <th>优先怀疑</th>
+                <th>解决方向</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>0x0000007B</code> INACCESSIBLE_BOOT_DEVICE</td>
+                <td>硬盘模式 / 硬盘故障</td>
+                <td>BIOS 里切换 SATA 模式（AHCI ↔ IDE）；检测硬盘健康</td>
+              </tr>
+              <tr>
+                <td><code>0x000000D1</code> / <code>0x0000000A</code></td>
+                <td>驱动（网卡/显卡/声卡）</td>
+                <td>BlueScreenView 看具体驱动文件，更新或回滚</td>
+              </tr>
+              <tr>
+                <td><code>0x00000050</code> PAGE_FAULT_IN_NONPAGED_AREA</td>
+                <td>内存 / 驱动</td>
+                <td>先测内存（mdsched / MemTest86），再排查新装驱动</td>
+              </tr>
+              <tr>
+                <td><code>0x0000003B</code> SYSTEM_SERVICE_EXCEPTION</td>
+                <td>驱动 / 系统文件</td>
+                <td><code>sfc /scannow</code> + DISM 修复系统，更新驱动</td>
+              </tr>
+              <tr>
+                <td><code>0x0000001E</code> / <code>0x0000007E</code></td>
+                <td>驱动 / 内存</td>
+                <td>查 dump 定位驱动；测内存</td>
+              </tr>
+              <tr>
+                <td>MEMORY_MANAGEMENT</td>
+                <td>内存（含超频不稳）</td>
+                <td>MemTest86 跑 4 遍；恢复 BIOS 默认（关 XMP）</td>
+              </tr>
+              <tr>
+                <td>KERNEL_DATA_INPAGE_ERROR</td>
+                <td>硬盘坏道 / 内存</td>
+                <td>CrystalDiskInfo 看健康；chkdsk /r；测内存</td>
+              </tr>
+              <tr>
+                <td>CRITICAL_PROCESS_DIED</td>
+                <td>系统关键进程崩溃</td>
+                <td>sfc /scannow；DISM；查病毒；不行则重置/重装系统</td>
+              </tr>
+              <tr>
+                <td>VIDEO_TDR_FAILURE</td>
+                <td>显卡驱动/显卡过热</td>
+                <td>DDU 卸载后装官网驱动；检查显卡温度与供电</td>
+              </tr>
+              <tr>
+                <td><code>0x000000ED</code> UNMOUNTABLE_BOOT_VOLUME</td>
+                <td>磁盘 I/O 错误</td>
+                <td>查硬盘健康、数据线、接口；PE 下备份数据</td>
+              </tr>
+              <tr>
+                <td>BAD_SYSTEM_CONFIG_INFO</td>
+                <td>注册表配置损坏</td>
+                <td>安全模式 → 最近一次正确配置 / 系统还原</td>
+              </tr>
+              <tr>
+                <td>ATTEMPTED_WRITE_TO_READONLY_MEMORY</td>
+                <td>驱动 / 内存</td>
+                <td>查 dump 驱动；测内存</td>
+              </tr>
+              <tr>
+                <td>IRQL_NOT_LESS_OR_EQUAL 伴随 dump 文件名</td>
+                <td>该驱动文件对应硬件</td>
+                <td>如 <code>nvlddmkm.sys</code> = 显卡，<code>rtwlanu.sys</code> = 无线网卡，卸载重装</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>如何用 dump 文件锁定真凶</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ① 确认已开启蓝屏 dump（默认开启，路径 C:\Windows\Minidump\）</span>
+<span class="cmd">dir</span> C:\Windows\Minidump
+
+<span class="comment"># ② 用 BlueScreenView 打开，重点看两列：</span>
+<span class="comment">#    - Bug Check Code（蓝屏代码）</span>
+<span class="comment">#    - 列表底部标红的驱动文件（十有八九是它导致）</span>
+<span class="comment"># ③ 把驱动文件名拿去搜索「文件名 + 蓝屏」，直接得到答案</span>
+<span class="comment">#    例：nvlddmkm.sys → NVIDIA 显卡驱动；rtwlanu.sys → 瑞昱无线网卡</span></code></pre>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">💡 蓝屏高频场景速答</div>
+          <ul>
+            <li><strong>装完某驱动后蓝屏</strong> → 安全模式卸载该驱动。</li>
+            <li><strong>Windows 更新后蓝屏</strong> → 卸载最近的更新（设置 → Windows 更新 → 更新历史记录 → 卸载更新）。</li>
+            <li><strong>开机进系统就蓝屏</strong> → 安全模式 → 最近一次正确配置 / 禁用故障驱动。</li>
+            <li><strong>玩大型游戏/跑负载时蓝屏</strong> → 优先查显卡驱动、温度、电源功率。</li>
+            <li><strong>每次蓝屏代码都不同</strong> → 内存或电源的典型信号，重点测内存。</li>
+          </ul>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 重要原则</div>
+          不要一蓝屏就重装系统。重装只能解决「系统文件损坏」，驱动、内存、硬盘问题重装后照蓝不误。
+          先花 5 分钟看 dump 和最近改动，往往就能省下 2 小时。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 黑屏与无法开机</h2>
+
+        <h3>先按症状分级（决定排查方向）</h3>
+        <div class="diagram">
+          <pre>
+  按下电源键
+      │
+      ├─ 完全无反应（灯不亮、风扇不转）→ 电源线 / 电源 / 主板
+      │
+      ├─ 风扇转、屏幕无信号 → 内存 / 显卡 / 显示器 / 主板
+      │
+      ├─ 有品牌 Logo，但进不了系统 → 系统 / 硬盘 / 启动项
+      │
+      ├─ 能进系统但桌面黑屏（有鼠标）→ 显卡驱动 / explorer
+      │
+      └─ 转圈卡死 / 反复重启 → 系统文件 / 硬盘 / 驱动
+</pre
+          >
+        </div>
+
+        <h3>症状 A：按电源键完全无反应</h3>
+        <div class="steps">
+          <li>检查电源线是否插紧、插板是否有电（换一个插口测试）。</li>
+          <li>检查电源开关（机箱后方的 0/1 开关，独立电源/笔记本看适配器指示灯）。</li>
+          <li>台式机：打开机箱，看主板通电指示灯是否亮；不亮 → 重点怀疑电源，用「短接电源绿黑线」或替换电源测试。</li>
+          <li>笔记本：拔掉电池只用适配器开机；适配器指示灯不亮 → 适配器坏了。</li>
+        </div>
+
+        <h3>症状 B：风扇转但屏幕黑（无信号）</h3>
+        <p>这是内存接触不良 / 显卡问题的经典表现，也是办公室电脑最高频的「假死」故障。按顺序做：</p>
+        <div class="steps">
+          <li>先看显示器：电源灯是否亮、信号线是否插对接口（独显要插显卡口，不是主板口）。</li>
+          <li>强制关机（长按电源 10 秒），拔电源线，<strong>重新插拔内存条</strong>：用橡皮擦擦拭金手指，换一个内存插槽，或单根内存测试。</li>
+          <li>有独显的：重新插拔显卡，检查 6/8pin 供电线是否插好。</li>
+          <li>把显示器信号线换接口 / 换线 / 接到别的电脑上，排除显示器与线材。</li>
+          <li>听主板蜂鸣器：<strong>连续短响 = 内存；1 长 2 短（或 3 短）= 显卡；长响 = 内存/主板</strong>（不同品牌略有差异）。</li>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">✅ 办公室最实用的一招</div>
+          台式机长期不开机箱，内存条容易氧化接触不良。「拔内存 → 橡皮擦金手指 → 重插」能解决
+          一半以上的「开机黑屏但风扇转」。操作前务必拔电源线并释放静电。
+        </div>
+
+        <h3>症状 C：有 Logo 但进不了系统</h3>
+        <div class="steps">
+          <li>强制关机 3 次（开机看到转圈时断电），第 4 次开机进入「恢复环境」（蓝屏修复界面）。</li>
+          <li>依次尝试：疑难解答 → 高级选项 → <strong>启动修复</strong>；不行再试 <strong>系统还原</strong>；再不行进 <strong>安全模式</strong>。</li>
+          <li>安全模式能进 → 说明是驱动/软件问题：卸载最近安装的软件、回滚驱动、跑 sfc /scannow。</li>
+          <li>安全模式也进不去 → 进 PE（U 盘启动盘）检查硬盘：BIOS 里能否识别硬盘、CrystalDiskInfo 健康度。</li>
+          <li>硬盘 SMART 报错 / 有坏道 → 先备份数据，再考虑更换硬盘或修复分区。</li>
+        </div>
+
+        <h3>症状 D：进系统后桌面黑屏（有鼠标箭头）</h3>
+        <p>通常是资源管理器（explorer.exe）崩溃或显卡驱动问题：</p>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ① 先尝试手动启动资源管理器</span>
+<span class="cmd">Ctrl+Shift+Esc</span>  打开任务管理器
+文件 → 运行新任务 → 输入 <span class="cmd">explorer.exe</span> → 回车
+
+<span class="comment"># ② 若反复黑屏 → 显卡驱动问题</span>
+<span class="comment">#    强制关机 3 次进安全模式 → 用 DDU 彻底卸载显卡驱动 → 重启装官网驱动</span>
+
+<span class="comment"># ③ 若只有个别软件界面黑 → 该软件显卡渲染问题，更新软件/关闭硬件加速</span></code></pre>
+        </div>
+
+        <h3>无法开机通用排错总表</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>症状</th>
+                <th>优先怀疑</th>
+                <th>快速验证</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>开机报 <code>No bootable device</code></td>
+                <td>硬盘识别不到 / 引导丢失</td>
+                <td>BIOS 看硬盘；PE 下修复引导（bcdboot）</td>
+              </tr>
+              <tr>
+                <td>开机报 <code>Bootmgr is missing</code></td>
+                <td>引导文件损坏</td>
+                <td>PE 修复：<code>bcdboot C:\Windows /s S:</code></td>
+              </tr>
+              <tr>
+                <td>无限自动修复循环</td>
+                <td>系统文件 / 硬盘</td>
+                <td>进高级选项重置此电脑（保留文件）</td>
+              </tr>
+              <tr>
+                <td>开机到品牌 Logo 卡死</td>
+                <td>硬盘 / 外设冲突</td>
+                <td>拔掉所有 USB 外设再开机（U 盘、移动硬盘最常背锅）</td>
+              </tr>
+              <tr>
+                <td>屏幕有背光但全黑</td>
+                <td>屏幕排线 / 显卡</td>
+                <td>外接显示器测试；笔记本合盖再开盖</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 卡顿与资源 100%</h2>
+
+        <h3>先看任务管理器，定位是谁在拖垮系统</h3>
+        <p>
+          <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> 打开任务管理器 → 「性能」标签页看四项指标：
+          <strong>CPU / 内存 / 磁盘 / 网络</strong>，哪一项长期 100%，问题就在哪。
+        </p>
+
+        <h3>场景一：CPU 100%</h3>
+        <ul>
+          <li>「进程」标签页按 CPU 排序，找出占满的进程：是熟悉的软件（如杀毒全盘扫描、Windows Update）还是陌生进程（可疑）？</li>
+          <li>陌生进程 → 右键「打开文件所在位置」看路径，正常软件在 Program Files；在 Temp/AppData 下的要警惕，查杀病毒。</li>
+          <li>杀毒软件占用 → 等扫描完成，或错峰设置扫描时间。</li>
+          <li>Windows Update 占用 → 允许其完成更新，更新后自然恢复。</li>
+          <li>关掉不必要的开机启动项：任务管理器 → 启动应用 → 禁用不需要的。</li>
+        </ul>
+
+        <h3>场景二：内存占用高 / 提示内存不足</h3>
+        <ul>
+          <li>物理内存不足（4GB 以下跑 Win10/11）→ 升级内存条是根本解法。</li>
+          <li>某个程序「内存泄漏」（占用持续增长不释放）→ 重启该程序，更新到新版。</li>
+          <li>虚拟内存被关小 → 系统属性 → 高级 → 性能设置 → 高级 → 虚拟内存，选「系统管理的大小」。</li>
+          <li>Chrome/Edge 多开标签是内存大户，属于正常现象，不是故障。</li>
+        </ul>
+
+        <h3>场景三：磁盘 100%（Win10/11 经典疑难）</h3>
+        <div class="steps">
+          <li>任务管理器「性能 → 磁盘」看是否持续 100% 且读写速度低（说明有程序在疯狂读写但效率低）。</li>
+          <li>资源监视器（resmon）→ 磁盘选项卡，看哪个进程在大量读写。</li>
+          <li>禁用 Windows Search 索引服务（services.msc → Windows Search → 禁用）；已用 Everything 替代搜索的场景下可放心关。</li>
+          <li>禁用 SysMain（旧称 Superfetch）：services.msc → SysMain → 禁用（机械硬盘上效果明显）。</li>
+          <li>关闭「诊断跟踪」：services.msc → Diagnostic Tracking Service → 禁用。</li>
+          <li>检查硬盘健康：CrystalDiskInfo，SMART 报错 → 换盘。</li>
+          <li>关闭「快速启动」：控制面板 → 电源选项 → 选择电源按钮功能 → 更改当前不可用设置 → 取消勾选「启用快速启动」。</li>
+        </div>
+
+        <h3>场景四：开机慢</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>开机自启软件太多</td>
+                <td>任务管理器 → 启动应用，只保留输入法/安全软件，其余禁用</td>
+              </tr>
+              <tr>
+                <td>机械硬盘（HDD）</td>
+                <td>换 SSD（固态硬盘），开机速度提升 5-10 倍，是性价比最高的升级</td>
+              </tr>
+              <tr>
+                <td>系统盘空间不足</td>
+                <td>清理临时文件：设置 → 系统 → 存储 → 临时文件；磁盘清理工具</td>
+              </tr>
+              <tr>
+                <td>杀毒软件开机扫描</td>
+                <td>调整安全软件开机扫描策略</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 磁盘 100% 且 CPU 也异常占用时的警惕信号</div>
+          如果发现陌生进程在 <code>%temp%</code>、<code>AppData\Roaming</code> 等目录下疯狂读写，
+          且网络上传持续占用——这可能是<strong>挖矿木马或勒索病毒</strong>。断网 → 进安全模式全盘查杀 →
+          检查启动项与计划任务（taskschd.msc）里的可疑条目。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 软件安装与运行异常</h2>
+
+        <h3>无法安装软件</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象 / 提示</th>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>「你没有权限在此位置保存文件」</td>
+                <td>未以管理员运行</td>
+                <td>右键安装包 → 以管理员身份运行</td>
+              </tr>
+              <tr>
+                <td>「安装包已损坏 / 无法验证发布者」</td>
+                <td>安装包下载不完整 / 被杀软拦截</td>
+                <td>重新下载；关闭杀软后安装（装完恢复）；去官网下载</td>
+              </tr>
+              <tr>
+                <td>安装到一半报错回滚</td>
+                <td>磁盘空间不足 / 缺少运行库 / 权限</td>
+                <td>清理 C 盘空间；先装 VC++ 运行库合集；以管理员运行</td>
+              </tr>
+              <tr>
+                <td>提示需要 .NET Framework 3.5</td>
+                <td>系统默认只有 4.x</td>
+                <td>控制面板 → 启用或关闭 Windows 功能 → 勾选 .NET Framework 3.5（联网安装）</td>
+              </tr>
+              <tr>
+                <td>提示需要安装 VC++ 运行库</td>
+                <td>缺少 MSVC 运行库</td>
+                <td>安装「VC_redist.x64.exe / x86.exe」（微软官网，x86 和 x64 都装）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>软件打不开 / 报错弹窗</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>错误</th>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>0xc000007b</code></td>
+                <td>VC++ 运行库缺失 / 32/64 位不匹配</td>
+                <td>安装 VC++ 运行库（x86+x64 都装）；重装软件</td>
+              </tr>
+              <tr>
+                <td><code>0xc0000142</code></td>
+                <td>DLL 初始化失败</td>
+                <td>重装软件；检查是否被杀毒删了文件；sfc /scannow</td>
+              </tr>
+              <tr>
+                <td>「找不到 <code>xxx.dll</code>」</td>
+                <td>软件文件缺失 / 被杀软隔离</td>
+                <td>先查杀软隔离区恢复；再重装软件。<strong>不要从 dll 下载站下载</strong>（极易中病毒）</td>
+              </tr>
+              <tr>
+                <td>「此应用无法在你的电脑上运行」</td>
+                <td>架构不匹配（32 位装 64 位系统可运行，反之不行；ARM 设备特殊）</td>
+                <td>下载对应版本；右键属性 → 兼容性 → 尝试兼容模式</td>
+              </tr>
+              <tr>
+                <td>双击没反应（进程闪退）</td>
+                <td>缺运行库 / 兼容性 / 配置损坏</td>
+                <td>事件查看器「应用程序」日志看崩溃模块；重装；兼容模式</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>文件删除不掉 / 被占用</h3>
+        <div class="steps">
+          <li>关闭正在使用该文件的程序（最常见：Word/Excel/WPS、视频播放器）。</li>
+          <li>任务管理器里结束资源管理器 explorer.exe，再在「文件 → 运行新任务」里输入 <code>cmd</code>，用 <code>del</code> 删除，然后重启 explorer。</li>
+          <li>查看是哪个进程占用：任务管理器 → 性能 → 打开资源监视器 → CPU → 关联的句柄 → 搜索文件名。</li>
+          <li>确认是杀毒/网盘/同步盘锁定：暂时退出再删。</li>
+          <li>删除需要管理员权限：右键文件 → 属性 → 安全 → 高级 → 更改所有者 → 勾选替换子容器和对象的所有者 → 重新授予完全控制。</li>
+        </div>
+
+        <h3>其他高频软件问题</h3>
+        <ul>
+          <li><strong>快捷方式打不开（指向失效）</strong>：目标程序被移动/改名/在 U 盘上。右键属性看「目标」路径是否存在，重新指向。</li>
+          <li><strong>系统时间不对</strong>：会导致网页证书报错、软件无法登录。设置 → 时间和语言 → 自动设置时间，并校准时区（UTC+8 北京）。</li>
+          <li><strong>软件界面文字乱码</strong>：区域设置问题。控制面板 → 区域 → 管理 → 更改系统区域设置 → 勾选 Beta 版 UTF-8（或改回中文简体）。</li>
+          <li><strong>右键菜单卡顿/失效</strong>：清理右键菜单扩展（右键管家类工具），或更新显卡驱动。</li>
+        </ul>
+
+        <div class="callout info">
+          <div class="callout-title">💡 万能兜底组合</div>
+          软件问题三板斧按顺序来：<strong>① 重启软件 → ② 重装软件 → ③ 查事件日志看崩溃原因</strong>。
+          重装前先备份配置（如数据库、书签、工程文件），装完后验证数据是否完好。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 打印机故障排查</h2>
+
+        <h3>打印机的三种连接方式（先分清再动手）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>特征</th>
+                <th>排查重点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>USB 本地打印</strong></td>
+                <td>打印机直接插电脑 USB</td>
+                <td>线材、驱动、端口、脱机状态</td>
+              </tr>
+              <tr>
+                <td><strong>网络打印机（IP 直连）</strong></td>
+                <td>打印机连路由器，有独立 IP</td>
+                <td>IP 是否可达、驱动端口、打印机自身网络设置</td>
+              </tr>
+              <tr>
+                <td><strong>共享打印机</strong></td>
+                <td>连在同事电脑上，通过 <code>\\电脑名\打印机名</code> 访问</td>
+                <td>主机是否开机、共享设置、凭据、防火墙</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>现象一：打印队列卡死（文档排队不动、删不掉）</h3>
+        <p>这是打印机故障的第一大原因，十次有八次是 <strong>Print Spooler（打印后台处理程序）卡死</strong>：</p>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># 以管理员身份打开 CMD，按顺序执行：</span>
+<span class="comment"># ① 停止打印服务</span>
+<span class="cmd">net stop</span> spooler
+
+<span class="comment"># ② 删除卡死的打印任务文件（清空队列）</span>
+<span class="cmd">del</span> /Q /F /S C:\Windows\System32\spool\PRINTERS\*
+
+<span class="comment"># ③ 重新启动打印服务</span>
+<span class="cmd">net start</span> spooler
+
+<span class="comment"># ④ 图形界面路径：services.msc → Print Spooler → 重启</span></code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">✅ 预防措施</div>
+          卡队列常发生在「文档太大 + 打印中途出错」时。日常运维建议：让共享打印的「主机」关闭打印机
+          的「启用后台打印，以便更快完成打印」，改为「直接打印到打印机」，可显著减少卡队列。
+        </div>
+
+        <h3>现象二：连不上共享打印机（0x00000709 / 709 等）</h3>
+        <p>
+          共享打印机报错 709 / 0x00000709「找不到打印机名」、0x0000007c、0x00000011，
+          多数是<strong>主机端共享配置</strong>或<strong>客户端凭据/驱动</strong>问题。排查顺序：
+        </p>
+        <div class="steps">
+          <li>确认打印机主机开机、共享已开（主机上 打印机属性 → 共享 → 勾选共享这台打印机）。</li>
+          <li>客户端能访问主机共享吗：<kbd>Win</kbd>+<kbd>R</kbd> → <code>\\主机IP</code> 能否打开、能否看到打印机图标。</li>
+          <li>用 IP 直连方式添加（最稳）：设置 → 蓝牙和其他设备 → 打印机 → 添加设备 → 我需要的打印机不在列表中 → 「使用 TCP/IP 地址或主机名添加打印机」→ 输入打印机 IP（网络打印机）或主机 IP（共享）。</li>
+          <li>共享打印机还可建「本地端口」：添加打印机 → 创建新端口 → 类型选 <code>Local Port</code> → 端口名填 <code>\\主机IP\共享名</code> → 选对应型号驱动。</li>
+          <li>驱动不一致会导致 709 错误：客户端和主机装<strong>同版本同位数驱动</strong>。</li>
+          <li>检查凭据：控制面板 → 凭据管理器 → Windows 凭据，添加主机 IP 与账号密码。</li>
+          <li>防火墙：主机与客户端都放行「文件和打印机共享」。</li>
+        </div>
+
+        <h3>现象三：打印机显示「脱机」</h3>
+        <ul>
+          <li>先看打印机面板：是待机还是报错（卡纸/缺纸/缺墨会显示错误）。</li>
+          <li>检查连接：网络打印机 ping 其 IP；USB 打印机重新插拔。</li>
+          <li>勾掉「脱机使用打印机」：打印机 → 右键当前打印机 → 取消勾选「脱机使用打印机」。</li>
+          <li>网络打印机睡眠后可能「假脱机」：唤醒打印机，或重启打印机电源。</li>
+          <li>IP 变了：打印机重启后 DHCP 重新分配 IP，客户端端口指向旧 IP → 在路由器上给打印机 MAC 绑定固定 IP。</li>
+        </ul>
+
+        <h3>现象四：能打印但结果不对</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>打印乱码（满纸符号）</td>
+                <td>驱动型号选错 / 端口选错（选了文本端口）</td>
+                <td>重装正确型号驱动；检查端口类型</td>
+              </tr>
+              <tr>
+                <td>打印空白页 / 字很淡</td>
+                <td>墨盒没墨 / 喷头堵塞 / 驱动色彩设置</td>
+                <td>检查墨量；执行喷头清洗；打印测试页验证</td>
+              </tr>
+              <tr>
+                <td>只打一半就停</td>
+                <td>驱动不对 / 硒鼓问题 / 纸张设置</td>
+                <td>换官方驱动；检查纸张类型设置与实际纸张一致</td>
+              </tr>
+              <tr>
+                <td>颜色不对 / 有横条纹</td>
+                <td>墨盒 / 硒鼓老化</td>
+                <td>更换耗材；清洁打印头</td>
+              </tr>
+              <tr>
+                <td>页面边距错位</td>
+                <td>驱动默认 A4 与实际纸张不符</td>
+                <td>打印机首选项中设为 A4；应用内页面设置一致</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>现象五：USB 打印机不被识别</h3>
+        <div class="steps">
+          <li>换 USB 口（优先插主机后置口）、换数据线（打印数据线易老化，优先换线测试）。</li>
+          <li>设备管理器看是否有「未知设备」→ 右键卸载 → 重插让系统重装驱动。</li>
+          <li>去打印机官网下载对应型号 + 系统版本的驱动（不要用驱动精灵乱装）。</li>
+          <li>确认打印机自带测试页能打（打印机面板按键长按打印测试页），先排除打印机本体故障。</li>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 换驱动前先做这步</div>
+          卸载旧驱动后，把打印机<strong>断电拔线</strong>，装好新驱动提示「连接打印机」时再插上。
+          否则 Windows 会自作主张装回旧驱动，白忙一场。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 其他外设问题</h2>
+
+        <h3>U 盘 / 移动硬盘不识别</h3>
+        <div class="steps">
+          <li>换一个 USB 口、换一台电脑测试：换电脑正常 → 本机接口/驱动问题；换电脑也不认 → 盘本身问题。</li>
+          <li>设备管理器是否有「未知设备」→ 卸载后重插。</li>
+          <li>磁盘管理（<kbd>Win</kbd>+<kbd>X</kbd> → 磁盘管理）看盘是否出现：
+            <ul>
+              <li>出现了但<strong>没有盘符</strong> → 右键该分区 → 更改驱动器号和路径 → 添加盘符。</li>
+              <li>显示<strong>未分配</strong> → 分区表损坏，重要数据先找专业恢复，再重新分区。</li>
+              <li>提示<strong>RAW 格式</strong> → 分区表/文件系统损坏，谨慎处理，优先备份。</li>
+            </ul>
+          </li>
+          <li>前置 USB 口供电不足 → 插后置口或用带供电的 USB HUB。</li>
+        </div>
+
+        <h3>鼠标 / 键盘失灵</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>无线鼠标没反应</td>
+                <td>电池没电 / 接收器掉了</td>
+                <td>换电池；重插接收器；重新对码（看说明书组合键）</td>
+              </tr>
+              <tr>
+                <td>键盘部分键失灵</td>
+                <td>进水 / 排线 / 键帽卡住</td>
+                <td>换键盘测试最直接；笔记本外接键盘排查</td>
+              </tr>
+              <tr>
+                <td>鼠标指针乱跳</td>
+                <td>鼠标垫反光 / 传感器脏</td>
+                <td>清洁传感器；换鼠标垫；换鼠标测试</td>
+              </tr>
+              <tr>
+                <td>插入后完全无反应</td>
+                <td>驱动 / 接口 / 设备损坏</td>
+                <td>换口、换电脑交叉测试定位；设备管理器卸载重装驱动</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>显示器相关</h3>
+        <ul>
+          <li><strong>无信号</strong>：先看显示器信号源是否切对（HDMI/DP/VGA）；换线换口；独显插独显口。</li>
+          <li><strong>外接显示器检测不到</strong>：<kbd>Win</kbd>+<kbd>P</kbd> 选择「扩展」；更新显卡驱动；部分老显卡多屏需重启。</li>
+          <li><strong>偏色 / 泛黄</strong>：先关「夜间模式」（设置 → 显示 → 夜间模式）；再看显示器菜单色温设置；最后才怀疑显卡/线材。</li>
+          <li><strong>闪屏</strong>：优先怀疑刷新率设置（设置 → 显示 → 高级显示设置，选显示器最佳刷新率）和显卡驱动。</li>
+        </ul>
+
+        <h3>没有声音</h3>
+        <div class="steps">
+          <li>右下角音量图标：是否静音、默认设备是否正确（插了耳机却选扬声器）。</li>
+          <li>设备管理器 → 声音、视频和游戏控制器：声卡是否有感叹号 → 重装驱动。</li>
+          <li>Windows Audio 服务是否停止：services.msc → Windows Audio → 启动。</li>
+          <li>右键音量图标 → 声音 → 播放选项卡 → 把目标设备设为「默认设备」。</li>
+          <li>HDMI 无声音：显示器音频需在播放设备里选中「显示器名称」并设为默认。</li>
+        </div>
+
+        <h3>蓝牙连不上</h3>
+        <ul>
+          <li>确认蓝牙开关已开（设置 → 蓝牙和其他设备）；Win10/11 在任务栏快捷开关里。</li>
+          <li>设备管理器中蓝牙适配器是否正常，异常则重装驱动。</li>
+          <li>删掉旧配对重新配对：设置 → 蓝牙 → 已配对的设备 → 删除 → 重新搜索。</li>
+          <li>蓝牙服务：services.msc 里 Bluetooth Support Service 设为自动并启动。</li>
+        </ul>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 硬件故障定位</h2>
+
+        <h3>内存检测（怀疑内存时）</h3>
+        <div class="steps">
+          <li>快速检测：<code>mdsched</code> → 立即重新启动 → 自动检测（标准模式约 20 分钟）。</li>
+          <li>深度检测：用 MemTest86 做 U 盘启动盘，<strong>完整跑 4 遍</strong>，有任何一行红色报错即判定内存故障。</li>
+          <li>多根内存条时：逐根单插测试，定位到坏的那根；再换插槽排除插槽问题。</li>
+          <li>提示：蓝屏代码随机变化、软件莫名崩溃、文件损坏，都是内存嫌疑的典型信号。</li>
+        </div>
+
+        <h3>硬盘检测（怀疑硬盘时）</h3>
+        <div class="code-wrap">
+          <pre><code><span class="comment"># ① 查看 SMART 健康状态（重点看三个值，用 CrystalDiskInfo）</span>
+<span class="comment">#    05 重映射扇区计数：>0 就要警惕，持续增长 = 盘在坏</span>
+<span class="comment">#    C5 当前待映射扇区 / C6 脱机无法映射扇区：出现即预警</span>
+<span class="comment">#    通电时间：机械盘寿命参考（通常 3-5 万小时）</span>
+
+<span class="comment"># ② Windows 自带检查（修复文件系统错误 + 扫描坏道）</span>
+<span class="cmd">chkdsk</span> C: /f /r    <span class="comment"># 需要重启时输入 Y 同意，重启后自动执行</span>
+
+<span class="comment"># ③ 硬盘异常表现速查</span>
+<span class="comment">#    开机极慢/频繁卡死 → 坏道或老化</span>
+<span class="comment">#    开机咔哒异响（机械盘）→ 磁头故障，立刻备份数据</span>
+<span class="comment">#    文件复制中途报错 → 坏道或供电不足</span></code></pre>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 硬盘告警第一原则</div>
+          SMART 报黄/报红、出现异响、频繁卡死后——<strong>第一动作永远是备份数据，而不是尝试修复</strong>。
+          修复操作（chkdsk /r）本身会增加硬盘负载，可能加速损坏。数据安全优先。
+        </div>
+
+        <h3>主板蜂鸣声代码速查（台式机）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>蜂鸣声</th>
+                <th>含义</th>
+                <th>处理</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 短</td>
+                <td>自检正常（开机成功的"滴"一声）</td>
+                <td>无需处理</td>
+              </tr>
+              <tr>
+                <td>连续短响</td>
+                <td>内存错误（最常见）</td>
+                <td>重插内存、擦金手指、单根测试、换内存</td>
+              </tr>
+              <tr>
+                <td>1 长 2 短 / 1 长 3 短</td>
+                <td>显卡错误</td>
+                <td>重插显卡、检查供电、换显卡测试</td>
+              </tr>
+              <tr>
+                <td>持续长响</td>
+                <td>内存或主板故障</td>
+                <td>先换内存槽/内存，再怀疑主板</td>
+              </tr>
+              <tr>
+                <td>1 长 1 短 / 无任何响声</td>
+                <td>主板 / CPU / 电源问题</td>
+                <td>检查 CPU 供电、主板电容、替换电源测试</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>注意</strong>：不同品牌（华硕/技嘉/微星/联想）的蜂鸣定义略有差异，以上为通用对照，特殊型号以官方手册为准。
+          新主板也可能完全无蜂鸣器（通过指示灯/诊断码 LED 报错）。
+        </p>
+
+        <h3>其他硬件特征速查</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>部件</th>
+                <th>故障特征</th>
+                <th>验证方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>电源</td>
+                <td>满载重启、USB 供电不稳、开机无力</td>
+                <td>替换电源测试；看电容鼓包；用电源测试器</td>
+              </tr>
+              <tr>
+                <td>CPU</td>
+                <td>死机重启（极少坏，多为过热）</td>
+                <td>看温度（HWiNFO）、重涂硅脂、清散热器灰尘</td>
+              </tr>
+              <tr>
+                <td>显卡</td>
+                <td>花屏、黑屏、驱动反复崩</td>
+                <td>换卡测试、看温度、DDU 重装驱动</td>
+              </tr>
+              <tr>
+                <td>主板</td>
+                <td>电容鼓包、USB 全部失灵、随机死机</td>
+                <td>目测电容；替换法；诊断卡（PCI/PCIe 报错灯）</td>
+              </tr>
+              <tr>
+                <td>散热</td>
+                <td>运行一会就卡/重启、风扇狂转</td>
+                <td>清灰换硅脂；HWiNFO 看温度曲线</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">✅ 硬件排查的黄金方法：替换法</div>
+          怀疑哪个部件，就用一个<strong>确认正常的同型号部件</strong>替换上去测试。替换法一次只换一个变量，
+          是最快锁定硬件故障的手段。办公环境建议常备：内存条、电源、数据线、网线各一。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 案例实战：完整排障记录</h2>
+        <p>以下 6 个案例是办公环境最高频的故障，完整展示「现象 → 排查 → 定位 → 解决」的思考过程，照抄思路即可。</p>
+
+        <h3>案例 1：全办公室集体断网</h3>
+        <ul>
+          <li><strong>现象</strong>：10 台电脑同时上不了网。</li>
+          <li><strong>排查</strong>：多台同时故障 → 排除单机问题，直奔公共设备。看交换机指示灯 → 正常；ping 网关 → 不通；ping 路由器 WAN 口对端 → 不通。</li>
+          <li><strong>定位</strong>：路由器 WAN 口到光猫之间的网线松动。</li>
+          <li><strong>解决</strong>：重插网线，全部恢复。复盘：这类问题 3 分钟搞定，如果逐台修电脑就闹笑话了——<strong>多台同时出问题，先查公共设备</strong>。</li>
+        </ul>
+
+        <h3>案例 2：蓝屏代码 0x000000D1 反复重启</h3>
+        <ul>
+          <li><strong>现象</strong>：开机进系统 1-2 分钟后蓝屏，重启循环。</li>
+          <li><strong>排查</strong>：记下代码 0x000000D1（驱动类蓝屏）；问用户 → 昨天手动更新过网卡驱动；进安全模式正常（安全模式不加载第三方驱动）。</li>
+          <li><strong>定位</strong>：用 BlueScreenView 打开 dump，崩溃驱动是 <code>rtwlanu.sys</code>（瑞昱无线网卡驱动）——与"更新过网卡驱动"互相印证。</li>
+          <li><strong>解决</strong>：设备管理器 → 网卡 → 回滚驱动程序 → 重启正常。复盘：dump + 最近改动双印证，一次到位。</li>
+        </ul>
+
+        <h3>案例 3：打印机共享报 0x00000709</h3>
+        <ul>
+          <li><strong>现象</strong>：新电脑连接共享打印机报「找不到打印机名 0x00000709」。</li>
+          <li><strong>排查</strong>：<code>\\主机IP</code> 能打开主机共享、能看到打印机 → 网络和权限没问题；检查驱动版本 → 主机 64 位驱动，客户端装成了 32 位。</li>
+          <li><strong>定位</strong>：驱动位数不匹配导致 709 错误。</li>
+          <li><strong>解决</strong>：客户端卸载旧驱动，装同版本 64 位驱动，连接成功。复盘：709 错误先查「主机能不能访问 + 驱动是否一致」。</li>
+        </ul>
+
+        <h3>案例 4：开机黑屏但风扇在转</h3>
+        <ul>
+          <li><strong>现象</strong>：老台式机早上开机，电源灯亮、风扇转，屏幕无信号。</li>
+          <li><strong>排查</strong>：先换显示器/线材 → 正常（排除显示端）；机箱有短促连续报警 → 内存问题。</li>
+          <li><strong>定位</strong>：拔内存 → 橡皮擦金手指 → 重插，开机正常。</li>
+          <li><strong>解决</strong>：氧化接触不良，清洁金手指解决。复盘：蜂鸣声代码是硬件定位的最快线索，先听声再拆机。</li>
+        </ul>
+
+        <h3>案例 5：网页打不开，QQ 却能上</h3>
+        <ul>
+          <li><strong>现象</strong>：用户报"电脑坏了，网页全打不开"，但 QQ/微信正常。</li>
+          <li><strong>排查</strong>：ping 域名失败，ping IP 通 → DNS 问题；<code>ipconfig /all</code> 发现 DNS 被改成了无效地址。</li>
+          <li><strong>定位</strong>：用户之前按网上教程手动填过 DNS，填错了。</li>
+          <li><strong>解决</strong>：改为自动获取 DNS，刷新缓存，网页恢复。复盘：能上 QQ 不能开网页，先怀疑 DNS，一分钟定位。</li>
+        </ul>
+
+        <h3>案例 6：电脑卡顿，磁盘 100%</h3>
+        <ul>
+          <li><strong>现象</strong>：Win10 电脑开机后一直卡，点什么都慢半拍。</li>
+          <li><strong>排查</strong>：任务管理器 → 磁盘 100%、响应时间飙高；资源监视器发现 <code>SearchIndexer.exe</code>（Windows 搜索索引）在疯狂读写。</li>
+          <li><strong>定位</strong>：机械硬盘 + 搜索索引 + SysMain 同时工作导致磁盘瓶颈。</li>
+          <li><strong>解决</strong>：禁用 Windows Search 与 SysMain 服务，卡顿消失。复盘：磁盘 100% 三件套（搜索/SysMain/诊断跟踪）直接禁用，机械盘场景屡试不爽。</li>
+        </ul>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 排障总表与口诀</h2>
+
+        <h3>一页排障总表（故障 → 优先怀疑 → 验证 → 解决）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>故障现象</th>
+                <th>优先怀疑</th>
+                <th>验证方法</th>
+                <th>常用解决</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>完全上不了网</td>
+                <td>物理链路 / IP 配置</td>
+                <td>ipconfig /all；ping 网关</td>
+                <td>重启网卡；重插网线；netsh winsock reset</td>
+              </tr>
+              <tr>
+                <td>能聊天不能开网页</td>
+                <td>DNS / 代理 / hosts</td>
+                <td>ping IP vs ping 域名</td>
+                <td>换公共 DNS；关代理；清 hosts</td>
+              </tr>
+              <tr>
+                <td>蓝屏</td>
+                <td>驱动 / 内存 / 硬盘</td>
+                <td>记代码；看 dump；问改动</td>
+                <td>回滚驱动；测内存；sfc + DISM</td>
+              </tr>
+              <tr>
+                <td>开机黑屏风扇转</td>
+                <td>内存 / 显卡</td>
+                <td>听蜂鸣声；重插内存</td>
+                <td>擦金手指重插；换槽单根测</td>
+              </tr>
+              <tr>
+                <td>进系统后桌面黑</td>
+                <td>explorer / 显卡驱动</td>
+                <td>任务管理器跑 explorer.exe</td>
+                <td>DDU 重装显卡驱动</td>
+              </tr>
+              <tr>
+                <td>系统卡顿</td>
+                <td>磁盘 100% / 内存不足</td>
+                <td>任务管理器四指标</td>
+                <td>禁用 Search/SysMain；加内存；换 SSD</td>
+              </tr>
+              <tr>
+                <td>打印队列卡死</td>
+                <td>Print Spooler</td>
+                <td>队列状态</td>
+                <td>net stop/start spooler + 删队列</td>
+              </tr>
+              <tr>
+                <td>共享打印机连不上</td>
+                <td>驱动 / 凭据 / 防火墙</td>
+                <td>\\主机IP 能否访问</td>
+                <td>驱动版本一致；加凭据；放行共享</td>
+              </tr>
+              <tr>
+                <td>U 盘不识别</td>
+                <td>接口 / 驱动 / 分区</td>
+                <td>换口换机交叉测</td>
+                <td>磁盘管理加盘符；卸载设备重插</td>
+              </tr>
+              <tr>
+                <td>软件装不上</td>
+                <td>权限 / 运行库</td>
+                <td>看报错弹窗</td>
+                <td>管理员运行；装 VC++/.NET</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>四句口诀（背熟就够用）</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>网络口诀</h4>
+            <p>「本机、网关、外网、域名，哪步断了修哪头」——127.0.0.1 → 网关 → 223.5.5.5 → 域名，逐层 ping。</p>
+          </div>
+          <div class="card">
+            <h4>蓝屏口诀</h4>
+            <p>「改了什么先还原，驱动内存硬盘三连查」——先问改动，再看 dump，最后测内存查硬盘。</p>
+          </div>
+          <div class="card">
+            <h4>开机口诀</h4>
+            <p>「电源内存显卡，排除法逐个换」——无反应查电，风扇转黑屏查内存显卡，有 Logo 进不去查系统硬盘。</p>
+          </div>
+          <div class="card">
+            <h4>打印机口诀</h4>
+            <p>「先看队列后看线，驱动端口依次验」——队列卡死清 Spooler，连不上查驱动与端口。</p>
+          </div>
+        </div>
+
+        <h3>运维十大黄金习惯</h3>
+        <ol>
+          <li>接到报修<strong>先问「最近做了什么」</strong>，再动手。</li>
+          <li>任何操作前<strong>先备份</strong>（注册表、配置、文档、驱动）。</li>
+          <li>重装系统是最后手段，不是第一手段。</li>
+          <li>报错信息<strong>截图存档</strong>，时间、代码、操作一并记录。</li>
+          <li>修好后<strong>验证用户场景</strong>（让用户自己操作一遍确认）。</li>
+          <li>一台一台修，<strong>多台同故障先查公共设备</strong>。</li>
+          <li>驱动只去<strong>官网</strong>下载，不装第三方驱动精灵全家桶。</li>
+          <li>改设置<strong>一次只改一个</strong>，方便回退和定位。</li>
+          <li>给打印机、路由器等设备<strong>固定 IP</strong>，避免 DHCP 变动引发故障。</li>
+          <li>每次故障解决后<strong>记录成文</strong>，同类问题下次 5 分钟搞定。</li>
+        </ol>
+
+        <div class="callout tip">
+          <div class="callout-title">✅ 最后的兜底建议</div>
+          当所有排查手段用尽仍无法解决时：备份数据 → 尝试「重置此电脑（保留我的文件）」→
+          还不行才考虑全新重装。重装前务必把驱动、常用软件安装包提前备好，装完打齐补丁再做镜像备份，
+          下次重装直接恢复镜像，10 分钟搞定。
+        </div>
+      </section>
+
+      <footer class="footer">
+        桌面运维故障排查实战指南 · 先锁定原因，再谈解决 · 共 14 章
+      </footer>
+    </main>
+
+    <script>
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const menuToggle = document.getElementById('menuToggle');
+
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+
+      // 侧边目录高亮
+      const tocLinks = document.querySelectorAll('.toc a');
+      const sections = document.querySelectorAll('.section');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tocLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === '#' + entry.target.id
+                );
+              });
+            }
+          });
+        },
+        { rootMargin: '-20% 0px -70% 0px' }
+      );
+      sections.forEach((s) => observer.observe(s));
+
+      // 复制代码按钮
+      document.querySelectorAll('.code-wrap').forEach((wrap) => {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = '复制';
+        btn.addEventListener('click', async () => {
+          const code = wrap.querySelector('code');
+          const text = code.innerText.replace(/\n\s*$/, '');
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = '已复制 ✓';
+            setTimeout(() => (btn.textContent = '复制'), 1500);
+          } catch {
+            btn.textContent = '复制失败';
+          }
+        });
+        wrap.appendChild(btn);
+      });
+    </script>
+  </body>
+</html>
