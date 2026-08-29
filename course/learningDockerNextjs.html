@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docker 部署 Next.js + Prisma + PostgreSQL 实战指南 · Zinx的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #42b883;
+        --accent-soft: rgba(66, 184, 131, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #42b883 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🐳</span> Docker 全栈部署</h2>
+        <p>Next.js + Prisma + PostgreSQL</p>
+      </div>
+      <a class="home-link" href="../indexCourse.html">← 返回教程目录</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">准备篇</li>
+        <li><a href="#ch01">1. 部署前必读：整体架构</a></li>
+        <li><a href="#ch02">2. 项目准备与环境变量</a></li>
+        <li><a href="#ch03">3. 编写 Dockerfile</a></li>
+        <li><a href="#ch04">4. Docker Compose 编排</a></li>
+        <li class="toc-section-title">部署篇</li>
+        <li><a href="#ch05">5. 本地构建与启动</a></li>
+        <li><a href="#ch06">6. 推送镜像到仓库</a></li>
+        <li><a href="#ch07">7. 服务器拉取与运行</a></li>
+        <li><a href="#ch08">8. 数据库初始化与迁移</a></li>
+        <li><a href="#ch09">9. 发新版完整流程</a></li>
+        <li class="toc-section-title">排错篇</li>
+        <li><a href="#ch10">10. 常见报错速查表</a></li>
+        <li><a href="#ch11">11. 验证清单与口诀总结</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🚀 实战指南 · 跟着做就能部署成功</span>
+        <h1>Docker 部署 Next.js + Prisma + PostgreSQL 实战指南</h1>
+        <p>
+          从零把一个 Next.js 全栈项目容器化并部署到服务器：编写 Dockerfile
+          多阶段构建、Compose 编排应用与数据库、镜像仓库推送拉取、
+          数据库迁移、发版更新，每一步都附常见报错与解决方法。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>11 个章节</span>
+          <span><span class="dot"></span>30+ 常见问题</span>
+          <span><span class="dot"></span>含私有镜像仓实战流程</span>
+          <span><span class="dot"></span>以 Next.js 14/15 为准</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 部署前必读：整体架构</h2>
+
+        <h3>这套技术栈各管什么</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>组件</th>
+                <th>角色</th>
+                <th>跑在哪</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Next.js</strong></td>
+                <td>Web 框架：页面 + API 路由</td>
+                <td>容器 A（监听 3000 端口）</td>
+              </tr>
+              <tr>
+                <td><strong>Prisma</strong></td>
+                <td>ORM：代码里操作数据库的类型安全工具</td>
+                <td>打包进容器 A（编译期生成客户端）</td>
+              </tr>
+              <tr>
+                <td><strong>PostgreSQL</strong></td>
+                <td>数据库：真正存数据的地方</td>
+                <td>容器 B（监听 5432 端口）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">📌 关键认知：Prisma 不是一个"服务"</div>
+          Prisma 只是<strong>代码依赖</strong>（node_modules 里的一个包），构建时执行
+          <code>prisma generate</code> 生成数据库客户端，运行时随 Next.js
+          一起跑。<strong>不需要也不应该单独为 Prisma 建容器</strong>——需要单独照顾的只有
+          PostgreSQL。
+        </div>
+
+        <h3>整体部署路线图</h3>
+        <div class="diagram">
+          <pre>
+ 本地开发机                                服务器
+ ───────────────                         ───────────────
+ ① 项目准备（output:'standalone' + .dockerignore + .env 规划）
+        │
+        ▼
+ ② docker buildx build ──► 得到镜像 next-app:v1.0.0
+        │
+        ▼
+ ③ docker login 私有仓库 ──► docker push 推送镜像
+        │                                  ┌─────────────────────────┐
+        ▼                                  │ ④ docker login          │
+ ─────────────────────────────────────►    │ ⑤ docker pull 拉镜像     │
+                                            │ ⑥ docker-compose up -d  │
+                                            │    app 容器 + db 容器    │
+                                            │    (数据卷持久化)         │
+                                            └─────────────────────────┘
+                                                        │
+                                                        ▼
+                                            ⑦ curl 服务器IP:端口 验证
+</pre
+          >
+        </div>
+
+        <h3>两种部署形态，先选定你的路线</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>形态</th>
+                <th>说明</th>
+                <th>适合</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>单镜像 + Compose</strong>（本指南主线）</td>
+                <td>Next.js 打一个镜像；PostgreSQL 用官方镜像；compose 文件编排两者</td>
+                <td><strong>绝大多数项目，推荐</strong></td>
+              </tr>
+              <tr>
+                <td>纯 docker run</td>
+                <td>两条 docker run 手动起两个容器，用 --link / 同网络通信</td>
+                <td>临时验证、理解原理</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 最大的坑：开发时 localhost，容器里不能用</div>
+          开发时 <code>DATABASE_URL=postgresql://...@localhost:5432/db</code>
+          能跑，是因为数据库跑在你<strong>本机</strong>。容器化后 app
+          是独立容器，<code>localhost</code> 指的是它自己容器内部——必须改成 compose
+          里的<strong>服务名</strong>（如 <code>db</code>）。这是本技术栈<strong
+            >第一高频报错</strong
+          >，先记住，后面第 10 章还会见到它。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 项目准备与环境变量</h2>
+
+        <h3>Step 1：开启 standalone 输出模式（必做）</h3>
+        <p>
+          standalone 让 Next.js 构建产物只包含运行必需的文件，镜像体积从
+          <strong>1GB+ 瘦身到 200MB 左右</strong>。改一行配置：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// next.config.js（或 next.config.mjs / .ts）</span>
+<span class="kw">const</span> nextConfig = {
+  <span class="var">output</span>: <span class="str">'standalone'</span>,   <span class="comment">// &lt;-- 加这一行</span>
+};
+
+module.exports = nextConfig;</code></pre>
+        </div>
+        <p>
+          加完后本地跑一次 <code>npm run build</code>，确认出现
+          <code>.next/standalone/</code> 目录，说明生效。
+        </p>
+
+        <h3>Step 2：规划环境变量（三份文件）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>文件</th>
+                <th>用途</th>
+                <th>提交到 Git？</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.env</code></td>
+                <td>本地开发，Prisma CLI 读它</td>
+                <td>❌ 不提交</td>
+              </tr>
+              <tr>
+                <td><code>.env.production</code></td>
+                <td>构建时需要的前端变量（NEXT_PUBLIC_ 开头的会打进前端包）</td>
+                <td>按团队约定</td>
+              </tr>
+              <tr>
+                <td><code>.env.docker</code></td>
+                <td>容器运行时注入（数据库地址等），本指南用 compose 注入</td>
+                <td>❌ 不提交</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">🚫 安全红线：密码不进镜像、不进 Git</div>
+          数据库密码、镜像仓账号等敏感信息<strong
+            >只放在服务器上的 .env 或 compose 环境变量里</strong
+          >，绝不写进 Dockerfile（写进去就永久烙在镜像层里，谁都扒得出来）、不提交
+          Git。镜像仓的登录凭证也一样——<code>docker login</code> 输入即可，别存笔记里发到任何公开处。
+        </div>
+
+        <h3>Step 3：确认 Prisma Schema 就绪</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">// prisma/schema.prisma</span>
+generator client {
+  provider = <span class="str">"prisma-client-js"</span>
+}
+
+datasource db {
+  provider = <span class="str">"postgresql"</span>
+  url      = env(<span class="str">"DATABASE_URL"</span>)   <span class="comment">// 从环境变量读，容器部署的关键</span>
+}</code></pre>
+        </div>
+
+        <h3>Step 4：创建 .dockerignore（不做镜像会巨大 + 缓存失效）</h3>
+        <p>在项目根目录新建 <code>.dockerignore</code>：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>node_modules
+.next
+.git
+.gitignore
+*.md
+.env
+.env.*
+!.env.production
+npm-debug.log*
+Dockerfile
+docker-compose*.yml
+.dockerignore</code></pre>
+        </div>
+        <p>
+          两个目的：① <code>node_modules</code> 不进构建上下文（传给 Docker
+          的体积小、构建快）；② <code>.env</code> 不被意外打进镜像。
+        </p>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 编写 Dockerfile（多阶段构建）</h2>
+
+        <h3>为什么必须多阶段</h3>
+        <p>
+          Next.js + Prisma 构建需要完整的 devDependencies（prisma CLI、TypeScript
+          等），但<strong>运行时不需要</strong>。单阶段构建会把编译工具全打进镜像——1GB
+          起步还留安全隐患。多阶段构建 = <strong>编译车间和成品仓库分开</strong>。
+        </div>
+
+        <h3>完整 Dockerfile（可直接抄）</h3>
+        <p>项目根目录新建 <code>Dockerfile</code>：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># ============ 阶段 1：deps 安装依赖 ============</span>
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+<span class="comment"># 先复制清单再安装 —— 依赖不变时命中 Docker 缓存，秒级完成</span>
+COPY package.json package-lock.json ./
+RUN npm ci
+
+<span class="comment"># ============ 阶段 2：builder 构建 ============</span>
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+<span class="comment"># 构建期需要 DATABASE_URL（prisma validate / 页面里若直连数据库）</span>
+<span class="comment"># 给个占位值即可，运行时会用真实值覆盖</span>
+ENV DATABASE_URL=<span class="str">"postgresql://placeholder:placeholder@localhost:5432/placeholder"</span>
+
+RUN npx prisma generate &amp;&amp; npm run build
+
+<span class="comment"># ============ 阶段 3：runner 运行 ============</span>
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+<span class="comment"># Prisma 在 alpine 上需要 openssl（Debian 基础镜像自带，alpine 必须显式装）</span>
+RUN apk add --no-cache openssl
+
+<span class="comment"># 非 root 用户跑应用，安全性更好</span>
+RUN addgroup --system --gid 1001 nodejs \
+ &amp;&amp; adduser --system --uid 1001 nextjs
+
+<span class="comment"># standalone 产物 + prisma 必需文件</span>
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000 HOSTNAME=<span class="str">"0.0.0.0"</span>
+
+<span class="comment"># 启动：先执行数据库迁移，再起服务</span>
+CMD [<span class="str">"sh"</span>, <span class="str">"-c"</span>, <span class="str">"npx prisma migrate deploy &amp;&amp; node server.js"</span>]</code></pre>
+        </div>
+
+        <h3>这个 Dockerfile 的 6 个关键点</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>写法</th>
+                <th>为什么</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>先 COPY package.json 再装依赖</td>
+                <td>改业务代码不重装依赖，构建从分钟级降到秒级（缓存命中）</td>
+              </tr>
+              <tr>
+                <td><code>npx prisma generate</code> 在 builder 阶段</td>
+                <td>生成 Prisma Client 供构建使用；产物复制到 runner</td>
+              </tr>
+              <tr>
+                <td><code>apk add openssl</code></td>
+                <td>alpine 上没有 openssl 时 Prisma 启动直接报 <code>Query engine error</code></td>
+              </tr>
+              <tr>
+                <td>复制 <code>node_modules/.prisma</code> 和 <code>@prisma</code></td>
+                <td>standalone 模式<strong>不会</strong>自动带上 Prisma 客户端，漏了必报 <code>@prisma/client did not initialize</code></td>
+              </tr>
+              <tr>
+                <td><code>HOSTNAME="0.0.0.0"</code></td>
+                <td>不设的话容器外访问不到服务（只监听容器内部回环）</td>
+              </tr>
+              <tr>
+                <td>CMD 里先 <code>migrate deploy</code></td>
+                <td>容器每次启动自动把数据库结构升到最新——发版不用手动改库</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 偷懒选择：node:20（Debian 版）</div>
+          用 <code>FROM node:20</code>（Debian 基础）可以省掉
+          <code>apk add openssl</code>、bcrypt/sharp 等原生模块的兼容烦恼，代价是镜像大
+          300MB 左右。第一次部署求稳可以用它，跑通了再换 alpine 瘦身。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> Docker Compose 编排（app + db）</h2>
+
+        <h3>完整 docker-compose.yml</h3>
+        <p>项目根目录新建 <code>docker-compose.yml</code>：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">services</span>:
+  <span class="comment"># ---------- 数据库 ----------</span>
+  db:
+    image: postgres:16-alpine
+    container_name: app-db
+    restart: always
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: <span class="str">"改成一个强密码"</span>       <span class="comment"># 生产建议从 .env 注入</span>
+      POSTGRES_DB: appdb
+    ports:
+      - <span class="str">"5432:5432"</span>       <span class="comment"># 生产环境建议删掉这行，不暴露数据库端口到公网</span>
+    volumes:
+      - pgdata:/var/lib/postgresql/data   <span class="comment"># 数据持久化的关键！</span>
+    healthcheck:                          <span class="comment"># 让 app 等 db 真正就绪再启动</span>
+      test: [<span class="str">"CMD-SHELL"</span>, <span class="str">"pg_isready -U appuser -d appdb"</span>]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  <span class="comment"># ---------- Next.js 应用 ----------</span>
+  app:
+    image: <span class="str">"next-app:1.0.0"</span>        <span class="comment"># 本地构建用；服务器上换成仓库地址</span>
+    container_name: app-web
+    restart: always
+    ports:
+      - <span class="str">"80:3000"</span>            <span class="comment"># 浏览器访问 80 → 容器内 3000</span>
+    environment:
+      <span class="comment"># 注意 host 是 db（服务名），不是 localhost！</span>
+      DATABASE_URL: <span class="str">"postgresql://appuser:你的强密码@db:5432/appdb"</span>
+    depends_on:
+      db:
+        condition: service_healthy   <span class="comment"># 等 healthcheck 通过才启动，避免连接被拒</span>
+
+<span class="kw">volumes</span>:
+  pgdata:</code></pre>
+        </div>
+
+        <h3>四个必懂的配置点</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>配置</th>
+                <th>作用</th>
+                <th>踩坑提醒</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>volumes: pgdata</code></td>
+                <td>数据库文件存在宿主机，容器删了数据还在</td>
+                <td><strong>没有它，每次发版数据全丢</strong></td>
+              </tr>
+              <tr>
+                <td><code>restart: always</code></td>
+                <td>容器崩溃 / 服务器重启后自动拉起</td>
+                <td>不加的话挂了就没人管</td>
+              </tr>
+              <tr>
+                <td><code>healthcheck + depends_on condition</code></td>
+                <td>app 等数据库真正能接连接了才启动</td>
+                <td>Postgres 启动有初始化过程，"容器起了"≠"能连了"</td>
+              </tr>
+              <tr>
+                <td><code>DATABASE_URL 里的 @db</code></td>
+                <td>compose 内置 DNS，服务名即主机名</td>
+                <td>写成 localhost 必报 <code>ECONNREFUSED 127.0.0.1:5432</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>进阶：密码不放 yml 里，用 .env 注入</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 服务器上与 docker-compose.yml 同目录放一个 .env 文件：</span>
+POSTGRES_PASSWORD=真实强密码
+DATABASE_URL=postgresql://appuser:真实强密码@db:5432/appdb
+
+<span class="comment"># compose 里引用（compose 会自动读同目录 .env）：</span>
+    environment:
+      POSTGRES_PASSWORD: <span class="str">"${POSTGRES_PASSWORD}"</span>
+      DATABASE_URL: <span class="str">"${DATABASE_URL}"</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> 本地构建与启动</h2>
+
+        <h3>构建镜像：为什么用 buildx 而不是 build</h3>
+        <p>
+          你在 Windows/Mac（包括 Apple 芯片）上构建的镜像，默认是<strong
+            >本机架构</strong
+          >（如 arm64）；而大多数服务器是 <strong>linux/amd64</strong>——架构不匹配的镜像在服务器上根本跑不起来（报
+          <code>exec format error</code>）。所以<strong>始终显式指定平台</strong>：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># -f 指定 Dockerfile 位置；-t 命名；末尾的 . 是构建上下文=当前目录</span>
+<span class="cmd">docker buildx build --platform linux/amd64 -t next-app:1.0.0 --load .</span>
+
+<span class="comment"># Dockerfile 不在根目录时（比如放在 docker/prod/ 下）：</span>
+<span class="cmd">docker buildx build --platform linux/amd64 -f docker/prod/Dockerfile -t next-app:1.0.0 --load .</span>
+
+<span class="comment"># 验证镜像架构（期望 Architecture: amd64）：</span>
+<span class="cmd">docker inspect next-app:1.0.0 --format "{{.Architecture}}"</span>
+
+<span class="comment"># 本地快速验证（compose 起 app+db）：</span>
+<span class="cmd">docker compose up -d</span>
+<span class="cmd">docker compose ps</span>            <span class="comment"># 两个容器都应 Up</span>
+<span class="cmd">docker logs -f app-web</span>      <span class="comment"># 看 app 日志，确认 migrate deploy 成功 + Ready on port 3000</span></code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ buildx 的 --load 别忘了</div>
+          老命令 <code>docker build</code> 构建完自动进本地镜像列表；<code>buildx
+          build</code> 默认<strong>只构建不加载</strong>，本地要使用需加
+          <code>--load</code>（直接 push 到仓库时则不需要）。
+        </div>
+        <p>浏览器访问 <code>http://localhost</code>（80 端口映射），页面正常即本地验证通过。</p>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 推送镜像到仓库</h2>
+
+        <h3>三种仓库怎么选</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>仓库</th>
+                <th>地址示例</th>
+                <th>适合</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>私有镜像仓</strong>（学校/公司 Harbor）</td>
+                <td><code>harbor.xxx.edu.cn/项目组/app</code></td>
+                <td>内网服务器，速度快、可控</td>
+              </tr>
+              <tr>
+                <td>Docker Hub</td>
+                <td><code>你的用户名/app</code></td>
+                <td>公开镜像、个人项目</td>
+              </tr>
+              <tr>
+                <td>阿里云 ACR 等</td>
+                <td><code>registry.cn-hangzhou.aliyuncs.com/空间/app</code></td>
+                <td>国内服务器拉取快</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>标准推送三步</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 1. 登录（输入账号密码；凭证会存在本机，之后不用重复登录）</span>
+<span class="cmd">docker login harbor.xxx.edu.cn</span>
+
+<span class="comment"># 2. 给镜像打上仓库完整地址的 tag（如果构建时 -t 已带完整地址，这步可省）</span>
+<span class="cmd">docker tag next-app:1.0.0 harbor.xxx.edu.cn/myteam/next-app:1.0.0</span>
+
+<span class="comment"># 3. 推送</span>
+<span class="cmd">docker push harbor.xxx.edu.cn/myteam/next-app:1.0.0</span>
+
+<span class="comment"># 推送时可以同时推多个 tag：latest 方便服务器默认拉，版本号便于回滚</span>
+<span class="cmd">docker tag next-app:1.0.0 harbor.xxx.edu.cn/myteam/next-app:latest</span>
+<span class="cmd">docker push harbor.xxx.edu.cn/myteam/next-app:latest</span></code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 版本号建议用可追溯的格式</div>
+          <code>v1.0.0</code>、<code>v1.0.1</code> 这种语义化版本 + Git commit
+          短哈希（如 <code>v1.0.1-3f2a9c</code>）组合最佳：出了问题能一键回滚到上一个 tag，也能精确对应到那次代码提交。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 服务器拉取与运行</h2>
+
+        <h3>服务器上的准备（一次性）</h3>
+        <ol class="steps">
+          <li>装好 Docker 与 Docker Compose 插件（<code>docker -v</code>、<code>docker compose version</code> 能出版本号即可）</li>
+          <li>登录镜像仓库（和本地一样的 login 命令）</li>
+          <li>建项目目录：<code>mkdir -p /opt/myapp && cd /opt/myapp</code></li>
+          <li>把 <code>docker-compose.yml</code> 和 <code>.env</code> 放进该目录（scp / 宝塔 / SFTP 均可），并确认防火墙/安全组放行 80 端口</li>
+        </ol>
+
+        <h3>拉取并启动</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 服务器上（compose 里的 image 改成仓库完整地址）：</span>
+<span class="comment">#   image: "harbor.xxx.edu.cn/myteam/next-app:1.0.0"</span>
+
+<span class="cmd">docker compose pull</span>          <span class="comment"># 拉取 compose 里定义的镜像</span>
+<span class="cmd">docker compose up -d</span>         <span class="comment"># 后台启动 app + db</span>
+<span class="cmd">docker compose ps</span>           <span class="comment"># 状态都应是 Up (healthy)</span>
+<span class="cmd">docker logs -f app-web</span>      <span class="comment"># 实时看应用日志（Ctrl+C 退出查看，不影响容器）</span></code></pre>
+        </div>
+
+        <h3>纯 docker run 方式（理解原理 / 快速验证用）</h3>
+        <p>不写 compose 时的等价操作——先建网络再起两个容器：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 1. 建一个专用网络，让两个容器能互相用名字访问</span>
+<span class="cmd">docker network create appnet</span>
+
+<span class="comment"># 2. 起 PostgreSQL（带数据卷持久化）</span>
+<span class="cmd">docker run -d --name app-db --network appnet \</span>
+  -e POSTGRES_USER=appuser \
+  -e POSTGRES_PASSWORD=<span class="str">"你的强密码"</span> \
+  -e POSTGRES_DB=appdb \
+  -v pgdata:/var/lib/postgresql/data \
+  --restart always \
+  postgres:16-alpine
+
+<span class="comment"># 3. 起 Next.js（DATABASE_URL 的 host 用容器名 app-db）</span>
+<span class="cmd">docker run -d --name app-web --network appnet \</span>
+  -p 80:3000 \
+  -e DATABASE_URL=<span class="str">"postgresql://appuser:你的强密码@app-db:5432/appdb"</span> \
+  --restart always \
+  harbor.xxx.edu.cn/myteam/next-app:1.0.0</code></pre>
+        </div>
+
+        <h3>用 run.sh 把命令固化成脚本</h3>
+        <p>
+          每次敲长命令容易错，写成脚本一键执行（服务器上
+          <code>vi run.sh</code>）：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment">#!/bin/bash</span>
+<span class="comment"># run.sh —— 停旧容器、删旧容器、起新容器</span>
+<span class="cmd">docker stop app-web</span>
+<span class="cmd">docker rm app-web</span>
+<span class="cmd">docker run -p 80:3000 --name app-web \</span>
+  --network appnet \
+  -e DATABASE_URL=<span class="str">"postgresql://appuser:你的强密码@app-db:5432/appdb"</span> \
+  -d --restart always \
+  harbor.xxx.edu.cn/myteam/next-app:1.0.0
+
+<span class="comment"># 保存退出后授权 + 运行：</span>
+<span class="cmd">chmod +x ./run.sh</span>
+<span class="cmd">./run.sh</span></code></pre>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">📌 脚本里的镜像版本每次发版要改</div>
+          <code>vi run.sh</code> 把 tag 换成新版本号再执行；compose 党则改
+          <code>docker-compose.yml</code> 里的 image 后
+          <code>docker compose pull && docker compose up -d</code>，更省事。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 数据库初始化与迁移</h2>
+
+        <h3>三条 Prisma 命令，别再混了</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>命令</th>
+                <th>做什么</th>
+                <th>什么时候用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>prisma migrate dev</code></td>
+                <td>生成迁移文件 + 应用到库 + （会重置数据！）</td>
+                <td><strong>仅本地开发</strong>，生产环境禁用</td>
+              </tr>
+              <tr>
+                <td><code>prisma migrate deploy</code></td>
+                <td>只应用已提交的迁移文件，不重置数据</td>
+                <td><strong>生产部署专用</strong>（本指南 CMD 里就是它）</td>
+              </tr>
+              <tr>
+                <td><code>prisma db push</code></td>
+                <td>直接把 schema 推到库，不生成迁移文件</td>
+                <td>原型快速验证，正式项目不推荐</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>本方案的迁移时机：容器启动时自动执行</h3>
+        <p>
+          第 3 章 Dockerfile 的 CMD 已包含
+          <code>npx prisma migrate deploy</code>，配合数据卷，效果是：
+          <strong>发新版 → 容器重启 → 自动执行新增的迁移文件 → 表结构更新 →
+          历史数据保留</strong>。
+        </p>
+
+        <h3>手动操作数据库（排查 / 验证用）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 进入 postgres 容器的交互式终端（psql）</span>
+<span class="cmd">docker exec -it app-db psql -U appuser -d appdb</span>
+
+<span class="comment"># 常用 psql 命令：</span>
+<span class="cmd">\dt</span>                          <span class="comment"># 列出所有表（确认迁移是否成功）</span>
+<span class="cmd">\d "User"</span>                   <span class="comment"># 查看某张表结构</span>
+<span class="cmd">SELECT count(*) FROM "User";</span> <span class="comment"># 数一下数据条数</span>
+<span class="cmd">\q</span>                          <span class="comment"># 退出</span>
+
+<span class="comment"># 进入 app 容器手动执行迁移（比如排查启动失败）：</span>
+<span class="cmd">docker exec -it app-web npx prisma migrate deploy</span>
+
+<span class="comment"># 备份数据库（重要！发大版本前先备份）：</span>
+<span class="cmd">docker exec app-db pg_dump -U appuser appdb &gt; backup_$(date +%F).sql</span></code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 首次部署 vs 后续发版的区别</div>
+          首次 <code>up -d</code>：Postgres 容器初始化空库 → migrate deploy
+          建出所有表。后续发版：数据卷里已有库，migrate deploy 只执行<strong
+            >新增的</strong>迁移文件。切记发版前 <code>pg_dump</code>
+          备份一次，给自己留后悔药。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 发新版完整流程（日常最常用）</h2>
+
+        <p>代码改完了，从提交到上线完整走一遍：</p>
+
+        <h3>本地：构建 → 推送</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># ① 改好代码，本地验证通过后，构建新版本镜像（版本号 +1）</span>
+<span class="cmd">docker buildx build --platform linux/amd64 \</span>
+  -f Dockerfile -t harbor.xxx.edu.cn/myteam/next-app:v1.0.1 --push .
+
+<span class="comment"># （--push 直接构建并推送一步到位，不用再单独 push）</span>
+
+<span class="comment"># ② 顺手推个 latest</span>
+<span class="cmd">docker tag harbor.xxx.edu.cn/myteam/next-app:v1.0.1 harbor.xxx.edu.cn/myteam/next-app:latest</span>
+<span class="cmd">docker push harbor.xxx.edu.cn/myteam/next-app:latest</span></code></pre>
+        </div>
+
+        <h3>服务器：拉取 → 换版 → 重启</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># ③ 登录仓库（凭证已存则跳过）并拉取新镜像</span>
+<span class="cmd">docker login harbor.xxx.edu.cn</span>
+<span class="cmd">docker pull harbor.xxx.edu.cn/myteam/next-app:v1.0.1</span>
+<span class="cmd">docker images</span>      <span class="comment"># 确认新镜像已在列表里</span>
+
+<span class="comment"># ④ 停止并删除旧容器（数据在卷里，不会丢！）</span>
+<span class="cmd">docker ps</span>          <span class="comment"># 查看正在运行的容器</span>
+<span class="cmd">docker stop app-web</span>
+<span class="cmd">docker rm app-web</span>
+
+<span class="comment"># ⑤ 起新容器（run.sh 里版本号已改成 v1.0.1）</span>
+<span class="cmd">./run.sh</span>
+<span class="comment"># 或 compose 方式（yml 里 image 改成 v1.0.1 后）：</span>
+<span class="comment"># docker compose pull &amp;&amp; docker compose up -d</span>
+
+<span class="comment"># ⑥ 看日志确认启动成功 + 迁移执行</span>
+<span class="cmd">docker logs -f app-web</span>
+
+<span class="comment"># ⑦ 清理旧镜像（磁盘不够时）</span>
+<span class="cmd">docker rmi harbor.xxx.edu.cn/myteam/next-app:v1.0.0</span></code></pre>
+        </div>
+
+        <h3>出问题回滚（30 秒恢复）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 版本号回退 → 重复 ④⑤ 即可，数据卷不动，数据不受影响</span>
+<span class="cmd">docker stop app-web && docker rm app-web</span>
+<span class="comment"># run.sh 里版本号改回 v1.0.0</span>
+<span class="cmd">./run.sh</span>
+
+<span class="comment"># 注意：若新版执行过"新增字段"的迁移，回滚代码可能遇到旧代码不认识新字段——</span>
+<span class="comment"># Prisma 迁移原则上只加不减，一般兼容；不确定就先用 pg_dump 备份再回滚</span></code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 发版口诀</div>
+          <strong
+            >本地 build 推仓库，服务器 pull 停旧删旧起 run；日志确认迁移跑，latest
+            打底版本号回滚用</strong
+          >。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 常见报错速查表</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>报错信息（关键词）</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ECONNREFUSED 127.0.0.1:5432</code></td>
+                <td>DATABASE_URL 写了 localhost</td>
+                <td>容器内改用服务名/容器名：<code>@db:5432</code>（第 1 章预告的头号坑）</td>
+              </tr>
+              <tr>
+                <td><code>exec format error</code></td>
+                <td>M1/M2 Mac 或默认构建出 arm64 镜像，服务器是 amd64</td>
+                <td>构建加 <code>--platform linux/amd64</code></td>
+              </tr>
+              <tr>
+                <td><code>@prisma/client did not initialize yet</code></td>
+                <td>standalone 镜像没带 Prisma 客户端</td>
+                <td>Dockerfile 里 COPY <code>node_modules/.prisma</code> 和 <code>@prisma</code>（第 3 章已包含）</td>
+              </tr>
+              <tr>
+                <td><code>Query engine binary not found / openssl</code></td>
+                <td>alpine 缺 openssl</td>
+                <td><code>RUN apk add --no-cache openssl</code>，或换 Debian 基础镜像</td>
+              </tr>
+              <tr>
+                <td>app 启动报数据库连不上，几秒后自愈</td>
+                <td>Postgres 还在初始化，app 抢跑了</td>
+                <td>compose 加 healthcheck + <code>depends_on: condition: service_healthy</code></td>
+              </tr>
+              <tr>
+                <td><code>P1001: Can't reach database server</code></td>
+                <td>网络不对 / 容器名写错 / db 没起</td>
+                <td><code>docker compose ps</code> 看 db 状态；确认两个容器在同一 network</td>
+              </tr>
+              <tr>
+                <td>页面能开但接口 500</td>
+                <td>DATABASE_URL 未注入 / 迁移没执行</td>
+                <td><code>docker exec -it app-web env | grep DATABASE</code> 查变量；手动跑 migrate deploy</td>
+              </tr>
+              <tr>
+                <td><code>port is already allocated</code></td>
+                <td>80 被占用（Nginx / 其他容器）</td>
+                <td><code>-p 8080:3000</code> 换端口，或停掉占用者；服务器已有 Nginx 就反代到 3000</td>
+              </tr>
+              <tr>
+                <td>容器一直 <code>Restarting</code></td>
+                <td>启动命令失败反复被拉起</td>
+                <td><code>docker logs app-web</code> 看崩溃原因，九成是迁移失败或连不上库</td>
+              </tr>
+              <tr>
+                <td>浏览器访问不了，容器内 curl 却通</td>
+                <td>监听 127.0.0.1 或防火墙拦截</td>
+                <td>确认 <code>ENV HOSTNAME="0.0.0.0"</code>；安全组/防火墙放行端口</td>
+              </tr>
+              <tr>
+                <td><code>buildx build</code> 完本地没有镜像</td>
+                <td>buildx 默认不加载到本地列表</td>
+                <td>本地使用加 <code>--load</code>；直接推仓库加 <code>--push</code></td>
+              </tr>
+              <tr>
+                <td><code>docker login</code> 报 unauthorized</td>
+                <td>密码错 / 无该仓库权限</td>
+                <td>找管理员确认账号和项目组权限（Harbor 按项目授权）</td>
+              </tr>
+              <tr>
+                <td>构建巨慢 / 每次全量重装依赖</td>
+                <td>缓存失效</td>
+                <td>检查是否先 COPY package.json 再装依赖；<code>.dockerignore</code> 是否排除了 node_modules</td>
+              </tr>
+              <tr>
+                <td>bcrypt / sharp 报模块错误</td>
+                <td>原生模块与镜像系统不匹配</td>
+                <td>基础镜像统一（都用 node:20-alpine）；或 <code>npm rebuild</code> 对应包</td>
+              </tr>
+              <tr>
+                <td>发版后数据没了</td>
+                <td>没挂数据卷 / 用了 <code>migrate dev</code></td>
+                <td>确认 <code>volumes: pgdata</code> 存在；生产只用 <code>migrate deploy</code></td>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 排障三板斧</div>
+          <strong>① docker compose ps 看状态 → ② docker logs -f 容器名 看报错 →
+          ③ docker exec -it 容器名 env / psql 进容器验证环境和数据库</strong>。三步之内，90%
+          的部署问题能定位。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 验证清单与口诀总结</h2>
+
+        <h3>上线验证清单（7 步全过才算成功）</h3>
+        <ol class="steps">
+          <li><code>docker compose ps</code> —— app 和 db 都是 Up，db 显示 (healthy)</li>
+          <li><code>docker logs app-web</code> —— 有 <code>Ready on port 3000</code>，无红色报错</li>
+          <li>日志里 migrate deploy 显示迁移已应用（首次为全部迁移，之后为 "No pending migrations"）</li>
+          <li>浏览器访问 <code>http://服务器IP</code> —— 首页正常渲染</li>
+          <li>注册/登录等<strong>写库功能</strong>操作一遍 —— 证明 app→db 链路通</li>
+          <li><code>docker exec -it app-db psql -U appuser -d appdb -c "\dt"</code> —— 表都在</li>
+          <li><code>docker restart app-web</code> 后再刷新页面 —— 证明重启自愈正常</li>
+        </ol>
+
+        <h3>全套配置文件清单（从零照抄）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>文件</th>
+                <th>位置</th>
+                <th>核心内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>next.config.js</td>
+                <td>项目根</td>
+                <td><code>output: 'standalone'</code></td>
+              </tr>
+              <tr>
+                <td>.dockerignore</td>
+                <td>项目根</td>
+                <td>排除 node_modules / .next / .env</td>
+              </tr>
+              <tr>
+                <td>Dockerfile</td>
+                <td>项目根</td>
+                <td>三阶段：deps → builder → runner</td>
+              </tr>
+              <tr>
+                <td>docker-compose.yml</td>
+                <td>项目根 + 服务器目录</td>
+                <td>app + db + healthcheck + 数据卷</td>
+              </tr>
+              <tr>
+                <td>.env</td>
+                <td>仅服务器目录</td>
+                <td>数据库密码、DATABASE_URL</td>
+              </tr>
+              <tr>
+                <td>run.sh</td>
+                <td>仅服务器目录</td>
+                <td>stop → rm → run 新版本</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>口诀总结</h3>
+        <div class="callout tip">
+          <div class="callout-title">💡 十句口诀带走全部</div>
+          <strong>
+          ① standalone 先开启，镜像瘦身十倍起；<br />
+          ② 多阶段构建分三步，deps 打底缓存住；<br />
+          ③ alpine 记得装 openssl，Prisma 少它起不来；<br />
+          ④ standalone 不带 Prisma，两个目录要手动拷；<br />
+          ⑤ 容器里 localhost 是自己，连库要用服务名；<br />
+          ⑥ 数据卷不挂，发版数据全丢光；<br />
+          ⑦ healthcheck 门前站，app 不跟 db 抢跑；<br />
+          ⑧ 跨平台构建加 platform，arm 镜像 amd 跑不动；<br />
+          ⑨ 生产只用 migrate deploy，dev 会清库要牢记；<br />
+          ⑩ 发版四连：push、pull、stop+rm、run；日志确认才算完。</strong>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>Docker 部署 Next.js + Prisma + PostgreSQL 实战指南 · 教程与实操指南</p>
+        <p style="margin-top: 8px; font-size: 0.8rem">
+          Build once, run anywhere. 🐳
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>
