@@ -201,12 +201,24 @@
       .card-arrow {
         color: var(--accent);
       }
-      .placeholder {
+      .more-card {
         border-style: dashed;
-        background: transparent;
+        background: rgba(148, 163, 184, 0.03);
+        cursor: default;
       }
-      .placeholder::before {
+      .more-card::before {
         display: none;
+      }
+      .more-card:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .more-card .card-icon {
+        background: rgba(148, 163, 184, 0.08);
+      }
+      .more-card .card-arrow {
+        color: var(--muted);
       }
       footer {
         margin-top: 48px;
@@ -248,47 +260,20 @@
           记录调试现场、故障排查和那些容易忽略的边界条件，把问题变成可以复用的解决路径。
         </p>
         <div class="stats">
-          <div class="stat"><strong>4</strong><span>问题分类</span></div>
+          <div class="stat"><strong>0</strong><span>问题分类</span></div>
           <div class="stat"><strong>0</strong><span>已整理案例</span></div>
           <div class="stat"><strong>∞</strong><span>持续复盘</span></div>
         </div>
       </header>
       <h2 class="section-title">问题解决目录</h2>
       <div class="grid">
-        <div class="card placeholder">
-          <div class="card-icon">⚙</div>
-          <div class="card-tag">开发调试</div>
-          <h2>代码与运行时</h2>
-          <p>整理语法错误、运行时异常、依赖冲突和难以复现的问题。</p>
+        <div class="card more-card">
+          <div class="card-icon">＋</div>
+          <div class="card-tag">持续更新</div>
+          <h2>更多内容</h2>
+          <p>更多问题案例和排查手册正在持续整理中，后续会持续补充。</p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">⌁</div>
-          <div class="card-tag">系统排查</div>
-          <h2>Linux 与环境</h2>
-          <p>记录进程、权限、网络、磁盘和服务部署中的排查方法。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">▣</div>
-          <div class="card-tag">工程实践</div>
-          <h2>部署与发布</h2>
-          <p>沉淀 Docker、CI/CD、配置管理和线上发布过程中的解决方案。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">?</div>
-          <div class="card-tag">边界条件</div>
-          <h2>常见误区</h2>
-          <p>收集容易忽略的输入、状态、并发和兼容性问题，方便以后快速查阅。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
+            <span>持续更新</span><span class="card-arrow">更多内容</span>
           </div>
         </div>
       </div>

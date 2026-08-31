@@ -201,12 +201,24 @@
       .card-arrow {
         color: var(--accent);
       }
-      .placeholder {
+      .more-card {
         border-style: dashed;
-        background: transparent;
+        background: rgba(148, 163, 184, 0.03);
+        cursor: default;
       }
-      .placeholder::before {
+      .more-card::before {
         display: none;
+      }
+      .more-card:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .more-card .card-icon {
+        background: rgba(148, 163, 184, 0.08);
+      }
+      .more-card .card-arrow {
+        color: var(--muted);
       }
       footer {
         margin-top: 48px;
@@ -248,8 +260,8 @@
           面向结果的操作清单，让第一次动手少走一点弯路，也为重复工作留下可复用的步骤。
         </p>
         <div class="stats">
-          <div class="stat"><strong>4</strong><span>教程分类</span></div>
-          <div class="stat"><strong>5</strong><span>已整理教程</span></div>
+          <div class="stat"><strong>3</strong><span>教程分类</span></div>
+          <div class="stat"><strong>6</strong><span>已整理教程</span></div>
           <div class="stat"><strong>∞</strong><span>持续完善</span></div>
         </div>
       </header>
@@ -311,31 +323,25 @@
             <span>已有专题</span><span class="card-arrow">开始阅读 →</span>
           </div></a
         >
-        <div class="card placeholder">
-          <div class="card-icon">⌘</div>
-          <div class="card-tag">效率工具</div>
-          <h2>开发工具配置</h2>
-          <p>记录编辑器、终端、调试工具和常用开发环境的配置方法。</p>
+        <a class="card" href="course/learningRedis.html"
+          ><div class="card-icon">⚡</div>
+          <div class="card-tag">数据与缓存</div>
+          <h2>Redis 实战指南</h2>
+          <p>
+            从安装到精通：五大数据类型、Python 实战六模式、缓存三大问题、
+            持久化与高可用、日常运维三板斧，跟着做就能用进项目。
+          </p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">↗</div>
-          <div class="card-tag">项目实践</div>
-          <h2>从零完成一个项目</h2>
-          <p>按目标拆分需求、实现、测试和发布，保留完整的可复现路径。</p>
+            <span>已有专题</span><span class="card-arrow">开始阅读 →</span>
+          </div></a
+        >
+        <div class="card more-card">
+          <div class="card-icon">＋</div>
+          <div class="card-tag">持续更新</div>
+          <h2>更多内容</h2>
+          <p>更多实战专题和案例仍在持续整理中，后续内容会持续补充。</p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">✓</div>
-          <div class="card-tag">操作清单</div>
-          <h2>常用检查清单</h2>
-          <p>汇总发布前检查、故障排查和项目交付时容易遗漏的事项。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
+            <span>持续更新</span><span class="card-arrow">更多内容</span>
           </div>
         </div>
       </div>

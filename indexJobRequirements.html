@@ -201,12 +201,24 @@
       .card-arrow {
         color: var(--accent);
       }
-      .placeholder {
+      .more-card {
         border-style: dashed;
-        background: transparent;
+        background: rgba(148, 163, 184, 0.03);
+        cursor: default;
       }
-      .placeholder::before {
+      .more-card::before {
         display: none;
+      }
+      .more-card:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .more-card .card-icon {
+        background: rgba(148, 163, 184, 0.08);
+      }
+      .more-card .card-arrow {
+        color: var(--muted);
       }
       footer {
         margin-top: 48px;
@@ -248,8 +260,8 @@
           从岗位描述出发，整理技能地图和阶段性学习计划，让学习目标与实际工作要求保持连接。
         </p>
         <div class="stats">
-          <div class="stat"><strong>4</strong><span>路线分类</span></div>
-          <div class="stat"><strong>0</strong><span>已整理岗位</span></div>
+          <div class="stat"><strong>1</strong><span>路线分类</span></div>
+          <div class="stat"><strong>1</strong><span>已整理岗位</span></div>
           <div class="stat"><strong>∞</strong><span>持续更新</span></div>
         </div>
       </header>
@@ -264,31 +276,13 @@
             <span>已有专题</span><span class="card-arrow">查看路线 →</span>
           </div></a
         >
-        <div class="card placeholder">
-          <div class="card-icon">⌁</div>
-          <div class="card-tag">后端方向</div>
-          <h2>Python 后端开发</h2>
-          <p>整理 Web 框架、数据库、接口设计、测试和部署等岗位能力要求。</p>
+        <div class="card more-card">
+          <div class="card-icon">＋</div>
+          <div class="card-tag">持续更新</div>
+          <h2>更多内容</h2>
+          <p>更多岗位路线与学习规划会在后续持续补充，帮助你更系统地成长。</p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">◈</div>
-          <div class="card-tag">前端方向</div>
-          <h2>前端开发</h2>
-          <p>围绕 JavaScript、Vue、React、工程化与浏览器能力建立学习阶段。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">↗</div>
-          <div class="card-tag">求职准备</div>
-          <h2>岗位分析与作品集</h2>
-          <p>记录岗位拆解、项目包装、简历准备和面试前的阶段性检查清单。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
+            <span>持续更新</span><span class="card-arrow">更多内容</span>
           </div>
         </div>
       </div>

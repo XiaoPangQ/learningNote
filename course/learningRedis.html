@@ -1,0 +1,2637 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redis 实战指南 · Zinx的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #42b883;
+        --accent-soft: rgba(66, 184, 131, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #42b883 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">⚡</span> Redis 实战指南</h2>
+        <p>从安装到缓存三大问题</p>
+      </div>
+      <a class="home-link" href="../indexCourse.html">← 返回教程目录</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">准备篇</li>
+        <li><a href="#ch01">1. Redis 是什么：为什么快</a></li>
+        <li><a href="#ch02">2. 安装与第一次连接</a></li>
+        <li class="toc-section-title">基础篇</li>
+        <li><a href="#ch03">3. 通用命令速览</a></li>
+        <li><a href="#ch04">4. 五大数据类型实战</a></li>
+        <li class="toc-section-title">实战篇</li>
+        <li><a href="#ch05">5. Python + Redis 应用</a></li>
+        <li><a href="#ch06">6. 缓存三大问题</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. 过期与内存淘汰</a></li>
+        <li><a href="#ch08">8. 持久化：RDB 与 AOF</a></li>
+        <li><a href="#ch09">9. 高可用：主从 / 哨兵 / 集群</a></li>
+        <li class="toc-section-title">运维篇</li>
+        <li><a href="#ch10">10. 日常运维与性能排查</a></li>
+        <li><a href="#ch11">11. 常见报错速查表</a></li>
+        <li><a href="#ch12">12. 验证清单与口诀总结</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">⚡ 实战指南 · 跟着做就能跑起来</span>
+        <h1>Redis 实战指南</h1>
+        <p>
+          从零开始掌握 Redis：安装连接、五大数据类型、Python 实战、缓存三大问题、
+          持久化与高可用、日常运维，每一步都附常见报错与解决方法，
+          跟着做完你就能把 Redis 真正用进项目里。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>12 个章节</span>
+          <span><span class="dot"></span>30+ 常见问题</span>
+          <span><span class="dot"></span>含 Python 实战代码</span>
+          <span><span class="dot"></span>以 Redis 7.x 为准</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> Redis 是什么：为什么快</h2>
+
+        <h3>一句话定义</h3>
+        <p>
+          Redis 是一个<strong>把数据存在内存里的 key-value 数据库</strong>。
+          传统数据库（MySQL）的数据放在硬盘上，Redis 的数据放在内存里——
+          而内存的读写速度比硬盘快几个数量级，这就是 Redis 快的根本原因。
+        </p>
+        <p>
+          打个比方：MySQL 是<strong>仓库</strong>（什么都能放，但取一次货要跑一趟仓库），
+          Redis 是<strong>柜台</strong>（热销货摆在手边，伸手就拿）。
+          实际项目里两者配合：MySQL 负责可靠存档，Redis 负责快速响应。
+        </p>
+
+        <div class="callout info">
+          <div class="callout-title">📌 先记住三句话，后面全部围绕它们展开</div>
+          ① <strong>快，是因为数据在内存</strong>；② <strong>数据可能丢，所以要持久化</strong>（RDB/AOF）；
+          ③ <strong>命令执行是单线程</strong>，所以并发安全、不用加锁，但也绝不能跑耗时命令。
+        </div>
+
+        <h3>为什么快：四个原因</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>原因</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>纯内存操作</strong></td>
+                <td>读写不碰硬盘，内存随机访问约 100ns 级，硬盘毫秒级</td>
+              </tr>
+              <tr>
+                <td><strong>单线程执行命令</strong></td>
+                <td>没有线程切换开销、没有锁竞争，一条命令执行时不会被别的命令插队</td>
+              </tr>
+              <tr>
+                <td><strong>IO 多路复用</strong></td>
+                <td>一个线程用 epoll 同时监听成千上万个连接，哪个有请求处理哪个</td>
+              </tr>
+              <tr>
+                <td><strong>高效数据结构</strong></td>
+                <td>SDS 字符串、跳表、压缩列表、哈希表，每种类型都是为场景专门优化过的</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          常见疑问：<em>「单线程不是慢吗？」</em>——命令执行单线程 ≠ 只有一个线程。
+          Redis 6.0 之后网络 IO 已经多线程化，但<strong>执行命令的核心仍是单线程</strong>。
+          这反而成了优点：天然原子性（<code>INCR</code> 并发加绝不会出错），也没有锁的开销。
+          代价是：一条慢命令会卡住所有人——这是后面所有「危险命令」警告的根源。
+        </p>
+
+        <h3>能干什么：八大应用场景</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>用到的类型 / 能力</th>
+                <th>举例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>缓存（最常见）</strong></td>
+                <td>String + TTL</td>
+                <td>商品详情、热点文章放缓存，MySQL 只做兜底</td>
+              </tr>
+              <tr>
+                <td><strong>Session 共享</strong></td>
+                <td>String + EXPIRE</td>
+                <td>多台 Web 服务器共享登录态</td>
+              </tr>
+              <tr>
+                <td><strong>排行榜</strong></td>
+                <td>ZSet</td>
+                <td>游戏积分榜、销量 Top10、热搜</td>
+              </tr>
+              <tr>
+                <td><strong>计数器 / 限流</strong></td>
+                <td>INCR 原子自增</td>
+                <td>文章阅读量、接口调用次数限制</td>
+              </tr>
+              <tr>
+                <td><strong>消息队列</strong></td>
+                <td>List / Stream</td>
+                <td>异步任务、削峰填谷</td>
+              </tr>
+              <tr>
+                <td><strong>分布式锁</strong></td>
+                <td>SET NX EX</td>
+                <td>多台服务器抢同一个任务时避免重复执行</td>
+              </tr>
+              <tr>
+                <td><strong>去重 / 交集</strong></td>
+                <td>Set</td>
+                <td>抽奖去重、共同好友、今日已签到用户</td>
+              </tr>
+              <tr>
+                <td><strong>签到 / UV 统计</strong></td>
+                <td>BitMap / HyperLogLog</td>
+                <td>一年签到只占 365 bit；亿级 UV 估算只占 12KB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>什么时候不该用 Redis</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>需求</th>
+                <th>为什么不适合</th>
+                <th>该用什么</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>数据量远大于内存</td>
+                <td>装不下就得淘汰，频繁穿透回源反而更慢</td>
+                <td>MySQL + 合理索引</td>
+              </tr>
+              <tr>
+                <td>强事务（转账、扣款）</td>
+                <td>Redis 事务不支持回滚</td>
+                <td>MySQL 事务</td>
+              </tr>
+              <tr>
+                <td>复杂关联查询</td>
+                <td>没有 join，只能按 key 取</td>
+                <td>关系型数据库</td>
+              </tr>
+              <tr>
+                <td>存大文件 / 图片</td>
+                <td>内存贵，大 value 拖垮所有请求</td>
+                <td>对象存储（OSS/COS）+ Redis 存地址</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 版本说明</div>
+          本指南以 <strong>Redis 7.x</strong> 为准，所有命令在 6.x / 5.x 上同样可用（个别新特性会标注）。
+          查看自己版本的命令：<code>redis-cli INFO server</code> 里的 <code>redis_version</code> 字段。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 安装与第一次连接</h2>
+
+        <h3>三条安装路线，先选一条</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>路线</th>
+                <th>适合</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Ubuntu apt 安装</strong></td>
+                <td>云服务器 / 虚拟机长期使用</td>
+                <td>最简单，systemd 托管，本指南主线</td>
+              </tr>
+              <tr>
+                <td><strong>Docker 安装</strong></td>
+                <td>本地开发、快速试验</td>
+                <td>一条命令起一个干净实例，随时销毁重建</td>
+              </tr>
+              <tr>
+                <td><strong>Windows</strong></td>
+                <td>只有 Windows 的本机学习</td>
+                <td>官方不出 Windows 版，用 WSL2 或 Docker Desktop</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>路线一：Ubuntu apt 安装（推荐）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 1. 安装（Ubuntu 20.04 / 22.04 / 24.04 通用）</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt update</span> &amp;&amp; <span class="cmd">sudo apt install redis-server -y</span>
+
+<span class="comment"># 2. 查看服务状态（看到 active (running) 即成功）</span>
+<span class="prompt">$</span> <span class="cmd">sudo systemctl status redis-server</span>
+
+<span class="comment"># 3. 设为开机自启（apt 安装通常已自动设置）</span>
+<span class="prompt">$</span> <span class="cmd">sudo systemctl enable redis-server</span>
+
+<span class="comment"># 4. 验证：能收到 PONG 就是活的</span>
+<span class="prompt">$</span> <span class="cmd">redis-cli ping</span>
+<span class="str">PONG</span></code></pre>
+        </div>
+
+        <h3>路线二：Docker 安装</h3>
+        <p>学过 Docker 的话这是最快的方式（参考之前的 Docker 教程），30 秒得到一个带密码、数据可持久化的实例：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># -d 后台运行；--restart always 宿主机重启后自动拉起</span>
+<span class="comment"># -v 把数据挂到数据卷，容器删了数据还在；--requirepass 设置密码</span>
+<span class="prompt">$</span> <span class="cmd">docker run -d --name redis --restart always -p 6379:6379 -v redis-data:/data redis:7 --requirepass "你的密码"</span>
+
+<span class="comment"># 进入容器里的 redis-cli（-a 带密码；--no-auth-warning 关掉密码明文提示）</span>
+<span class="prompt">$</span> <span class="cmd">docker exec -it redis redis-cli -a 你的密码 --no-auth-warning</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">ping</span>
+<span class="str">PONG</span></code></pre>
+        </div>
+
+        <h3>第一次连接：redis-cli 交互</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">$</span> <span class="cmd">redis-cli</span>              <span class="comment"># 直接进入交互模式</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">ping</span>          <span class="comment"># 测试连通性</span>
+<span class="str">PONG</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">set</span> <span class="var">hello:redis</span> <span class="str">"我跑起来了!"</span>
+<span class="str">OK</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">get</span> <span class="var">hello:redis</span>
+<span class="str">"我跑起来了!"</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">exit</span>          <span class="comment"># 或 Ctrl+D 退出</span></code></pre>
+        </div>
+
+        <h3>对外可用前：安全配置（必做）</h3>
+        <p>apt 安装后 Redis <strong>默认只监听 127.0.0.1</strong>，本机访问没问题；但要给别的机器（比如你的应用服务器）用，改配置前必须先做好安全：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">$</span> <span class="cmd">sudo vim /etc/redis/redis.conf</span>
+
+<span class="comment"># ---- 关键四项 ----</span>
+bind 0.0.0.0              <span class="comment"># 允许外部连接（改之前先确认下面两项已配好！）</span>
+requirepass 你的强密码      <span class="comment"># 必须设密码</span>
+protected-mode yes        <span class="comment"># 没设密码时拒绝外部访问，保险丝，保持 yes</span>
+port 6379                 <span class="comment"># 建议改成非默认端口（可选，减少被扫描概率）</span>
+
+<span class="comment"># ---- 可选：禁用危险命令 ----</span>
+rename-command FLUSHALL ""
+rename-command FLUSHDB ""
+rename-command KEYS ""
+
+<span class="comment"># 改完重启生效</span>
+<span class="prompt">$</span> <span class="cmd">sudo systemctl restart redis-server</span>
+
+<span class="comment"># 云服务器还要在安全组放行 6379（只对应用服务器 IP 放行，不要 0.0.0.0/0）</span></code></pre>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">⚠️ 红线：Redis 裸奔公网 = 被挖矿</div>
+          <strong>无密码 + bind 0.0.0.0 + 安全组全开的 Redis，平均几分钟内就会被扫描工具攻陷</strong>
+          （写 crontab 拉挖矿木马是经典套路）。上公网前自查三件事：
+          ① 设了 requirepass；② 安全组只放行应用服务器 IP；③ 能不开公网就只走内网。
+        </div>
+
+        <h3>本章常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Could not connect to Redis at 127.0.0.1:6379: Connection refused</code></td>
+                <td>服务没启动 / 端口不对</td>
+                <td><code>systemctl status redis-server</code> 看状态；Docker 方式用 <code>docker ps</code> 查</td>
+              </tr>
+              <tr>
+                <td>远程连不上，本机能连</td>
+                <td>bind 只监听 127.0.0.1 / 防火墙 / 安全组没放行</td>
+                <td>依次查三层：redis.conf 的 bind → 服务器防火墙 ufw → 云厂商安全组</td>
+              </tr>
+              <tr>
+                <td><code>(error) NOAUTH Authentication required</code></td>
+                <td>设了密码但连接时没带</td>
+                <td><code>redis-cli -a 密码</code> 或进入后 <code>AUTH 密码</code></td>
+              </tr>
+              <tr>
+                <td><code>(error) WRONGPASS</code></td>
+                <td>密码输错 / 配置与运行中不一致</td>
+                <td>核对 redis.conf 的 requirepass；改过配置要 restart</td>
+              </tr>
+              <tr>
+                <td>Windows 下没有 redis 命令</td>
+                <td>官方不出 Windows 版</td>
+                <td>用 WSL2（<code>wsl --install</code>）或 Docker Desktop，里面照常 apt 安装</td>
+              </tr>
+              <tr>
+                <td>Docker 里 <code>-a</code> 连接报警告</td>
+                <td>密码出现在命令行会有提示</td>
+                <td>加 <code>--no-auth-warning</code>，或进入后 AUTH</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 通用命令速览</h2>
+        <p>不管值是什么类型，这些命令对所有 key 都适用，先过一遍混个脸熟：</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+                <th>示例</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>EXISTS</code></td>
+                <td>key 是否存在</td>
+                <td><code>EXISTS user:1</code></td>
+                <td>返回 1 存在 / 0 不存在</td>
+              </tr>
+              <tr>
+                <td><code>TYPE</code></td>
+                <td>查看值的类型</td>
+                <td><code>TYPE user:1</code></td>
+                <td>返回 string / hash / list / set / zset</td>
+              </tr>
+              <tr>
+                <td><code>DEL</code></td>
+                <td>删除 key（同步阻塞）</td>
+                <td><code>DEL user:1</code></td>
+                <td>删大 key 会卡，大 key 用 UNLINK</td>
+              </tr>
+              <tr>
+                <td><code>UNLINK</code></td>
+                <td>异步删除</td>
+                <td><code>UNLINK big:key</code></td>
+                <td>后台慢慢回收内存，不卡主线程</td>
+              </tr>
+              <tr>
+                <td><code>EXPIRE</code></td>
+                <td>给 key 设过期秒数</td>
+                <td><code>EXPIRE user:1 3600</code></td>
+                <td>到期自动消失（缓存必备）</td>
+              </tr>
+              <tr>
+                <td><code>TTL</code></td>
+                <td>查看剩余存活时间</td>
+                <td><code>TTL user:1</code></td>
+                <td>见下方返回值表</td>
+              </tr>
+              <tr>
+                <td><code>PERSIST</code></td>
+                <td>去掉过期时间（永生）</td>
+                <td><code>PERSIST user:1</code></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><code>RENAME</code></td>
+                <td>改名</td>
+                <td><code>RENAME old new</code></td>
+                <td>new 已存在会被覆盖</td>
+              </tr>
+              <tr>
+                <td><code>DBSIZE</code></td>
+                <td>当前库 key 总数</td>
+                <td><code>DBSIZE</code></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><code>SCAN</code></td>
+                <td>游标分批遍历 key</td>
+                <td><code>SCAN 0 MATCH user:* COUNT 100</code></td>
+                <td><strong>生产唯一推荐的遍历方式</strong></td>
+              </tr>
+              <tr>
+                <td><code>KEYS</code></td>
+                <td>按模式列全部 key</td>
+                <td><code>KEYS user:*</code></td>
+                <td><strong>生产禁用</strong>，见下方警告</td>
+              </tr>
+              <tr>
+                <td><code>FLUSHDB / FLUSHALL</code></td>
+                <td>清空当前库 / 全部库</td>
+                <td>—</td>
+                <td><strong>核弹按钮</strong>，练习环境再按</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TTL 返回值速记</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>返回值</th>
+                <th>含义</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>-2</code></td>
+                <td>key 不存在（可能过期了，可能从没有过）</td>
+              </tr>
+              <tr>
+                <td><code>-1</code></td>
+                <td>存在，但永不过期</td>
+              </tr>
+              <tr>
+                <td><code>正整数</code></td>
+                <td>还剩多少秒到期</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">⚠️ 为什么生产禁用 KEYS *</div>
+          Redis 执行命令是<strong>单线程</strong>的。<code>KEYS *</code> 要一次遍历所有 key，
+          百万级 key 会卡住 Redis 几秒——这几秒里<strong>所有业务请求全部排队</strong>，等于全站卡死。
+          替代方案是 <code>SCAN</code>：像翻书一样一批一批找，每批之间可以处理别的请求，不卡。
+        </div>
+
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># SCAN 用法：返回 [游标, 一批 key]，游标变回 0 表示遍历结束</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">SCAN</span> <span class="flag">0</span> <span class="flag">MATCH</span> <span class="var">user:*</span> <span class="flag">COUNT</span> 100
+<span class="str">1) "42"                </span>  <span class="comment"># 下一批的游标</span>
+<span class="str">2) 1) "user:1"</span>
+<span class="str">   2) "user:2"</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">SCAN</span> <span class="flag">42</span> <span class="flag">MATCH</span> <span class="var">user:*</span> <span class="flag">COUNT</span> 100   <span class="comment"># 拿上次的游标继续</span>
+<span class="str">1) "0"                </span>  <span class="comment"># 游标为 0：遍历完了</span>
+<span class="str">2) 1) "user:99"</span></code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 一个冷知识：TTL 到 0 的瞬间，key 会立刻消失吗？</div>
+          不一定。过期删除用的是<strong>惰性删除 + 定期抽样</strong>：访问到过期 key 时顺手删掉，后台每 100ms
+          抽样主动删。所以个别 key 可能「过期了还占着内存」一小会儿，但对你来说逻辑上等价于不存在（GET 返回 nil）。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 五大数据类型实战</h2>
+        <p>这是 Redis 的核心。先给一张总表建立全局认知，再逐个实战：</p>
+
+        <h3>先看总表：什么场景用什么类型</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>一句话理解</th>
+                <th>典型场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>String</strong></td>
+                <td>一个 key 对一个值（字符串 / 数字 / JSON）</td>
+                <td>缓存、计数器、分布式锁</td>
+              </tr>
+              <tr>
+                <td><strong>Hash</strong></td>
+                <td>一个 key 对一张小表（字段-值），像 Python 字典</td>
+                <td>购物车、用户资料（可单独改一个字段）</td>
+              </tr>
+              <tr>
+                <td><strong>List</strong></td>
+                <td>双端队列，两头进出有序可重复</td>
+                <td>消息队列、最新列表</td>
+              </tr>
+              <tr>
+                <td><strong>Set</strong></td>
+                <td>无序自动去重的集合，能算交并差</td>
+                <td>抽奖、共同好友、去重</td>
+              </tr>
+              <tr>
+                <td><strong>ZSet</strong></td>
+                <td>带分数（score）的 Set，自动按分数排序</td>
+                <td>排行榜、延迟队列</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 选型口诀</div>
+          <strong>单值用 String，对象用 Hash；排队用 List，去重用 Set，排名用 ZSet。</strong>
+        </div>
+
+        <h3>4.1 String：最常用的一个</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 基本读写</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">set</span> <span class="var">user:name</span> <span class="str">"zinx"</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">get</span> <span class="var">user:name</span>
+<span class="str">"zinx"</span>
+
+<span class="comment"># 写入同时设置过期时间（缓存标配写法，3600 秒）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">set</span> <span class="var">goods:1001</span> <span class="str">'{"name":"键盘","price":199}'</span> <span class="flag">EX 3600</span>
+
+<span class="comment"># 不存在才写入（SETNX 语义，分布式锁的核心）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">set</span> <span class="var">lock:order</span> <span class="str">"abc"</span> <span class="flag">NX EX 10</span>
+<span class="str">OK</span>   <span class="comment"># 第二次执行返回 (nil)，因为已经存在</span>
+
+<span class="comment"># 计数器：INCR 原子自增，并发调用也绝不丢数</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">set</span> <span class="var">pv:article:1</span> 0
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">incr</span> <span class="var">pv:article:1</span>
+<span class="str">(integer) 1</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">incrby</span> <span class="var">pv:article:1</span> 100
+<span class="str">(integer) 101</span>
+
+<span class="comment"># 其他常用：批量读 / 追加 / 长度</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">mget</span> <span class="var">user:name</span> <span class="var">pv:article:1</span>    <span class="comment"># 一次读多个 key，省往返</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">append</span> <span class="var">user:name</span> <span class="str">"_dev"</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">strlen</span> <span class="var">user:name</span></code></pre>
+        </div>
+        <p>
+          <strong>为什么 INCR 并发安全？</strong> 因为命令是单线程排队执行的，
+          10 个请求同时 INCR，就是在队列里排成 10 个加 1，一个都不会丢——
+          这就是「天然原子性」，不需要任何锁。
+        </p>
+
+        <h3>4.2 Hash：把对象按字段存</h3>
+        <p>
+          存用户信息，String 只能把整个 JSON 塞进去（改一个字段要读出→改→写回）；
+          Hash 可以<strong>单独读写某个字段</strong>：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 存对象：一个 key（user:1）下挂多个字段</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">hset</span> <span class="var">user:1</span> <span class="flag">name</span> <span class="str">"zinx"</span> <span class="flag">city</span> <span class="str">"成都"</span> <span class="flag">vip</span> <span class="str">1</span>
+<span class="str">(integer) 3</span>
+
+<span class="comment"># 读单个字段 / 全部字段</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">hget</span> <span class="var">user:1</span> <span class="flag">name</span>
+<span class="str">"zinx"</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">hgetall</span> <span class="var">user:1</span>
+<span class="str">1) "name"</span>
+<span class="str">2) "zinx"</span>
+<span class="str">3) "city"</span>
+<span class="str">4) "成都"</span>
+<span class="str">5) "vip"</span>
+<span class="str">6) "1"</span>
+
+<span class="comment"># 只改一个字段，不用动其他数据（购物车加一件商品就是这个）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">hincrby</span> <span class="var">cart:user:1</span> <span class="flag">goods:1001</span> 1
+
+<span class="comment"># 判断字段是否存在 / 删除字段</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">hexists</span> <span class="var">user:1</span> <span class="flag">vip</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">hdel</span> <span class="var">user:1</span> <span class="flag">vip</span></code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>对比项</th>
+                <th>String 存 JSON</th>
+                <th>Hash 按字段存</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>改一个字段</td>
+                <td>GET 整个 JSON → 改 → SET 回去</td>
+                <td><strong>HSET 一个字段完事</strong></td>
+              </tr>
+              <tr>
+                <td>读整个对象</td>
+                <td><strong>一次 GET</strong></td>
+                <td>HGETALL（字段特别多时慢）</td>
+              </tr>
+              <tr>
+                <td>字段数</td>
+                <td>无限制</td>
+                <td>建议不超过几百个</td>
+              </tr>
+              <tr>
+                <td>适合</td>
+                <td>整读整写的小对象缓存</td>
+                <td>常改局部字段的活跃对象</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.3 List：双端队列</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 两头都能进、都能出</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">lpush</span> <span class="var">mq:tasks</span> <span class="str">"任务A"</span> <span class="str">"任务B"</span>   <span class="comment"># 从左塞（后塞的在左边）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">rpush</span> <span class="var">mq:tasks</span> <span class="str">"任务C"</span>            <span class="comment"># 从右塞</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">lrange</span> <span class="var">mq:tasks</span> 0 -1              <span class="comment"># 看全部（下标 0 到 -1）</span>
+<span class="str">1) "任务B"</span>
+<span class="str">2) "任务A"</span>
+<span class="str">3) "任务C"</span>
+
+<span class="comment"># 经典队列模式：LPUSH 进 + BRPOP 出（B=阻塞：队列空就等着，不空转耗 CPU）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">brpop</span> <span class="var">mq:tasks</span> 5   <span class="comment"># 阻塞最多 5 秒等新任务，超时返回 nil</span>
+<span class="str">1) "mq:tasks"</span>
+<span class="str">2) "任务C"</span>
+
+<span class="comment"># 最新列表：只取前 N 条</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">lrange</span> <span class="var">latest:news</span> 0 9    <span class="comment"># 最新 10 条</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">llen</span> <span class="var">latest:news</span>          <span class="comment"># 长度</span></code></pre>
+        </div>
+
+        <h3>4.4 Set：自动去重的袋子</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 添加自动去重</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">sadd</span> <span class="var">lottery:day1</span> <span class="str">"user:1"</span> <span class="str">"user:2"</span> <span class="str">"user:1"</span>
+<span class="str">(integer) 2</span>      <span class="comment"># 第三个重复，只加进去 2 个</span>
+
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">sismember</span> <span class="var">lottery:day1</span> <span class="str">"user:1"</span>   <span class="comment"># 是否已存在（签到去重就靠它）</span>
+<span class="str">(integer) 1</span>
+
+<span class="comment"># 随机弹出（抽奖）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">spop</span> <span class="var">lottery:day1</span> 1
+
+<span class="comment"># 交集：共同好友 / 共同关注</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">sinter</span> <span class="var">follow:A</span> <span class="var">follow:B</span>
+<span class="comment"># 并集 / 差集</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">sunion</span> <span class="var">follow:A</span> <span class="var">follow:B</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">sdiff</span> <span class="var">follow:A</span> <span class="var">follow:B</span>   <span class="comment"># A 关注了而 B 没关注的</span></code></pre>
+        </div>
+
+        <h3>4.5 ZSet：天生排行榜</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 添加成员+分数</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zadd</span> <span class="var">rank:score</span> 100 <span class="str">"player:1"</span> 250 <span class="str">"player:2"</span> 180 <span class="str">"player:3"</span>
+
+<span class="comment"># 按分数从低到高取（ZRANGE）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zrange</span> <span class="var">rank:score</span> 0 -1 <span class="flag">WITHSCORES</span>
+<span class="str">1) "player:1"</span>
+<span class="str">2) "100"</span>
+<span class="str">3) "player:3"</span>
+<span class="str">4) "180"</span>
+<span class="str">5) "player:2"</span>
+<span class="str">6) "250"</span>
+
+<span class="comment"># Top10 排行榜：从高到低取前 10（游戏/销量榜全是这一行）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zrevrange</span> <span class="var">rank:score</span> 0 9 <span class="flag">WITHSCORES</span>
+
+<span class="comment"># 加分（赢了 +50）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zincrby</span> <span class="var">rank:score</span> 50 <span class="str">"player:1"</span>
+
+<span class="comment"># 我的排名（从 0 开始数）/ 我的分数</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zrevrank</span> <span class="var">rank:score</span> <span class="str">"player:2"</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zscore</span> <span class="var">rank:score</span> <span class="str">"player:2"</span>
+
+<span class="comment"># 按分数范围取：100~200 分之间（延迟队列取"到期任务"就靠它）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">zrangebyscore</span> <span class="var">rank:score</span> 100 200</code></pre>
+        </div>
+
+        <h3>4.6 附加了解：三个特殊类型</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>绝活</th>
+                <th>典型用法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>BitMap</strong></td>
+                <td>一个 bit 存一个布尔，极省空间</td>
+                <td>签到：<code>SETBIT sign:uid:8 26 1</code>（8 月 26 日签到），<code>BITCOUNT</code> 统计签到天数</td>
+              </tr>
+              <tr>
+                <td><strong>HyperLogLog</strong></td>
+                <td>固定约 12KB 估算基数（误差 0.81%）</td>
+                <td>UV 统计：<code>PFADD uv:2026-08-31 uid1 uid2</code> → <code>PFCOUNT</code></td>
+              </tr>
+              <tr>
+                <td><strong>Stream</strong></td>
+                <td>真正的消息队列（消费组 + ACK 确认）</td>
+                <td>要求消息不丢的消费场景；简单场景用 List 就够</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>本章常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>(error) WRONGTYPE Operation against a key holding the wrong kind of value</code></td>
+                <td>用错命令：对 String 用了 HGET 等</td>
+                <td>先 <code>TYPE key</code> 看类型，换对应命令；或换一个 key 名</td>
+              </tr>
+              <tr>
+                <td>INCR 报 <code>(error) ERR value is not an integer or out of range</code></td>
+                <td>value 是非数字字符串</td>
+                <td>INCR 只能用于纯数字的 String</td>
+              </tr>
+              <tr>
+                <td>SET 中文后 GET 显示乱码字节</td>
+                <td>redis-cli 默认按字节显示</td>
+                <td>启动加 <code>--raw</code> 参数</td>
+              </tr>
+              <tr>
+                <td>HGETALL / LRANGE 0 -1 后界面卡住</td>
+                <td>集合元素太多，一次拉爆了</td>
+                <td>用 HSCAN / 分页 <code>LRANGE key 0 99</code>；正式环境见第 10 章 bigkey 治理</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> Python + Redis 应用实战</h2>
+
+        <h3>安装与第一次连接</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">$</span> <span class="cmd">pip install redis</span>    <span class="comment"># redis-py 5.x，pip 里的 redis 包就是官方库</span></code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">import</span> redis
+
+r = redis.Redis(
+    host=<span class="str">"127.0.0.1"</span>,
+    port=<span class="num">6379</span>,
+    password=<span class="str">"你的密码"</span>,
+    db=<span class="num">0</span>,
+    decode_responses=<span class="kw">True</span>,   <span class="comment"># 重要！不加返回的是 bytes，加了对中文直接友好</span>
+)
+
+<span class="kw">print</span>(r.<span class="var">ping</span>())           <span class="comment"># True 即连接成功</span>
+r.<span class="var">set</span>(<span class="str">"py:hello"</span>, <span class="str">"你好 Redis"</span>, ex=<span class="num">60</span>)
+<span class="kw">print</span>(r.<span class="var">get</span>(<span class="str">"py:hello"</span>))   <span class="comment"># 你好 Redis</span></code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 最常见的坑：忘记 decode_responses</div>
+          不加这个参数，<code>get</code> 返回的是 <code>b'\xe4\xbd\xa0\xe5\xa5\xbd'</code> 这样的 bytes，
+          打印、比较、json.loads 全出错。两种解法：连接时加 <code>decode_responses=True</code>（推荐），
+          或每次手动 <code>.decode()</code>。
+        </div>
+
+        <h3>生产写法：用连接池</h3>
+        <p>
+          每次操作都新建 TCP 连接太浪费。连接池让连接复用——Web 框架（Flask/FastAPI/Django）里
+          <strong>全局建一个池</strong>，所有请求共用：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">import</span> redis
+
+<span class="comment"># 全局只建一次（比如放在 config.py / app 启动时）</span>
+pool = redis.ConnectionPool(
+    host=<span class="str">"127.0.0.1"</span>, port=<span class="num">6379</span>, password=<span class="str">"你的密码"</span>,
+    max_connections=<span class="num">50</span>, decode_responses=<span class="kw">True</span>,
+    socket_timeout=<span class="num">3</span>, socket_connect_timeout=<span class="num">3</span>,   <span class="comment"># 网络抖动时不至于把请求拖死</span>
+)
+r = redis.Redis(connection_pool=pool)
+
+<span class="comment"># 另一种等价写法：URL 方式，配置文件里更整洁</span>
+r = redis.Redis.<span class="var">from_url</span>(<span class="str">"redis://:你的密码@127.0.0.1:6379/0"</span>,
+                          decode_responses=<span class="kw">True</span>)</code></pre>
+        </div>
+
+        <h3>五大数据类型的 Python 写法</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># ---- String ----</span>
+r.<span class="var">set</span>(<span class="str">"name"</span>, <span class="str">"zinx"</span>, ex=<span class="num">3600</span>)       <span class="comment"># ex=过期秒数</span>
+r.<span class="var">get</span>(<span class="str">"name"</span>)
+r.<span class="var">incr</span>(<span class="str">"counter"</span>)                      <span class="comment"># 自增</span>
+r.<span class="var">set</span>(<span class="str">"lock:job"</span>, <span class="str">"1"</span>, nx=<span class="kw">True</span>, ex=<span class="num">10</span>)    <span class="comment"># 不存在才写</span>
+
+<span class="comment"># ---- Hash ----</span>
+r.<span class="var">hset</span>(<span class="str">"user:1"</span>, mapping={<span class="str">"name"</span>: <span class="str">"zinx"</span>, <span class="str">"city"</span>: <span class="str">"成都"</span>})
+r.<span class="var">hget</span>(<span class="str">"user:1"</span>, <span class="str">"name"</span>)
+r.<span class="var">hgetall</span>(<span class="str">"user:1"</span>)                      <span class="comment"># {'name': 'zinx', 'city': '成都'}</span>
+r.<span class="var">hincrby</span>(<span class="str">"cart:1"</span>, <span class="str">"goods:1001"</span>, <span class="num">1</span>)    <span class="comment"># 购物车 +1</span>
+
+<span class="comment"># ---- List ----</span>
+r.<span class="var">lpush</span>(<span class="str">"mq:tasks"</span>, <span class="str">"任务A"</span>)
+r.<span class="var">brpop</span>(<span class="str">"mq:tasks"</span>, timeout=<span class="num">5</span>)            <span class="comment"># 阻塞 5 秒等任务</span>
+
+<span class="comment"># ---- Set ----</span>
+r.<span class="var">sadd</span>(<span class="str">"lottery"</span>, <span class="str">"user:1"</span>, <span class="str">"user:2"</span>)
+r.<span class="var">sismember</span>(<span class="str">"lottery"</span>, <span class="str">"user:1"</span>)            <span class="comment"># True 已参与</span>
+r.<span class="var">sinter</span>(<span class="str">"follow:A"</span>, <span class="str">"follow:B"</span>)          <span class="comment"># 共同关注</span>
+
+<span class="comment"># ---- ZSet ----</span>
+r.<span class="var">zadd</span>(<span class="str">"rank"</span>, {<span class="str">"player:1"</span>: <span class="num">100</span>})
+r.<span class="var">zincrby</span>(<span class="str">"rank"</span>, <span class="num">50</span>, <span class="str">"player:1"</span>)
+r.<span class="var">zrevrange</span>(<span class="str">"rank"</span>, <span class="num">0</span>, <span class="num">9</span>, withscores=<span class="kw">True</span>)   <span class="comment"># Top10</span></code></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 记忆技巧</div>
+          redis-py 的方法名就是 Redis 命令的<strong>小写</strong>：命令 <code>HGETALL</code> → 方法
+          <code>hgetall()</code>，命令 <code>ZREVRANGE</code> → <code>zrevrange()</code>。
+          会敲命令就会写 Python。
+        </div>
+
+        <h3>六个高频实战模式</h3>
+
+        <h4>模式一：旁路缓存（最核心，务必掌握）</h4>
+        <p>读：先查缓存 → 没有再查数据库 → 查到回填缓存。写：先更新数据库，<strong>再删除缓存</strong>：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">import</span> json
+
+<span class="kw">def</span> <span class="var">get_user</span>(user_id):
+    cache_key = <span class="str">f"user:{user_id}"</span>
+    <span class="comment"># ① 先查缓存</span>
+    cached = r.<span class="var">get</span>(cache_key)
+    <span class="kw">if</span> cached:
+        <span class="kw">return</span> json.<span class="var">loads</span>(cached)           <span class="comment"># 命中，直接返回（快）</span>
+    <span class="comment"># ② 没命中，查数据库（慢）</span>
+    user = db.<span class="var">query</span>(<span class="str">"SELECT * FROM users WHERE id=%s"</span>, user_id)
+    <span class="comment"># ③ 回填缓存，1 小时过期</span>
+    r.<span class="var">set</span>(cache_key, json.<span class="var">dumps</span>(user), ex=<span class="num">3600</span>)
+    <span class="kw">return</span> user
+
+<span class="kw">def</span> <span class="var">update_user</span>(user_id, **fields):
+    db.<span class="var">execute</span>(<span class="str">"UPDATE users SET ... WHERE id=%s"</span>, user_id)   <span class="comment"># 先更新库</span>
+    r.<span class="var">delete</span>(<span class="str">f"user:{user_id}"</span>)   <span class="comment"># 再删缓存（下次读自动回填新值）</span></code></pre>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">📌 为什么是「删缓存」而不是「改缓存」？</div>
+          改缓存要算出新值再写入，并发两个写请求容易把旧值写回去（脏数据）；
+          删除是无脑幂等操作——下次读的时候自然会加载最新数据。这套「Cache Aside」是业界默认答案。
+        </div>
+
+        <h4>模式二：计数器 / 接口限流</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 文章阅读量：一条命令搞定，天然并发安全</span>
+r.<span class="var">incr</span>(<span class="str">f"pv:article:{article_id}"</span>)
+
+<span class="comment"># 接口限流：每个 IP 每分钟最多 60 次</span>
+<span class="kw">def</span> <span class="var">allow_request</span>(ip):
+    key = <span class="str">f"rate:{ip}"</span>
+    current = r.<span class="var">incr</span>(key)
+    <span class="kw">if</span> current == <span class="num">1</span>:
+        r.<span class="var">expire</span>(key, <span class="num">60</span>)        <span class="comment"># 第一次访问时设置 60 秒窗口</span>
+    <span class="kw">return</span> current &lt;= <span class="num">60</span></code></pre>
+        </div>
+
+        <h4>模式三：排行榜</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 玩家得分变动</span>
+r.<span class="var">zincrby</span>(<span class="str">"rank:score"</span>, <span class="num">25</span>, <span class="str">"player:1001"</span>)
+
+<span class="comment"># 拉取 Top10（返回 [(成员, 分数), ...]，从高到低）</span>
+top10 = r.<span class="var">zrevrange</span>(<span class="str">"rank:score"</span>, <span class="num">0</span>, <span class="num">9</span>, withscores=<span class="kw">True</span>)
+
+<span class="comment"># 我的全国排名（0 = 第一名）</span>
+my_rank = r.<span class="var">zrevrank</span>(<span class="str">"rank:score"</span>, <span class="str">"player:1001"</span>)</code></pre>
+        </div>
+
+        <h4>模式四：分布式锁（面试高频）</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">import</span> uuid, time
+
+<span class="comment"># 加锁：NX 保证只有一个客户端能成功；EX 是锁的自动过期（防止持有者崩了锁永远不释放）</span>
+<span class="kw">def</span> <span class="var">acquire_lock</span>(name, timeout=<span class="num">10</span>):
+    lock_id = <span class="var">str</span>(uuid.<span class="var">uuid4</span>())       <span class="comment"># 每个持锁者一个唯一 ID</span>
+    deadline = time.<span class="var">time</span>() + timeout
+    <span class="kw">while</span> time.<span class="var">time</span>() &lt; deadline:      <span class="comment"># 没抢到就自旋重试</span>
+        <span class="kw">if</span> r.<span class="var">set</span>(<span class="str">f"lock:{name}"</span>, lock_id, nx=<span class="kw">True</span>, ex=<span class="num">10</span>):
+            <span class="kw">return</span> lock_id
+        time.<span class="var">sleep</span>(<span class="num">0.05</span>)
+    <span class="kw">return</span> <span class="kw">None</span>                       <span class="comment"># 超时没抢到</span>
+
+<span class="comment"># 解锁：必须用 Lua 校验"锁还是我的"再删，防止误删别人的锁</span>
+RELEASE_LUA = <span class="str">"""
+if redis.call('GET', KEYS[1]) == ARGV[1] then
+    return redis.call('DEL', KEYS[1])
+else
+    return 0
+end
+"""</span>
+
+<span class="kw">def</span> <span class="var">release_lock</span>(name, lock_id):
+    <span class="kw">return</span> r.<span class="var">eval</span>(RELEASE_LUA, <span class="num">1</span>, <span class="str">f"lock:{name}"</span>, lock_id)
+
+<span class="comment"># 使用</span>
+lock_id = <span class="var">acquire_lock</span>(<span class="str">"sync_job"</span>)
+<span class="kw">if</span> lock_id:
+    <span class="kw">try</span>:
+        <span class="var">do_sync_job</span>()               <span class="comment"># 三台服务器同时跑，只有一台真正执行</span>
+    <span class="kw">finally</span>:
+        <span class="var">release_lock</span>(<span class="str">"sync_job"</span>, lock_id)</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 为什么解锁要用 Lua？</div>
+          「先 GET 判断再 DEL」是两步操作，中间可能锁恰好过期被别人抢走——DEL 删掉的就是别人的锁。
+          Lua 脚本在 Redis 里<strong>原子执行</strong>（判断+删除一气呵成），不会被人插队。
+          生产更完善的方案直接用现成库 <code>pip install redlock</code>。
+        </div>
+
+        <h4>模式五：简单异步任务队列</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 生产者（Web 接口里）：发邮件、生成报表等耗时操作扔进队列</span>
+r.<span class="var">lpush</span>(<span class="str">"mq:email"</span>, json.<span class="var">dumps</span>({<span class="str">"to"</span>: <span class="str">"a@x.com"</span>, <span class="str">"subject"</span>: <span class="str">"注册成功"</span>}))
+
+<span class="comment"># 消费者（独立进程跑的 worker）</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    item = r.<span class="var">brpop</span>(<span class="str">"mq:email"</span>, timeout=<span class="num">0</span>)    <span class="comment"># 阻塞等任务，不空转</span>
+    <span class="kw">if</span> item:
+        _, data = item
+        <span class="var">send_email</span>(json.<span class="var">loads</span>(data))</code></pre>
+        </div>
+
+        <h4>模式六：登录 Session / 验证码</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 登录成功：生成 session，30 分钟有效（setex = set + expire 合一）</span>
+session_id = <span class="var">str</span>(uuid.uuid4())
+r.<span class="var">setex</span>(<span class="str">f"sess:{session_id}"</span>, <span class="num">1800</span>, json.<span class="var">dumps</span>({<span class="str">"user_id"</span>: <span class="num">42</span>}))
+
+<span class="comment"># 每次请求校验：中间件里做</span>
+<span class="kw">def</span> <span class="var">get_session</span>(session_id):
+    data = r.<span class="var">get</span>(<span class="str">f"sess:{session_id}"</span>)
+    <span class="kw">return</span> json.<span class="var">loads</span>(data) <span class="kw">if</span> data <span class="kw">else</span> <span class="kw">None</span>      <span class="comment"># None = 未登录/已过期</span>
+
+<span class="comment"># 验证码：5 分钟有效，天然倒计时</span>
+r.<span class="var">setex</span>(<span class="str">f"code:{phone}"</span>, <span class="num">300</span>, <span class="str">"836291"</span>)</code></pre>
+        </div>
+
+        <h3>本章常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ConnectionError: Error 111 Connection refused</code></td>
+                <td>Redis 没启动 / 地址端口错 / bind 限制</td>
+                <td>服务器上 <code>redis-cli ping</code> 先测通；再查 host/port/密码</td>
+              </tr>
+              <tr>
+                <td><code>AuthenticationError: Authentication required</code></td>
+                <td>忘传 password</td>
+                <td>连接参数加 <code>password=</code></td>
+              </tr>
+              <tr>
+                <td>返回值是 <code>b'xxx'</code> 字节串</td>
+                <td>没开 decode_responses</td>
+                <td>连接参数加 <code>decode_responses=True</code></td>
+              </tr>
+              <tr>
+                <td><code>ResponseError: WRONGTYPE</code></td>
+                <td>key 类型与方法不符</td>
+                <td><code>print(r.type(key))</code> 先看类型</td>
+              </tr>
+              <tr>
+                <td>偶发 <code>TimeoutError</code></td>
+                <td>慢查询 / bigkey / 网络抖动</td>
+                <td>连接参数设 <code>socket_timeout</code> 快速失败；按第 10 章排查慢查询</td>
+              </tr>
+              <tr>
+                <td>Web 应用里连接越积越多</td>
+                <td>每次请求都新建 Redis 客户端</td>
+                <td>全局连接池（本文写法），不要在视图函数里创建连接</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 缓存三大问题：穿透 / 击穿 / 雪崩</h2>
+        <p>只要把 Redis 当缓存用，这三个问题迟早会撞上，也是面试必问。先看正常流程长什么样：</p>
+        <div class="diagram">
+          <pre>
+ 正常的缓存流程（一切美好）
+ ──────────────────────────────
+ 请求 ──► ① 查 Redis ──命中──► 直接返回（快）
+              │
+             未命中
+              ▼
+         ② 查 MySQL ──► ③ 结果写回 Redis（带回 TTL）──► 返回
+</pre>
+        </div>
+
+        <h3>6.1 缓存穿透：查「根本不存在」的数据</h3>
+        <p>
+          <strong>现象</strong>：请求的 key 在缓存和数据库里<strong>都不存在</strong>（比如恶意攻击者拿
+          <code>id=-1</code>、<code>id=99999999</code> 疯狂请求）。缓存永远不命中，
+          每个请求都直奔 MySQL——缓存形同虚设。
+        </p>
+        <div class="diagram">
+          <pre>
+ 穿透：恶意请求打在"不存在的数据"上
+ ──────────────────────────────
+ 恶意请求 ──► Redis 没有 ──► MySQL 也没有 ──► 无法回填缓存
+    ▲           （永远不会命中）              │
+    └──────── 下一个同样的请求，还是全落到 MySQL ─┘
+</pre>
+        </div>
+        <p><strong>三种解法（组合使用）：</strong></p>
+        <ol class="steps">
+          <li>
+            <strong>缓存空值</strong>：数据库也查不到时，往 Redis 写一个空标记（短 TTL），
+            下次同样的请求就被挡在缓存层
+          </li>
+          <li>
+            <strong>入口校验</strong>：<code>id &lt;= 0</code>、非法格式直接拒绝，根本不往下走
+          </li>
+          <li>
+            <strong>布隆过滤器</strong>：启动时把所有合法 id 装进过滤器，请求先问一句
+            「这个 id 可能存在吗」，不存在直接返回（适合 id 集合稳定的场景）
+          </li>
+        </ol>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="kw">def</span> <span class="var">get_goods</span>(goods_id):
+    <span class="kw">if</span> goods_id &lt;= <span class="num">0</span>:                         <span class="comment"># 解法② 入口校验</span>
+        <span class="kw">return</span> <span class="kw">None</span>
+    key = <span class="str">f"goods:{goods_id}"</span>
+    cached = r.<span class="var">get</span>(key)
+    <span class="kw">if</span> cached == <span class="str">"__NULL__"</span>:                    <span class="comment"># 解法① 空值缓存命中</span>
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">if</span> cached:
+        <span class="kw">return</span> json.<span class="var">loads</span>(cached)
+    goods = db.<span class="var">query_goods</span>(goods_id)
+    <span class="kw">if</span> goods <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="comment"># 库里也没有：写空标记，60 秒后过期</span>
+        <span class="comment"># （TTL 要短，防止新商品上架后一直返回"不存在"）</span>
+        r.<span class="var">set</span>(key, <span class="str">"__NULL__"</span>, ex=<span class="num">60</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    r.<span class="var">set</span>(key, json.<span class="var">dumps</span>(goods), ex=<span class="num">3600</span>)
+    <span class="kw">return</span> goods</code></pre>
+        </div>
+
+        <h3>6.2 缓存击穿：热点 key 过期的那一瞬间</h3>
+        <p>
+          <strong>现象</strong>：某个<strong>超级热点的 key</strong> 过期的瞬间，
+          大量并发同时未命中，全部涌向数据库重建缓存，数据库瞬间被打爆。
+          典型场景：秒杀商品详情、热搜词条。
+        </p>
+        <div class="diagram">
+          <pre>
+ 击穿：热 key 过期瞬间，重建请求挤破门
+ ──────────────────────────────
+       ┌── 请求1 ──┐
+       ├── 请求2 ──┤    热点 key 过期
+       ├── 请求3 ──┼──► 全部同时未命中 ──► 全部去查 MySQL（爆）
+       └── 请求N ──┘
+</pre>
+        </div>
+        <p><strong>两种主流解法：</strong></p>
+        <ol class="steps">
+          <li>
+            <strong>互斥锁重建</strong>：只放一个请求去查库重建，其他请求短暂等待后重读缓存。
+            保证一致，但其他请求要等一下
+          </li>
+          <li>
+            <strong>逻辑过期</strong>：key 不设物理 TTL，把过期时间写进 value 里；
+            发现逻辑过期时<strong>先返回旧数据</strong>，同时异步开一个线程去重建。
+            绝不阻塞用户，但短时间内返回的是旧数据
+          </li>
+        </ol>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 解法①：互斥锁重建（简单可靠，中小项目首选）</span>
+<span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="var">get_hot_data</span>(key):
+    cached = r.<span class="var">get</span>(key)
+    <span class="kw">if</span> cached:
+        <span class="kw">return</span> json.<span class="var">loads</span>(cached)
+
+    lock_key = <span class="str">f"rebuild:{key}"</span>
+    <span class="comment"># 抢到锁的幸运儿去查库</span>
+    <span class="kw">if</span> r.<span class="var">set</span>(lock_key, <span class="str">"1"</span>, nx=<span class="kw">True</span>, ex=<span class="num">10</span>):
+        <span class="kw">try</span>:
+            data = db.<span class="var">query_hot</span>(key)
+            r.<span class="var">set</span>(key, json.<span class="var">dumps</span>(data), ex=<span class="num">3600</span>)
+            <span class="kw">return</span> data
+        <span class="kw">finally</span>:
+            r.<span class="var">delete</span>(lock_key)
+
+    <span class="comment"># 没抢到锁的：小睡片刻后重读缓存（重建大概率已完成）</span>
+    time.<span class="var">sleep</span>(<span class="num">0.1</span>)
+    <span class="kw">return</span> <span class="var">get_hot_data</span>(key)</code></pre>
+        </div>
+
+        <h3>6.3 缓存雪崩：一大片同时倒下</h3>
+        <p><strong>两种形态：</strong></p>
+        <ul>
+          <li>
+            <strong>大面积同时过期</strong>：批量导入数据时给了相同的 TTL，到期那一刻洪峰直冲数据库
+          </li>
+          <li>
+            <strong>Redis 整个挂了</strong>：所有请求全部落到数据库，连锁雪崩
+          </li>
+        </ul>
+        <p><strong>四件武器：</strong></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>武器</th>
+                <th>针对形态</th>
+                <th>做法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TTL 加随机值</td>
+                <td>同时过期</td>
+                <td><code>ex = 3600 + random.randint(0, 600)</code>，把过期时间打散</td>
+              </tr>
+              <tr>
+                <td>高可用</td>
+                <td>Redis 挂掉</td>
+                <td>主从 + 哨兵（第 9 章），挂了自动切</td>
+              </tr>
+              <tr>
+                <td>多级缓存</td>
+                <td>两者皆可</td>
+                <td>本地缓存（进程内 dict）→ Redis → DB，层层兜底</td>
+              </tr>
+              <tr>
+                <td>限流降级</td>
+                <td>最后一道墙</td>
+                <td>DB 前加限流（每秒最多 N 个回源请求），超出的返回默认值/排队</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>三兄弟对照表（面试就答这张）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>问题</th>
+                <th>本质区别</th>
+                <th>一句话解法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>穿透</strong></td>
+                <td>查<strong>不存在</strong>的数据，缓存永远无法命中</td>
+                <td>缓存空值 + 入口校验 + 布隆过滤器</td>
+              </tr>
+              <tr>
+                <td><strong>击穿</strong></td>
+                <td><strong>单个热点</strong> key 过期瞬间被击穿</td>
+                <td>互斥锁重建 / 逻辑过期</td>
+              </tr>
+              <tr>
+                <td><strong>雪崩</strong></td>
+                <td><strong>大面积</strong>同时过期或 Redis 整体宕机</td>
+                <td>TTL 加随机 + 高可用 + 多级缓存 + 限流</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 口诀：三个问题一句话记住</div>
+          <strong>穿透是「查不到」：空值缓存来兜底；<br />
+          击穿是「热 key 掉」：互斥重建别拥挤；<br />
+          雪崩是「一起倒」：过期加随机、高可用不能少。</strong>
+        </div>
+      </section>
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 过期与内存淘汰</h2>
+
+        <h3>内存满了会怎样：先懂 maxmemory</h3>
+        <p>
+          Redis 把数据全放内存，内存不是无限的。<code>maxmemory</code> 设定可用上限，
+          超过之后怎么办？——由<strong>淘汰策略（maxmemory-policy）</strong>决定。
+          两者都可以不重启直接改：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 查看当前配置</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">CONFIG</span> <span class="flag">GET</span> maxmemory
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">CONFIG</span> <span class="flag">GET</span> maxmemory-policy
+
+<span class="comment"># 运行时立即生效（重启后失效；要长期生效写进 redis.conf）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">CONFIG</span> <span class="flag">SET</span> maxmemory 512mb
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">CONFIG</span> <span class="flag">SET</span> maxmemory-policy allkeys-lru
+
+<span class="comment"># 顺便看内存占用情况</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">INFO</span> <span class="flag">memory</span>     <span class="comment"># 重点看 used_memory_human</span></code></pre>
+        </div>
+
+        <h3>八种淘汰策略一览</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>策略</th>
+                <th>淘汰谁</th>
+                <th>适合</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>noeviction</code>（默认）</td>
+                <td><strong>谁也不淘汰，直接报错</strong>拒绝写入</td>
+                <td>数据不能丢的场景；缓存场景不建议</td>
+              </tr>
+              <tr>
+                <td><code>allkeys-lru</code></td>
+                <td>所有 key 里，淘汰最久没用的</td>
+                <td><strong>纯缓存场景首选</strong></td>
+              </tr>
+              <tr>
+                <td><code>allkeys-lfu</code></td>
+                <td>所有 key 里，淘汰访问次数最少的</td>
+                <td>缓存且区分「偶尔访问一次」和「高频访问」</td>
+              </tr>
+              <tr>
+                <td><code>allkeys-random</code></td>
+                <td>所有 key 里，随机淘汰</td>
+                <td>极少用</td>
+              </tr>
+              <tr>
+                <td><code>volatile-lru</code></td>
+                <td>设了 TTL 的 key 里，淘汰最久没用的</td>
+                <td>缓存+持久数据混用一个实例</td>
+              </tr>
+              <tr>
+                <td><code>volatile-lfu</code></td>
+                <td>设了 TTL 的 key 里，淘汰访问最少的</td>
+                <td>同上</td>
+              </tr>
+              <tr>
+                <td><code>volatile-random</code></td>
+                <td>设了 TTL 的 key 里，随机淘汰</td>
+                <td>极少用</td>
+              </tr>
+              <tr>
+                <td><code>volatile-ttl</code></td>
+                <td>设了 TTL 的 key 里，淘汰剩余存活时间最短的</td>
+                <td>让「快过期的先走」</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 选型速记</div>
+          LRU 看「多久没访问」，LFU 看「访问频率高不高」。
+          <strong>纯缓存选 allkeys-lru / allkeys-lfu；混着存数据选 volatile 系列；
+          一点都不能丢选 noeviction（但要盯内存，写满会报错）。</strong>
+          生产上推荐「缓存和存储分实例部署」，缓存实例用 allkeys-lru，谁也不用纠结。
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 一个高频线上事故</div>
+          某天应用突然大量报错 <code>(error) OOM command not allowed when used memory &gt; 'maxmemory'</code>
+          ——就是默认的 <code>noeviction</code> 策略 + 内存写满。缓存场景的解法：
+          <code>CONFIG SET maxmemory-policy allkeys-lru</code> 立即恢复写入，
+          再考虑加内存或清理大 key。
+        </div>
+
+        <h3>过期 key 是怎么被删掉的</h3>
+        <p>上一章说过「惰性删除 + 定期抽样」，这里补一个推论：</p>
+        <ul>
+          <li>
+            <strong>大量 key 设了相同的 TTL</strong>，到期后内存不一定立刻回落——定期抽样删不过来时，
+            可能要等访问触发惰性删除。这也是<strong>雪崩问题里「TTL 加随机值」的另一个理由</strong>
+          </li>
+          <li>
+            想立刻回收内存的写法：删 key 用 <code>UNLINK</code>（异步），比 <code>DEL</code> 友好
+          </li>
+          <li>
+            <code>INFO memory</code> 里的 <code>expired_keys</code> 可以看到累计删除的过期 key 数量
+          </li>
+        </ul>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 持久化：RDB 与 AOF</h2>
+        <p>
+          内存一断电就清空。Redis 提供两套持久化机制把数据落到硬盘，
+          重启后能恢复：<strong>RDB（快照）</strong>和 <strong>AOF（命令日志）</strong>。
+        </p>
+
+        <h3>RDB：定时快照</h3>
+        <p>
+          相当于给内存<strong>拍照片</strong>：某一时刻的全部数据一次性写进 <code>dump.rdb</code> 文件。
+          触发方式有自动（配置规则）和手动：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># redis.conf 中的自动触发规则（默认）</span>
+save 3600 1      <span class="comment"># 3600 秒内至少 1 次修改 → 触发快照</span>
+save 300 100     <span class="comment"># 300 秒内至少 100 次修改 → 触发</span>
+save 60 10000    <span class="comment"># 60 秒内至少 10000 次修改 → 触发</span>
+
+<span class="comment"># 手动触发</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">BGSAVE</span>    <span class="comment"># 后台保存（fork 子进程去干，不阻塞主线程，推荐）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">SAVE</span>      <span class="comment"># 前台保存（阻塞所有人，只该在维护窗口用）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">LASTSAVE</span>  <span class="comment"># 上次成功保存的时间戳</span></code></pre>
+        </div>
+        <p>
+          <strong>优点</strong>：文件紧凑、恢复飞快（直接把照片加载进内存）。
+          <strong>缺点</strong>：两次快照之间的数据会丢——比如每 5 分钟一次快照，最坏丢最近 5 分钟。
+        </p>
+
+        <h3>AOF：命令日志</h3>
+        <p>
+          相当于<strong>记账</strong>：每条写命令都追加记录到 <code>appendonly.aof</code>，
+          重启时把日志从头到尾重放一遍恢复数据。丢多少取决于刷盘策略：
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>appendfsync 策略</th>
+                <th>含义</th>
+                <th>丢数据</th>
+                <th>性能</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>always</code></td>
+                <td>每条命令都刷盘</td>
+                <td>最多丢 1 条</td>
+                <td>最慢，一般不用</td>
+              </tr>
+              <tr>
+                <td><code>everysec</code>（推荐）</td>
+                <td>每秒刷一次盘</td>
+                <td>最多丢 1 秒</td>
+                <td>兼顾性能与安全</td>
+              </tr>
+              <tr>
+                <td><code>no</code></td>
+                <td>交给操作系统，攒多了自己刷</td>
+                <td>不可控</td>
+                <td>最快</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          日志会越记越长（「+1 又 -1」这种抵消操作都留着），所以有 <strong>AOF 重写</strong>：
+          把当前内存状态用最少的命令重新写一份新日志（自动触发条件
+          <code>auto-aof-rewrite-percentage 100</code>：日志比上次重写后翻倍就重写）。
+        </p>
+
+        <h3>怎么选：一张表 + 一个推荐</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>对比项</th>
+                <th>RDB</th>
+                <th>AOF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>本质</td>
+                <td>某一时刻的全量照片</td>
+                <td>全部写命令的日志</td>
+              </tr>
+              <tr>
+                <td>文件大小</td>
+                <td><strong>小</strong></td>
+                <td>大（重写后可缩小）</td>
+              </tr>
+              <tr>
+                <td>恢复速度</td>
+                <td><strong>快</strong>（直接加载）</td>
+                <td>慢（逐条重放）</td>
+              </tr>
+              <tr>
+                <td>数据丢失</td>
+                <td>最多丢一个快照周期</td>
+                <td>everysec 最多丢 1 秒</td>
+              </tr>
+              <tr>
+                <td>性能影响</td>
+                <td>fork 瞬间可能卡一下</td>
+                <td>持续小开销</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 推荐配置：混合持久化（4.0+，5.0 后默认开启）</div>
+          <code>aof-use-rdb-preamble yes</code>——AOF 重写时，文件前半段写成 RDB 格式的全量快照，
+          后半段追加增量命令。<strong>恢复快（读快照）+ 丢得少（增量日志）</strong>，两全其美。
+          开启方式：redis.conf 里 <code>appendonly yes</code> + <code>aof-use-rdb-preamble yes</code>。
+          <br /><br />
+          简单决策：<strong>纯缓存（丢了能重建）→ 只开 RDB 甚至不开；数据重要 → 开混合持久化。</strong>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 持久化 ≠ 备份</div>
+          硬盘坏了 / 误删目录 / 勒索病毒，dump.rdb 和 aof 一起没了。
+          定期把 RDB 文件 <code>scp</code> / 上传到另一台机器或对象存储，才是真正的备份。
+        </div>
+
+        <h3>本章常见问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>MISCONF Redis is configured to persist RDB snapshots...</code></td>
+                <td>BGSAVE 失败（磁盘满 / 权限），默认会拒绝写入自保</td>
+                <td>清磁盘、修权限后 <code>CONFIG SET stop-writes-on-bgsave-error no</code> 临时恢复写入（治标），根治要修磁盘问题</td>
+              </tr>
+              <tr>
+                <td>重启后数据丢了</td>
+                <td>没开持久化 / 丢在快照间隔内 / save 规则太宽松</td>
+                <td>确认 <code>CONFIG GET save</code>；重要数据开 AOF everysec</td>
+              </tr>
+              <tr>
+                <td>BGSAVE 时业务卡一下</td>
+                <td>fork 子进程复制页表，大内存实例 fork 慢</td>
+                <td>降低 fork 频率；确认 Linux 关闭大页 <code>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</code></td>
+              </tr>
+              <tr>
+                <td>AOF 文件损坏导致起不来</td>
+                <td>断电写了一半</td>
+                <td><code>redis-check-aof --fix appendonly.aof</code> 修复截断部分</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 高可用：主从 / 哨兵 / 集群</h2>
+        <p>单机 Redis 有两个天花板：挂了就全停（可用性）、一台内存装不下（容量）。三代架构逐级解决：</p>
+        <div class="diagram">
+          <pre>
+ 单机          主从（读写分离）        哨兵（自动故障转移）      集群（数据分片）
+ ┌─────┐      ┌─────────────┐      ┌───────────────────┐   ┌─────────────────┐
+ │Redis│      │   Master ◄──┼──写  │ Sentinel1  Sentinel2│   │ Master1 Master2  │
+ │     │ ──►  │     │复制    │      │     ▼ 监控投票      │   │ Master3 ...     │
+ └─────┘      │  Replica1   │      │ Master ◄─自动选主    │   │ 每个主挂从       │
+   挂了全停    │  Replica2   │      │ Replica 升级接替    │   │ key 分 16384 槽  │
+              └─────────────┘      └───────────────────┘   └─────────────────┘
+              主挂需手动切            挂了自动切               容量/写性能水平扩展
+</pre>
+        </div>
+
+        <h3>主从复制：一拖 N</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 从库上执行（或写进它的 redis.conf： replicaof 主IP 6379）</span>
+<span class="prompt">127.0.0.1:6380&gt;</span> <span class="cmd">REPLICAOF</span> <span class="flag">192.168.1.10</span> <span class="flag">6379</span>
+
+<span class="comment"># 验证：主库 INFO replication 应看到 connected_slaves: 1</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">INFO</span> <span class="flag">replication</span>
+<span class="str">role:master</span>
+<span class="str">connected_slaves:1</span></code></pre>
+        </div>
+        <ul>
+          <li>写走主库，读走从库（读写分离），从库默认只读</li>
+          <li>主库挂了<strong>要人工</strong>把从库切成主：<code>REPLICAOF NO ONE</code>——哨兵就是干这个的自动化版</li>
+        </ul>
+
+        <h3>哨兵：给主从配个监工</h3>
+        <p>
+          哨兵进程（通常部署奇数个，如 3 个）盯着主库：ping 不通就投票，多数同意就判定下线，
+          自动挑一个从库升级为新主，通知客户端切换。<strong>客户端不再直连 Redis，而是先问哨兵「现在的主库是谁」</strong>。
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># sentinel.conf（三个哨兵各一份，指向同一个主库）</span>
+<span class="kw">sentinel monitor</span> <span class="var">mymaster</span> <span class="flag">192.168.1.10</span> <span class="flag">6379</span> <span class="flag">2</span>   <span class="comment"># 2 = 至少 2 个哨兵同意才判定主库下线</span>
+<span class="kw">sentinel down-after-milliseconds</span> <span class="var">mymaster</span> <span class="flag">5000</span>  <span class="comment"># 5 秒无响应视为失联</span>
+
+<span class="comment"># 启动哨兵</span>
+<span class="prompt">$</span> <span class="cmd">redis-sentinel /etc/redis/sentinel.conf</span></code></pre>
+        </div>
+
+        <h3>集群：数据分片，水平扩展</h3>
+        <p>
+          当一台机器的内存装不下（比如 &gt; 25GB）或写入量单机扛不住时上集群：
+          全部 key 划分成 <strong>16384 个槽（slot）</strong>，按 <code>key 的 CRC16 值 mod 16384</code>
+          分散到多个主节点。官方建议至少 <strong>6 台（3 主 3 从）</strong>。
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 6 个实例的 redis.conf 都开集群模式（port 分别 7001-7006）</span>
+<span class="kw">cluster-enabled</span> yes
+<span class="kw">cluster-config-file</span> nodes-7001.conf
+
+<span class="comment"># 一条命令组建集群（3 主 3 从自动分配）</span>
+<span class="prompt">$</span> <span class="cmd">redis-cli --cluster create 192.168.1.10:7001 192.168.1.10:7002 \</span>
+<span class="cmd">  192.168.1.11:7003 192.168.1.11:7004 192.168.1.12:7005 192.168.1.12:7006 \</span>
+<span class="cmd">  --cluster-replicas 1</span></code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 集群的代价（不是免费午餐）</div>
+          ① 多 key 操作受限：不在同一 slot 的 key 不能一起 MGET/事务，
+          要用 <code>{}</code> hash tag 强制同槽（如 <code>user:{1001}:cart</code> 和 <code>user:{1001}:profile</code>）；
+          ② 运维复杂度直线上升。<strong>数据量没到瓶颈就别上集群</strong>，哨兵足够应付大多数项目。
+        </div>
+
+        <h3>选型对照</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>架构</th>
+                <th>解决什么</th>
+                <th>复杂度</th>
+                <th>什么时候用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>单机</td>
+                <td>—</td>
+                <td>★</td>
+                <td>学习、个人项目、缓存丢了无所谓</td>
+              </tr>
+              <tr>
+                <td>主从</td>
+                <td>读扩展 + 数据热备</td>
+                <td>★★</td>
+                <td>读多写少；体验复制机制</td>
+              </tr>
+              <tr>
+                <td>哨兵</td>
+                <td>主从 + 自动故障转移</td>
+                <td>★★★</td>
+                <td><strong>大多数生产项目的甜点位</strong></td>
+              </tr>
+              <tr>
+                <td>集群</td>
+                <td>+ 容量/写性能水平扩展</td>
+                <td>★★★★</td>
+                <td>数据量 &gt; 单机内存、写 QPS 极高</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">💡 口诀</div>
+          <strong>主从备份读写分，哨兵盯着自动切；槽位分片上集群，没到瓶颈别折腾。</strong>
+        </div>
+      </section>
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 日常运维与性能排查</h2>
+
+        <h3>INFO：健康检查的第一站</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">INFO</span> <span class="flag">memory</span>       <span class="comment"># 内存</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">INFO</span> <span class="flag">clients</span>       <span class="comment"># 连接</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">INFO</span> <span class="flag">stats</span>         <span class="comment"># 流量统计</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">INFO</span> <span class="flag">keyspace</span>     <span class="comment"># 各库 key 数量与带 TTL 的比例</span></code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>字段</th>
+                <th>看什么</th>
+                <th>异常信号</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>used_memory_human</code></td>
+                <td>当前内存占用</td>
+                <td>逼近 maxmemory → 准备淘汰/扩容</td>
+              </tr>
+              <tr>
+                <td><code>connected_clients</code></td>
+                <td>当前连接数</td>
+                <td>持续逼近 maxclients（默认 10000）→ 应用可能在泄漏连接</td>
+              </tr>
+              <tr>
+                <td><code>instantaneous_ops_per_sec</code></td>
+                <td>每秒命令数</td>
+                <td>与业务量对不上 → 被滥用/被攻击</td>
+              </tr>
+              <tr>
+                <td><code>evicted_keys</code></td>
+                <td>因内存满被淘汰的 key 累计数</td>
+                <td>持续增长 → 内存吃紧，缓存命中率在下降</td>
+              </tr>
+              <tr>
+                <td><code>expired_keys</code></td>
+                <td>累计过期删除数</td>
+                <td>正常现象，用于确认 TTL 生效</td>
+              </tr>
+              <tr>
+                <td><code>keyspace</code></td>
+                <td>如 <code>db0:keys=100000,expires=80000</code></td>
+                <td>expires 占比过低 → 大量 key 没设 TTL，内存会只涨不降</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>慢查询：谁在拖慢 Redis</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 阈值：记录超过 10ms 的命令（微秒为单位，10000µs = 10ms）</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">CONFIG</span> <span class="flag">SET</span> slowlog-log-slower-than 10000
+
+<span class="comment"># 查看最近 10 条慢查询</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">SLOWLOG</span> <span class="flag">GET</span> 10
+<span class="str">1) 1) (integer) 14            # 编号</span>
+<span class="str">   2) (integer) 1725091200     # 发生时间戳</span>
+<span class="str">   3) (integer) 25000          # 耗时 25000µs = 25ms</span>
+<span class="str">   4) 1) "KEYS"                # 元凶命令</span>
+<span class="str">      2) "*"</span></code></pre>
+        </div>
+
+        <h3>bigkey：藏在暗处的性能杀手</h3>
+        <p>
+          bigkey 不是 key 名长，而是<strong>value 特别大</strong>（百万元素的集合、几 MB 的字符串）。
+          危害：读写耗时长、网络传输占带宽、删除时阻塞主线程、集中过期时引发卡顿。
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 扫描：只采样不阻塞（生产可用）</span>
+<span class="prompt">$</span> <span class="cmd">redis-cli --bigkeys -i 0.1</span>        <span class="comment"># -i 每次扫描间隔 0.1s，更温柔</span>
+
+<span class="comment"># 精确看某个 key 占多少内存</span>
+<span class="prompt">127.0.0.1:6379&gt;</span> <span class="cmd">MEMORY</span> <span class="flag">USAGE</span> <span class="var">big:hash:key</span>
+<span class="str">(integer) 6291456      </span>  <span class="comment"># 字节数</span>
+
+<span class="comment"># 找热 key（需 LFU 淘汰策略才有数据）</span>
+<span class="prompt">$</span> <span class="cmd">redis-cli --hotkeys</span></code></pre>
+        </div>
+        <p><strong>bigkey 治理三板斧：</strong></p>
+        <ol class="steps">
+          <li>拆：大 Hash 按 <code>big:key:{0..99}</code> 拆成 100 个小 Hash；大 List 截断只留需要的部分</li>
+          <li>异步删：用 <code>UNLINK</code> 代替 <code>DEL</code></li>
+          <li>压缩：value 先压缩再存（Python <code>zlib</code> / <code>gzip</code>），读时解压</li>
+        </ol>
+
+        <h3>危险命令红线表（贴在工位那种）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>命令</th>
+                <th>危险等级</th>
+                <th>替代做法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>KEYS *</code></td>
+                <td>🔴 卡死全站</td>
+                <td><code>SCAN 0 MATCH xxx:* COUNT 100</code></td>
+              </tr>
+              <tr>
+                <td><code>FLUSHALL / FLUSHDB</code></td>
+                <td>🔴 清空全部数据</td>
+                <td>生产用 <code>rename-command</code> 禁用；测试环境才可执行</td>
+              </tr>
+              <tr>
+                <td><code>HGETALL 大key</code> / <code>LRANGE 0 -1</code></td>
+                <td>🟠 一次拉爆网络</td>
+                <td>HSCAN / 分页取</td>
+              </tr>
+              <tr>
+                <td><code>DEL 大key</code></td>
+                <td>🟠 主线程卡顿</td>
+                <td><code>UNLINK</code></td>
+              </tr>
+              <tr>
+                <td><code>MONITOR</code> 生产长开</td>
+                <td>🟠 吞吐降一半</td>
+                <td>临时排查几秒就关</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>排查三板斧（总结）</h3>
+        <div class="callout info">
+          <div class="callout-title">📌 Redis 变慢了怎么查：固定顺序</div>
+          ① <code>INFO memory</code> 看内存是否打满（evicted_keys 在涨？）→
+          ② <code>SLOWLOG GET</code> 找慢命令（KEYS？大集合操作？）→
+          ③ <code>--bigkeys</code> 找大 key、<code>--hotkeys</code> 找热 key。
+          三步下来 90% 的性能问题都能定位。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 常见报错速查表</h2>
+        <p>实战中最常撞见的报错都在这了，按「看到什么 → 为什么 → 怎么修」组织：</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>报错 / 现象</th>
+                <th>原因</th>
+                <th>解决方法</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Could not connect ... Connection refused</code></td>
+                <td>服务未启动 / 端口不对</td>
+                <td><code>systemctl status redis-server</code>；Docker 用 <code>docker ps</code>；核对端口</td>
+              </tr>
+              <tr>
+                <td>远程能 telnet 通但 redis-cli 连不上</td>
+                <td>bind 限制 / protected-mode</td>
+                <td>redis.conf 改 bind、设密码后 protected-mode 不会拦截外部</td>
+              </tr>
+              <tr>
+                <td><code>(error) NOAUTH</code></td>
+                <td>没带密码</td>
+                <td><code>redis-cli -a 密码</code> 或 <code>AUTH 密码</code></td>
+              </tr>
+              <tr>
+                <td><code>(error) WRONGPASS</code></td>
+                <td>密码错误</td>
+                <td>核对 requirepass；注意配置改后要 restart</td>
+              </tr>
+              <tr>
+                <td><code>OOM command not allowed when used memory &gt; 'maxmemory'</code></td>
+                <td>noeviction 策略 + 内存满</td>
+                <td><code>CONFIG SET maxmemory-policy allkeys-lru</code>；长期看加内存/清 bigkey</td>
+              </tr>
+              <tr>
+                <td><code>MISCONF Redis is configured to persist RDB snapshots...</code></td>
+                <td>磁盘满/权限导致 BGSAVE 失败</td>
+                <td>清磁盘修权限；临时 <code>CONFIG SET stop-writes-on-bgsave-error no</code></td>
+              </tr>
+              <tr>
+                <td><code>(error) WRONGTYPE ...</code></td>
+                <td>命令与 key 类型不匹配</td>
+                <td><code>TYPE key</code> 确认类型换命令</td>
+              </tr>
+              <tr>
+                <td><code>ERR value is not an integer</code></td>
+                <td>对非数字 String 做 INCR</td>
+                <td>保证 INCR 的 key 只存数字</td>
+              </tr>
+              <tr>
+                <td><code>READONLY You can't write against a read only replica</code></td>
+                <td>连的是从库（从库只读）</td>
+                <td>写操作走主库地址</td>
+              </tr>
+              <tr>
+                <td><code>LOADING Redis is loading the dataset in memory</code></td>
+                <td>启动中正在加载持久化文件</td>
+                <td>等它加载完（数据多会久一点），别急着重启</td>
+              </tr>
+              <tr>
+                <td><code>BUSY Redis is busy running a script</code></td>
+                <td>Lua 脚本死循环卡住主线程</td>
+                <td><code>SCRIPT KILL</code>（还没写入时有效）；写过的只能 <code>SHUTDOWN NOSAVE</code></td>
+              </tr>
+              <tr>
+                <td>get 中文是 <code>\xe4\xbd\xa0...</code></td>
+                <td>字节显示模式</td>
+                <td>redis-cli 加 <code>--raw</code>；Python 加 <code>decode_responses=True</code></td>
+              </tr>
+              <tr>
+                <td>Python <code>ConnectionError: Connection reset by peer</code></td>
+                <td>连接被 Redis 断开：超时被踢 / 服务重启 / 网络闪断</td>
+                <td>redis-py 会自动重连重试；频繁出现查 timeout 配置和网络</td>
+              </tr>
+              <tr>
+                <td>主从复制频繁断开重连</td>
+                <td>网络抖动 / 主库写入压力过大 / repl-backlog 太小</td>
+                <td>查网络；调大 <code>repl-backlog-size</code>（如 256mb）</td>
+              </tr>
+              <tr>
+                <td>Docker 容器里 Redis 时快时慢</td>
+                <td>宿主机内存不足 / 磁盘 IO 争抢</td>
+                <td>限制容器内存 <code>--memory</code>；确认持久化文件在 SSD</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 验证清单与口诀总结</h2>
+
+        <h3>动手验证清单：跟着做完这篇指南，你应该能</h3>
+        <ol class="steps">
+          <li>用 apt / Docker 装好 Redis，<code>redis-cli ping</code> 返回 PONG，密码与安全配置齐全</li>
+          <li>五种基础类型各完成一轮「写入 → 读取 → 删除」，说得出各自的典型场景</li>
+          <li>给 key 设置 TTL 并用 <code>TTL</code> 观察倒计时，解释 -1 和 -2 的区别</li>
+          <li>用 Python 连接池连上 Redis，独立写出一个「先查缓存、miss 回源、回填 TTL」的函数</li>
+          <li>写出分布式锁加锁/解锁代码，能解释为什么解锁要 Lua</li>
+          <li>能对着「三兄弟对照表」给面试官讲清穿透/击穿/雪崩的区别与解法</li>
+          <li>知道 maxmemory 八种策略怎么选、RDB/AOF/混合持久化怎么配</li>
+          <li>Redis 变慢时按「INFO → SLOWLOG → bigkeys」三板斧走一遍</li>
+        </ol>
+
+        <h3>全书速查总表</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>我要做什么</th>
+                <th>用哪个</th>
+                <th>关键点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>缓存一个对象（整读整写）</td>
+                <td>String + JSON + EX</td>
+                <td>读 miss 回填，写完库删缓存</td>
+              </tr>
+              <tr>
+                <td>存常改局部的对象（购物车）</td>
+                <td>Hash</td>
+                <td>HSET/HINCRBY 改单字段</td>
+              </tr>
+              <tr>
+                <td>排行榜</td>
+                <td>ZSet</td>
+                <td>ZINCRBY 加分，ZREVRANGE 0 9 取 Top10</td>
+              </tr>
+              <tr>
+                <td>异步任务队列</td>
+                <td>List</td>
+                <td>LPUSH 进 + BRPOP 出</td>
+              </tr>
+              <tr>
+                <td>签到 / 去重 / 交集</td>
+                <td>BitMap / Set</td>
+                <td>SISMEMBER 判存在，SINTER 算交集</td>
+              </tr>
+              <tr>
+                <td>并发防重 / 抢任务</td>
+                <td>SET NX EX + Lua 解锁</td>
+                <td>锁要设过期 + 解锁要校验身份</td>
+              </tr>
+              <tr>
+                <td>防穿透</td>
+                <td>空值缓存 + 入口校验</td>
+                <td>空值 TTL 要短</td>
+              </tr>
+              <tr>
+                <td>防击穿</td>
+                <td>互斥锁重建</td>
+                <td>只有一个人回源，其他人重读</td>
+              </tr>
+              <tr>
+                <td>防雪崩</td>
+                <td>TTL 加随机 + 高可用</td>
+                <td>expires 加 0~600 秒随机数</td>
+              </tr>
+              <tr>
+                <td>遍历 key</td>
+                <td>SCAN</td>
+                <td>永远别用 KEYS</td>
+              </tr>
+              <tr>
+                <td>删大 key</td>
+                <td>UNLINK</td>
+                <td>不阻塞主线程</td>
+              </tr>
+              <tr>
+                <td>选淘汰策略</td>
+                <td>allkeys-lru（缓存）</td>
+                <td>混存数据用 volatile 系列</td>
+              </tr>
+              <tr>
+                <td>持久化</td>
+                <td>混合（RDB+AOF）</td>
+                <td>纯缓存可只用 RDB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>十句口诀收尾</h3>
+        <div class="callout tip">
+          <div class="callout-title">💡 Redis 十句口诀</div>
+          <strong>
+          ① 内存快持久慢，Redis 定位要记牢；<br />
+          ② 单值 String 对象 Hash，排队 List 去重 Set，排名就用 ZSet；<br />
+          ③ KEYS 生产是禁令，遍历请用 SCAN；<br />
+          ④ 大 key 别全量读，分页扫描慢慢来；<br />
+          ⑤ 读走缓存 miss 回源，写完数据库删缓存；<br />
+          ⑥ 穿透空值挡，击穿互斥忙，雪崩过期加随机；<br />
+          ⑦ 淘汰策略先想清，纯缓存 allkeys-lru 最稳；<br />
+          ⑧ RDB 快照恢复快，AOF 日志丢得少，混合持久化两全好；<br />
+          ⑨ 变慢三板斧：INFO、SLOWLOG、bigkeys；<br />
+          ⑩ 密码白名单要配好，公网裸奔是灾难。
+          </strong>
+        </div>
+
+        <h3>下一步可以学什么</h3>
+        <ul>
+          <li>结合博客里的 <a href="learningDockerNextjs.html">Docker 部署实战</a>：把 Redis 也容器化，和你的应用 compose 编排到一起</li>
+          <li>结合 <a href="learningServerEnv.html">云服务器环境配置指南</a>：在真实服务器上搭建主从 + 哨兵</li>
+          <li>进阶话题：Redis 事务与 Lua 深入、Stream 消息队列、缓存与数据库一致性方案（延迟双删、订阅 binlog）</li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>Redis 实战指南 · 教程与实操指南</p>
+        <p style="margin-top: 8px; font-size: 0.8rem">
+          In memory, we trust. ⚡
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>

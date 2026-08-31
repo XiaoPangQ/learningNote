@@ -1,0 +1,2971 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Java 开发工程师面试题总结 · 高频考点速记</title>
+    <style>
+      :root {
+        --bg: #12151a;
+        --panel: #1a1f26;
+        --panel-hover: #242b34;
+        --text: #e9edf3;
+        --text-secondary: #b3bcc9;
+        --border: #313a45;
+        --accent: #f43f5e;
+        --accent-soft: rgba(244, 63, 94, 0.12);
+        --hot: #fb7185;
+        --hot-soft: rgba(251, 113, 133, 0.1);
+        --code-green: #aebfd4;
+        --link-blue: #93c5fd;
+        --warn: #ffd166;
+        --sidebar-w: 300px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3d4855;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+      .toc .hot-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--hot);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e9edf3 0%, #f43f5e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-legend span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-legend .hot-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot-soft);
+        color: var(--hot);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+
+      /* Q&A Card */
+      .qa {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .qa:hover {
+        border-color: rgba(244, 63, 94, 0.3);
+      }
+      .qa.hot {
+        border-left: 3px solid var(--hot);
+        background: linear-gradient(
+          90deg,
+          var(--hot-soft) 0%,
+          var(--panel) 30%
+        );
+      }
+      .qa.hot:hover {
+        border-color: var(--hot);
+      }
+
+      .qa-q {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .qa-q .q-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+      }
+      .qa.hot .q-mark {
+        background: var(--hot-soft);
+        color: var(--hot);
+      }
+      .hot-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot);
+        color: #fff;
+        padding: 1px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+        white-space: nowrap;
+        animation: hotPulse 2s ease-in-out infinite;
+      }
+      @keyframes hotPulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .qa-a {
+        color: var(--text-secondary);
+        font-size: 0.93rem;
+      }
+      .qa-a ul,
+      .qa-a ol {
+        margin: 6px 0 6px 20px;
+      }
+      .qa-a li {
+        margin-bottom: 5px;
+      }
+      .qa-a strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .qa-a .key {
+        color: var(--code-green);
+        font-weight: 600;
+      }
+      .qa-a p {
+        margin-bottom: 8px;
+      }
+      .qa-a .mnemonic {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: rgba(174, 191, 212, 0.06);
+        border-left: 3px solid var(--code-green);
+        border-radius: 0 6px 6px 0;
+        font-size: 0.85rem;
+        color: var(--code-green);
+      }
+      .qa-a .mnemonic::before {
+        content: '🧠 速记：';
+        font-weight: 700;
+      }
+
+      pre {
+        background: #0b0e12;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        overflow-x: auto;
+        margin: 10px 0 14px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #aebfd4;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn {
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid;
+        font-size: 0.88rem;
+      }
+      .tip {
+        background: rgba(174, 191, 212, 0.06);
+        border-color: var(--code-green);
+        color: var(--text-secondary);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+        color: var(--text-secondary);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn,
+        .back-home {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        .qa {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .hot-badge {
+          background: #ccc;
+          color: #000;
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">☕</span> Java 开发工程师面试指南</h2>
+        <p>高频考点 · 速记答案 · 100+ 题</p>
+      </div>
+      <ul class="toc">
+        <li><a href="../indexInterview.html">← 返回面试题目录</a></li>
+        <li class="toc-section-title">语言基础与数据类型</li>
+        <li><a href="#java-basics"><span class="hot-dot"></span>JDK/JRE/JVM 与跨平台</a></li>
+        <li><a href="#java-types">8 种基本数据类型</a></li>
+        <li><a href="#java-wrapper"><span class="hot-dot"></span>包装类与 Integer 缓存</a></li>
+        <li><a href="#java-eq"><span class="hot-dot"></span>== 与 equals 区别</a></li>
+        <li><a href="#java-string-immu"><span class="hot-dot"></span>String 为什么不可变</a></li>
+        <li><a href="#java-string-3"><span class="hot-dot"></span>String 三兄弟区别</a></li>
+        <li><a href="#java-string-pool">字符串常量池与 intern</a></li>
+        <li><a href="#java-final">final / finally / finalize</a></li>
+        <li><a href="#java-static">static 关键字用法</a></li>
+        <li><a href="#java-pass"><span class="hot-dot"></span>值传递还是引用传递</a></li>
+
+        <li class="toc-section-title">面向对象</li>
+        <li><a href="#java-oop-three"><span class="hot-dot"></span>三大特性</a></li>
+        <li><a href="#java-overload"><span class="hot-dot"></span>重载 vs 重写</a></li>
+        <li><a href="#java-abstract"><span class="hot-dot"></span>抽象类 vs 接口</a></li>
+        <li><a href="#java-init-order"><span class="hot-dot"></span>类初始化顺序</a></li>
+        <li><a href="#java-polymorph">多态实现原理</a></li>
+        <li><a href="#java-inner">内部类四种</a></li>
+        <li><a href="#java-ctor">构造器规则</a></li>
+        <li><a href="#java-copy"><span class="hot-dot"></span>深拷贝 vs 浅拷贝</a></li>
+        <li><a href="#java-object-methods">Object 常用方法</a></li>
+        <li><a href="#java-super-this">super 与 this</a></li>
+
+        <li class="toc-section-title">常用 API 与工具类</li>
+        <li><a href="#java-hash-eq"><span class="hot-dot"></span>equals 与 hashCode 契约</a></li>
+        <li><a href="#java-equals-write">正确重写 equals</a></li>
+        <li><a href="#java-bigdecimal"><span class="hot-dot"></span>BigDecimal 精度</a></li>
+        <li><a href="#java-date">日期时间 API</a></li>
+        <li><a href="#java-objects">Objects 工具类</a></li>
+        <li><a href="#java-math">取整方法区别</a></li>
+        <li><a href="#java-uuid">UUID 与随机数</a></li>
+
+        <li class="toc-section-title">集合框架</li>
+        <li><a href="#java-coll-sys"><span class="hot-dot"></span>集合体系总览</a></li>
+        <li><a href="#java-list-ll"><span class="hot-dot"></span>ArrayList vs LinkedList</a></li>
+        <li><a href="#java-arraylist-grow">ArrayList 扩容机制</a></li>
+        <li><a href="#java-hashmap-struct"><span class="hot-dot"></span>HashMap 底层结构</a></li>
+        <li><a href="#java-hashmap-put"><span class="hot-dot"></span>HashMap put 流程</a></li>
+        <li><a href="#java-hashmap-cap">容量为什么是 2 的幂</a></li>
+        <li><a href="#java-hashmap-treeify">链表树化条件</a></li>
+        <li><a href="#java-hashmap-17"><span class="hot-dot"></span>HashMap 1.7 vs 1.8</a></li>
+        <li><a href="#java-chm"><span class="hot-dot"></span>ConcurrentHashMap</a></li>
+        <li><a href="#java-hashset">HashSet 原理</a></li>
+        <li><a href="#java-treemap">TreeMap 排序</a></li>
+        <li><a href="#java-linkedhashmap">LinkedHashMap 与 LRU</a></li>
+        <li><a href="#java-failfast"><span class="hot-dot"></span>fail-fast 机制</a></li>
+        <li><a href="#java-coll-choose">集合选型</a></li>
+
+        <li class="toc-section-title">异常处理</li>
+        <li><a href="#java-exception-sys"><span class="hot-dot"></span>异常体系</a></li>
+        <li><a href="#java-checked"><span class="hot-dot"></span>受检 vs 非受检</a></li>
+        <li><a href="#java-try-resource">try-with-resources</a></li>
+        <li><a href="#java-finally-return"><span class="hot-dot"></span>finally 与 return</a></li>
+        <li><a href="#java-custom-exception">自定义异常</a></li>
+        <li><a href="#java-throw-throws">throw vs throws</a></li>
+
+        <li class="toc-section-title">泛型与反射</li>
+        <li><a href="#java-generic"><span class="hot-dot"></span>类型擦除</a></li>
+        <li><a href="#java-wildcard"><span class="hot-dot"></span>通配符与 PECS</a></li>
+        <li><a href="#java-reflect"><span class="hot-dot"></span>反射原理与应用</a></li>
+        <li><a href="#java-reflect-cost">反射的代价</a></li>
+        <li><a href="#java-annotation">注解与元注解</a></li>
+        <li><a href="#java-proxy"><span class="hot-dot"></span>动态代理</a></li>
+
+        <li class="toc-section-title">IO 与 NIO</li>
+        <li><a href="#java-io-sys">IO 流体系</a></li>
+        <li><a href="#java-byte-char">字节流 vs 字符流</a></li>
+        <li><a href="#java-bio-nio"><span class="hot-dot"></span>BIO / NIO / AIO</a></li>
+        <li><a href="#java-nio-core"><span class="hot-dot"></span>NIO 三大核心</a></li>
+        <li><a href="#java-zerocopy"><span class="hot-dot"></span>零拷贝</a></li>
+        <li><a href="#java-io-best">IO 最佳实践</a></li>
+
+        <li class="toc-section-title">多线程基础</li>
+        <li><a href="#java-thread-create"><span class="hot-dot"></span>线程创建方式</a></li>
+        <li><a href="#java-thread-state"><span class="hot-dot"></span>线程六种状态</a></li>
+        <li><a href="#java-sleep-wait"><span class="hot-dot"></span>sleep vs wait</a></li>
+        <li><a href="#java-interrupt">线程中断机制</a></li>
+        <li><a href="#java-join-yield">join 与 yield</a></li>
+        <li><a href="#java-daemon">守护线程</a></li>
+        <li><a href="#java-thread-safe"><span class="hot-dot"></span>什么是线程安全</a></li>
+
+        <li class="toc-section-title">并发编程核心</li>
+        <li><a href="#java-synchronized"><span class="hot-dot"></span>synchronized 原理</a></li>
+        <li><a href="#java-lock-upgrade"><span class="hot-dot"></span>锁升级过程</a></li>
+        <li><a href="#java-volatile"><span class="hot-dot"></span>volatile 两大作用</a></li>
+        <li><a href="#java-jmm">JMM 与 happens-before</a></li>
+        <li><a href="#java-cas"><span class="hot-dot"></span>CAS 与 ABA</a></li>
+        <li><a href="#java-aqs"><span class="hot-dot"></span>AQS 原理</a></li>
+        <li><a href="#java-reentrantlock">synchronized vs Lock</a></li>
+        <li><a href="#java-threadpool"><span class="hot-dot"></span>线程池七大参数</a></li>
+        <li><a href="#java-threadpool-exec"><span class="hot-dot"></span>执行流程与拒绝策略</a></li>
+        <li><a href="#java-threadpool-size"><span class="hot-dot"></span>线程数如何设置</a></li>
+        <li><a href="#java-threadlocal"><span class="hot-dot"></span>ThreadLocal 原理</a></li>
+        <li><a href="#java-threadlocal-leak">ThreadLocal 内存泄漏</a></li>
+        <li><a href="#java-tools">JUC 同步工具</a></li>
+        <li><a href="#java-concurrent-colls">并发容器</a></li>
+        <li><a href="#java-deadlock"><span class="hot-dot"></span>死锁条件与排查</a></li>
+        <li><a href="#java-atomic">原子类与 LongAdder</a></li>
+
+        <li class="toc-section-title">JVM 虚拟机</li>
+        <li><a href="#java-runtime-areas"><span class="hot-dot"></span>运行时数据区</a></li>
+        <li><a href="#java-heap-stack">堆 vs 栈</a></li>
+        <li><a href="#java-object-create"><span class="hot-dot"></span>对象创建过程</a></li>
+        <li><a href="#java-ref-types"><span class="hot-dot"></span>四种引用类型</a></li>
+        <li><a href="#java-classload"><span class="hot-dot"></span>类加载过程</a></li>
+        <li><a href="#java-parents"><span class="hot-dot"></span>双亲委派模型</a></li>
+        <li><a href="#java-gc-roots"><span class="hot-dot"></span>可达性分析</a></li>
+        <li><a href="#java-gc-algo"><span class="hot-dot"></span>垃圾回收算法</a></li>
+        <li><a href="#java-gc-collectors"><span class="hot-dot"></span>垃圾收集器</a></li>
+        <li><a href="#java-minor-full"><span class="hot-dot"></span>Minor GC 与 Full GC</a></li>
+        <li><a href="#java-jvm-params">常用 JVM 参数</a></li>
+        <li><a href="#java-jvm-tools">JVM 排查工具</a></li>
+        <li><a href="#java-gc-tuning">GC 调优思路</a></li>
+
+        <li class="toc-section-title">Java 8+ 新特性</li>
+        <li><a href="#java-lambda"><span class="hot-dot"></span>Lambda 表达式</a></li>
+        <li><a href="#java-func-if">四大函数式接口</a></li>
+        <li><a href="#java-stream"><span class="hot-dot"></span>Stream 流操作</a></li>
+        <li><a href="#java-stream-pit">Stream 常见坑</a></li>
+        <li><a href="#java-optional"><span class="hot-dot"></span>Optional 用法</a></li>
+        <li><a href="#java-interface-default">接口默认方法</a></li>
+        <li><a href="#java-new-features"><span class="hot-dot"></span>9 到 21 版本特性</a></li>
+        <li><a href="#java-virtual-thread"><span class="hot-dot"></span>虚拟线程</a></li>
+
+        <li class="toc-section-title">场景与调优</li>
+        <li><a href="#java-cpu100"><span class="hot-dot"></span>CPU 100% 排查</a></li>
+        <li><a href="#java-memleak"><span class="hot-dot"></span>内存泄漏排查</a></li>
+        <li><a href="#java-oom"><span class="hot-dot"></span>OOM 种类与场景</a></li>
+        <li><a href="#java-fullgc"><span class="hot-dot"></span>频繁 Full GC 排查</a></li>
+        <li><a href="#java-perf"><span class="hot-dot"></span>接口性能优化</a></li>
+        <li><a href="#java-id">分布式 ID 方案</a></li>
+        <li><a href="#java-bigfile">大文件处理</a></li>
+
+        <li class="toc-section-title">手写代码题</li>
+        <li><a href="#java-write-singleton"><span class="hot-dot"></span>单例模式</a></li>
+        <li><a href="#java-write-prodcons"><span class="hot-dot"></span>生产者消费者</a></li>
+        <li><a href="#java-write-alternate"><span class="hot-dot"></span>两线程交替打印</a></li>
+        <li><a href="#java-write-deadlock">死锁示例与修复</a></li>
+        <li><a href="#java-write-lru">手写 LRU 缓存</a></li>
+        <li><a href="#java-write-blockingq">手写阻塞队列</a></li>
+        <li><a href="#java-write-equals">手写 equals/hashCode</a></li>
+        <li><a href="#java-write-async">Callable 与 Future</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <a class="back-home" href="../indexInterview.html">← 返回面试题目录</a>
+
+      <header class="hero">
+        <span class="hero-badge">开发方向 · 面试题库</span>
+        <h1>Java 开发工程师面试题总结</h1>
+        <p>
+          覆盖语言基础、面向对象、集合框架、异常、泛型反射、IO/NIO、多线程并发、JVM 虚拟机、Java 8+ 新特性、场景调优与手写代码题，答案均为「要点 + 速记口诀」易背诵格式。
+        </p>
+        <div class="hero-legend">
+          <span>📚 118 道高频题</span>
+          <span>🔥 <span class="hot-tag">66 道必考题</span></span>
+          <span>🧠 每题附速记口诀</span>
+          <span>☕ 含手写代码题</span>
+        </div>
+      </header>
+
+      <section class="section" id="java-ch1">
+        <h2><span class="num">01</span>语言基础与数据类型</h2>
+
+        <div class="qa hot" id="java-basics">
+          <div class="qa-q"><span class="q-mark">Q1</span>JDK、JRE、JVM 有什么区别？Java 如何实现跨平台？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>三者是<strong>包含关系</strong>：JDK ⊃ JRE ⊃ JVM。</p>
+            <ul>
+              <li><strong>JVM</strong>（Java 虚拟机）：执行字节码的「虚拟电脑」，负责<strong>类加载、字节码解释/JIT 编译、内存管理与 GC</strong></li>
+              <li><strong>JRE</strong>（运行环境）：JVM + 核心类库（java.lang、java.util 等），只能<strong>运行</strong>程序</li>
+              <li><strong>JDK</strong>（开发工具包）：JRE + 开发工具（<span class="key">javac、javap、jdb、jstack</span> 等），能<strong>编译 + 运行</strong></li>
+            </ul>
+            <p><strong>跨平台原理</strong>：Java 源码编译成与平台无关的<span class="key">字节码（.class）</span>，各平台安装对应版本的 JVM 来执行——「一次编译，到处运行」。跨平台的是 <strong>Java 程序，而 JVM 本身不跨平台</strong>（各平台有各平台的 JVM 实现）。</p>
+            <span class="mnemonic">「JDK 造车，JRE 开车，JVM 是发动机」；程序跨平台靠字节码，JVM 各平台各一份</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-types">
+          <div class="qa-q"><span class="q-mark">Q2</span>Java 有哪 8 种基本数据类型？各占多少字节？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>类型</th><th>关键字</th><th>字节</th><th>默认值</th></tr>
+                <tr><td>整型 ×4</td><td>byte / short / int / long</td><td>1 / 2 / 4 / 8</td><td>0</td></tr>
+                <tr><td>浮点 ×2</td><td>float / double</td><td>4 / 8</td><td>0.0</td></tr>
+                <tr><td>字符</td><td>char</td><td>2（Unicode）</td><td>'\u0000'</td></tr>
+                <tr><td>布尔</td><td>boolean</td><td>未明确规定（JVM 用 int 实现，数组用 byte）</td><td>false</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li><strong>取值范围口诀</strong>：n 位有符号数范围 −2<sup>n−1</sup> ~ 2<sup>n−1</sup>−1，如 int 为 <span class="key">-2^31 ~ 2^31-1</span>（约 ±21 亿）</li>
+              <li>long 赋值要加 <span class="key">L</span>，float 赋值要加 <span class="key">F</span>；<strong>整型默认 int、浮点默认 double</strong></li>
+              <li>自动类型转换：<strong>小 → 大自动</strong>（byte→int→long→float→double）；大 → 小需<strong>强制转换</strong>（可能丢精度）</li>
+            </ul>
+            <span class="mnemonic">「4 整 2 浮 1 字 1 布尔」；1/2/4/8、4/8、2、不明确，long 加 L、float 加 F</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-wrapper">
+          <div class="qa-q"><span class="q-mark">Q3</span>什么是自动装箱拆箱？Integer 缓存是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>自动装箱</strong>：基本类型 → 包装类，编译期调用 <span class="key">Integer.valueOf()</span></li>
+              <li><strong>自动拆箱</strong>：包装类 → 基本类型，编译期调用 <span class="key">intValue()</span> 等方法</li>
+              <li><strong>Integer 缓存</strong>：<span class="key">IntegerCache</span> 缓存 <strong>-128 ~ 127</strong> 的对象，此范围内 <span class="key">valueOf</span> 返回同一对象，<span class="key">==</span> 为 true；超出范围则 new 新对象，<span class="key">==</span> 为 false</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>Integer a = 127, b = 127;
+System.out.println(a == b);       // true  —— 走缓存，同一对象
+Integer c = 128, d = 128;
+System.out.println(c == d);       // false —— new 出了两个对象
+System.out.println(c.equals(d));  // true  —— 包装类比较永远用 equals</code></pre>
+            <div class="warn">高频陷阱：包装类比较一律用 <strong>equals</strong>；自动拆箱遇到 null 会抛 <strong>NullPointerException</strong>（如 Integer 为 null 参与运算）。</div>
+            <span class="mnemonic">「装箱 valueOf，拆箱 xxxValue；缓存负 128 到 127，出了缓存 == 假」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-eq">
+          <div class="qa-q"><span class="q-mark">Q4</span>== 和 equals 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>==</strong>：基本类型比较<strong>值</strong>；引用类型比较<strong>地址（是否同一对象）</strong></li>
+              <li><strong>equals</strong>：Object 默认就是 <span class="key">==</span>；<strong>String、Integer 等已重写</strong>为比较内容</li>
+              <li>自定义类想比内容，必须<strong>自己重写 equals</strong>（同时重写 hashCode）</li>
+            </ul>
+            <p>经典题：<span class="key">String s1 = "abc"</span> 与 <span class="key">String s2 = new String("abc")</span>——s1 == s2 为 false（一个在常量池、一个在堆），s1.equals(s2) 为 true。</p>
+            <span class="mnemonic">「== 比地址，equals 比内容（前提是重写）」；包装类和 String 比较永远用 equals</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-string-immu">
+          <div class="qa-q"><span class="q-mark">Q5</span>String 为什么设计成不可变？有什么好处？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>String 内部用 <span class="key">private final char[]（JDK9 后 byte[]）</span> 存储，类本身 final 不可继承、没有提供修改数组的方法——所以一旦创建<strong>内容不可变</strong>。</p>
+            <ul>
+              <li><strong>字符串常量池</strong>：不可变才能安全地共享缓存同一份字面量，节省内存</li>
+              <li><strong>线程安全</strong>：不可变对象天然线程安全，可自由跨线程共享</li>
+              <li><strong>hashCode 缓存</strong>：String 的 hash 计算一次后缓存，适合做 HashMap 的 key（这也是 <strong>HashMap key 推荐 String</strong> 的原因）</li>
+              <li><strong>安全性</strong>：路径、类名、URL 参数不可被中途篡改</li>
+            </ul>
+            <span class="mnemonic">「常量池、线程安、hash 缓存、防篡改」四大好处，靠 final 类 + final 私有数组实现</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-string-3">
+          <div class="qa-q"><span class="q-mark">Q6</span>String、StringBuilder、StringBuffer 有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>String</th><th>StringBuilder</th><th>StringBuffer</th></tr>
+                <tr><td>可变性</td><td>不可变</td><td>可变</td><td>可变</td></tr>
+                <tr><td>线程安全</td><td>安全（不可变）</td><td><strong>不安全</strong></td><td><strong>安全</strong>（方法加 synchronized）</td></tr>
+                <tr><td>性能</td><td>拼接慢（新建对象）</td><td><strong>最快</strong></td><td>比 Builder 慢（锁开销）</td></tr>
+                <tr><td>场景</td><td>少量、常量拼接</td><td>单线程拼接</td><td>多线程拼接</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>循环里拼接字符串<strong>必须用 StringBuilder</strong>，用 String 或 <span class="key">+=</span> 每轮都产生新对象</li>
+              <li>循环外单行拼接，编译器会自动优化成 StringBuilder（或 invokedynamic），写 <span class="key">+</span> 没问题</li>
+            </ul>
+            <span class="mnemonic">「String 定死、Builder 最快、Buffer 加锁」；循环拼接选 Builder</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-string-pool">
+          <div class="qa-q"><span class="q-mark">Q7</span>什么是字符串常量池？intern() 方法做什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>常量池</strong>：JVM 专门存放字符串字面量的区域（JDK7 后从方法区移到<strong>堆</strong>），相同字面量只存一份</li>
+              <li><span class="key">String s = "abc"</span>：先查池，有就直接引用；没有则入池再引用</li>
+              <li><span class="key">new String("abc")</span>：<strong>一定在堆里新建对象</strong>（最多产生 2 个对象：堆对象 + 池中字面量）</li>
+              <li><strong>intern()</strong>：主动把字符串放入/查找常量池——池中有则返回池中引用，没有则入池（JDK7 起存的是堆对象引用）并返回</li>
+            </ul>
+            <span class="mnemonic">「字面量进池共享，new 一定新建堆对象」；intern 是手动入池的开关</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-final">
+          <div class="qa-q"><span class="q-mark">Q8</span>final、finally、finalize 分别是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>final</strong>（关键字）：修饰类不可继承、方法不可重写、变量不可重新赋值（引用类型指<strong>地址不可变</strong>，对象内容仍可变）</li>
+              <li><strong>finally</strong>（异常块）：try/catch 后的代码块<strong>一定执行</strong>（除非 JVM 退出 System.exit / 线程被杀 / 断电），用于释放资源</li>
+              <li><strong>finalize</strong>（方法）：对象被 GC 回收前由 GC 线程调用，<strong>JDK9 已废弃</strong>——执行时机不确定、性能差，替代方案是 <span class="key">try-with-resources</span> 或 <span class="key">Cleaner</span></li>
+            </ul>
+            <span class="mnemonic">「final 不许改、finally 一定跑、finalize 已淘汰」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-static">
+          <div class="qa-q"><span class="q-mark">Q9</span>static 关键字有哪些用法？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>静态变量</strong>：类级别一份，所有对象共享，存在方法区/堆的静态区，类加载时初始化</li>
+              <li><strong>静态方法</strong>：属于类，<strong>不能访问实例成员、不能用 this</strong>，可直接类名调用（main 方法就是静态方法）</li>
+              <li><strong>静态代码块</strong>：类加载时执行<strong>一次</strong>，用于初始化静态资源（优先于构造器）</li>
+              <li><strong>静态内部类</strong>：不依赖外部实例，<strong>不持有外部类引用</strong>（可避免内存泄漏，单例/Builder 常用）</li>
+              <li>静态导入（import static）：直接使用静态成员，少写类名</li>
+            </ul>
+            <span class="mnemonic">「变量共享、方法无 this、代码块加载跑、内部类不抱引用」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-pass">
+          <div class="qa-q"><span class="q-mark">Q10</span>Java 是值传递还是引用传递？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>Java 只有值传递</strong>。</p>
+            <ul>
+              <li>传<strong>基本类型</strong>：拷贝值本身，方法内修改不影响外部</li>
+              <li>传<strong>引用类型</strong>：拷贝的是「地址的值」——方法内通过该地址<strong>修改对象内容会影响外部</strong>，但<strong>让参数指向新对象不影响外部</strong></li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>void change(StringBuilder sb) {
+    sb.append("x");        // 影响外部：改的是同一对象
+    sb = new StringBuilder("new");  // 不影响外部：只改了副本的指向
+}</code></pre>
+            <span class="mnemonic">「Java 只有值传递」；改内容看得见，换指向看不见</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch2">
+        <h2><span class="num">02</span>面向对象</h2>
+
+        <div class="qa hot" id="java-oop-three">
+          <div class="qa-q"><span class="q-mark">Q11</span>面向对象三大特性是什么？各自解决什么问题？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>封装</strong>：属性私有 + 公共方法访问，<strong>隐藏实现细节、控制读写权限</strong>（private + getter/setter）</li>
+              <li><strong>继承</strong>：子类复用父类代码、表达 is-a 关系；Java <strong>单继承</strong>（多实现接口），子类拥有父类非私有成员</li>
+              <li><strong>多态</strong>：同一名方法在不同对象上有不同表现——<strong>编译看左边（静态类型），运行看右边（实际对象）</strong>，是「可扩展性」的基石</li>
+            </ul>
+            <p>多态三个前提：<strong>继承/实现 + 重写 + 父类引用指向子类对象</strong>（<span class="key">Animal a = new Dog()</span>）。</p>
+            <span class="mnemonic">「封装藏细节、继承复代码、多态换实现」；多态三前提：父引子、有重写、有继承</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-overload">
+          <div class="qa-q"><span class="q-mark">Q12</span>重载（Overload）和重写（Override）的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>重载</th><th>重写</th></tr>
+                <tr><td>范围</td><td><strong>同一个类</strong>中</td><td><strong>父子的继承</strong>体系间</td></tr>
+                <tr><td>参数列表</td><td>必须<strong>不同</strong></td><td>必须<strong>相同</strong></td></tr>
+                <tr><td>返回值</td><td>可不同</td><td>相同或协变（子类型）</td></tr>
+                <tr><td>访问权限</td><td>无要求</td><td>不能比父类<strong>更严格</strong></td></tr>
+                <tr><td>异常</td><td>无要求</td><td>不能抛更大的受检异常</td></tr>
+                <tr><td>绑定时机</td><td><strong>编译期</strong>（静态分派）</td><td><strong>运行期</strong>（动态绑定）</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>重写两同两小一大：<strong>方法名、参数相同；返回值和异常更小或相同；权限更大或相同</strong></li>
+              <li><span class="key">@Override</span> 注解：让编译器帮检查是否真的重写成功</li>
+              <li>被 <strong>static / final / private</strong> 修饰的方法不能被重写（private 对子类不可见）</li>
+            </ul>
+            <span class="mnemonic">「重载同类不同参、编译期定；重写父子同签名、运行期定」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-abstract">
+          <div class="qa-q"><span class="q-mark">Q13</span>抽象类和接口有什么区别？如何选择？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>抽象类</th><th>接口</th></tr>
+                <tr><td>关键字</td><td>abstract class / extends</td><td>interface / implements</td></tr>
+                <tr><td>继承数量</td><td><strong>单继承</strong></td><td><strong>多实现</strong></td></tr>
+                <tr><td>成员变量</td><td>任意（可有状态）</td><td>默认 <strong>public static final</strong> 常量</td></tr>
+                <tr><td>方法</td><td>可含具体方法</td><td>抽象方法 + default/static 方法（JDK8+）</td></tr>
+                <tr><td>构造器</td><td>有（供子类 super 调用）</td><td><strong>没有</strong></td></tr>
+                <tr><td>语义</td><td><strong>is-a</strong>：本质是什么（模板）</td><td><strong>can-do</strong>：能做什么（能力/契约）</td></tr>
+              </table>
+            </div>
+            <p><strong>选择</strong>：抽取公共<strong>状态和模板代码</strong>用抽象类（如 AbstractList）；定义<strong>能力契约</strong>、让不相关类都实现用接口（如 Comparable、Serializable）。</p>
+            <span class="mnemonic">「抽象类是半成品模板（单继承），接口是能力合同（多实现）」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-init-order">
+          <div class="qa-q"><span class="q-mark">Q14</span>类的加载与初始化顺序是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>一个对象的完整初始化顺序：</p>
+            <ol>
+              <li><strong>父类静态变量 + 父类静态代码块</strong>（类加载，只执行一次，按书写顺序）</li>
+              <li><strong>子类静态变量 + 子类静态代码块</strong></li>
+              <li><strong>父类实例变量 + 父类实例代码块</strong></li>
+              <li><strong>父类构造器</strong></li>
+              <li><strong>子类实例变量 + 子类实例代码块</strong></li>
+              <li><strong>子类构造器</strong></li>
+            </ol>
+            <ul>
+              <li>静态内容<strong>只随类加载执行一次</strong>；实例内容<strong>每 new 一次执行一次</strong></li>
+              <li>子类构造器默认第一行 <span class="key">super()</span>——所以父类先初始化</li>
+            </ul>
+            <span class="mnemonic">「先静态后实例、先父类后子类、静态只一次」——口诀背熟，笔试常考</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-polymorph">
+          <div class="qa-q"><span class="q-mark">Q15</span>多态的实现原理是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>调用方法时，JVM 通过对象头中的<strong>类指针找到方法表（vtable）</strong>，再根据<strong>实际类型</strong>定位到重写后的方法——即<strong>动态绑定</strong>（运行期才确定调用目标）</li>
+              <li><strong>invokespecial</strong> 调构造器/private/super 方法（静态绑定）；<strong>invokevirtual</strong> 调普通实例方法（虚方法，支持多态）；<strong>invokestatic</strong> 调静态方法（静态绑定，所以 static 方法「多态无效」）</li>
+              <li>字段<strong>没有多态</strong>：字段访问按编译期静态类型决定</li>
+            </ul>
+            <span class="mnemonic">「方法看运行类型（动态绑定），字段看声明类型（没有多态），static/final/private 不参与」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-inner">
+          <div class="qa-q"><span class="q-mark">Q16</span>内部类有哪几种？各有什么特点？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>成员内部类</strong>：依附外部实例，<strong>持有外部类引用</strong>，可访问外部全部成员；可能引发<strong>内存泄漏</strong></li>
+              <li><strong>静态内部类</strong>：不依赖外部实例、<strong>不持有外部引用</strong>——推荐用它做 Holder/Builder/单例（如 HashMap.Node）</li>
+              <li><strong>局部内部类</strong>：定义在方法内，作用域仅限该方法</li>
+              <li><strong>匿名内部类</strong>：没有名字、声明即实例化，常用于回调/事件监听；访问局部变量必须是 <strong>final 或事实 final</strong>（变量拷贝一份，改了外部就不同步了）</li>
+            </ul>
+            <span class="mnemonic">「成员抱引用、静态不抱、局部方法内、匿名即用即走」；防泄漏优先静态内部类</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-ctor">
+          <div class="qa-q"><span class="q-mark">Q17</span>构造器有哪些规则？可以被重写吗？</div>
+          <div class="qa-a">
+            <ul>
+              <li>构造器<strong>与类同名、无返回值</strong>（连 void 都没有），随 new 一起调用</li>
+              <li><strong>可以重载</strong>（不同参数列表形成多个构造器），可用 <span class="key">this(...)</span> 互调（必须放第一行）</li>
+              <li><strong>不能被继承，因此不能被重写</strong>；但子类构造器默认调用 <span class="key">super(...)</span>（父类无默认构造器时子类必须显式调用）</li>
+              <li>构造器不能是 abstract / static / final / synchronized</li>
+              <li>陷阱：<strong>构造器里调用可被重写的方法</strong>是危险行为——子类重写后可能读到「还没初始化完」的字段</li>
+            </ul>
+            <span class="mnemonic">「同名无返回、可重载不可重写、子类先 super」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-copy">
+          <div class="qa-q"><span class="q-mark">Q18</span>深拷贝和浅拷贝的区别？怎么实现深拷贝？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>浅拷贝</strong>：复制对象本身，引用类型字段<strong>只复制地址</strong>——新旧对象共享内部子对象（改一个另一个也变）</li>
+              <li><strong>深拷贝</strong>：连同引用指向的对象一起递归复制，新旧对象<strong>完全独立</strong></li>
+            </ul>
+            <p><strong>实现方式</strong>：</p>
+            <ol>
+              <li>实现 <span class="key">Cloneable</span> + 重写 <span class="key">clone()</span>（默认浅拷贝，深拷贝需字段也递归 clone——代码繁琐）</li>
+              <li><strong>序列化/反序列化</strong>（推荐）：对象图整体转字节再转回来，如 JSON 序列化（Jackson/Gson）或 Java 原生序列化</li>
+              <li>手动 new + 逐字段复制（小对象最简单直观）</li>
+            </ol>
+            <span class="mnemonic">「浅拷共享子对象，深拷整树全独立」；深拷贝首选序列化大法</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-object-methods">
+          <div class="qa-q"><span class="q-mark">Q19</span>Object 类有哪些常用方法？</div>
+          <div class="qa-a">
+            <ul>
+              <li><span class="key">equals(Object)</span> / <span class="key">hashCode()</span>：内容判断与哈希值，<strong>成对重写</strong></li>
+              <li><span class="key">toString()</span>：默认「类名@十六进制哈希」，日志打印必重写</li>
+              <li><span class="key">getClass()</span>：获取运行时类对象（final 方法）</li>
+              <li><span class="key">clone()</span>：protected 本地方法，需实现 Cloneable 才可调</li>
+              <li><span class="key">wait() / notify() / notifyAll()</span>：线程协作（final，必须在 synchronized 块内调用）</li>
+              <li><span class="key">finalize()</span>：已废弃，回收前回调</li>
+            </ul>
+            <span class="mnemonic">「equals+hashCode 成对、toString 打印、wait/notify 配锁用」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-super-this">
+          <div class="qa-q"><span class="q-mark">Q20</span>super 和 this 关键字的用法？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>this</strong>：当前对象引用——<span class="key">this.字段</span> 区分同名局部变量、<span class="key">this(...)</span> 调本类其他构造器、<span class="key">this</span> 作为参数传递自己</li>
+              <li><strong>super</strong>：父类「引用」——<span class="key">super.字段/方法</span> 访问被隐藏/重写的父类成员、<span class="key">super(...)</span> 调父类构造器</li>
+              <li><strong>this() 和 super() 都必须在构造器第一行，且不能共存</strong></li>
+              <li>构造器里没写任何 this/super，编译器默认插入 <span class="key">super()</span>（无参父类构造）</li>
+            </ul>
+            <span class="mnemonic">「this 看自己、super 找爸爸；两个调用抢第一行，只能留一个」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch3">
+        <h2><span class="num">03</span>常用 API 与工具类</h2>
+
+        <div class="qa hot" id="java-hash-eq">
+          <div class="qa-q"><span class="q-mark">Q21</span>equals 和 hashCode 之间有什么契约？为什么重写 equals 必须重写 hashCode？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>JDK 规定的两大契约：</p>
+            <ol>
+              <li><strong>equals 相等 → hashCode 必须相等</strong></li>
+              <li>hashCode 相等，equals 不一定相等（哈希冲突是允许的）</li>
+            </ol>
+            <p><strong>为什么必须成对重写</strong>：HashMap/HashSet 先用 hashCode 定位桶，再用 equals 判等。若只重写 equals 不重写 hashCode——两个「内容相等」的对象 hash 不同，<strong>落在不同桶里，contains 永远返回 false</strong>，集合去重直接失效。</p>
+            <span class="mnemonic">「equals 等，hash 必等；只重写一个，集合判等翻车」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-equals-write">
+          <div class="qa-q"><span class="q-mark">Q22</span>如何正确重写 equals()？有哪些坑？</div>
+          <div class="qa-a">
+            <p>标准五步：①自反 ②对称 ③传递 ④一致 ⑤与 null 比较为 false。</p>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>@Override
+public boolean equals(Object o) {
+    if (this == o) return true;                 // 1. 快速判断同一对象
+    if (o == null || getClass() != o.getClass()) // 2. 判空 + 类型判断
+        return false;
+    Person p = (Person) o;
+    return age == p.age &amp;&amp; Objects.equals(name, p.name); // 3. 逐字段比较
+}
+
+@Override
+public int hashCode() {
+    return Objects.hash(name, age);             // 与 equals 用同一批字段
+}</code></pre>
+            <ul>
+              <li>坑 1：参数必须是 <span class="key">Object</span> 类型，写成自己的类就是<strong>重载不是重写</strong>（加 @Override 让编译器抓）</li>
+              <li>坑 2：字段用 <span class="key">Objects.equals</span> 防 NPE，不用 == 比对象</li>
+              <li>坑 3：equals 用了哪些字段，hashCode 就必须用哪些字段</li>
+            </ul>
+            <span class="mnemonic">「一同二判三转型，字段比较用 Objects；hash 字段要同步」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-bigdecimal">
+          <div class="qa-q"><span class="q-mark">Q23</span>为什么金额计算要用 BigDecimal？有哪些坑？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>float/double 是<strong>二进制浮点</strong>，0.1 无法精确表示，<span class="key">0.1 + 0.2 != 0.3</span>——金额计算必须用 <span class="key">BigDecimal</span>（十进制任意精度）</li>
+              <li>坑 1：<strong>必须用字符串构造</strong>——<span class="key">new BigDecimal(0.1)</span> 依旧带精度误差，要写 <span class="key">new BigDecimal("0.1")</span> 或 <span class="key">BigDecimal.valueOf(0.1)</span></li>
+              <li>坑 2：<strong>BigDecimal 不可变</strong>，<span class="key">add/subtract/multiply</span> 返回新对象，必须接返回值</li>
+              <li>坑 3：除法<strong>必须指定精度和舍入模式</strong>，否则除不尽直接抛 <span class="key">ArithmeticException</span></li>
+              <li>坑 4：比较大小用 <span class="key">compareTo</span>（equals 会连 scale 一起比，1.0 与 1.00 不等）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>BigDecimal a = new BigDecimal("0.1");
+BigDecimal b = a.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP); // 0.03
+int cmp = a.compareTo(b); // -1/0/1，不用 equals</code></pre>
+            <span class="mnemonic">「金额用 BigDecimal、构造传字符串、运算接返回值、除法给精度、比较用 compareTo」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-date">
+          <div class="qa-q"><span class="q-mark">Q24</span>日期时间 API 新旧有什么区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>旧 API</strong>（java.util.Date / Calendar）：<strong>可变（线程不安全）、月份从 0 开始、设计混乱</strong>，SimpleDateFormat 并发解析还会出错</li>
+              <li><strong>新 API</strong>（JDK8+ java.time 包）：<strong>不可变、线程安全、API 清晰</strong></li>
+            </ul>
+            <div class="table-wrap">
+              <table>
+                <tr><th>用途</th><th>新 API 类</th></tr>
+                <tr><td>本地日期/时间/日期时间</td><td>LocalDate / LocalTime / LocalDateTime</td></tr>
+                <tr><td>时间戳（机器时间）</td><td>Instant</td></tr>
+                <tr><td>带时区</td><td>ZonedDateTime</td></tr>
+                <tr><td>时间差</td><td>Duration（时分秒）/ Period（年月日）</td></tr>
+                <tr><td>格式化</td><td>DateTimeFormatter（线程安全，可静态复用）</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「旧的能变又坑月，新的不可变线程安」；格式化用 DateTimeFormatter</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-objects">
+          <div class="qa-q"><span class="q-mark">Q25</span>Objects 工具类有哪些常用方法？</div>
+          <div class="qa-a">
+            <ul>
+              <li><span class="key">Objects.equals(a, b)</span>：null 安全的相等判断（都为 null 也返回 true）</li>
+              <li><span class="key">Objects.requireNonNull(obj)</span>：参数非空校验，为 null 直接抛 NPE 并带消息（快速失败）</li>
+              <li><span class="key">Objects.hash(...)</span> / <span class="key">hashCode(obj)</span>：null 安全的 hash 计算</li>
+              <li><span class="key">Objects.isNull / nonNull</span>：配合 Stream 的 filter 使用更清晰</li>
+              <li><span class="key">Objects.toString(obj, 默认值)</span>：null 安全的字符串化</li>
+            </ul>
+            <span class="mnemonic">「判等判空求 hash，Objects 全包了」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-math">
+          <div class="qa-q"><span class="q-mark">Q26</span>Math 的取整方法有什么区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><span class="key">Math.ceil</span>：<strong>向上取整</strong>（天花板），-1.2 → -1</li>
+              <li><span class="key">Math.floor</span>：<strong>向下取整</strong>（地板），-1.2 → -2</li>
+              <li><span class="key">Math.round</span>：<strong>四舍五入</strong>（内部 floor(x + 0.5)），返回 long/int</li>
+              <li><span class="key">(int) 强转</span>：直接<strong>截断小数</strong>（向零取整），-1.9 → -1</li>
+            </ul>
+            <p>记忆例：对 2.5——ceil=3、floor=2、round=3、强转=2；对 -2.5——ceil=-2、floor=-3、round=-2、强转=-2。</p>
+            <span class="mnemonic">「ceil 抬头、floor 踩地、round 加半再砍、强转只剁尾」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-uuid">
+          <div class="qa-q"><span class="q-mark">Q27</span>UUID 和随机数怎么生成？做主键有什么问题？</div>
+          <div class="qa-a">
+            <ul>
+              <li>生成：<span class="key">UUID.randomUUID()</span>（36 位含 4 个连字符）；随机数用 <span class="key">ThreadLocalRandom.current()</span>（并发下比共享 Random 高效）或 <span class="key">SecureRandom</span>（安全场景）</li>
+              <li>UUID 做主键的问题：<strong>无序</strong>导致 InnoDB 主键页分裂、写入性能差；36 字符<strong>太长</strong>占空间；<strong>无业务含义</strong></li>
+              <li>替代方案：<strong>数据库自增 ID</strong>（简单但分库会重复）、<strong>雪花算法 Snowflake</strong>（有序、趋势递增、分布式，详见场景篇）</li>
+            </ul>
+            <span class="mnemonic">「UUID 无序太长，主键选雪花或自增」；随机数并发用 ThreadLocalRandom</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch4">
+        <h2><span class="num">04</span>集合框架</h2>
+
+        <div class="qa hot" id="java-coll-sys">
+          <div class="qa-q"><span class="q-mark">Q28</span>Java 集合框架的整体体系是怎样的？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>两大顶级接口 + 一张地图：</p>
+            <ul>
+              <li><strong>Collection</strong>（单值）：List（有序可重复）/ Set（不重复）/ Queue（队列）</li>
+              <li><strong>Map</strong>（键值对）：key 唯一，与 Collection 是<strong>并列关系</strong>（Map 不是 Collection 的子接口）</li>
+            </ul>
+            <div class="table-wrap">
+              <table>
+                <tr><th>接口</th><th>实现类</th><th>底层结构</th><th>特点</th></tr>
+                <tr><td rowspan="2">List</td><td>ArrayList</td><td>动态数组</td><td>随机访问快，中间插删慢</td></tr>
+                <tr><td>LinkedList</td><td>双向链表</td><td>头尾插删快，随机访问慢（也是 Deque）</td></tr>
+                <tr><td rowspan="2">Set</td><td>HashSet</td><td>哈希表</td><td>无序、O(1) 判重</td></tr>
+                <tr><td>TreeSet</td><td>红黑树</td><td>有序（排序）、O(log n)</td></tr>
+                <tr><td rowspan="2">Map</td><td>HashMap</td><td>数组+链表+红黑树</td><td>线程不安全、允许一个 null key</td></tr>
+                <tr><td>TreeMap</td><td>红黑树</td><td>key 有序</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「Collection 管单值（List 队 Set），Map 独立管键值」；数组查快、链表插快、树有序、哈希均衡</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-list-ll">
+          <div class="qa-q"><span class="q-mark">Q29</span>ArrayList 和 LinkedList 的区别？如何选择？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>ArrayList</th><th>LinkedList</th></tr>
+                <tr><td>底层</td><td>Object[] 动态数组</td><td>双向链表</td></tr>
+                <tr><td>随机访问</td><td>O(1) 支持 get(i)</td><td>O(n) 需从头遍历</td></tr>
+                <tr><td>头尾插删</td><td>头插 O(n) 要搬移、尾插均摊 O(1)</td><td>O(1)（头尾节点直达）</td></tr>
+                <tr><td>内存</td><td>连续、缓存友好、有预留空间</td><td>每节点多两个指针、不连续</td></tr>
+                <tr><td>额外能力</td><td>—</td><td>实现 Deque，可当队列/栈</td></tr>
+              </table>
+            </div>
+            <p><strong>选择</strong>：绝大多数场景选 <strong>ArrayList</strong>（CPU 缓存命中率带来的收益常超过理论复杂度）；频繁头尾操作或当队列/栈用才考虑 LinkedList。中间插删两者都不占优（ArrayList 搬移 vs LinkedList 先找位置）。</p>
+            <span class="mnemonic">「数组查得快、链表头尾快；默认 ArrayList，队列用 LinkedList」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-arraylist-grow">
+          <div class="qa-q"><span class="q-mark">Q30</span>ArrayList 的扩容机制是怎样的？</div>
+          <div class="qa-a">
+            <ul>
+              <li>无参构造：初始为<strong>空数组</strong>，首次 add 时扩到 <strong>10</strong>（默认容量）</li>
+              <li>装满再 add：<strong>扩容 1.5 倍</strong>——<span class="key">newCapacity = oldCapacity + (oldCapacity >> 1)</span></li>
+              <li>扩容 = <strong>新建数组 + Arrays.copyOf 整体拷贝</strong>（O(n)，所以预估大小、初始化时指定容量可避免多次扩容）</li>
+              <li>最大容量：Integer.MAX_VALUE - 8（数组头部保留）；超出抛 <span class="key">OutOfMemoryError</span></li>
+              <li>注意：ArrayList <strong>线程不安全</strong>，并发场景用 <span class="key">CopyOnWriteArrayList</span> 或 <span class="key">Collections.synchronizedList</span></li>
+            </ul>
+            <span class="mnemonic">「首次给 10，往后 1.5 倍，拷贝旧数据」；能预估就传初始容量</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-hashmap-struct">
+          <div class="qa-q"><span class="q-mark">Q31</span>HashMap 的底层结构是怎样的？（JDK 1.8）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>JDK1.8 的 HashMap = <strong>数组 + 链表 + 红黑树</strong>。</p>
+            <ul>
+              <li><strong>数组</strong>（Node[] table）：主体，默认容量 <strong>16</strong>，负载因子 <strong>0.75</strong></li>
+              <li><strong>链表</strong>：hash 冲突的节点用链地址法挂在同一桶上（1.8 <strong>尾插</strong>）</li>
+              <li><strong>红黑树</strong>：链表长度 ≥ <strong>8</strong> 且数组长度 ≥ <strong>64</strong> 时树化（查询 O(log n)）；节点减到 <strong>6</strong> 时退回链表</li>
+              <li>容量超过 <strong>容量 × 0.75</strong> 触发扩容（翻倍，2 的幂）</li>
+            </ul>
+            <p>树化阈值 8 的由来：泊松分布下链长到 8 的概率约千万分之六——正常 hash 下几乎不可能，树化只是<strong>哈希攻击兜底</strong>。</p>
+            <span class="mnemonic">「数组挂链表，链长 8 变树，树缩 6 退链，超 75% 扩容翻倍」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-hashmap-put">
+          <div class="qa-q"><span class="q-mark">Q32</span>描述 HashMap 的 put 完整流程？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ol>
+              <li>计算 key 的 hash：<span class="key">h = key.hashCode() ^ (h >>> 16)</span>（高 16 位参与异或，<strong>扰动函数</strong>减少冲突）</li>
+              <li><span class="key">index = (n-1) &amp; hash</span> 定位桶，桶为空——直接新建节点放入</li>
+              <li>桶不空则逐一比对：key 的 hash 相同且 <span class="key">(== 或 equals 相等)</span> → <strong>覆盖旧 value</strong></li>
+              <li>如果是 TreeNode → 按<strong>红黑树</strong>方式插入</li>
+              <li>否则沿<strong>链表尾插</strong>；插完链长 ≥8 且数组 ≥64 → 树化</li>
+              <li>元素总数 &gt; 容量 × 0.75 → <strong>resize 扩容</strong>（容量翻倍，节点按 hash 与旧容量与运算结果<strong>留在原地或搬到新位置</strong>）</li>
+            </ol>
+            <ul>
+              <li>key 为 null 特殊处理：固定放<strong>下标 0</strong> 的桶（只允许一个 null key）</li>
+            </ul>
+            <span class="mnemonic">「hash 扰动定位桶，空则放、同则盖、链则尾插、长则树化、满则扩容」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-hashmap-cap">
+          <div class="qa-q"><span class="q-mark">Q33</span>HashMap 容量为什么必须是 2 的幂？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定位桶时用 <span class="key">(n - 1) &amp; hash</span> 代替取模 <span class="key">hash % n</span>——<strong>当 n 是 2 的幂时两者等价，位运算更快</strong></li>
+              <li>n-1 的二进制是<strong>全 1</strong>（如 16-1=1111），与运算后 hash 的<strong>每一位都能参与</strong>，分布均匀、减少冲突；若 n-1 有 0 位，某些桶永远取不到</li>
+              <li>扩容翻倍保持 2 的幂；构造时传 17 也会被 <span class="key">tableSizeFor</span> 向上修正为 32</li>
+            </ul>
+            <span class="mnemonic">「2 的幂：与运算代替取模，快 + 桶全用得上」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-hashmap-treeify">
+          <div class="qa-q"><span class="q-mark">Q34</span>链表转红黑树为什么阈值是 8？退化为什么是 6？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>8 的由来</strong>：理想 hash 下链长服从泊松分布，长度到 8 的概率约 <strong>0.00000006</strong>——几乎只有 hash 算法劣化/哈希攻击才会出现，树化是兜底而非常态</li>
+              <li><strong>红黑树节点大小是链表节点的 2 倍</strong>，为罕见场景常态买单不值</li>
+              <li><strong>退化阈值 6 而非 8</strong>：留出缓冲带，避免节点数在 7/8 之间反复增删导致<strong>树 ↔ 链表反复转换</strong>的抖动开销</li>
+            </ul>
+            <span class="mnemonic">「8 是小概率兜底，6 是防抖缓冲」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-hashmap-17">
+          <div class="qa-q"><span class="q-mark">Q35</span>HashMap 在 JDK 1.7 和 1.8 有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>JDK 1.7</th><th>JDK 1.8</th></tr>
+                <tr><td>结构</td><td>数组 + 链表</td><td>数组 + 链表 + <strong>红黑树</strong></td></tr>
+                <tr><td>插入方式</td><td><strong>头插法</strong></td><td><strong>尾插法</strong></td></tr>
+                <tr><td>扩容</td><td>先判断再插入</td><td>先插入再判断</td></tr>
+                <tr><td>扩容迁移</td><td>重新计算 index，<strong>倒序搬移</strong></td><td>hash &amp; oldCap 判断「原位 or 原位+旧容量」，<strong>顺序保持</strong></td></tr>
+              </table>
+            </div>
+            <ul>
+              <li><strong>头插的核心问题</strong>：1.7 并发扩容时，两个线程头插搬移节点会形成<strong>环形链表</strong>，后续 get 死循环 CPU 100%——1.8 改尾插修复（但 HashMap 依旧线程不安全，并发请用 ConcurrentHashMap）</li>
+              <li>1.8 节点由 Entry 改名 <strong>Node</strong>（树节点 TreeNode）</li>
+            </ul>
+            <span class="mnemonic">「1.7 头插会成环，1.8 尾插加红黑树」；并发永不裸用 HashMap</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-chm">
+          <div class="qa-q"><span class="q-mark">Q36</span>ConcurrentHashMap 如何保证线程安全？（1.7 vs 1.8）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>JDK 1.7</strong>：<strong>分段锁 Segment</strong>（继承 ReentrantLock），默认 16 段——不同段并发写互不阻塞，并发度 = 段数</li>
+              <li><strong>JDK 1.8</strong>：抛弃分段锁，改为 <strong>CAS + synchronized 锁单个桶头节点</strong>：
+                <ul>
+                  <li>桶为空：CAS 无锁插入，失败自旋重试</li>
+                  <li>桶非空：synchronized 锁住<strong>头节点</strong>，只影响这一个桶，锁粒度更细</li>
+                </ul>
+              </li>
+              <li>其他保障：<span class="key">size()</span> 用 baseCount + CounterCell 分散计数（类似 LongAdder）；<strong>不允许 null key/value</strong>（并发下无法区分「不存在」和「值为 null」，歧义）</li>
+            </ul>
+            <p><strong>为什么 key/value 不能为 null</strong>：HashMap 单线程 get 返回 null 能用 containsKey 区分；并发下 containsKey 和 get 是两次调用，中间可能被改——干脆禁止。</p>
+            <span class="mnemonic">「1.7 分段 16 间房，1.8 CAS + 锁桶头」；并发 map 禁 null 是为消灭歧义</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-hashset">
+          <div class="qa-q"><span class="q-mark">Q37</span>HashSet 的实现原理？如何保证不重复？</div>
+          <div class="qa-a">
+            <ul>
+              <li>HashSet 内部就是<strong>一个 HashMap</strong>，元素作 key，所有 value 指向同一个静态 <span class="key">PRESENT = new Object()</span> 占位对象</li>
+              <li>去重逻辑完全复用 HashMap：<strong>先比 hashCode 定位桶，再 == / equals 判等</strong>——重复则覆盖（表现为 add 返回 false）</li>
+              <li>推论：自定义对象去重<strong>必须正确重写 hashCode + equals</strong>，否则「内容相同」的两个对象都会被存进去</li>
+              <li>LinkedHashSet = HashMap + 双向链表，维护<strong>插入顺序</strong>；TreeSet 底层 TreeMap，按比较器<strong>排序去重</strong></li>
+            </ul>
+            <span class="mnemonic">「HashSet 是披着 Set 皮的 HashMap，value 全是 PRESENT」；去重效果取决于 hashCode + equals</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-treemap">
+          <div class="qa-q"><span class="q-mark">Q38</span>TreeMap 的排序原理？与 HashMap 怎么选？</div>
+          <div class="qa-a">
+            <ul>
+              <li>底层<strong>红黑树</strong>（自平衡二叉搜索树），增删查均 <strong>O(log n)</strong></li>
+              <li>排序依据：key 实现 <span class="key">Comparable</span>（自然排序）或构造时传 <span class="key">Comparator</span>（定制排序，优先级更高）</li>
+              <li>额外能力：<span class="key">firstKey / lastKey / floorKey / ceilingKey / headMap / tailMap</span>——范围查询、最值、有序遍历</li>
+              <li><strong>选择</strong>：要排序/范围查询 → TreeMap；只做 KV 存取 → HashMap（O(1) 更快）；要插入顺序 → LinkedHashMap</li>
+            </ul>
+            <span class="mnemonic">「TreeMap 红黑树，log n 还能范围查；无序求快 HashMap」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-linkedhashmap">
+          <div class="qa-q"><span class="q-mark">Q39</span>LinkedHashMap 的原理？怎么用它实现 LRU？</div>
+          <div class="qa-a">
+            <ul>
+              <li>结构 = HashMap + <strong>双向链表</strong>维护顺序：默认按<strong>插入顺序</strong>，构造参数 <span class="key">accessOrder=true</span> 则按<strong>访问顺序</strong>（get 也会把节点移到链尾）</li>
+              <li><strong>LRU 三步</strong>：①accessOrder = true ②重写 <span class="key">removeEldestEntry()</span> 返回 size() &gt; capacity ③访问/插入自动把热数据挪到尾部，超容量的头部（最久未用）被自动移除</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class LRUCache&lt;K, V&gt; extends LinkedHashMap&lt;K, V&gt; {
+    private final int capacity;
+    LRUCache(int capacity) {
+        super(16, 0.75f, true);   // accessOrder = true
+        this.capacity = capacity;
+    }
+    @Override
+    protected boolean removeEldestEntry(Map.Entry&lt;K, V&gt; eldest) {
+        return size() &gt; capacity; // 超容即淘汰最老
+    }
+}</code></pre>
+            <span class="mnemonic">「LinkedHashMap 加链表，accessOrder 开启访问序，重写淘汰回调即 LRU」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-failfast">
+          <div class="qa-q"><span class="q-mark">Q40</span>什么是 fail-fast？怎么安全地遍历时删除元素？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>fail-fast</strong>：迭代器创建时记录 <span class="key">modCount</span>，每次 next 检查 <span class="key">modCount != expectedModCount</span> 就抛 <span class="key">ConcurrentModificationException</span>——快速暴露「集合被结构性修改」的错误用法</li>
+              <li>遍历时直接 <span class="key">list.remove(obj)</span> 绕过了迭代器 → 计数不一致 → 报错（有时是「偶尔不报」，更隐蔽）</li>
+            </ul>
+            <p><strong>正确姿势</strong>：</p>
+            <ol>
+              <li><strong>迭代器自己的 remove</strong>：<span class="key">it.remove()</span>（会同步 expectedModCount）</li>
+              <li>JDK8+ <strong>集合方法</strong>：<span class="key">list.removeIf(x -&gt; ...)</span>（内部就是迭代器删除）</li>
+              <li>倒序 for 循环按下标删（只针对 List，避免删除后索引位移漏删）</li>
+              <li>并发场景用 <span class="key">CopyOnWriteArrayList</span>（写时复制，迭代的是快照，绝不报错）</li>
+            </ol>
+            <span class="mnemonic">「modCount 对不上就炸；删除要么用迭代器，要么 removeIf，要么 COW」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-coll-choose">
+          <div class="qa-q"><span class="q-mark">Q41</span>集合选型的整体思路？（业务场景怎么选容器）</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>要不要键值对</strong>：要 → Map；不要 → List / Set / Queue</li>
+              <li>Map 细分：默认 HashMap；要排序/范围 → TreeMap；要插入/访问序 → LinkedHashMap；并发 → ConcurrentHashMap</li>
+              <li>List 细分：默认 ArrayList；当队列/栈或头尾频繁增删 → LinkedList（或 ArrayDeque，性能更好）；并发读多写少 → CopyOnWriteArrayList</li>
+              <li>Set 细分：去重默认 HashSet；有序 TreeSet / LinkedHashSet；并发 → CopyOnWriteArraySet / ConcurrentHashMap.newKeySet()</li>
+              <li>队列：单端 ArrayDeque（推荐替代 Stack）；阻塞队列 BlockingQueue（生产者消费者）；优先级 PriorityQueue（底层小顶堆）</li>
+            </ul>
+            <span class="mnemonic">「先问键值再问序，并发一律 Concurrent/COW，队列首选 ArrayDeque」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch5">
+        <h2><span class="num">05</span>异常处理</h2>
+
+        <div class="qa hot" id="java-exception-sys">
+          <div class="qa-q"><span class="q-mark">Q42</span>Java 异常体系是怎样的？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>顶层：<span class="key">Throwable</span>，两大分支：<strong>Error</strong> 与 <strong>Exception</strong></li>
+              <li><strong>Error</strong>：严重错误，程序救不了——OutOfMemoryError、StackOverflowError、NoClassDefFoundError</li>
+              <li><strong>Exception</strong>：
+                <ul>
+                  <li><strong>受检异常</strong>（Checked）：编译器强制处理——IOException、SQLException</li>
+                  <li><strong>非受检</strong>（RuntimeException 及子类）：编译器不管——NullPointerException、IndexOutOfBoundsException、ClassCastException、ArithmeticException</li>
+                </ul>
+              </li>
+            </ul>
+            <p>常见运行时异常对应场景：NPE（调 null 的成员）、数组/字符串越界、类型强转不匹配、除以 0（整数运算）、NumberFormatException（Integer.parseInt("abc")）。</p>
+            <span class="mnemonic">「Throwable 分两支：Error 救不了，Exception 分受检和运行时」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-checked">
+          <div class="qa-q"><span class="q-mark">Q43</span>受检异常和非受检异常的区别？各自适合什么场景？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>受检异常</strong>：编译期强制 try/catch 或 throws；表示<strong>可预期、可恢复</strong>的外部问题（文件不存在、网络中断）——调用方必须面对</li>
+              <li><strong>非受检异常</strong>：编译器不强制；表示<strong>程序 bug</strong>（空指针、越界）——应该修代码而不是 catch</li>
+              <li>业务中常把受检包成非受检：<span class="key">throw new RuntimeException(e)</span> 让框架统一兜底</li>
+            </ul>
+            <div class="warn">别用异常做流程控制：异常构造要抓栈快照（fillInStackTrace），代价远高于 if 判断；也不要 catch (Exception e) 后什么都不干（吞异常最致命）。</div>
+            <span class="mnemonic">「受检是外部意外必须接，非受检是代码 bug 要修根」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-try-resource">
+          <div class="qa-q"><span class="q-mark">Q44</span>try-with-resources 是什么？为什么推荐？</div>
+          <div class="qa-a">
+            <ul>
+              <li>资源类实现 <span class="key">AutoCloseable</span>（或 Closeable），放 try 的括号里，<strong>无论正常结束还是抛异常，编译器自动按声明逆序 close</strong></li>
+              <li>对比传统 try-finally 手写 close：代码更短、<strong>不会漏关</strong>、不会出现「close 抛异常把业务异常吞掉」（被抑制的异常可通过 getSuppressed 拿到）</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>try (FileInputStream in = new FileInputStream("a.txt");
+     FileOutputStream out = new FileOutputStream("b.txt")) {
+    in.transferTo(out);   // 结束自动 close，先开后关
+}</code></pre>
+            <span class="mnemonic">「实现 AutoCloseable，放进括号自动关，先开后关」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-finally-return">
+          <div class="qa-q"><span class="q-mark">Q45</span>finally 里写 return 会发生什么？finally 一定执行吗？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>finally 里 return：会<strong>覆盖 try/catch 的返回值</strong>，并且若 finally 抛异常会<strong>吞掉原异常</strong>——<strong>严禁这样写</strong>（编译器给 warning）</li>
+              <li>finally 里修改基本类型返回值：无效——return 时返回值已拷贝进局部变量表</li>
+              <li>finally 修改引用对象的<strong>内容</strong>：生效（地址早拷贝了，改的是同一对象）</li>
+              <li><strong>不执行 finally 的三种情况</strong>：①System.exit() ②JVM 崩溃/断电 ③finally 所在线程被杀死；注意 <strong>try 里死循环也会导致永远到不了 finally</strong></li>
+            </ul>
+            <span class="mnemonic">「finally 的 return 会顶掉一切，千万别写；exit/崩溃/杀线程才跳过 finally」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-custom-exception">
+          <div class="qa-q"><span class="q-mark">Q46</span>如何自定义异常？有什么最佳实践？</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>public class BizException extends RuntimeException {
+    private final int code;                       // 业务错误码
+    public BizException(int code, String message) {
+        super(message);                           // 消息传给父类
+        this.code = code;
+    }
+    public int getCode() { return code; }
+}</code></pre>
+            <ul>
+              <li>业务异常一般<strong>继承 RuntimeException</strong>（不强制调用方处理），带 <strong>错误码 + 消息</strong>便于前端/日志定位</li>
+              <li>最佳实践：①异常要有<strong>上下文信息</strong>（哪个订单、什么参数）②不要吞异常，至少记日志 ③不要用异常控制流程 ④统一由全局异常处理器（@ControllerAdvice）兜底转响应</li>
+            </ul>
+            <span class="mnemonic">「业务异常继承 Runtime，带码带上下文，全局处理器统一兜」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-throw-throws">
+          <div class="qa-q"><span class="q-mark">Q47</span>throw 和 throws 的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>throw</strong>：语句，方法体内<strong>真正抛出一个异常对象</strong>，后面代码不执行</li>
+              <li><strong>throws</strong>：声明，写在方法签名上，<strong>告诉调用者可能抛哪些异常</strong>，本身不抛</li>
+              <li>throw 后面跟<strong>一个对象</strong>；throws 后面跟<strong>一个或多个异常类</strong></li>
+              <li>throw 可以抛 unchecked 也可以抛 checked（抛 checked 时方法必须同时 throws 声明）</li>
+            </ul>
+            <span class="mnemonic">「throw 是扔出去（真扔），throws 是贴告示（可能扔）」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch6">
+        <h2><span class="num">06</span>泛型与反射</h2>
+
+        <div class="qa hot" id="java-generic">
+          <div class="qa-q"><span class="q-mark">Q48</span>什么是泛型的类型擦除？带来了什么问题？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>泛型只存在于编译期</strong>：编译后 <span class="key">List&lt;String&gt;</span> 与 <span class="key">List&lt;Integer&gt;</span> 都是裸的 <span class="key">List</span>，类型参数被擦成上界（默认 Object，声明 &lt;T extends Number&gt; 则擦成 Number）</li>
+              <li>目的：兼容 JDK5 之前的老代码（迁移兼容性），「伪泛型」</li>
+              <li><strong>带来的限制</strong>：
+                <ul>
+                  <li>不能 <span class="key">new T()</span>、不能 <span class="key">new T[]</span>（运行期不知道 T 是谁）</li>
+                  <li>不能 <span class="key">instanceof List&lt;String&gt;</span>；泛型类不能是异常类</li>
+                  <li>静态成员不能用类型参数</li>
+                  <li><span class="key">List&lt;String&gt;.class</span> 不存在，只有一个 List.class</li>
+                </ul>
+              </li>
+              <li>需要运行期泛型信息的场景：通过<strong>继承捕获泛型</strong>（子类持有具体类型的 Class）或方法签名的 <span class="key">getGenericSuperclass()</span>——主流框架（Jackson、MyBatis）都这么干</li>
+            </ul>
+            <span class="mnemonic">「泛型进编译器，出 class 全擦掉，运行期只剩上界」；要拿类型靠继承或签名</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-wildcard">
+          <div class="qa-q"><span class="q-mark">Q49</span>? extends 和 ? super 有什么区别？什么是 PECS？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><span class="key">? extends T</span>（上界通配符）：泛型是 <strong>T 或 T 的子类</strong>——<strong>只读不写</strong>（读出来的一定是 T；但放任何东西进去都不安全）</li>
+              <li><span class="key">? super T</span>（下界通配符）：泛型是 <strong>T 或 T 的父类</strong>——<strong>可写只能写 T</strong>（读出来只能当 Object）</li>
+              <li><strong>PECS 原则</strong>：Producer Extends, Consumer Super——<strong>生产者（读数据）用 extends，消费者（写数据）用 super</strong></li>
+              <li>经典例子：<span class="key">Collections.copy(List&lt;? super T&gt; dest, List&lt;? extends T&gt; src)</span>——从 src 读、往 dest 写</li>
+            </ul>
+            <span class="mnemonic">「extends 读只读，super 写只写；生产用 extends，消费用 super」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-reflect">
+          <div class="qa-q"><span class="q-mark">Q50</span>什么是反射？有哪些应用场景？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>反射</strong>：运行期通过 Class 对象<strong>获取类信息、创建对象、访问字段、调用方法</strong>的能力——绕过编译期检查，让程序「自我审视」</li>
+              <li>三种获取 Class 的方式：<span class="key">类名.class / obj.getClass() / Class.forName("全限定名")</span>（同一类的 Class 全局唯一，== 可比较）</li>
+              <li><strong>框架基石</strong>：Spring 依赖注入（按类名 new Bean）、MyBatis（结果集映射到字段）、Jackson（JSON ↔ 对象）、动态代理、注解处理、JDBC 驱动加载</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>Class&lt;?&gt; clazz = Class.forName("com.demo.User");
+Constructor&lt;?&gt; ctor = clazz.getConstructor();
+Object user = ctor.newInstance();                    // 创建实例
+Method m = clazz.getMethod("setName", String.class);
+m.invoke(user, "Tom");                               // 调用方法
+Field f = clazz.getDeclaredField("name");
+f.setAccessible(true);                               // 突破 private</code></pre>
+            <span class="mnemonic">「反射 = 运行期开盲盒：看类、造对象、改字段、调方法」；框架全靠它</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-reflect-cost">
+          <div class="qa-q"><span class="q-mark">Q51</span>反射有什么缺点？如何优化？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>性能开销</strong>：方法查找、参数装箱、安全检查比直接调用慢（但 JIT 优化后差距已缩小）</li>
+              <li><strong>破坏封装</strong>：setAccessible(true) 可改 private，绕过访问控制</li>
+              <li><strong>编译期失去保护</strong>：方法名拼错运行时才炸，重构工具也追踪不到</li>
+              <li><strong>优化手段</strong>：缓存 Method/Field 对象（别每次 getMethod）、高频场景用 <span class="key">MethodHandle</span> / LambdaMetafactory（接近直接调用）、或编译期代码生成（APT/Lombok）</li>
+            </ul>
+            <span class="mnemonic">「反射慢在查找、险在破封装、坑在运行才炸」；缓存 + MethodHandle 救性能</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-annotation">
+          <div class="qa-q"><span class="q-mark">Q52</span>注解的本质是什么？元注解有哪些？</div>
+          <div class="qa-a">
+            <ul>
+              <li>注解本质是<strong>继承了 Annotation 接口的特殊接口</strong>，运行期由 JVM 生成代理对象；<strong>注解本身只是「标记」，必须配合反射读取才产生行为</strong></li>
+              <li><strong>元注解</strong>（贴在注解定义上的注解）：
+                <ul>
+                  <li><span class="key">@Target</span>：能贴在哪（TYPE / METHOD / FIELD / PARAMETER...）</li>
+                  <li><span class="key">@Retention</span>：活到什么时候——<strong>SOURCE（编译丢弃，如 @Override）/ CLASS（class 文件有、运行时无）/ RUNTIME（运行期可反射读，框架用）</strong></li>
+                  <li><span class="key">@Documented / @Inherited / @Repeatable</span>：进文档 / 子类可继承 / 可重复贴</li>
+                </ul>
+              </li>
+              <li>属性用 default 给默认值；只有一个属性且名为 value 时使用时可省略名字</li>
+            </ul>
+            <span class="mnemonic">「注解是标记，Retention 定生死，RUNTIME 才能被反射读」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-proxy">
+          <div class="qa-q"><span class="q-mark">Q53</span>JDK 动态代理和 CGLIB 动态代理的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>JDK 动态代理</th><th>CGLIB 动态代理</th></tr>
+                <tr><td>实现机制</td><td>基于<strong>接口</strong>，运行期生成实现接口的代理类（$Proxy0）</td><td>基于<strong>继承</strong>，生成目标类的子类，重写方法</td></tr>
+                <tr><td>要求</td><td>目标类必须实现接口</td><td>类和方法不能是 final</td></tr>
+                <tr><td>拦截入口</td><td>InvocationHandler.invoke()</td><td>MethodInterceptor.intercept()</td></tr>
+                <tr><td>性能</td><td>JDK8 后生成快、调用已优化</td><td>生成慢一点，老版本调用快</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>核心 API：<span class="key">Proxy.newProxyInstance(loader, interfaces, handler)</span></li>
+              <li><strong>Spring 的选择</strong>：有接口默认 JDK 代理；无接口用 CGLIB（SpringBoot 2.x 起默认全部 CGLIB）；AOP、@Transactional、日志切面全是动态代理</li>
+              <li>经典陷阱：<strong>同类内部方法自调用</strong>（this.method()）不走代理 → 事务/切面失效；解法是拿代理对象调用（AopContext）或拆类</li>
+            </ul>
+            <span class="mnemonic">「JDK 靠接口、CGLIB 靠继承、final 拦 CGLIB、自调不过代理」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch7">
+        <h2><span class="num">07</span>IO 与 NIO</h2>
+
+        <div class="qa" id="java-io-sys">
+          <div class="qa-q"><span class="q-mark">Q54</span>Java IO 流体系如何分类？</div>
+          <div class="qa-a">
+            <ul>
+              <li>按<strong>方向</strong>：输入流（InputStream/Reader）/ 输出流（OutputStream/Writer）——站在<strong>程序视角</strong>定方向</li>
+              <li>按<strong>单位</strong>：字节流（InputStream/OutputStream，一切文件）/ 字符流（Reader/Writer，纯文本）</li>
+              <li>按<strong>功能</strong>：节点流（直接连数据源，FileInputStream）/ <strong>处理流（包一层增强，Buffered、Data、Object、转换流）</strong>——装饰器模式的经典应用</li>
+            </ul>
+            <p>常用组合：<span class="key">BufferedReader + InputStreamReader</span> 读文本、<span class="key">BufferedInputStream</span> 拷贝文件、<span class="key">ObjectOutputStream</span> 序列化。</p>
+            <span class="mnemonic">「方向看程序、单位看内容、节点加处理（缓冲提速）」——IO 流就是套娃装饰器</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-byte-char">
+          <div class="qa-q"><span class="q-mark">Q55</span>字节流和字符流怎么选？乱码是怎么产生的？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>字节流</strong>：万能（图片/音视频/压缩包/一切）；<strong>字符流</strong>：纯文本专用（内部自带<strong>编码解码</strong>与缓冲区，处理中文方便）</li>
+              <li><strong>乱码本质</strong>：编码与解码用了<strong>不同字符集</strong>（UTF-8 写、GBK 读），或按字节截断了多字节字符（中文 3 字节被砍一半）</li>
+              <li>预防：读写都<strong>显式指定字符集</strong> <span class="key">new InputStreamReader(in, StandardCharsets.UTF_8)</span>，不要依赖平台默认编码</li>
+              <li>转换流 <span class="key">InputStreamReader / OutputStreamWriter</span> 是字节流 ↔ 字符流的桥梁</li>
+            </ul>
+            <span class="mnemonic">「二进制用字节、文本用字符、编码两边一致才不乱」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-bio-nio">
+          <div class="qa-q"><span class="q-mark">Q56</span>BIO、NIO、AIO 有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>模型</th><th>机制</th><th>线程模型</th><th>适用</th></tr>
+                <tr><td><strong>BIO</strong></td><td>一连接一线程，read 阻塞</td><td>阻塞式</td><td>连接少且固定（传统 JDBC、文件 IO）</td></tr>
+                <tr><td><strong>NIO</strong></td><td>一个线程管多连接（Selector 轮询），read 就绪才处理</td><td><strong>同步非阻塞 + 多路复用</strong></td><td>高并发连接（Netty、Tomcat NIO、Kafka）</td></tr>
+                <tr><td><strong>AIO</strong></td><td>内核完成后回调完成事件</td><td>异步非阻塞</td><td>Linux 实现不成熟，生产少用</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>类比餐厅：BIO 每桌一个服务员站着等点菜；<strong>NIO 一个服务员轮流看哪些桌举手</strong>；AIO 点完菜直接推送通知</li>
+              <li>NIO 的底层依赖操作系统 <span class="key">select / poll / epoll</span>（Linux epoll 事件驱动，一个线程监听成千上万 fd）</li>
+            </ul>
+            <span class="mnemonic">「BIO 一连一线程，NIO 一线程轮多路，AIO 完了再回调」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-nio-core">
+          <div class="qa-q"><span class="q-mark">Q57</span>NIO 的三大核心组件是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Buffer（缓冲区）</strong>：数据容器，本质数组 + <strong>position / limit / capacity</strong> 三个指针；写后 <span class="key">flip()</span> 切读态，<span class="key">clear()</span> 复位</li>
+              <li><strong>Channel（通道）</strong>：双向传输管道（可读可写），替代单向流；FileChannel / SocketChannel / ServerSocketChannel</li>
+              <li><strong>Selector（选择器）</strong>：多路复用器，一个线程注册监听多个 Channel 的<strong>就绪事件</strong>（OP_ACCEPT / OP_CONNECT / OP_READ / OP_WRITE），select() 阻塞直到有事件</li>
+            </ul>
+            <p>工作流：Channel 把数据读写到 Buffer → Channel 注册到 Selector → Selector 轮询就绪事件 → 处理对应 Buffer。<strong>Netty 就是对这套原生 API 的封装增强</strong>。</p>
+            <span class="mnemonic">「Buffer 装数据、Channel 是管道、Selector 当裁判」；flip 前写后读</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-zerocopy">
+          <div class="qa-q"><span class="q-mark">Q58</span>什么是零拷贝？Java 里怎么实现？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>传统读文件发送网络要 4 次拷贝 + 4 次上下文切换</strong>：磁盘→内核缓冲（DMA）→用户空间（CPU）→socket 缓冲（CPU）→网卡（DMA）。</p>
+            <ul>
+              <li><strong>零拷贝</strong>：数据<strong>全程不进用户空间</strong>（用户态不参与 CPU 拷贝），减少拷贝次数与上下文切换</li>
+              <li>实现 1：<span class="key">FileChannel.transferTo()</span> —— 底层 Linux <span class="key">sendfile</span> 系统调用，内核缓冲直送 socket</li>
+              <li>实现 2：<strong>mmap 内存映射</strong>（MappedByteBuffer）——文件映射进用户地址空间，省一次拷贝，适合修改</li>
+              <li>应用：Kafka 高吞吐（sendfile 顺序读发给消费者）、RocketMQ（mmap）、Tomcat 大文件传输、Nginx</li>
+            </ul>
+            <span class="mnemonic">「sendfile 直送网卡，mmap 映射省一跳；Kafka 快就快在这」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-io-best">
+          <div class="qa-q"><span class="q-mark">Q59</span>IO 操作有哪些最佳实践？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>流必须关闭</strong>：try-with-resources 自动关闭（多个资源按声明<strong>逆序</strong>关，先开后关）</li>
+              <li><strong>一定加缓冲</strong>：BufferedInputStream / BufferedReader 包装节点流，减少系统调用（拷贝文件可差几十倍）</li>
+              <li>大文件用 <span class="key">transferTo</span>（零拷贝）；<strong>不要一次性 read 全部进内存</strong>（OOM），分块或流式处理</li>
+              <li>读写文本<strong>显式指定字符集</strong>（UTF-8），避免依赖平台默认值</li>
+              <li>序列化敏感字段加 <span class="key">transient</span>；Java 原生序列化有安全漏洞，跨语言场景优先 JSON/Protobuf</li>
+            </ul>
+            <span class="mnemonic">「关流用 try-res、提速靠缓冲、大件走零拷、字符定编码」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch8">
+        <h2><span class="num">08</span>多线程基础</h2>
+
+        <div class="qa hot" id="java-thread-create">
+          <div class="qa-q"><span class="q-mark">Q60</span>创建线程有几种方式？为什么说本质只有一种？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ol>
+              <li>继承 <span class="key">Thread</span>，重写 run()</li>
+              <li>实现 <span class="key">Runnable</span>（无返回值，推荐——不占用继承位）</li>
+              <li>实现 <span class="key">Callable&lt;V&gt;</span> + <span class="key">FutureTask</span>（<strong>有返回值、可抛异常</strong>）</li>
+              <li>线程池 <span class="key">Executors / ThreadPoolExecutor</span>（生产唯一推荐）</li>
+            </ol>
+            <p><strong>本质只有一种</strong>：new Thread() 启动线程。Runnable/Callable 只是「任务」，真正开线程的永远是 <span class="key">thread.start()</span>。</p>
+            <ul>
+              <li><strong>start() vs run()</strong>：start() 向 JVM 申请新线程并由它调 run()；直接调 run() 只是普通方法调用，<strong>仍在主线程同步执行</strong>，没有任何多线程效果</li>
+              <li>start() 只能调用一次（IllegalThreadStateException）</li>
+            </ul>
+            <span class="mnemonic">「任务归任务、线程归线程；start 才开新线程，run 只是普通调用」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-thread-state">
+          <div class="qa-q"><span class="q-mark">Q61</span>线程有哪 6 种状态？如何流转？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>状态（Thread.State）</th><th>含义</th><th>触发</th></tr>
+                <tr><td>NEW</td><td>创建未启动</td><td>new Thread()</td></tr>
+                <tr><td>RUNNABLE</td><td>可运行（就绪+运行）</td><td>start()；锁/IO 就绪后恢复</td></tr>
+                <tr><td>BLOCKED</td><td>阻塞等监视器锁</td><td>等 synchronized 锁</td></tr>
+                <tr><td>WAITING</td><td>无限期等待</td><td>wait() / join() / LockSupport.park()</td></tr>
+                <tr><td>TIMED_WAITING</td><td>限时等待</td><td>sleep(ms) / wait(ms) / join(ms)</td></tr>
+                <tr><td>TERMINATED</td><td>终止</td><td>run() 结束或异常退出</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>注意：Java 没有「Running」独立状态，运行中也是 RUNNABLE；<strong>等待 CPU 与等待锁是不同状态</strong>（BLOCKED 只属于抢 synchronized）</li>
+              <li>WAITING 需要别人唤醒（notify/notifyAll/join 目标结束）；TIMED_WAITING 到点自动醒</li>
+            </ul>
+            <span class="mnemonic">「新可阻等限终」六态；sleep 是限时等、等锁是 BLOCKED、wait 是无限等</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-sleep-wait">
+          <div class="qa-q"><span class="q-mark">Q62</span>sleep() 和 wait() 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>sleep（Thread）</th><th>wait（Object）</th></tr>
+                <tr><td>所属</td><td>Thread 静态方法</td><td>Object 方法，所有对象都有</td></tr>
+                <tr><td>释放锁</td><td><strong>不释放</strong>锁</td><td><strong>释放</strong>锁</td></tr>
+                <tr><td>使用位置</td><td>任意地方</td><td>必须在 synchronized 块内</td></tr>
+                <tr><td>唤醒方式</td><td>时间到自动醒</td><td>notify/notifyAll 唤醒（可带超时）</td></tr>
+                <tr><td>用途</td><td>暂停当前线程</td><td>线程间<strong>协作通信</strong></td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>核心区别一句话：<strong>sleep 抱着锁睡，wait 让出锁睡</strong></li>
+              <li>wait 醒来后要<strong>重新竞争锁</strong>才能继续执行</li>
+              <li>wait 的经典范式：<span class="key">while(条件不满足) wait();</span>（防虚假唤醒，用 if 判断是经典 bug）</li>
+            </ul>
+            <span class="mnemonic">「sleep 抱锁睡、wait 交锁睡、醒来还得抢回来」；wait 配 while 不配 if</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-interrupt">
+          <div class="qa-q"><span class="q-mark">Q63</span>线程的中断机制是怎样的？stop() 为什么被废弃？</div>
+          <div class="qa-a">
+            <ul>
+              <li>Java <strong>没有强制杀线程</strong>的安全手段，中断是「<strong>协商式</strong>」的：thread.interrupt() 只是<strong>设置中断标志位</strong>，线程自己决定怎么响应</li>
+              <li>响应方式：①循环里 <span class="key">Thread.currentThread().isInterrupted()</span> 检查并退出 ②阻塞中的 sleep/wait/join 收到中断会抛 <span class="key">InterruptedException</span> 并<strong>清除标志位</strong></li>
+              <li>catch 了 InterruptedException 要么重新 interrupt()，要么向上抛——<strong>别吞掉中断信号</strong>，否则上层感知不到取消请求</li>
+              <li><strong>stop() 废弃原因</strong>：直接杀死线程并立刻释放所有锁，可能让共享数据停在<strong>中间状态</strong>（转账扣了 A 没加 B），对象损坏不可控；suspend/resume 同理死锁风险而废弃</li>
+            </ul>
+            <span class="mnemonic">「中断是商量不是枪毙；标志位 + 异常两条路，别吞信号」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-join-yield">
+          <div class="qa-q"><span class="q-mark">Q64</span>join() 和 yield() 的作用？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>join()</strong>：等待目标线程<strong>执行结束</strong>——<span class="key">t.join()</span> 让当前线程阻塞直到 t 跑完；经典用法：主线程等所有子任务完成再汇总（join 可带超时）</li>
+              <li><strong>yield()</strong>：当前线程<strong>暗示</strong>让出 CPU 时间片，回到就绪态<strong>继续参与竞争</strong>——只是建议，调度器可无视；几乎不用于生产（测试复现竞态时有用）</li>
+              <li>更现代的等待方式：<span class="key">CountDownLatch / Future.get() / CompletableFuture.allOf()</span>，比裸 join 更灵活</li>
+            </ul>
+            <span class="mnemonic">「join 等他死，yield 让个座（可能白让）」；生产用 JUC 不用 yield</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-daemon">
+          <div class="qa-q"><span class="q-mark">Q65</span>什么是守护线程？有什么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li>守护线程（Daemon）：<strong>为用户线程服务的后台线程</strong>——当所有用户线程结束，JVM 直接退出，<strong>不等守护线程</strong>（守护线程被强行终止）</li>
+              <li>典型：<strong>GC 线程</strong>、JIT 编译线程、心跳/日志刷盘线程</li>
+              <li>设置：<span class="key">t.setDaemon(true)</span>，<strong>必须在 start() 之前</strong>（否则 IllegalThreadStateException）</li>
+              <li>注意：守护线程里<strong>不要写关键业务/IO</strong>——JVM 退出时不会给它收尾机会，可能写一半断掉</li>
+            </ul>
+            <span class="mnemonic">「守护线程陪跑，用户线程走光它陪葬」；start 前设置，别放关键逻辑</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-thread-safe">
+          <div class="qa-q"><span class="q-mark">Q66</span>什么是线程安全？产生线程不安全的根源是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>线程安全</strong>：多线程访问共享资源时，结果始终正确、行为可预期（不管调度顺序如何）。</p>
+            <p><strong>三大根源</strong>（并发三性）：</p>
+            <ul>
+              <li><strong>原子性</strong>：i++ 是「读-改-写」三步，可被中途打断——解法 synchronized / Lock / CAS 原子类</li>
+              <li><strong>可见性</strong>：CPU 缓存导致 A 改了共享变量 B 看不见——解法 volatile / synchronized / final</li>
+              <li><strong>有序性</strong>：编译器与 CPU <strong>指令重排</strong>打乱代码顺序——解法 volatile（含内存屏障）/ happens-before 规则</li>
+            </ul>
+            <p>经典案例：双重检查锁单例不加 volatile 时 new 对象的「分配→初始化→赋值」可能重排，别的线程拿到<strong>半初始化对象</strong>。</p>
+            <span class="mnemonic">「原子被打断、可见隔缓存、有序乱重排」——并发三性，对应三把锁</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch9">
+        <h2><span class="num">09</span>并发编程核心</h2>
+
+        <div class="qa hot" id="java-synchronized">
+          <div class="qa-q"><span class="q-mark">Q67</span>synchronized 的原理是什么？有哪些用法？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>底层基于对象头的 <span class="key">Monitor（监视器锁）</span>：字节码层面是 <span class="key">monitorenter / monitorexit</span> 指令（同步方法靠 ACC_SYNCHRONIZED 标志）</li>
+              <li>三种用法：①修饰<strong>实例方法</strong>（锁当前对象 this）②修饰<strong>静态方法</strong>（锁 Class 对象，全类唯一）③修饰<strong>代码块</strong>（锁指定对象，粒度最细）</li>
+              <li>特性：<strong>可重入</strong>（同线程可重复获取自己的锁）、非公平、保证原子+可见+有序（互斥区天然 happens-before）</li>
+              <li>JDK6 后优化：偏向锁、轻量级锁、自旋锁、锁消除、锁粗化——性能已与 ReentrantLock 相当</li>
+            </ul>
+            <div class="warn">陷阱：锁实例方法时，不同对象各自有锁互不影响；「Integer 缓存对象」「String 常量」做锁对象时，可能与其他代码意外共享同一把锁。锁对象应为 <strong>private final</strong>。</div>
+            <span class="mnemonic">「实例锁 this、静态锁 Class、代码块锁指定」；monitor 进出、可重入</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-lock-upgrade">
+          <div class="qa-q"><span class="q-mark">Q68</span>描述 synchronized 的锁升级过程？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>JDK6 引入，锁信息记录在<strong>对象头 Mark Word</strong> 中，随竞争激烈程度逐步升级（只升不降）：</p>
+            <ol>
+              <li><strong>无锁</strong> → <strong>偏向锁</strong>：第一个线程访问，Mark Word 记下线程 ID——之后该线程进出<strong>无需任何同步操作</strong>（只有一个线程反复拿锁的场景）</li>
+              <li><strong>偏向锁 → 轻量级锁</strong>：第二个线程来竞争，偏向撤销，升级为轻量级锁——线程栈里建 Lock Record，<strong>CAS 自旋</strong>抢锁（交替执行、临界区极短）</li>
+              <li><strong>轻量级锁 → 重量级锁</strong>：自旋超限或第三者竞争，膨胀为重量级锁——依赖操作系统 <strong>mutex 互斥量</strong>，拿不到锁的线程<strong>阻塞挂起</strong>（用户态 ↔ 内核态切换，开销大）</li>
+            </ol>
+            <ul>
+              <li>设计思想：<strong>能不加锁就不加、能自旋就不阻塞</strong>——按竞争强度花不同代价</li>
+              <li>JDK15 起偏向锁已被废弃移除（维护成本高、收益在现代应用中有限）</li>
+            </ul>
+            <span class="mnemonic">「无锁→偏向→轻量自旋→重量阻塞」只升不降，代价层层加码</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-volatile">
+          <div class="qa-q"><span class="q-mark">Q69</span>volatile 的作用是什么？能保证原子性吗？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>volatile 两大作用（保证两个，不保证一个）：</p>
+            <ul>
+              <li><strong>可见性</strong>：写 volatile 变量立刻刷回主内存并<strong>使其他 CPU 的缓存行失效</strong>（MESI 协议），别的线程读到的一定是最新值</li>
+              <li><strong>有序性</strong>：编译器/处理器<strong>禁止指令重排</strong>（插入内存屏障）——典型应用：DCL 单例的实例字段</li>
+              <li><strong>不保证原子性</strong>：i++ 依旧丢数据（读改写三步仍可被打断），计数请用 <span class="key">AtomicInteger / synchronized</span></li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>public class Singleton {
+    private static volatile Singleton instance;  // 防止 new 半初始化对象外泄
+
+    public static Singleton getInstance() {
+        if (instance == null) {                   // 1. 第一次检查（免锁提速）
+            synchronized (Singleton.class) {
+                if (instance == null) {           // 2. 第二次检查（真正防重）
+                    instance = new Singleton();   // 分配→初始化→赋值 可能重排
+                }
+            }
+        }
+        return instance;
+    }
+}</code></pre>
+            <span class="mnemonic">「volatile 保可见、禁重排，不管原子」；DCL 双检 + volatile 是标配</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-jmm">
+          <div class="qa-q"><span class="q-mark">Q70</span>什么是 Java 内存模型（JMM）？happens-before 是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>JMM</strong>：Java 定义的<strong>内存可见性规则</strong>——所有共享变量存<strong>主内存</strong>，每线程有自己的<strong>工作内存</strong>（CPU 缓存抽象），操作变量必须先拷到工作内存，改完再刷回——可见性问题的模型根源</li>
+              <li><strong>happens-before</strong>：JMM 给程序员的承诺——若 A 操作 happens-before B，则 A 的结果对 B 可见。它是<strong>判断数据有无竞争的依据</strong>，无需懂底层屏障</li>
+              <li>核心规则（背这几条）：①<strong>程序顺序</strong>（单线程内按代码顺序）②<strong>监视器锁</strong>（解锁 hb 于后续加锁）③<strong>volatile</strong>（写 hb 于后续读）④<strong>线程 start</strong>（start 前的操作 hb 于线程内操作）⑤<strong>线程 join</strong>（线程内操作 hb 于 join 返回后）⑥<strong>传递性</strong></li>
+            </ul>
+            <span class="mnemonic">「JMM 隔主存与工作内存；happens-before 六条规则锁可见性」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-cas">
+          <div class="qa-q"><span class="q-mark">Q71</span>什么是 CAS？有什么问题？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>CAS（比较并交换）</strong>：CPU 原子指令——「内存值 V、期望值 E、新值 N，<strong>当且仅当 V==E 时把 V 改成 N</strong>，否则失败重试」。JDK 里由 <span class="key">Unsafe.compareAndSwapInt</span> 等本地方法包装</li>
+              <li><strong>优点</strong>：无锁、无阻塞，竞争小性能好——AtomicInteger 自增、AQS 抢锁、ConcurrentHashMap 插空桶全靠它</li>
+            </ul>
+            <p><strong>三大问题</strong>：</p>
+            <ol>
+              <li><strong>ABA 问题</strong>：值从 A→B→A，CAS 以为没变过——解法：带<strong>版本号</strong>的 <span class="key">AtomicStampedReference</span></li>
+              <li><strong>自旋开销</strong>：竞争激烈时失败重试空耗 CPU——可用 LongAdder 分段计数替代</li>
+              <li><strong>只能保证一个变量</strong>的原子性——多个变量只能包成对象用 AtomicReference 或加锁</li>
+            </ol>
+            <span class="mnemonic">「CAS 比了才换，无锁但自旋」；ABA 靠版本号、竞争大换 LongAdder</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-aqs">
+          <div class="qa-q"><span class="q-mark">Q72</span>AQS 是什么？它是如何工作的？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>AQS（AbstractQueuedSynchronizer）</strong>：JUC 的<strong>锁与同步器框架</strong>——ReentrantLock、Semaphore、CountDownLatch、ThreadPoolExecutor 的 Worker 全基于它</li>
+              <li>核心两件套：
+                <ul>
+                  <li><strong>state（volatile int）</strong>：同步状态——0 无锁 / &gt;0 有锁或剩余资源，CAS 修改</li>
+                  <li><strong>CLH 双向队列</strong>：抢不到锁的线程封装成 Node 挂到队列<strong>排队挂起</strong>（LockSupport.park），释放时唤醒后继</li>
+                </ul>
+              </li>
+              <li><strong>模板方法模式</strong>：AQS 管排队挂起唤醒，子类只需实现 tryAcquire / tryRelease（独占）或 tryAcquireShared / tryReleaseShared（共享）定义「怎么算抢到」</li>
+              <li>独占模式：ReentrantLock；共享模式：Semaphore（state = 许可数）、CountDownLatch（state = 计数，减到 0 放行）</li>
+            </ul>
+            <span class="mnemonic">「一个 state 记状态，一条 CLH 队列排线程，CAS 抢 LockSupport 睡」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-reentrantlock">
+          <div class="qa-q"><span class="q-mark">Q73</span>synchronized 和 ReentrantLock 怎么选？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>维度</th><th>synchronized</th><th>ReentrantLock</th></tr>
+                <tr><td>层级</td><td>JVM 关键字（monitor）</td><td>JDK 类（AQS 实现）</td></tr>
+                <tr><td>释放</td><td><strong>自动释放</strong>（异常也释放）</td><td>必须 finally 手动 unlock()</td></tr>
+                <tr><td>公平锁</td><td>只有非公平</td><td>可选公平/非公平</td></tr>
+                <tr><td>可中断</td><td>不可</td><td>lockInterruptibly() 可中断抢锁</td></tr>
+                <tr><td>超时</td><td>不支持</td><td>tryLock(time) 限时尝试</td></tr>
+                <tr><td>条件</td><td>一个 wait 集合</td><td>多个 Condition 精准唤醒</td></tr>
+                <tr><td>性能</td><td>JDK6 后基本持平</td><td>持平</td></tr>
+              </table>
+            </div>
+            <p><strong>选择</strong>：默认 synchronized（简单、不漏释放）；需要<strong>公平、可中断、超时、多条件队列</strong>才用 ReentrantLock。</p>
+            <span class="mnemonic">「sync 自动释放省心，Lock 三额外（公平/中断/超时）+ 多条件」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-threadpool">
+          <div class="qa-q"><span class="q-mark">Q74</span>线程池的七大核心参数是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>corePoolSize</strong> 核心线程数：常驻最小线程数（默认不回收，除非 allowCoreThreadTimeOut）</li>
+              <li><strong>maximumPoolSize</strong> 最大线程数：核心 + 临时线程的上限</li>
+              <li><strong>keepAliveTime</strong> 空闲存活时间：临时线程空闲多久被回收</li>
+              <li><strong>unit</strong>：时间单位</li>
+              <li><strong>workQueue</strong> 任务队列：阻塞队列——ArrayBlockingQueue（有界）/ LinkedBlockingQueue（默认无界 Integer.MAX_VALUE）/ SynchronousQueue（不排队直接交接）</li>
+              <li><strong>threadFactory</strong> 线程工厂：自定义线程名、守护属性（排障必备）</li>
+              <li><strong>handler</strong> 拒绝策略：队列满且线程满时的处置</li>
+            </ol>
+            <p><strong>为什么不推荐 Executors 工具方法</strong>：newFixedThreadPool / newSingleThreadExecutor 用<strong>无界队列</strong>（任务堆积 OOM）；newCachedThreadPool 最大线程 Integer.MAX_VALUE（线程爆炸 OOM）——<strong>阿里规约要求手动 new ThreadPoolExecutor</strong>，明确每个参数。</p>
+            <span class="mnemonic">「核最保时单 + 队厂拒」七参数；Executors 两坑：无界队列、无线程上限</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-threadpool-exec">
+          <div class="qa-q"><span class="q-mark">Q75</span>描述线程池的执行流程？四种拒绝策略是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>提交任务后的判断顺序（<strong>先扩线程、再排队、再扩线程</strong>）：</p>
+            <ol>
+              <li>当前线程数 &lt; <strong>corePoolSize</strong> → 新建核心线程执行</li>
+              <li>核心满 → 任务进 <strong>workQueue</strong> 排队</li>
+              <li>队列也满 且 线程数 &lt; <strong>maximumPoolSize</strong> → 新建<strong>临时线程</strong>执行</li>
+              <li>队列满 且 线程到 max → 触发<strong>拒绝策略</strong></li>
+            </ol>
+            <p><strong>四种拒绝策略</strong>：</p>
+            <ul>
+              <li><span class="key">AbortPolicy</span>（默认）：抛 RejectedExecutionException</li>
+              <li><span class="key">CallerRunsPolicy</span>：让<strong>提交任务的线程自己执行</strong>——天然限流减速（推荐）</li>
+              <li><span class="key">DiscardPolicy</span>：静默丢弃新任务（不抛异常，最危险）</li>
+              <li><span class="key">DiscardOldestPolicy</span>：丢掉队列最老任务，再重试提交</li>
+            </ul>
+            <span class="mnemonic">「核心 → 排队 → 临时 → 拒绝」四步；拒绝默认抛异常，限流选 CallerRuns</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-threadpool-size">
+          <div class="qa-q"><span class="q-mark">Q76</span>线程数应该怎么设置？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>CPU 密集型</strong>（计算、压缩、加密）：线程数 = <strong>CPU 核数 + 1</strong>（+1 防缺页等短暂停顿浪费 CPU）</li>
+              <li><strong>IO 密集型</strong>（RPC、DB、HTTP）：线程数 = <strong>核数 × (1 + 平均等待时间/计算时间)</strong>——等待越长越多线程填补空档；粗略取 <strong>2 × 核数</strong> 起步</li>
+              <li>终极答案：<strong>压测调优</strong>——没有万能公式，观察吞吐与响应时间拐点</li>
+              <li>获取核数：<span class="key">Runtime.getRuntime().availableProcessors()</span></li>
+              <li>混合型任务应<strong>拆分成两个线程池</strong>隔离，避免相互拖累（也是舱壁模式）</li>
+            </ul>
+            <span class="mnemonic">「CPU 密集 N+1，IO 密集看等待，最终压测说了算」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-threadlocal">
+          <div class="qa-q"><span class="q-mark">Q77</span>ThreadLocal 的原理是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>每个 Thread 内部有一个 <span class="key">ThreadLocalMap</span>（就是普通 map 结构），key 是 ThreadLocal 对象（弱引用），value 是存的值——<strong>数据存在线程自己身上</strong>，天然隔离</li>
+              <li><span class="key">threadLocal.set(v)</span>：以 this（ThreadLocal）为 key 存进当前线程的 map；get/remove 同理</li>
+              <li><strong>用途</strong>：数据库连接/Session 绑定线程、SimpleDateFormat 线程封闭、链路 traceId 透传、Spring 事务的 Connection 绑定、用户上下文 UserContext</li>
+              <li>父子传递用 <span class="key">InheritableThreadLocal</span>；线程池场景（线程复用会串值）用阿里 <span class="key">TransmittableThreadLocal</span></li>
+            </ul>
+            <span class="mnemonic">「ThreadLocal 是钥匙，数据锁在线程自己的 map 里」；线程封闭，人各一份</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-threadlocal-leak">
+          <div class="qa-q"><span class="q-mark">Q78</span>ThreadLocal 为什么可能内存泄漏？怎么避免？</div>
+          <div class="qa-a">
+            <ul>
+              <li>引用链：Thread → ThreadLocalMap → Entry（<strong>key 是弱引用</strong>，value 是<strong>强引用</strong>）</li>
+              <li><strong>泄漏机制</strong>：ThreadLocal 外部无强引用时，GC 回收 key（变 null），但 <strong>value 依旧被 Entry 强引用着</strong>——若线程一直活着（线程池！），这些「key=null 的 value」无法回收 → 泄漏</li>
+              <li>设计弱引用的意义：这是<strong>尽力补救</strong>而非预防——set/get 时会顺手清理 key 为 null 的 Entry，但不保证及时</li>
+              <li><strong>规范解法</strong>：用完必调 <span class="key">remove()</span>（finally 里），尤其是线程池场景；ThreadLocal 尽量 <strong>static final</strong>（全局一份 key，避免无谓弱引用失效）</li>
+            </ul>
+            <span class="mnemonic">「key 弱 value 强，线程不死 value 活；finally 里必 remove」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-tools">
+          <div class="qa-q"><span class="q-mark">Q79</span>CountDownLatch、CyclicBarrier、Semaphore 分别适合什么场景？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>工具</th><th>语义</th><th>典型场景</th></tr>
+                <tr><td>CountDownLatch</td><td>倒计数门闩，<strong>减到 0 放行</strong>，不可重用</td><td>主线程等 N 个子任务完成（汇总）</td></tr>
+                <tr><td>CyclicBarrier</td><td>循环栅栏，<strong>凑齐 N 个线程同时出发</strong>，可重用</td><td>多线程分段计算后统一汇总再下一轮</td></tr>
+                <tr><td>Semaphore</td><td>许可数限流，acquire 拿 / release 还</td><td>限并发（如最多 10 个连接、秒杀限流）</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>记忆：Latch 是「等大家干完」、Barrier 是「等大家到齐一起冲」、Semaphore 是「手里牌有限，拿牌才能进」</li>
+              <li>更现代的异步汇总用 <span class="key">CompletableFuture.allOf(...).join()</span></li>
+            </ul>
+            <span class="mnemonic">「门闩等完工、栅栏齐出发、信号量管限流」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-concurrent-colls">
+          <div class="qa-q"><span class="q-mark">Q80</span>常见的并发容器有哪些？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>ConcurrentHashMap</strong>：并发哈希表（CAS + 锁桶头），替代 Hashtable（全表一把锁）</li>
+              <li><strong>CopyOnWriteArrayList / Set</strong>：写时复制（复制新数组改完换引用），<strong>读完全无锁</strong>——读多写少（监听器列表、黑名单）</li>
+              <li><strong>ConcurrentLinkedQueue</strong>：无锁 CAS 链表队列（高并发、无阻塞等待）</li>
+              <li><strong>BlockingQueue 家族</strong>：ArrayBlockingQueue（有界数组）、LinkedBlockingQueue（链表）、SynchronousQueue（零容量直接交接）、<strong>DelayQueue</strong>（延时任务，RocketMQ 定时消息）、PriorityBlockingQueue（优先级）——线程池与生产者消费者的核心</li>
+              <li><strong>ConcurrentSkipListMap</strong>：跳表实现的有序并发 Map（替代 TreeMap）</li>
+            </ul>
+            <span class="mnemonic">「哈希 CHM、读多 COW、队列 Blocking、有序跳表」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-deadlock">
+          <div class="qa-q"><span class="q-mark">Q81</span>死锁的产生条件是什么？如何避免和排查？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>四个必要条件</strong>（缺一不死锁）：</p>
+            <ol>
+              <li><strong>互斥</strong>：资源一次只能一人用</li>
+              <li><strong>持有并等待</strong>：拿着 A 等 B</li>
+              <li><strong>不可剥夺</strong>：不能强行抢走</li>
+              <li><strong>循环等待</strong>：A 等 B、B 等 A 成环</li>
+            </ol>
+            <p><strong>避免（破坏后三条）</strong>：</p>
+            <ul>
+              <li><strong>按固定顺序加锁</strong>（破坏循环等待，最常用）——按账户 ID 排序再转账</li>
+              <li>一次性申请全部资源（破坏持有并等待）</li>
+              <li>用 <span class="key">tryLock(timeout)</span> 拿不到就放弃已持有的锁（破坏不可剥夺）</li>
+            </ul>
+            <p><strong>排查</strong>：<span class="key">jstack &lt;pid&gt;</span> 会直接输出 "Found one Java-level deadlock"；或 jconsole / Arthas 的 thread -b。</p>
+            <span class="mnemonic">「互持不循环」四条件；破循环靠顺序加锁，排查用 jstack</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-atomic">
+          <div class="qa-q"><span class="q-mark">Q82</span>原子类有哪些？LongAdder 为什么比 AtomicLong 快？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>基本类型原子类</strong>：AtomicInteger / AtomicLong / AtomicBoolean（CAS 实现）</li>
+              <li><strong>引用类型</strong>：AtomicReference（整体替换对象）、AtomicStampedReference（带版本号防 ABA）、AtomicMarkableReference</li>
+              <li><strong>字段更新器</strong>：AtomicIntegerFieldUpdater（volatile 字段的反射式 CAS）</li>
+              <li><strong>累加器</strong>：LongAdder / DoubleAdder、LongAccumulator</li>
+            </ul>
+            <p><strong>LongAdder 原理</strong>：高竞争下 AtomicLong 所有线程<strong>同一个 value 上 CAS 自旋</strong>，失败率飙升；LongAdder 把值<strong>拆成 base + Cell[] 数组</strong>——不同线程散列到不同 Cell 各自累加（空间换时间），sum() 时再汇总——<strong>写多读少</strong>的计数场景（如接口 QPS 统计）首选；要<strong>精确即时值或 CAS 语义</strong>仍用 AtomicLong。</p>
+            <span class="mnemonic">「Atomic 单点自旋，LongAdder 分片累加」；统计计数用 Adder，精确值用 Atomic</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch10">
+        <h2><span class="num">10</span>JVM 虚拟机</h2>
+
+        <div class="qa hot" id="java-runtime-areas">
+          <div class="qa-q"><span class="q-mark">Q83</span>JVM 运行时数据区有哪几块？哪些线程共享？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>区域</th><th>存什么</th><th>线程</th><th>异常</th></tr>
+                <tr><td><strong>堆 Heap</strong></td><td>对象实例、数组</td><td>共享</td><td>OutOfMemoryError</td></tr>
+                <tr><td><strong>方法区</strong>（元空间 Metaspace）</td><td>类信息、常量、静态变量、JIT 代码</td><td>共享</td><td>OOM（元空间用本地内存）</td></tr>
+                <tr><td>虚拟机栈</td><td>栈帧（局部变量表、操作数栈）</td><td>私有</td><td>StackOverflowError / OOM</td></tr>
+                <tr><td>本地方法栈</td><td>native 方法栈帧</td><td>私有</td><td>同上</td></tr>
+                <tr><td>程序计数器</td><td>当前字节码行号</td><td>私有</td><td><strong>唯一不会 OOM</strong></td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>JDK8 起<strong>永久代被移除</strong>，类元数据移入<strong>本地内存的元空间</strong>（字符串常量池早已在 JDK7 移入堆）——解决永久代易 OOM 与大小难调的问题</li>
+              <li>堆内部分区（经典分代）：新生代（Eden + 2 个 Survivor，默认 8:1:1）+ 老年代（默认 1:2）</li>
+            </ul>
+            <span class="mnemonic">「共享堆方法区，私有栈计本地；计数器永不 OOM」；JDK8 永久代换元空间</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-heap-stack">
+          <div class="qa-q"><span class="q-mark">Q84</span>堆和栈的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>栈</strong>：线程私有，存<strong>局部变量与栈帧</strong>，随方法调用自动分配回收，速度快、不需要 GC；空间小（默认约 512K~1M）</li>
+              <li><strong>堆</strong>：线程共享，存<strong>对象与数组</strong>，由 GC 管理；空间大（GB 级）；new 出来的都在堆</li>
+              <li>关联：栈里的<strong>局部变量表存对象引用</strong>，引用指向堆中实体——「栈管运行、堆管存储」</li>
+              <li>递归太深 → 栈溢出 StackOverflowError；对象太多/泄漏 → 堆 OOM</li>
+            </ul>
+            <span class="mnemonic">「栈快小私自动收，堆大共享靠 GC；栈存引用堆存身」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-object-create">
+          <div class="qa-q"><span class="q-mark">Q85</span>new 一个对象的全过程是怎样的？对象在内存中如何布局？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>五步</strong>：</p>
+            <ol>
+              <li><strong>类加载检查</strong>：未加载则先触发加载（父类先于子类）</li>
+              <li><strong>分配内存</strong>：指针碰撞（内存规整）或空闲列表（内存零散）——TLAB 线程私有缓冲避免并发竞争</li>
+              <li><strong>初始化零值</strong>：字段置默认值（int=0、引用=null）——所以字段「不初始化也能用」</li>
+              <li><strong>设置对象头</strong>：Mark Word（哈希码、GC 分代年龄、锁标志）+ 类型指针</li>
+              <li><strong>init 初始化</strong>：执行实例代码块与构造器，真正的赋值</li>
+            </ol>
+            <p><strong>对象布局三部分</strong>：对象头（Mark Word + 类型指针，12/16 字节）+ 实例数据（字段，受对齐填充影响）+ 对齐填充（补齐到 8 字节整数倍）。指针压缩（-XX:+UseCompressedOops）把 8 字节指针压成 4 字节。</p>
+            <span class="mnemonic">「检查加载、TLAB 分配、零值、对象头、init」五步；布局 = 头 + 数据 + 填充 8 的倍数」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-ref-types">
+          <div class="qa-q"><span class="q-mark">Q86</span>四种引用类型是什么？分别什么场景？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>引用</th><th>回收时机</th><th>典型场景</th></tr>
+                <tr><td><strong>强引用 Strong</strong></td><td>永不回收（宁可 OOM）</td><td>普通赋值 Object o = new Object()</td></tr>
+                <tr><td><strong>软引用 Soft</strong></td><td>内存不足时才回收</td><td>内存敏感缓存（图片缓存）</td></tr>
+                <tr><td><strong>弱引用 Weak</strong></td><td>只要 GC 就回收</td><td>ThreadLocalMap 的 key、WeakHashMap、防止泄漏</td></tr>
+                <tr><td><strong>虚引用 Phantom</strong></td><td>随时可回收，拿不到对象</td><td>堆外内存回收通知（DirectByteBuffer 的 Cleaner）</td></tr>
+              </table>
+            </div>
+            <p>引用强度递减：强 &gt; 软 &gt; 弱 &gt; 虚；一个对象可同时被多种引用指向，按最强者对待。</p>
+            <span class="mnemonic">「强不回收、软没内存才收、弱见 GC 就收、虚只做通知」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-classload">
+          <div class="qa-q"><span class="q-mark">Q87</span>类的加载过程分哪几步？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>加载 → 验证 → 准备 → 解析 → 初始化</strong>（后四步合称连接）：</p>
+            <ul>
+              <li><strong>加载</strong>：读 .class 字节流，方法区生成类结构，堆中建 Class 对象</li>
+              <li><strong>验证</strong>：文件格式、字节码、语义安全检查（防恶意字节码）</li>
+              <li><strong>准备</strong>：静态变量<strong>分配内存并置零值</strong>（static int a=1 此时 a=0，赋值在初始化才做；但 static final 常量在此刻直接赋值——ConstantValue）</li>
+              <li><strong>解析</strong>：符号引用 → 直接引用（方法/字段的真实地址）</li>
+              <li><strong>初始化</strong>：执行 <span class="key">&lt;clinit&gt;</span>（静态变量赋值 + 静态块，按书写顺序，JVM 保证线程安全——静态单例的合法性来源）</li>
+            </ul>
+            <span class="mnemonic">「加验准解初」五步；准备给零值、初始化才赋真值，final 常量例外</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-parents">
+          <div class="qa-q"><span class="q-mark">Q88</span>什么是双亲委派模型？为什么这么设计？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p><strong>三层加载器</strong>：启动类加载器（Bootstrap，核心库 rt.jar）→ 扩展类加载器（Platform）→ 应用类加载器（Application，classpath）→ 自定义加载器。</p>
+            <ul>
+              <li><strong>流程</strong>：收到加载请求<strong>层层向上委托</strong>，父加载器加载不了才<strong>向下回退</strong>自己加载——「子先问爹，爹办不了再回来」</li>
+              <li><strong>两大目的</strong>：①<strong>避免重复加载</strong>（同一个类只加载一次，保证类的唯一性——类的相等以「类加载器 + 类名」判定）②<strong>安全</strong>：用户自定义的 java.lang.String 永远轮不到加载，防核心 API 被篡改（沙箱安全）</li>
+              <li><strong>打破双亲委派</strong>的场景：SPI 机制（JDBC 驱动，线程上下文类加载器）、Tomcat 隔离各 webapp（每应用独立 WebappClassLoader）、OSGi / 热部署</li>
+            </ul>
+            <span class="mnemonic">「子委托父，父不行为子」；防重复 + 防篡改；SPI/Tomcat 是打破者</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-gc-roots">
+          <div class="qa-q"><span class="q-mark">Q89</span>如何判断对象可以被回收？GC Roots 有哪些？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>引用计数法</strong>（Java 不用）：循环引用永远非零，无法回收</li>
+              <li><strong>可达性分析</strong>（Java 采用）：从 GC Roots 出发向下搜索，<strong>不可达的对象 = 可回收</strong>（引用链断了就死）</li>
+            </ul>
+            <p><strong>GC Roots 包括</strong>：</p>
+            <ul>
+              <li>虚拟机栈中局部变量表引用的对象（方法局部变量、参数）</li>
+              <li>方法区中<strong>静态变量、常量</strong>引用的对象</li>
+              <li>本地方法栈 JNI 引用的对象</li>
+              <li>JVM 内部引用（基本类型 Class 对象、常驻异常对象、系统类加载器）等</li>
+            </ul>
+            <p>注意：<strong>方法区/元空间的类也可以被卸载</strong>（该类所有实例已回收 + 类加载器已回收 + Class 对象无引用，三者齐才卸载）。</p>
+            <span class="mnemonic">「引用计数怕循环，可达分析从根找」；根 = 栈变量 + 静态常量 + JNI</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-gc-algo">
+          <div class="qa-q"><span class="q-mark">Q90</span>垃圾回收算法有哪些？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>算法</th><th>思路</th><th>优点</th><th>缺点</th></tr>
+                <tr><td><strong>标记-清除</strong></td><td>标记死对象→统一清除</td><td>简单</td><td>碎片多、效率不稳</td></tr>
+                <tr><td><strong>标记-复制</strong></td><td>活对象复制到另一半，整区清空</td><td>无碎片、快</td><td>浪费一半空间（适合朝生夕死的<strong>新生代</strong>，Eden:S0:S1 = 8:1:1）</td></tr>
+                <tr><td><strong>标记-整理</strong></td><td>活对象向一端搬移再清理边界</td><td>无碎片</td><td>搬移成本高（适合<strong>老年代</strong>）</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li><strong>分代收集</strong>（现代 JVM 的策略框架）：新生代用复制（对象存活率低）、老年代用标记-清除/整理（存活率高）——按对象寿命选算法</li>
+            </ul>
+            <span class="mnemonic">「清除有碎片、复制费一半、整理要搬家；新代复制老代整理」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-gc-collectors">
+          <div class="qa-q"><span class="q-mark">Q91</span>常见垃圾收集器有哪些？各自特点？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>收集器</th><th>代际</th><th>特点</th></tr>
+                <tr><td>Serial / Serial Old</td><td>新生代/老年代</td><td>单线程 STW，客户端小内存</td></tr>
+                <tr><td>Parallel Scavenge / Old</td><td>新生代/老年代</td><td>多线程吞吐量优先，JDK8 默认</td></tr>
+                <tr><td><strong>CMS</strong></td><td>老年代</td><td><strong>低停顿</strong>：初始标记(STW短)→并发标记→重新标记(STW)→并发清除；<strong>碎片化 + 并发失败退化</strong>，JDK14 移除</td></tr>
+                <tr><td><strong>G1</strong></td><td>整堆</td><td>Region 分区 + 可预测停顿（-XX:MaxGCPauseMillis），<strong>JDK9+ 默认</strong>；大内存服务首选</td></tr>
+                <tr><td>ZGC / Shenandoah</td><td>整堆</td><td><strong>着色指针 + 读屏障</strong>，停顿 &lt;1ms（与堆大小无关），JDK15+/17+ 生产可用</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>演进主线：STW 全停 → 并发标记 → Region 化可控停顿 → <strong>亚毫秒级</strong></li>
+              <li>选型经验：JDK8 吞吐选 Parallel、低延迟选 G1；JDK17+ 大堆低延迟选 ZGC</li>
+            </ul>
+            <span class="mnemonic">「Parallel 重吞吐、CMS 低停顿（已退役）、G1 分区可预期、ZGC 亚毫秒」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-minor-full">
+          <div class="qa-q"><span class="q-mark">Q92</span>Minor GC、Major GC、Full GC 什么时候触发？怎么减少 Full GC？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Minor GC</strong>：Eden 满 → 回收新生代（频繁但快，存活对象少）；对象年龄 +1，到 15（默认）晋升老年代；大对象直接进老年代（-XX:PretenureSizeThreshold）</li>
+              <li><strong>Full GC</strong>触发条件：①老年代空间不足 ②<strong>元空间不足</strong> ③<strong>System.gc() 显式调用</strong>（建议触发） ④空间分配担保失败（Minor GC 前老年代放不下晋升对象）</li>
+              <li><strong>减少 Full GC 手段</strong>：调大新生代/ Survivor（减少过早晋升）；避免内存泄漏；控制大对象；调大元空间；慎用 System.gc()（可 -XX:+DisableExplicitGC 禁用，注意影响 DirectByteBuffer 回收）</li>
+            </ul>
+            <span class="mnemonic">「Eden 满 Minor，老年代/元空间满/System.gc() 触发 Full」；防治靠防泄漏 + 调分代</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-jvm-params">
+          <div class="qa-q"><span class="q-mark">Q93</span>常用 JVM 参数有哪些？</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>-Xms4g -Xmx4g                 # 初始/最大堆，生产设成一样防抖动
+-Xmn2g                        # 新生代大小（或 -XX:NewRatio=2）
+-XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m
+-XX:SurvivorRatio=8           # Eden : Survivor = 8:1:1
+-XX:+UseG1GC -XX:MaxGCPauseMillis=200
+-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/logs/   # OOM 自动 dump
+-Xss512k                      # 线程栈大小
+-XX:+PrintGCDetails -Xlog:gc*:file=gc.log   # GC 日志(JDK8/JDK9+)</code></pre>
+            <ul>
+              <li>经验：Xms = Xmx；dump 参数是<strong>线上必配</strong>（OOM 留现场）；GC 日志开销小，建议常开</li>
+            </ul>
+            <span class="mnemonic">「堆 ms/mx 设一样，OOM 必 dump，GC 日志常开」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-jvm-tools">
+          <div class="qa-q"><span class="q-mark">Q94</span>JDK 自带哪些排查工具？各看什么？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>工具</th><th>用途</th></tr>
+                <tr><td><span class="key">jps</span></td><td>列出 Java 进程 PID</td></tr>
+                <tr><td><span class="key">jstat -gcutil pid 1000</span></td><td>GC 频率与各区占用（线上首选，实时看 O/M 区）</td></tr>
+                <tr><td><span class="key">jmap -dump:live,format=b,file=heap.hprof pid</span></td><td>导出堆快照（配合 MAT 分析大对象）</td></tr>
+                <tr><td><span class="key">jstack pid</span></td><td>线程快照：死锁、CPU 高的线程栈、BLOCKED 分析</td></tr>
+                <tr><td><span class="key">jinfo / jcmd</span></td><td>查看/修改运行期 JVM 参数</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>图形化：JConsole、VisualVM、<strong>Arthas</strong>（阿里，线上热诊断神器：dashboard/thread/dashboard/trace 一条龙）</li>
+            </ul>
+            <span class="mnemonic">「jstat 看 GC、jmap 导堆、jstack 抓线程栈，重案用 MAT/Arthas」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-gc-tuning">
+          <div class="qa-q"><span class="q-mark">Q95</span>GC 调优的整体思路是什么？</div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>先定目标</strong>：吞吐优先 or 延迟优先？（报表批处理 vs 交易接口）</li>
+              <li><strong>拿数据</strong>：开启 GC 日志，观察 Minor/Full 频率、单次耗时、回收效果</li>
+              <li><strong>常见手段</strong>：
+                <ul>
+                  <li>频繁 Minor 且存活多 → 调大新生代</li>
+                  <li>对象过早晋升 → 调大 Survivor / 晋升年龄</li>
+                  <li>Full GC 频繁 → 先查<strong>内存泄漏</strong>（调参救不了泄漏）</li>
+                  <li>停顿长 → 换 G1/ZGC，设 MaxGCPauseMillis</li>
+                </ul>
+              </li>
+              <li><strong>压测验证</strong>：一次只改一个参数，对比指标回归</li>
+            </ol>
+            <span class="mnemonic">「先定目标、再凭日志、一次一参、压测回归」；调参前先排泄漏</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch11">
+        <h2><span class="num">11</span>Java 8+ 新特性</h2>
+
+        <div class="qa hot" id="java-lambda">
+          <div class="qa-q"><span class="q-mark">Q96</span>Lambda 表达式是什么？和匿名内部类有何区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>Lambda 是<strong>函数式接口的简洁实现</strong>：<span class="key">(a, b) -&gt; a + b</span>，参数类型可推断、单行免 return 花括号</li>
+              <li>与匿名内部类区别：
+                <ul>
+                  <li><strong>this 指向</strong>：匿名类 this 指匿名类实例；Lambda this 指外部类（更直观）</li>
+                  <li><strong>实现机制</strong>：匿名类编译期生成 <strong>$1.class</strong>；Lambda 运行期由 <strong>invokedynamic 指令动态生成</strong>（JDK7+），更省类文件</li>
+                  <li>匿名类可实现<strong>任意接口/抽象类</strong>；Lambda 只能是<strong>单抽象方法接口</strong>（@FunctionalInterface）</li>
+                </ul>
+              </li>
+              <li>变量捕获：只能用 <strong>final 或事实 final</strong> 的局部变量（副本机制）</li>
+            </ul>
+            <span class="mnemonic">「Lambda 只嫁函数式接口；this 看外部、字节码用 invokedynamic」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-func-if">
+          <div class="qa-q"><span class="q-mark">Q97</span>四大核心函数式接口是什么？</div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>接口</th><th>签名</th><th>语义</th><th>示例</th></tr>
+                <tr><td><span class="key">Function&lt;T,R&gt;</span></td><td>R apply(T t)</td><td>输入 T 出 R（转换）</td><td>s -&gt; s.length()</td></tr>
+                <tr><td><span class="key">Predicate&lt;T&gt;</span></td><td>boolean test(T t)</td><td>判断真假（过滤）</td><td>s -&gt; s.isEmpty()</td></tr>
+                <tr><td><span class="key">Consumer&lt;T&gt;</span></td><td>void accept(T t)</td><td>只消费不返回</td><td>System.out::println</td></tr>
+                <tr><td><span class="key">Supplier&lt;T&gt;</span></td><td>T get()</td><td>无中生有（生产）</td><td>() -&gt; new ArrayList&lt;&gt;()</td></tr>
+              </table>
+            </div>
+            <p>扩展：BiFunction（两入一出）、UnaryOperator（同类型进出）、BiPredicate 等；<strong>Stream 的每个操作参数都是这四大家族</strong>（map 用 Function、filter 用 Predicate、forEach 用 Consumer、collect 的工厂用 Supplier）。</p>
+            <span class="mnemonic">「Function 转换、Predicate 判断、Consumer 消费、Supplier 供给」四大金刚撑起 Stream</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-stream">
+          <div class="qa-q"><span class="q-mark">Q98</span>Stream 的常用操作有哪些？中间操作和终结操作的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>中间操作</strong>（返回新 Stream，<strong>惰性求值</strong>，不触发执行）：filter / map / flatMap / sorted / distinct / limit / skip / peek</li>
+              <li><strong>终结操作</strong>（触发整条流水线，一次性）：forEach / collect / count / reduce / anyMatch / findFirst / toArray</li>
+            </ul>
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 部门里工资前 3 的员工姓名
+List&lt;String&gt; top3 = employees.stream()
+        .filter(e -&gt; e.getDept().equals("rd"))     // 中间：过滤
+        .sorted(Comparator.comparingDouble(Employee::getSalary).reversed())
+        .limit(3)                                   // 中间：截断
+        .map(Employee::getName)                     // 中间：转换
+        .collect(Collectors.toList());              // 终结：收集
+
+// 分组统计
+Map&lt;String, Long&gt; byDept = employees.stream()
+        .collect(Collectors.groupingBy(Employee::getDept, Collectors.counting()));</code></pre>
+            <ul>
+              <li>方法引用（<span class="key">类名::方法</span> / <span class="key">对象::方法</span> / <span class="key">类名::new</span>）是 Lambda 的再简化</li>
+              <li>本质：数据源 → 中间操作链 → 终结收口，一次遍历完成多步加工</li>
+            </ul>
+            <span class="mnemonic">「中间惰性串水管，终结一冲全流走」；filter 筛、map 变、collect 收</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-stream-pit">
+          <div class="qa-q"><span class="q-mark">Q99</span>使用 Stream 有哪些常见的坑？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Stream 一次性</strong>：用过的流不能复用（IllegalStateException），需要就重新创建</li>
+              <li><strong>惰性陷阱</strong>：只写中间操作不调用终结操作，<strong>什么都不执行</strong>（peek 调试看不到输出）</li>
+              <li><strong>并行流乱序</strong>：parallelStream 用公共 ForkJoinPool，<strong>forEach 顺序不定</strong>；有 I/O 或共享变量的任务用并行流会拖垮全局（阻塞公共池）；简单任务并行反而更慢</li>
+              <li><strong>避免装箱</strong>：IntStream / mapToDouble 替代 Stream&lt;Integer&gt;，性能差数倍</li>
+              <li><strong>别在流里写复杂业务</strong>：多层嵌套 collect 可读性差，难 debug，长逻辑抽方法</li>
+            </ul>
+            <span class="mnemonic">「流是一次性的、惰性要收口、并行要小心、装箱要避开」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-optional">
+          <div class="qa-q"><span class="q-mark">Q100</span>Optional 怎么正确使用？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 正确姿势：链式防 NPE
+String city = Optional.ofNullable(user)
+        .map(User::getAddress)
+        .map(Address::getCity)
+        .orElse("未知城市");
+
+Optional.ofNullable(order)
+        .map(Order::getUserId)
+        .ifPresent(id -&gt; log.info("userId={}", id));
+
+// orElseThrow：没有就抛异常
+User u = repo.findById(id).orElseThrow(() -&gt; new BizException(404, "用户不存在"));</code></pre>
+            <ul>
+              <li>定位：Optional 是<strong>返回类型的防 NPE 包装</strong>（明确告诉调用者可能没有值）</li>
+              <li>反模式（面试扣分）：<strong>用 Optional 做字段 / 方法参数</strong>、直接 <span class="key">get()</span>（不判空照炸）、<span class="key">isPresent()+get()</span>（等价于 null 判断白绕一圈）</li>
+              <li>orElse vs orElseGet：<strong>orElse 的参数无条件执行</strong>（默认值是方法调用时永远跑），orElseGet 惰性——重默认值用 orElseGet</li>
+            </ul>
+            <span class="mnemonic">「Optional 只做返回值，链式 map/orElse；别 get、别当字段」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-interface-default">
+          <div class="qa-q"><span class="q-mark">Q101</span>接口的 default 方法和静态方法是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>default 方法</strong>：接口里带实现的方法，实现类<strong>白拿不用重写</strong>——为了给老接口加功能不破坏已发布的实现（如 Collection.stream()、Iterable.forEach()）</li>
+              <li><strong>静态方法</strong>：接口自己的工具方法，<span class="key">接口名.方法()</span> 调用，不可继承（Comparator.comparing 就是）</li>
+              <li>规则：类优先于接口（父类具体方法赢）；两个接口有同名 default → <strong>必须重写</strong>（用 <span class="key">接口名.super.方法()</span> 指定）</li>
+              <li>private 方法（JDK9）：接口内 default 方法间的公共逻辑抽取</li>
+            </ul>
+            <span class="mnemonic">「default 送实现、static 当工具、冲突必须重写指 super」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-new-features">
+          <div class="qa-q"><span class="q-mark">Q102</span>JDK 9 到 21 有哪些值得关注的特性？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>版本</th><th>核心特性</th></tr>
+                <tr><td><strong>9</strong></td><td>模块化系统（JPMS）、接口私有方法、G1 转正、集合工厂 of()</td></tr>
+                <tr><td><strong>10</strong></td><td><strong>var 局部变量类型推断</strong>、并行 Full GC、容器感知</td></tr>
+                <tr><td><strong>11 LTS</strong></td><td>HTTP Client 标准化、String 增强（isBlank/strip/lines）、单文件直接运行</td></tr>
+                <tr><td><strong>14-16</strong></td><td>switch 表达式、文本块 """、<strong>record 记录类</strong>、instanceof 模式匹配、密封类（17 转正）</td></tr>
+                <tr><td><strong>17 LTS</strong></td><td>密封类 sealed、伪随机增强、移除 CMS；record/switch/文本块全部转正</td></tr>
+                <tr><td><strong>21 LTS</strong></td><td><strong>虚拟线程转正</strong>、分代 ZGC、结构化并发（预览）、record 模式匹配</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li><strong>record</strong>：一行定义不可变数据载体 <span class="key">record Point(int x, int y) {}</span>——自动生成构造器/getter/equals/hashCode/toString</li>
+              <li><strong>sealed</strong>：限制谁可以 implements/extends，让 switch 穷尽检查成为可能</li>
+              <li>LTS 记住：<strong>8、11、17、21</strong>（每 3 年一个）</li>
+            </ul>
+            <span class="mnemonic">「9 模块、10 var、11 HTTP、17 密封 record、21 虚拟线程」；LTS = 8/11/17/21</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-virtual-thread">
+          <div class="qa-q"><span class="q-mark">Q103</span>虚拟线程是什么？和平台线程有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>平台线程</strong>：1:1 映射操作系统线程，栈 1MB 固定，创建切换贵——几千个就吃满内存</li>
+              <li><strong>虚拟线程</strong>（JDK21）：由 JVM <strong>调度到少量载体线程（ForkJoinPool）</strong>上运行的轻量线程；栈存在<strong>堆</strong>上按需伸缩——<strong>百万级并发</strong>成为可能</li>
+              <li><strong>关键机制 mount/unmount</strong>：遇到阻塞 IO 时自动「卸载」虚拟线程，载体线程立刻去跑别的——<strong>阻塞不再昂贵</strong>，同步阻塞代码写出异步吞吐</li>
+              <li>用法：<span class="key">Thread.ofVirtual().start(...)</span> 或 Executors.newVirtualThreadPerTaskExecutor()</li>
+              <li><strong>适用</strong>：IO 密集、高并发请求处理；<strong>不适用</strong>：CPU 密集（没便宜可占）、长时间占用 synchronized 的代码（pinning 钉住载体线程，JDK24 才优化）</li>
+              <li>最佳实践：<strong>不要池化虚拟线程</strong>（用完即弃）、ThreadLocal 克制使用（百万线程=百万份副本）</li>
+            </ul>
+            <span class="mnemonic">「平台 1:1 贵在栈，虚拟 N:M 便宜在堆」；阻塞自动卸载，IO 密集神器，别池化</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch12">
+        <h2><span class="num">12</span>场景与调优</h2>
+
+        <div class="qa hot" id="java-cpu100">
+          <div class="qa-q"><span class="q-mark">Q104</span>线上服务 CPU 100%，如何排查？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <p>标准四步（背熟流程比记命令重要）：</p>
+            <ol>
+              <li><strong>定位进程</strong>：<span class="key">top</span> 找到 CPU 最高的 Java 进程 PID</li>
+              <li><strong>定位线程</strong>：<span class="key">top -Hp &lt;pid&gt;</span>（-H 显示线程）拿到最耗 CPU 的线程 TID，<span class="key">printf '%x' &lt;tid&gt;</span> 转十六进制</li>
+              <li><strong>定位代码</strong>：<span class="key">jstack &lt;pid&gt; | grep -A 30 &lt;十六进制nid&gt;</span>，看线程栈在跑什么方法</li>
+              <li><strong>对症下药</strong></li>
+            </ol>
+            <p>常见元凶：①<strong>死循环 / while 条件永不满足</strong> ②<strong>频繁 Full GC</strong>（GC 线程烧 CPU，jstat 确认，本质是内存问题）③<strong>正则回溯爆炸</strong> ④大量序列化/加密计算 ⑤<strong>死锁互相自旋</strong>（CAS 自旋空转）。</p>
+            <p>一键化：Arthas <span class="key">thread -n 3</span> 直接列出最忙线程栈。</p>
+            <span class="mnemonic">「top 找进程、-Hp 找线程、转十六进制、jstack 对栈」四板斧</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-memleak">
+          <div class="qa-q"><span class="q-mark">Q105</span>如何排查内存泄漏 / 内存持续增长？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>确认泄漏</strong>：jstat -gcutil 看<strong>老年代使用量只涨不降</strong>（Full GC 后仍不回落）；或连续 jmap -histo 对比对象增长</li>
+              <li><strong>导堆快照</strong>：jmap -dump（或提前配 HeapDumpOnOutOfMemoryError 自动留现场）</li>
+              <li><strong>MAT 分析</strong>：看 <strong>Dominator Tree 支配树 / Leak Suspects 报告</strong>——找到「占最大且引用链不断」的对象</li>
+              <li><strong>顺引用链找根</strong>：谁 Hold 住了它（静态集合、ThreadLocal 未 remove、监听器未注销、连接未关、缓存无界）</li>
+            </ol>
+            <p>高频泄漏源：static Map 无界缓存、ThreadLocal + 线程池、内部类持有外部对象、资源未 close、Session/监听器堆积。</p>
+            <span class="mnemonic">「老年代涨了不落是泄漏，dump 进 MAT 看支配树」；根子常在 static 和 ThreadLocal</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-oom">
+          <div class="qa-q"><span class="q-mark">Q106</span>常见的 OOM 有哪几种？分别怎么处理？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>OOM 类型</th><th>原因</th><th>处理</th></tr>
+                <tr><td><strong>Java heap space</strong></td><td>堆不够 / 泄漏 / 大对象</td><td>dump 分析 → 排泄漏或调 Xmx</td></tr>
+                <tr><td><strong>GC overhead limit</strong></td><td>98% 时间在 GC 却回收 &lt;2%</td><td>同上（先于堆 OOM 的预警）</td></tr>
+                <tr><td><strong>Metaspace</strong></td><td>动态生成类过多（CGLib、反射、脚本引擎）</td><td>调 MaxMetaspaceSize、查类泄漏</td></tr>
+                <tr><td><strong>Direct buffer / unable to create thread</strong></td><td>堆外内存 / 线程数到系统上限</td><td>查 DirectByteBuffer；线程池化限流</td></tr>
+                <tr><td><strong>StackOverflow</strong>（同族）</td><td>递归无出口、栈太深</td><td>查递归终止条件，或 -Xss 调大</td></tr>
+              </table>
+            </div>
+            <span class="mnemonic">「堆溢查泄漏、元空间查动态类、建线程查上限、栈溢查递归」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-fullgc">
+          <div class="qa-q"><span class="q-mark">Q107</span>线上频繁 Full GC，怎么排查？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>先看 GC 日志 / jstat</strong>：确认频率、单次耗时、每次回收效果（回收后占用高 = 泄漏；回收有效但还是频繁 = 流量/参数问题）</li>
+              <li><strong>回收不掉型</strong>（老年代高位震荡）：内存泄漏 → dump + MAT；缓存类对象 → 换弱引用或限容 LRU</li>
+              <li><strong>回收有效型</strong>：①对象晋升太快 → 新生代太小 / Survivor 太小 / 大对象多 ②元空间触发 → 加大或查动态类生成 ③<strong>显式 System.gc()</strong> → 搜代码 / DisableExplicitGC ④流量真的涨了 → 扩容分流</li>
+              <li><strong>验证</strong>：一次调一个参数，压测对比</li>
+            </ol>
+            <span class="mnemonic">「回收不掉查泄漏，回收有效调分代；别忘 System.gc 这个内鬼」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-perf">
+          <div class="qa-q"><span class="q-mark">Q108</span>一个接口响应慢，性能优化的思路？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ol>
+              <li><strong>定位瓶颈</strong>（先测量再动手）：链路追踪（SkyWalking/Zipkin）+ Arthas trace 逐段耗时——SQL？RPC？锁竞争？GC？序列化？</li>
+              <li><strong>数据库层</strong>（最常见）：慢 SQL + explain 看执行计划、加索引、避免大事务/深分页、读写分离、批处理代替循环单查（N+1 问题）</li>
+              <li><strong>缓存</strong>：热点数据加 Redis 多级缓存，注意穿透/击穿/雪崩防护</li>
+              <li><strong>异步化</strong>：非核心链路（发短信、记日志、发 MQ）异步/削峰</li>
+              <li><strong>并发</strong>：无依赖的多个 RPC 用 CompletableFuture 并行调用</li>
+              <li><strong>JVM/架构</strong>：GC 停顿调优、限流熔断保命、扩容</li>
+            </ol>
+            <span class="mnemonic">「先 trace 定位，再 DB 索引，缓存兜热点，异步削边路，并行压延迟」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-id">
+          <div class="qa-q"><span class="q-mark">Q109</span>分布式 ID 有哪些方案？雪花算法的原理和问题？</div>
+          <div class="qa-a">
+            <ul>
+              <li>方案对比：UUID（无序太长）、数据库自增（分库瓶颈）、号段模式（一次取一批，DB 压力小，美团 Leaf）、<strong>雪花算法</strong>（本地生成、趋势递增）</li>
+              <li><strong>Snowflake 结构</strong>（64 bit）：1 符号位 + <strong>41 时间戳</strong>（毫秒，约 69 年）+ <strong>10 机器 ID</strong>（5 数据中心 + 5 机器）+ <strong>12 序列号</strong>（每毫秒 4096 个）</li>
+              <li><strong>两大问题</strong>：①<strong>时钟回拨</strong>（NTP 校时往回跳 → 重复 ID）：等待/报警/备用位，美团的 Leaf-snowflake 用 ZK 校时 ②机器 ID 分配：ZK / 数据库 / 配置中心统一发号</li>
+              <li>Java 实现要点：System.currentTimeMillis() + 位运算拼装 + synchronized 或 CAS 保证同毫秒序列自增</li>
+            </ul>
+            <span class="mnemonic">「41 时间 10 机器 12 序列」；最大坑是时钟回拨，机器号要统一分配</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-bigfile">
+          <div class="qa-q"><span class="q-mark">Q110</span>如何用 Java 处理超大文件 / 超大数据量？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>绝不整读</strong>：不 readAllBytes / readLine 全存 List——OOM 起手式</li>
+              <li><strong>流式处理</strong>：BufferedReader 逐行读、Files.lines()（注意关流）、Scanner 增量解析</li>
+              <li><strong>大文件下载</strong>：InputStream + 固定 byte[] 缓冲循环写 out（response 流式输出）；服务端文件用 <span class="key">transferTo</span> 零拷贝</li>
+              <li><strong>分片/并行</strong>：按行数或字节偏移切块，多线程/多节点（MapReduce 思想）各处理一块再合并</li>
+              <li><strong>数据库批量</strong>：JDBC batch（addBatch/executeBatch）+ rewriteBatchedStatements，每批 500~1000</li>
+              <li>亿级统计：分批聚合 → 中间结果汇总；或直接交给大数据组件（Flink/Spark）</li>
+            </ul>
+            <span class="mnemonic">「流式逐行、分块并行、批量入库、零拷贝传输」——大文件四板斧</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="java-ch13">
+        <h2><span class="num">13</span>手写代码题</h2>
+
+        <div class="qa hot" id="java-write-singleton">
+          <div class="qa-q"><span class="q-mark">Q111</span>手写线程安全的单例模式（多种写法）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 写法一：静态内部类（推荐：懒加载 + JVM 类加载天然线程安全）
+public class Singleton {
+    private Singleton() {}                       // 私有构造防 new
+    private static class Holder {
+        static final Singleton INSTANCE = new Singleton();
+    }
+    public static Singleton getInstance() { return Holder.INSTANCE; }
+}
+
+// 写法二：双重检查锁 DCL（考察 volatile 的理解）
+public class Singleton2 {
+    private static volatile Singleton2 instance;  // volatile 禁止重排！
+    private Singleton2() {}
+    public static Singleton2 getInstance() {
+        if (instance == null) {
+            synchronized (Singleton2.class) {
+                if (instance == null) {
+                    instance = new Singleton2();  // 分配→初始化→赋值
+                }
+            }
+        }
+        return instance;
+    }
+}
+
+// 写法三：枚举（《 Effective Java 》推荐，天然防反射/防反序列化破坏）
+public enum Singleton3 { INSTANCE; }</code></pre>
+            <ul>
+              <li>追问点：①为什么 DCL 要 volatile（new 三步重排，防拿到半初始化对象）②静态内部类为何懒加载（Holder 只有在 getInstance 首次调用才类加载）③单例如何被反射破坏（setAccessible 调私有构造）→ 构造器里抛异常防御；枚举天然免疫</li>
+            </ul>
+            <span class="mnemonic">「内部类最优雅、DCL 考 volatile、枚举最坚固」三写法一网打尽</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-write-prodcons">
+          <div class="qa-q"><span class="q-mark">Q112</span>手写生产者消费者模型<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 写法一：wait / notifyAll（考察基础）
+class Buffer {
+    private final Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+    private final int cap = 5;
+
+    public synchronized void put(int v) throws InterruptedException {
+        while (queue.size() == cap) {       // 必须 while，防虚假唤醒
+            wait();                          // 释放锁等待消费
+        }
+        queue.offer(v);
+        notifyAll();                         // 唤醒消费者
+    }
+
+    public synchronized int take() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait();
+        }
+        int v = queue.poll();
+        notifyAll();
+        return v;
+    }
+}
+
+// 写法二：BlockingQueue（生产推荐，五行搞定）
+BlockingQueue&lt;Integer&gt; bq = new ArrayBlockingQueue&lt;&gt;(5);
+new Thread(() -&gt; { try { bq.put(1); } catch (InterruptedException e) { Thread.currentThread().interrupt(); } }).start();
+new Thread(() -&gt; { try { Integer v = bq.take(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); } }).start();</code></pre>
+            <ul>
+              <li>考点：①<strong>while 判断而非 if</strong>（虚假唤醒）②notifyAll 代替 notify（防只唤醒同类线程集体饿死）③锁的对象是<strong>同一把</strong>（this）④BlockingQueue 版体现工程能力</li>
+            </ul>
+            <span class="mnemonic">「while 判条件、wait 让锁、notifyAll 广播；工程直接 BlockingQueue」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="java-write-alternate">
+          <div class="qa-q"><span class="q-mark">Q113</span>两个线程交替打印 1-100（或 AB 交替）<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 写法一：wait / notify
+class Alternate {
+    private int n = 1;
+    private boolean flag = true;              // true: 线程A 的回合
+
+    public synchronized void printA() throws InterruptedException {
+        while (!flag) wait();
+        System.out.println("A: " + n++);
+        flag = false;
+        notifyAll();
+    }
+    public synchronized void printB() throws InterruptedException {
+        while (flag) wait();
+        System.out.println("B: " + n);
+        n++; flag = true;
+        notifyAll();
+    }
+}
+
+// 写法二：LockSupport 精准唤醒（更轻量）
+Thread a = new Thread(() -&gt; { for (int i = 1; i &lt;= 100; i += 2) {
+    System.out.println(i); LockSupport.unpark(b); LockSupport.park(); }});
+Thread b = new Thread(() -&gt; { for (int i = 2; i &lt;= 100; i += 2) {
+    LockSupport.park(); System.out.println(i); LockSupport.unpark(a); }});
+a.start(); b.start();
+
+// 写法三：Condition 两个条件队列（ReentrantLock 版，思路同一）</code></pre>
+            <ul>
+              <li>考点：标志位 + while 等待 + 唤醒对方；LockSupport 版考察 park/unpark（许可机制，先 unpark 后 park 也不死锁）</li>
+            </ul>
+            <span class="mnemonic">「一个标志位，wait 的等回合，notify 的交接力」；高级版 LockSupport 点名唤醒</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-write-deadlock">
+          <div class="qa-q"><span class="q-mark">Q114</span>手写一个死锁示例并修复</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 死锁：两个线程交叉持锁互等
+Object lockA = new Object(), lockB = new Object();
+
+new Thread(() -&gt; {
+    synchronized (lockA) {
+        sleep(100);                      // 放大交错窗口
+        synchronized (lockB) { }         // 持A等B
+    }
+}).start();
+new Thread(() -&gt; {
+    synchronized (lockB) {
+        sleep(100);
+        synchronized (lockA) { }         // 持B等A —— 成环
+    }
+}).start();
+
+// 修复一：固定加锁顺序（最常用）
+// 两个线程都先锁 lockA 再锁 lockB，打破「循环等待」
+
+// 修复二：tryLock 超时放弃
+if (lockB.tryLock(1, TimeUnit.SECONDS)) {
+    try { /* ... */ } finally { lockB.unlock(); }
+} else {
+    lockA.unlock();                      // 拿不到 B 就放掉 A 重来
+    return;
+}</code></pre>
+            <ul>
+              <li>验证：jstack &lt;pid&gt; 输出 "Found one Java-level deadlock" 并画出持有/等待环</li>
+              <li>修复三：用一个统一大锁（牺牲并发度）；修复四：无锁化设计（CAS / 队列化改造）</li>
+            </ul>
+            <span class="mnemonic">「先演示成环，再顺序拆环或 tryLock 弃锁」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-write-lru">
+          <div class="qa-q"><span class="q-mark">Q115</span>手写 LRU 缓存</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 写法一：继承 LinkedHashMap（简洁，工程够用）
+class LRUCache&lt;K, V&gt; extends LinkedHashMap&lt;K, V&gt; {
+    private final int capacity;
+    LRUCache(int capacity) {
+        super(16, 0.75f, true);          // accessOrder=true 按访问排序
+        this.capacity = capacity;
+    }
+    @Override
+    protected boolean removeEldestEntry(Map.Entry&lt;K, V&gt; eldest) {
+        return size() &gt; capacity;        // 超容淘汰链头（最久未用）
+    }
+}
+
+// 写法二：HashMap + 双向链表（面试加分，LeetCode 146）
+class LRUCache2 {
+    class Node {                          // 双向链表节点
+        int k, v; Node prev, next;
+        Node(int k, int v) { this.k = k; this.v = v; }
+    }
+    private final int cap;
+    private final Map&lt;Integer, Node&gt; map = new HashMap&lt;&gt;();
+    private final Node head = new Node(0, 0), tail = new Node(0, 0); // 哨兵
+
+    LRUCache2(int cap) {
+        this.cap = cap;
+        head.next = tail; tail.prev = head;
+    }
+    public int get(int key) {
+        Node n = map.get(key);
+        if (n == null) return -1;
+        remove(n); addFirst(n);           // 访问即提前
+        return n.v;
+    }
+    public void put(int key, int value) {
+        Node n = map.get(key);
+        if (n != null) { n.v = value; remove(n); addFirst(n); return; }
+        if (map.size() == cap) {          // 淘汰链尾
+            Node last = tail.prev;
+            remove(last); map.remove(last.k);
+        }
+        n = new Node(key, value);
+        map.put(key, n); addFirst(n);
+    }
+    private void remove(Node n) { n.prev.next = n.next; n.next.prev = n.prev; }
+    private void addFirst(Node n) { n.next = head.next; n.prev = head; head.next.prev = n; head.next = n; }
+}</code></pre>
+            <ul>
+              <li>考点：数据结构选型（HashMap 定位 O(1) + 双向链表维护顺序 O(1)）、哨兵节点简化边界、访问即移到头部</li>
+            </ul>
+            <span class="mnemonic">「HashMap 查得快，双向链表管顺序，访问弹到头，满了砍尾巴」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-write-blockingq">
+          <div class="qa-q"><span class="q-mark">Q116</span>手写一个简单的阻塞队列</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>class MyBlockingQueue&lt;T&gt; {
+    private final Object[] items;
+    private int count, putIdx, takeIdx;
+
+    MyBlockingQueue(int capacity) { items = new Object[capacity]; }
+
+    public synchronized void put(T t) throws InterruptedException {
+        while (count == items.length) {   // 满则等
+            wait();
+        }
+        items[putIdx] = t;
+        if (++putIdx == items.length) putIdx = 0;
+        count++;
+        notifyAll();                      // 叫醒消费者
+    }
+
+    @SuppressWarnings("unchecked")
+    public synchronized T take() throws InterruptedException {
+        while (count == 0) {              // 空则等
+            wait();
+        }
+        T t = (T) items[takeIdx];
+        if (++takeIdx == items.length) takeIdx = 0;
+        count--;
+        notifyAll();                      // 叫醒生产者
+        return t;
+    }
+}</code></pre>
+            <ul>
+              <li>考点：环形数组（下标取模回绕）、<strong>while 判满/空</strong>、wait/notifyAll 配对、泛型 + 数组只能 Object[]（类型擦除）</li>
+            </ul>
+            <span class="mnemonic">「数组转圈、满了等空了等、放完取完 notifyAll」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-write-equals">
+          <div class="qa-q"><span class="q-mark">Q117</span>手写 equals 和 hashCode（IDEA 自动生成也要会默写）</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>public class Employee {
+    private String name;
+    private int age;
+    private double salary;
+    private Department dept;              // 引用类型字段
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;                       // 1 同一对象
+        if (o == null || getClass() != o.getClass())      // 2 空与类型
+            return false;
+        Employee e = (Employee) o;
+        return age == e.age                                // 3 基本类型 ==
+            &amp;&amp; Double.compare(salary, e.salary) == 0       //   浮点防精度
+            &amp;&amp; Objects.equals(name, e.name)              //   引用 null 安全
+            &amp;&amp; Objects.equals(dept, e.dept);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(name, age);             // 与 equals 同字段
+        result = 31 * result + Objects.hashCode(dept);
+        return result;
+    }
+}</code></pre>
+            <ul>
+              <li>考点：五步结构、Double.compare 处理浮点（== 对 NaN 失效）、31 倍增系数（奇数、移位优化、冲突分布好）、<strong>equals 与 hashCode 字段必须一致</strong></li>
+            </ul>
+            <span class="mnemonic">「一同二判三转型，引用用 Objects，浮点用 compare，hash 同字段乘 31」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="java-write-async">
+          <div class="qa-q"><span class="q-mark">Q118</span>手写 Callable + Future 异步任务与 CompletableFuture 并行调用</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>// 写法一：Callable + FutureTask（有返回值的线程任务）
+Callable&lt;Integer&gt; task = () -&gt; {
+    Thread.sleep(1000);
+    return 42;
+};
+FutureTask&lt;Integer&gt; futureTask = new FutureTask&lt;&gt;(task);
+new Thread(futureTask).start();
+Integer result = futureTask.get(3, TimeUnit.SECONDS);   // 阻塞拿结果，带超时
+
+// 写法二：CompletableFuture 并行调多个 RPC 后汇总（接口提速利器）
+CompletableFuture&lt;User&gt; userF =
+        CompletableFuture.supplyAsync(() -&gt; queryUser(id), ioPool);
+CompletableFuture&lt;List&lt;Order&gt;&gt; orderF =
+        CompletableFuture.supplyAsync(() -&gt; queryOrders(id), ioPool);
+CompletableFuture&lt;Integer&gt; pointF =
+        CompletableFuture.supplyAsync(() -&gt; queryPoints(id), ioPool);
+
+CompletableFuture.allOf(userF, orderF, pointF).join();  // 等全部完成
+UserVO vo = new UserVO(userF.join(), orderF.join(), pointF.join());
+// 三个接口 300ms 串行 → 最慢那个的耗时（~100ms）</code></pre>
+            <ul>
+              <li>考点：Runnable vs Callable（返回值/异常）、Future.get 阻塞与超时、<strong>supplyAsync 默认用公共 ForkJoinPool（要自定义线程池）</strong>、allOf/anyOf 汇总、thenApply/thenCompose 链式编排</li>
+            </ul>
+            <span class="mnemonic">「Callable 有返回，Future 阻塞取；并行 allOf 汇总，串行变最慢」</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      style="
+        text-align: center;
+        padding: 40px 0 20px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      ">
+      <p>
+        ☕ Java 开发工程师面试题总结 · 100+ 高频考点 &nbsp;|&nbsp;
+        <a
+          href="../indexInterview.html"
+          style="color: var(--link-blue); text-decoration: none"
+          >返回面试题目录</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      function copyCode(btn) {
+        const pre = btn.parentElement
+        const code = pre.querySelector('code').innerText
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '已复制 ✓'
+          setTimeout(() => {
+            btn.textContent = '复制'
+          }, 1500)
+        })
+      }
+
+      // 侧边栏当前章节高亮
+      const sections = document.querySelectorAll('.section')
+      const navLinks = document.querySelectorAll('.toc li a')
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              navLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === `#${id}`,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-10% 0px -70% 0px' },
+      )
+      sections.forEach((s) => observer.observe(s))
+
+      // 移动端点击链接关闭侧边栏
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          document.querySelector('.sidebar').classList.remove('open')
+        })
+      })
+
+      document.addEventListener('pointerdown', (event) => {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(event.target) &&
+          !menuToggle.contains(event.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>

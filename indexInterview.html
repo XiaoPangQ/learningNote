@@ -201,6 +201,25 @@
       .card-arrow {
         color: var(--card-accent);
       }
+      .more-card {
+        border-style: dashed;
+        background: rgba(148, 163, 184, 0.03);
+        cursor: default;
+      }
+      .more-card::before {
+        display: none;
+      }
+      .more-card:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .more-card .card-icon {
+        background: rgba(148, 163, 184, 0.08);
+      }
+      .more-card .card-arrow {
+        color: var(--muted);
+      }
       footer {
         margin-top: 48px;
         padding-top: 40px;
@@ -242,8 +261,8 @@
           把高频问题拆成原理、思路和可落地的回答，建立从基础知识到真实面试表达的复习路径。
         </p>
         <div class="stats">
-          <div class="stat"><strong>11</strong><span>复习专题</span></div>
-          <div class="stat"><strong>1100+</strong><span>已整理题目</span></div>
+          <div class="stat"><strong>13</strong><span>复习专题</span></div>
+          <div class="stat"><strong>1300+</strong><span>已整理题目</span></div>
           <div class="stat"><strong>∞</strong><span>持续积累</span></div>
         </div>
       </header>
@@ -427,6 +446,15 @@
             <span>100+ 高频题</span><span class="card-arrow">开始复习 →</span>
           </div>
         </a>
+        <div class="card more-card">
+          <div class="card-icon">＋</div>
+          <div class="card-tag">持续更新</div>
+          <h2>更多内容</h2>
+          <p>更多面试专题与高频题型仍在持续补充，后续内容会持续更新。</p>
+          <div class="card-footer">
+            <span>持续更新</span><span class="card-arrow">更多内容</span>
+          </div>
+        </div>
         <a
           class="card"
           href="interview/interviewCppDevelopment.html"
@@ -444,6 +472,45 @@
           </p>
           <div class="card-footer">
             <span>100+ 高频题</span><span class="card-arrow">开始复习 →</span>
+          </div>
+        </a>
+        <a
+          class="card"
+          href="interview/interviewJavaDevelopment.html"
+          style="
+            --card-accent: #f43f5e;
+            --card-accent-soft: rgba(244, 63, 94, 0.12);
+          ">
+          <div class="card-icon">☕</div>
+          <div class="card-tag">开发方向</div>
+          <h2>Java 开发工程师面试题</h2>
+          <p>
+            覆盖语言基础与 String
+            深究、面向对象、集合框架（HashMap/ConcurrentHashMap
+            原理）、泛型反射、IO/NIO
+            零拷贝、并发编程（synchronized/volatile/AQS/线程池）、JVM 内存模型与
+            GC 调优、Java 8+ 新特性（虚拟线程）及手写代码题。
+          </p>
+          <div class="card-footer">
+            <span>118 道高频题</span><span class="card-arrow">开始复习 →</span>
+          </div>
+        </a>
+        <a
+          class="card"
+          href="interview/interviewEmbeddedDevelopment.html"
+          style="
+            --card-accent: #06b6d4;
+            --card-accent-soft: rgba(6, 182, 212, 0.12);
+          ">
+          <div class="card-icon">🔩</div>
+          <div class="card-tag">开发方向</div>
+          <h2>嵌入式开发工程师面试题</h2>
+          <p>
+            覆盖嵌入式基础、C 语言与编译链接、内存存储、中断定时器、通信协议（UART/I2C/SPI/CAN）、外设驱动、RTOS
+            （任务调度/信号量/优先级翻转）、嵌入式 Linux（设备树/驱动）、低功耗、调试测试、安全可靠、故障排查及手写代码题。
+          </p>
+          <div class="card-footer">
+            <span>110 道高频题</span><span class="card-arrow">开始复习 →</span>
           </div>
         </a>
       </div>

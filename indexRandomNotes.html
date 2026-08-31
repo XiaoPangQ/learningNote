@@ -201,12 +201,24 @@
       .card-arrow {
         color: var(--accent);
       }
-      .placeholder {
+      .more-card {
         border-style: dashed;
-        background: transparent;
+        background: rgba(148, 163, 184, 0.03);
+        cursor: default;
       }
-      .placeholder::before {
+      .more-card::before {
         display: none;
+      }
+      .more-card:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .more-card .card-icon {
+        background: rgba(148, 163, 184, 0.08);
+      }
+      .more-card .card-arrow {
+        color: var(--muted);
       }
       footer {
         margin-top: 48px;
@@ -248,47 +260,45 @@
           短小的观察、工具发现，以及写给未来自己的备忘。先记下来，再慢慢整理成可以复用的内容。
         </p>
         <div class="stats">
-          <div class="stat"><strong>4</strong><span>记录分类</span></div>
-          <div class="stat"><strong>0</strong><span>已整理记录</span></div>
+          <div class="stat"><strong>2</strong><span>记录分类</span></div>
+          <div class="stat"><strong>2</strong><span>已整理记录</span></div>
           <div class="stat"><strong>∞</strong><span>持续记录</span></div>
         </div>
       </header>
       <h2 class="section-title">随手记录目录</h2>
       <div class="grid">
-        <div class="card placeholder">
-          <div class="card-icon">✎</div>
-          <div class="card-tag">灵感片段</div>
-          <h2>短笔记</h2>
-          <p>收集读书、学习和工作中突然想到的概念、判断与小结。</p>
+        <a class="card" href="randomNotes/ecommerceOpsInterview.html">
+          <div class="card-icon">🛒</div>
+          <div class="card-tag">电商运营 · 面试题</div>
+          <h2>电商运营面试题总结</h2>
+          <p>
+            覆盖平台模式与商业模式、商品供应链、流量获取、活动促销、用户与会员运营、内容直播、数据分析、平台合规、广告投放、私域复购与手写方案题，105
+            题含 36 道高频必考题。
+          </p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
+            <span>105 道高频题</span><span class="card-arrow">开始复习 →</span>
           </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">⌘</div>
-          <div class="card-tag">工具发现</div>
-          <h2>工具与资源</h2>
-          <p>记录好用的命令、软件、网站和提高日常效率的小工具。</p>
+        </a>
+        <a class="card" href="randomNotes/crossBorderEcommerceLearning.html">
+          <div class="card-icon">🌊</div>
+          <div class="card-tag">跨境电商 · 学习笔记</div>
+          <h2>跨境电商从入门到精通</h2>
+          <p>
+            覆盖行业认知、平台选型、术语指标、开店准备、选品供应链、Listing
+            优化、定价利润、物流广告、站外引流、客服售后、数据分析、合规风控、独立站品牌到团队规模，18
+            章含公式模板与避坑指南。
+          </p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
+            <span>18 章学习手册</span><span class="card-arrow">开始学习 →</span>
           </div>
-        </div>
-        <div class="card placeholder">
-          <div class="card-icon">◌</div>
-          <div class="card-tag">学习复盘</div>
-          <h2>阶段性总结</h2>
-          <p>把某一阶段的学习进度、疑问和下一步计划留下来，方便回看。</p>
-          <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
-          </div>
-        </div>
-        <div class="card placeholder">
+        </a>
+        <div class="card more-card">
           <div class="card-icon">＋</div>
-          <div class="card-tag">持续扩展</div>
-          <h2>更多记录</h2>
-          <p>这里为未来的新主题预留位置，内容成熟后再独立成篇。</p>
+          <div class="card-tag">持续更新</div>
+          <h2>更多内容</h2>
+          <p>更多随手记录和经验片段仍在持续整理中，后续内容会不断补充。</p>
           <div class="card-footer">
-            <span>待补充</span><span class="card-arrow">即将推出</span>
+            <span>持续更新</span><span class="card-arrow">更多内容</span>
           </div>
         </div>
       </div>

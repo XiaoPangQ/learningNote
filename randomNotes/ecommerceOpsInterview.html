@@ -1,0 +1,2374 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>电商运营面试题总结 · 高频考点速记</title>
+    <style>
+      :root {
+        --bg: #141012;
+        --panel: #1c1619;
+        --panel-hover: #282023;
+        --text: #f3ecec;
+        --text-secondary: #c6b8ba;
+        --border: #3a2d31;
+        --accent: #f87171;
+        --accent-soft: rgba(248, 113, 113, 0.12);
+        --hot: #fda4af;
+        --hot-soft: rgba(253, 164, 175, 0.1);
+        --code-green: #e5c9a0;
+        --link-blue: #93c5fd;
+        --warn: #ffd166;
+        --sidebar-w: 300px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #4a3a3f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+      .toc .hot-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--hot);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 28px;
+        padding: 8px 18px;
+        border: 1px solid var(--accent);
+        border-radius: 20px;
+        background: var(--accent-soft);
+        transition: all 0.2s ease;
+      }
+      .back-home:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 16px var(--accent-soft);
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #f3ecec 0%, #f87171 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-legend span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-legend .hot-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot-soft);
+        color: var(--hot);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+
+      /* Q&A Card */
+      .qa {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .qa:hover {
+        border-color: rgba(248, 113, 113, 0.3);
+      }
+      .qa.hot {
+        border-left: 3px solid var(--hot);
+        background: linear-gradient(
+          90deg,
+          var(--hot-soft) 0%,
+          var(--panel) 30%
+        );
+      }
+      .qa.hot:hover {
+        border-color: var(--hot);
+      }
+
+      .qa-q {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .qa-q .q-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+      }
+      .qa.hot .q-mark {
+        background: var(--hot-soft);
+        color: var(--hot);
+      }
+      .hot-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--hot);
+        color: #fff;
+        padding: 1px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+        white-space: nowrap;
+        animation: hotPulse 2s ease-in-out infinite;
+      }
+      @keyframes hotPulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .qa-a {
+        color: var(--text-secondary);
+        font-size: 0.93rem;
+      }
+      .qa-a ul,
+      .qa-a ol {
+        margin: 6px 0 6px 20px;
+      }
+      .qa-a li {
+        margin-bottom: 5px;
+      }
+      .qa-a strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .qa-a .key {
+        color: var(--code-green);
+        font-weight: 600;
+      }
+      .qa-a p {
+        margin-bottom: 8px;
+      }
+      .qa-a .mnemonic {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: rgba(229, 201, 160, 0.06);
+        border-left: 3px solid var(--code-green);
+        border-radius: 0 6px 6px 0;
+        font-size: 0.85rem;
+        color: var(--code-green);
+      }
+      .qa-a .mnemonic::before {
+        content: '🧠 速记：';
+        font-weight: 700;
+      }
+
+      pre {
+        background: #0d0a0c;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        overflow-x: auto;
+        margin: 10px 0 14px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #e5c9a0;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      pre:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .tip,
+      .warn {
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid;
+        font-size: 0.88rem;
+      }
+      .tip {
+        background: rgba(229, 201, 160, 0.06);
+        border-color: var(--code-green);
+        color: var(--text-secondary);
+      }
+      .warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+        color: var(--text-secondary);
+      }
+      .tip::before {
+        content: '💡 ';
+      }
+      .warn::before {
+        content: '⚠️ ';
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th,
+      td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      tr:hover td {
+        background: var(--panel-hover);
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          padding: 64px 20px 60px;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .sidebar,
+        .menu-toggle,
+        .copy-btn,
+        .back-home {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        .qa {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+        }
+        pre {
+          background: #f5f5f5;
+          color: #000;
+          border: 1px solid #ccc;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        pre code {
+          color: #000;
+        }
+        .hot-badge {
+          background: #ccc;
+          color: #000;
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button
+      class="menu-toggle"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="菜单">
+      ☰
+    </button>
+
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🛒</span> 电商运营面试指南</h2>
+        <p>高频考点 · 速记答案 · 100+ 题</p>
+      </div>
+      <ul class="toc">
+        <li><a href="../indexRandomNotes.html">← 返回随手记目录</a></li>
+        <li class="toc-section-title">行业认知与商业模式</li>
+        <li><a href="#eco-nature"><span class="hot-dot"></span>电商本质与人货场</a></li>
+        <li><a href="#eco-platform"><span class="hot-dot"></span>主流平台模式对比</a></li>
+        <li><a href="#eco-gmv"><span class="hot-dot"></span>GMV vs 真实销售额</a></li>
+        <li><a href="#eco-interest"><span class="hot-dot"></span>兴趣电商 vs 货架电商</a></li>
+        <li><a href="#eco-public-private">公域流量 vs 私域流量</a></li>
+        <li><a href="#eco-d2c">B2B / B2C / C2C / D2C</a></li>
+        <li><a href="#eco-cross">跨境电商模式</a></li>
+        <li><a href="#eco-ops-role">运营岗位职责与能力模型</a></li>
+
+        <li class="toc-section-title">商品与供应链</li>
+        <li><a href="#eco-spu-sku"><span class="hot-dot"></span>SPU vs SKU</a></li>
+        <li><a href="#eco-select"><span class="hot-dot"></span>选品逻辑与方法</a></li>
+        <li><a href="#eco-pricing"><span class="hot-dot"></span>定价策略</a></li>
+        <li><a href="#eco-margin"><span class="hot-dot"></span>毛利与净利计算</a></li>
+        <li><a href="#eco-stock-turnover"><span class="hot-dot"></span>库存周转率</a></li>
+        <li><a href="#eco-safe-stock">安全库存与补货</a></li>
+        <li><a href="#eco-abc">ABC 库存分类</a></li>
+        <li><a href="#eco-supply-chain">供应链时效管理</a></li>
+
+        <li class="toc-section-title">流量获取与渠道</li>
+        <li><a href="#eco-traffic-type"><span class="hot-dot"></span>流量类型全景</a></li>
+        <li><a href="#eco-search-seo"><span class="hot-dot"></span>站内搜索与 SEO</a></li>
+        <li><a href="#eco-recommend">推荐流量机制</a></li>
+        <li><a href="#eco-content-traffic">内容流量</a></li>
+        <li><a href="#eco-outer-channel"><span class="hot-dot"></span>站外渠道矩阵</a></li>
+        <li><a href="#eco-cac"><span class="hot-dot"></span>流量成本 CAC / LTV</a></li>
+        <li><a href="#eco-traffic-structure">流量结构健康度</a></li>
+        <li><a href="#eco-free-traffic">免费流量获取技巧</a></li>
+
+        <li class="toc-section-title">活动运营与促销</li>
+        <li><a href="#eco-promo-rhythm"><span class="hot-dot"></span>大促节奏四阶段</a></li>
+        <li><a href="#eco-manjian"><span class="hot-dot"></span>满减满折设计</a></li>
+        <li><a href="#eco-coupon"><span class="hot-dot"></span>优惠券体系</a></li>
+        <li><a href="#eco-stack"><span class="hot-dot"></span>优惠叠加规则</a></li>
+        <li><a href="#eco-price-protect">价格保护机制</a></li>
+        <li><a href="#eco-blast">爆款打造路径</a></li>
+        <li><a href="#eco-clear">清库存活动玩法</a></li>
+        <li><a href="#eco-retro">活动复盘五步</a></li>
+        <li><a href="#eco-gmv-split">GMV 拆解公式</a></li>
+
+        <li class="toc-section-title">用户运营</li>
+        <li><a href="#eco-aarrr"><span class="hot-dot"></span>AARRR 漏斗模型</a></li>
+        <li><a href="#eco-rfm"><span class="hot-dot"></span>RFM 模型</a></li>
+        <li><a href="#eco-acquire">新客拉新方法</a></li>
+        <li><a href="#eco-retention">留存与复购提升</a></li>
+        <li><a href="#eco-member">会员体系设计</a></li>
+        <li><a href="#eco-community">社群运营</a></li>
+        <li><a href="#eco-recall">沉默老客召回</a></li>
+        <li><a href="#eco-user-split">用户分层方法</a></li>
+
+        <li class="toc-section-title">内容与直播电商</li>
+        <li><a href="#eco-live-3"><span class="hot-dot"></span>直播间人货场</a></li>
+        <li><a href="#eco-live-rhythm"><span class="hot-dot"></span>直播节奏与话术</a></li>
+        <li><a href="#eco-live-product">直播选品结构</a></li>
+        <li><a href="#eco-live-data">直播核心指标</a></li>
+        <li><a href="#eco-content-seed">短视频引流直播间</a></li>
+        <li><a href="#eco-kol">达人合作评估</a></li>
+        <li><a href="#eco-live-sop">直播 SOP 流程</a></li>
+
+        <li class="toc-section-title">数据分析与指标体系</li>
+        <li><a href="#eco-northstar"><span class="hot-dot"></span>北极星指标</a></li>
+        <li><a href="#eco-funnel"><span class="hot-dot"></span>转化漏斗分析</a></li>
+        <li><a href="#eco-ab"><span class="hot-dot"></span>A/B 测试方法论</a></li>
+        <li><a href="#eco-kpi">核心指标口径</a></li>
+        <li><a href="#eco-attribution">渠道归因</a></li>
+        <li><a href="#eco-dashboard">数据看板设计</a></li>
+        <li><a href="#eco-anomaly">数据异常排查</a></li>
+        <li><a href="#eco-uv-value">UV 价值</a></li>
+        <li><a href="#eco-cohort">同期群分析</a></li>
+
+        <li class="toc-section-title">转化率优化</li>
+        <li><a href="#eco-detail"><span class="hot-dot"></span>详情页转化逻辑</a></li>
+        <li><a href="#eco-mainimg"><span class="hot-dot"></span>主图点击率优化</a></li>
+        <li><a href="#eco-review">评价与差评管理</a></li>
+        <li><a href="#eco-service">客服话术转化</a></li>
+        <li><a href="#eco-cart">加购不转化处理</a></li>
+        <li><a href="#eco-upsell">客单价与连带</a></li>
+        <li><a href="#eco-pay-loss">支付流失挽回</a></li>
+        <li><a href="#eco-ctr-cvr">点击率 vs 转化率</a></li>
+
+        <li class="toc-section-title">平台规则与合规</li>
+        <li><a href="#eco-adlaw"><span class="hot-dot"></span>广告法违禁词</a></li>
+        <li><a href="#eco-platform-rule"><span class="hot-dot"></span>平台规则差异</a></li>
+        <li><a href="#eco-dsr">DSR 与体验分</a></li>
+        <li><a href="#eco-after-sale">售后与退换货</a></li>
+        <li><a href="#eco-fake">虚假交易稽查</a></li>
+        <li><a href="#eco-ipr">知识产权风险</a></li>
+        <li><a href="#eco-invoice">发票与税务</a></li>
+        <li><a href="#eco-compliance">职业打假应对</a></li>
+
+        <li class="toc-section-title">广告投放与推广</li>
+        <li><a href="#eco-zsx"><span class="hot-dot"></span>直通车原理</a></li>
+        <li><a href="#eco-keyword"><span class="hot-dot"></span>关键词与质量分</a></li>
+        <li><a href="#eco-bid">出价与 ROI</a></li>
+        <li><a href="#eco-wxt">万相台与引力魔方</a></li>
+        <li><a href="#eco-qianchuan">千川投放要点</a></li>
+        <li><a href="#eco-audience">人群包圈选</a></li>
+        <li><a href="#eco-budget">预算分配</a></li>
+        <li><a href="#eco-roi-low">ROI 低排查</a></li>
+
+        <li class="toc-section-title">私域运营与复购</li>
+        <li><a href="#eco-private-form"><span class="hot-dot"></span>私域载体与链路</a></li>
+        <li><a href="#eco-private-sop"><span class="hot-dot"></span>私域 SOP</a></li>
+        <li><a href="#eco-repurchase-rate">复购率计算与提升</a></li>
+        <li><a href="#eco-member-day">会员日策划</a></li>
+        <li><a href="#eco-k-factor">裂变与 K 因子</a></li>
+        <li><a href="#eco-private-data">私域数据指标</a></li>
+        <li><a href="#eco-private-vs-public">私域的价值边界</a></li>
+
+        <li class="toc-section-title">场景题</li>
+        <li><a href="#eco-s1"><span class="hot-dot"></span>GMV 下滑排查</a></li>
+        <li><a href="#eco-s2"><span class="hot-dot"></span>转化率低于同行</a></li>
+        <li><a href="#eco-s3">大促备货与清尾</a></li>
+        <li><a href="#eco-s4">恶意差评应对</a></li>
+        <li><a href="#eco-s5">新店冷启动</a></li>
+        <li><a href="#eco-s6">KPI 不合理沟通</a></li>
+        <li><a href="#eco-s7">双 11 预算分配</a></li>
+        <li><a href="#eco-s8">改版后转化下降</a></li>
+        <li><a href="#eco-s9">直播没流量排查</a></li>
+
+        <li class="toc-section-title">手写方案与计算题</li>
+        <li><a href="#eco-w1"><span class="hot-dot"></span>大促活动方案</a></li>
+        <li><a href="#eco-w2"><span class="hot-dot"></span>定价毛利计算</a></li>
+        <li><a href="#eco-w3">会员体系方案</a></li>
+        <li><a href="#eco-w4">直播脚本框架</a></li>
+        <li><a href="#eco-w5">运营周报模板</a></li>
+        <li><a href="#eco-w6">A/B 测试方案</a></li>
+        <li><a href="#eco-w7">年度运营规划</a></li>
+        <li><a href="#eco-w8">私域 SOP 示例</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <a class="back-home" href="../indexRandomNotes.html">← 返回随手记目录</a>
+
+      <header class="hero">
+        <div class="hero-badge">电商运营 · 高频面试题</div>
+        <h1>电商运营面试题总结</h1>
+        <p>
+          从平台模式、商品供应链到流量活动、数据分析与私域复购，覆盖电商运营全链路的高频面试考点。答案均为「要点 + 口诀」速记格式。
+        </p>
+        <div class="hero-legend">
+          <span>📚 105 道高频题</span>
+          <span>🔥 <span class="hot-tag">36 道必考题</span></span>
+        </div>
+      </header>
+
+      <section class="section" id="eco-ch1">
+        <h2><span class="num">01</span>行业认知与商业模式</h2>
+
+        <div class="qa hot" id="eco-nature">
+          <div class="qa-q"><span class="q-mark">Q1</span>电商运营的本质是什么？「人货场」怎么理解？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>本质：<strong>以商品（货）为载体，通过内容/渠道（场）触达目标人群（人），完成交易并沉淀复购</strong>——一切动作都围绕「人货场」匹配效率</li>
+              <li>人：目标客群画像（年龄/地域/消费力/偏好），决定<strong>流量结构和话术</strong></li>
+              <li>货：商品结构（引流款/利润款/形象款/活动款），决定<strong>转化和毛利</strong></li>
+              <li>场：店铺/直播间/详情页/活动页，决定<strong>承接转化能力</strong></li>
+              <li>运营的终极指标：<strong>人货场匹配效率</strong> = 流量 × 转化率 × 客单价 × 复购率</li>
+            </ul>
+            <span class="mnemonic">「人找货场定转化，三要素匹配即效率」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-platform">
+          <div class="qa-q"><span class="q-mark">Q2</span>主流电商平台模式怎么对比？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>平台</th><th>模式</th><th>流量逻辑</th><th>核心优势</th></tr>
+                <tr><td>淘宝/天猫</td><td>货架电商（B2C/C2C）</td><td>搜索+推荐</td><td>SKU 最全、用户心智成熟</td></tr>
+                <tr><td>京东</td><td>自营+平台</td><td>搜索+品质</td><td>物流快、正品行货心智</td></tr>
+                <tr><td>拼多多</td><td>社交拼团</td><td>低价+社交裂变</td><td>下沉市场、价格力</td></tr>
+                <tr><td>抖音/快手</td><td>兴趣电商（内容/直播）</td><td>算法推荐+内容种草</td><td>货找人、爆发力强</td></tr>
+                <tr><td>小红书</td><td>种草社区电商</td><td>笔记+搜索</td><td>高客单、决策信任</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>划分维度：<strong>货架 vs 内容、搜索 vs 推荐、自营 vs 平台</strong></li>
+              <li>面试加分：能说出「<strong>货架电商人找货，兴趣电商货找人</strong>」的本质差异</li>
+            </ul>
+            <span class="mnemonic">「淘京拼抖红：货架内容两阵营，搜索推荐分流量」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-gmv">
+          <div class="qa-q"><span class="q-mark">Q3</span>GMV 和真实销售额有什么区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>GMV（Gross Merchandise Volume）= <strong>拍下总金额</strong>：含未付款、已付款、已发货、已退款等全部订单金额</li>
+              <li>真实销售额（成交额）= <strong>确认收货/实际核销</strong>的金额，剔除退款与虚假单</li>
+              <li>公式：GMV = 访客数 × 转化率 × 客单价；GMV ≈ 销售额 + <strong>未支付 + 已退款</strong></li>
+              <li>运营关注：GMV 看<strong>增长趋势</strong>，销售额/毛利看<strong>真实健康度</strong>；大量 GMV 无销售额 = 数据注水</li>
+            </ul>
+            <span class="mnemonic">「GMV 是拍下不是收到，退款未付都是水」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-interest">
+          <div class="qa-q"><span class="q-mark">Q4</span>兴趣电商和货架电商的本质区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>货架电商：<strong>人找货</strong>——用户有明确需求→搜索→比较→下单，转化靠<strong>搜索排名、价格、评价</strong></li>
+              <li>兴趣电商：<strong>货找人</strong>——内容激发潜在需求→兴趣→冲动下单，转化靠<strong>内容质量、直播间氛围、价格刺激</strong></li>
+              <li>链路差异：货架是「搜索→详情→购买」；兴趣是「<strong>刷到→种草→信任→购买</strong>」</li>
+              <li>数据差异：兴趣电商<strong>点击率高、转化率看似低但种草溢出强</strong>（浏览不买也算心智沉淀）</li>
+              <li>趋势：两边正在融合——抖音做商城（货架化），淘宝做逛逛/直播（内容化）</li>
+            </ul>
+            <span class="mnemonic">「货架人找货、兴趣货找人，一个搜一个刷」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-public-private">
+          <div class="qa-q"><span class="q-mark">Q5</span>公域流量和私域流量的区别？</div>
+          <div class="qa-a">
+            <ul>
+              <li>公域：平台分配的流量（搜索、推荐、广告、活动）——<strong>不付费不持续、一次性</strong></li>
+              <li>私域：可反复触达的流量（微信好友、企微社群、会员、公众号）——<strong>免费、可重复、忠诚度高</strong></li>
+              <li>关系：<strong>公域做拉新，私域做留存复购</strong>；公域是「自来水」，私域是「自留地」</li>
+              <li>关键指标：公域看<strong>获客成本 CAC</strong>，私域看<strong>复购率、LTV、触达率</strong></li>
+            </ul>
+            <span class="mnemonic">「公域买流量、私域留用户；公域拉新私域养」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-d2c">
+          <div class="qa-q"><span class="q-mark">Q6</span>B2B、B2C、C2C、D2C 分别是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>B2B</strong>：企业对企业（1688、阿里巴巴国际站），大额低频、重服务</li>
+              <li><strong>B2C</strong>：企业对消费者（天猫旗舰店、京东自营），标准化的零售生意</li>
+              <li><strong>C2C</strong>：个人对个人（淘宝集市、闲鱼），轻资产、低门槛</li>
+              <li><strong>D2C</strong>：品牌直接触达消费者（自建站、私域、品牌直播间）——<strong>去中间商、掌握数据与用户</strong></li>
+              <li>面试常问：D2C 的优势——毛利更高、数据闭环、用户资产自有；挑战——<strong>流量与履约要自己扛</strong></li>
+            </ul>
+            <span class="mnemonic">「B 对 B 低频，B 对 C 零售，C 对 C 闲鱼，D 对 C 品牌直连」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-cross">
+          <div class="qa-q"><span class="q-mark">Q7</span>跨境电商有哪些主流模式？</div>
+          <div class="qa-a">
+            <ul>
+              <li>出口模式：<strong>B2C 平台</strong>（亚马逊、速卖通、Shopee、TikTok Shop）、<strong>独立站 DTC</strong>（Shopify + 广告引流）</li>
+              <li>物流模式：<strong>FBA</strong>（亚马逊仓储配送，省心但压货压资金）、<strong>FBM/自发货</strong>（灵活但时效慢）、<strong>海外仓</strong></li>
+              <li>选品逻辑：<strong>高毛利、轻小件、不易碎、无侵权风险、复购性强</strong></li>
+              <li>合规红线：<strong>知识产权侵权、平台禁售、各国税务与认证</strong>（欧洲 VAT、美国 FCC/CPC）</li>
+            </ul>
+            <span class="mnemonic">「轻小高毛利，FBA 压钱自发慢，侵权认证是红线」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-ops-role">
+          <div class="qa-q"><span class="q-mark">Q8</span>电商运营的核心职责与能力模型？</div>
+          <div class="qa-a">
+            <ul>
+              <li>职责五板块：<strong>货品规划、流量获取、活动策划、数据优化、用户维护</strong></li>
+              <li>日常动作：上架优化、推广投放、活动报名、数据分析、客服协同、库存监控</li>
+              <li>能力模型：<strong>数据敏感度（必考）、平台规则熟悉度、文案与审美、沟通协同、复盘总结</strong></li>
+              <li>面试加分：能讲出「<strong>运营 = 用数据做决策的人</strong>」，并举例自己如何用数据优化过转化率</li>
+            </ul>
+            <span class="mnemonic">「货流活数人五板斧，数据决策是核心」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch2">
+        <h2><span class="num">02</span>商品与供应链</h2>
+
+        <div class="qa hot" id="eco-spu-sku">
+          <div class="qa-q"><span class="q-mark">Q9</span>SPU 和 SKU 的区别？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>SPU</strong>（Standard Product Unit）：商品聚合单位，<strong>一个商品一个 SPU</strong>（如「iPhone 15 Pro 手机」）</li>
+              <li><strong>SKU</strong>（Stock Keeping Unit）：库存最小单位，<strong>一个规格一个 SKU</strong>（如「iPhone 15 Pro 256G 钛金属」）</li>
+              <li>关系：<strong>SPU 是一组 SKU 的集合</strong>；SKU 决定库存、价格、销量统计粒度</li>
+              <li>运营应用：SKU 结构设计（引流 SKU 低价拉点击、主销 SKU 走量、利润 SKU 保毛利）是<strong>商品运营的基本功</strong></li>
+            </ul>
+            <span class="mnemonic">「SPU 是一件商品，SKU 是一个规格」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-select">
+          <div class="qa-q"><span class="q-mark">Q10</span>电商选品的逻辑和方法有哪些？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>核心标准：<strong>高需求（搜索量/销量趋势）、高毛利（≥50% 更佳）、低竞争、易履约、可复购</strong></li>
+              <li>数据选品法：看<strong>平台热销榜、关键词搜索趋势（生意参谋/巨量算数）、竞品差评痛点</strong></li>
+              <li>差异化选品：<strong>微创新</strong>（功能/包装/人群细分）避开纯价格战</li>
+              <li>测款方法：<strong>小批量上新 → 广告小预算测点击与转化 → 数据达标再放量</strong></li>
+              <li>避坑：<strong>侵权品、低价标品（无利润）、季节品压货、巨头垄断品类</strong></li>
+            </ul>
+            <span class="mnemonic">「需毛低竞易履约，微创测款再放量」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-pricing">
+          <div class="qa-q"><span class="q-mark">Q11</span>商品定价策略有哪些？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>成本加成定价</strong>：成本 ×（1+加价率），保底不亏</li>
+              <li><strong>竞品定价</strong>：对标同款，高 5% 需要有附加价值（赠品/服务），低 5% 抢流量</li>
+              <li><strong>心理定价</strong>：9.9/19.9 尾数定价、锚定（原价划线）、套餐打包「更划算」</li>
+              <li><strong>价值定价</strong>：按用户感知价值定价（品牌溢价、场景溢价）</li>
+              <li>运营动作：定价要预留<strong>活动价空间</strong>（日常价→大促价→最低到手价），否则活动无力度</li>
+            </ul>
+            <span class="mnemonic">「成本保底、竞品对标、尾数锚定、价值溢价」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-margin">
+          <div class="qa-q"><span class="q-mark">Q12</span>毛利和净利怎么算？如何快速判断一个品能不能做？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>毛利 = 销售额 − <strong>商品成本</strong>（进货/生产成本）</li>
+              <li>净利 = 销售额 − 商品成本 − <strong>平台佣金 − 运费 − 推广费 − 包装 − 人员摊销</strong></li>
+              <li>毛利率 = 毛利 ÷ 销售额；<strong>净利润率才是能不能做的判据</strong></li>
+              <li>快速判断：<strong>售价 100 元 → 成本 30 + 佣金 5 + 运费 8 + 推广 20 ≈ 总成本 63 → 净利 37%，可做</strong>；推广费占比超 30% 要警惕</li>
+              <li>注意：<strong>大促让利后要算「到手价下的净利率」</strong>，亏本冲量只适合拉新/清库存</li>
+            </ul>
+            <span class="mnemonic">「毛减成本、净减六项；推广占比超三成要警惕」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-stock-turnover">
+          <div class="qa-q"><span class="q-mark">Q13</span>库存周转率是什么？怎么算？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>定义：<strong>一段时间内库存周转的次数</strong>，衡量货卖得快不快</li>
+              <li>公式：周转率 = <strong>销售成本（或销售额）÷ 平均库存</strong>；周转天数 = 周期天数 ÷ 周转率</li>
+              <li>例：月销售成本 60 万，平均库存 20 万 → 周转率 3 次/月，周转天数约 10 天</li>
+              <li>意义：周转越快，<strong>资金占用越少、积压风险越低</strong>；不同类目差异大（生鲜几天、服装几十天、家具更长）</li>
+              <li>运营动作：周转慢的 SKU <strong>降价/搭赠/活动清仓</strong>，周转快的保供应防断货</li>
+            </ul>
+            <span class="mnemonic">「销货成本除均库，转得快钱就活」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-safe-stock">
+          <div class="qa-q"><span class="q-mark">Q14</span>安全库存怎么定？补货逻辑是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>安全库存 = <strong>日均销量 × 补货周期波动天数 × 安全系数</strong>，缓冲需求与供应波动</li>
+              <li>补货点 = <strong>日均销量 × 采购提前期 + 安全库存</strong>；低于补货点触发补货</li>
+              <li>补货量常用<strong>订货周期法</strong>：补到目标库存 = 日均销量 ×（提前期 + 补货周期）+ 安全库存 − 在途</li>
+              <li>动态调整：<strong>大促前按销量预测 ×1.5~3 倍备货，活动后复盘实际消化调整</strong></li>
+            </ul>
+            <span class="mnemonic">「日均乘提前期加安全垫，到点就补补到目标」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-abc">
+          <div class="qa-q"><span class="q-mark">Q15</span>ABC 库存分类法怎么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li>原理：<strong>二八法则</strong>——少量商品贡献大部分销售额</li>
+              <li><strong>A 类</strong>（10-20% 品种，70-80% 销售额）：重点管理，<strong>精确预测、高频率盘点、保供应</strong></li>
+              <li><strong>B 类</strong>（中间段）：常规管理，定期盘点</li>
+              <li><strong>C 类</strong>（大量品种，低销售额）：简化管理，<strong>低库存、少备货</strong></li>
+              <li>运营应用：把精力集中在 A 类——<strong>盯销量、做活动、控库存</strong>，C 类防止积压</li>
+            </ul>
+            <span class="mnemonic">「A 类保供精细管，B 类常规 C 类简」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-supply-chain">
+          <div class="qa-q"><span class="q-mark">Q16</span>如何管理供应链时效？发货慢会被平台处罚吗？</div>
+          <div class="qa-a">
+            <ul>
+              <li>时效指标：<strong>揽收率（48 小时）、发货时效、妥投时长、缺货率</strong></li>
+              <li>平台规则：超时未发货<strong>自动赔付违约金</strong>（如淘宝 10% 上限 100 元），并计入<strong>体验分/DSR</strong></li>
+              <li>管理手段：<strong>预售模式（控库存）、多仓布局（就近发货）、供应商备货机制、爆单应急预案</strong></li>
+              <li>优化链路：下单→打单→拣货→打包→揽收各环节<strong>设 SLA 看板</strong>，卡点即时处理</li>
+            </ul>
+            <span class="mnemonic">「48 小时揽收红线，多仓预售防爆单」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch3">
+        <h2><span class="num">03</span>流量获取与渠道</h2>
+
+        <div class="qa hot" id="eco-traffic-type">
+          <div class="qa-q"><span class="q-mark">Q17</span>电商流量类型有哪些？各有什么特点？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>免费流量</strong>：搜索（自然排名）、推荐（猜你喜欢）、活动报名、内容（逛逛/视频）——成本低但<strong>不可控</strong></li>
+              <li><strong>付费流量</strong>：直通车/引力魔方/万相台、千川、站外广告——<strong>可控但花钱</strong>，看 ROI</li>
+              <li><strong>私域流量</strong>：粉丝、会员、社群——<strong>复购主引擎</strong></li>
+              <li>健康结构：<strong>免费 : 付费 ≈ 7 : 3 较健康</strong>；付费占比过高 = 依赖买量，利润被吃</li>
+              <li>面试点：能说出「<strong>流量不是越多越好，匹配才是</strong>」——精准流量 > 泛流量</li>
+            </ul>
+            <span class="mnemonic">「免付私三流，七三开才健康，精准胜过海量」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-search-seo">
+          <div class="qa-q"><span class="q-mark">Q18</span>站内搜索流量怎么优化（电商 SEO）？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>核心逻辑：<strong>关键词相关性 × 商品权重</strong>决定搜索排名</li>
+              <li>标题优化：<strong>核心词前置、属性词堆满、人群词覆盖</strong>（如「连衣裙 女 2026 新款 显瘦 夏季」）</li>
+              <li>权重因素：<strong>销量、转化率、DSR/体验分、上新率、动销率</strong>——本质是「平台觉得你能卖货」</li>
+              <li>工具：生意参谋搜词排行、直通车流量解析；<strong>下拉词与长尾词是蓝海</strong></li>
+              <li>避坑：<strong>堆砌无关词、标题频繁改、虚假交易</strong>都会被降权</li>
+            </ul>
+            <span class="mnemonic">「相关定生死、权重定高低；词前置、分稳住、量做真」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-recommend">
+          <div class="qa-q"><span class="q-mark">Q19</span>推荐流量（猜你喜欢）的机制是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>机制：<strong>算法基于「人 × 货 × 场景」做匹配</strong>——用户行为画像 + 商品标签 + 实时上下文</li>
+              <li>冷启动：商品要有<strong>清晰的标签（类目、价格带、人群）</strong>，通过付费/内容先积累数据</li>
+              <li>放大逻辑：推荐位考核<strong>点击率、停留、加购、转化、复购</strong>——表现好给更多曝光（赛马机制）</li>
+              <li>运营动作：<strong>老客回访行为、收藏加购人群包投放</strong>都能撬动推荐流量</li>
+            </ul>
+            <span class="mnemonic">「打标签、赛马跑、表现好就喂流量」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-content-traffic">
+          <div class="qa-q"><span class="q-mark">Q20</span>内容流量怎么做？短视频/图文种草的逻辑？</div>
+          <div class="qa-a">
+            <ul>
+              <li>内容电商链路：<strong>内容（种草）→ 兴趣（点击）→ 信任（关注/加购）→ 转化（下单）</strong></li>
+              <li>内容类型：<strong>测评种草、场景剧情、知识干货、开箱展示、对比测评</strong>——前三秒留人最重要</li>
+              <li>分发逻辑：<strong>完播率、互动率（赞藏评转）、关注转化</strong>决定推流</li>
+              <li>内容矩阵：<strong>一个账号垂直打透一个细分人群</strong>，矩阵号覆盖多人群</li>
+            </ul>
+            <span class="mnemonic">「三秒留人、完播互动、垂直打透」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-outer-channel">
+          <div class="qa-q"><span class="q-mark">Q21</span>站外渠道有哪些？怎么搭矩阵？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>搜索类：<strong>百度 SEO/SEM</strong>——品牌词防守、长尾词收割</li>
+              <li>内容类：<strong>小红书、抖音、B 站、知乎</strong>——种草心智，适合高客单/新品牌</li>
+              <li>导购类：<strong>什么值得买、返利网</strong>——性价比人群</li>
+              <li>私域类：<strong>微信生态（公众号/视频号/小程序）</strong>——沉淀与复购</li>
+              <li>搭建逻辑：<strong>先定人群 → 选主阵地 → 内容种草 + 搜索承接 + 私域沉淀</strong>，统一监测 UTM 数据</li>
+            </ul>
+            <span class="mnemonic">「搜索承接、内容种草、私域沉淀，三角闭环」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-cac">
+          <div class="qa-q"><span class="q-mark">Q22</span>CAC 和 LTV 是什么？怎么判断投放值不值？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>CAC</strong>（获客成本）= 总营销费用 ÷ 新增用户数</li>
+              <li><strong>LTV</strong>（用户生命周期价值）= 客单价 × 购买频次 × 用户留存时长（粗略=毛利 × 复购次数）</li>
+              <li>判断标准：<strong>LTV / CAC ≥ 3 健康</strong>；小于 1 说明越买越亏</li>
+              <li>优化方向：降 CAC（精准投放、内容自然流、老带新）或<strong>升 LTV（复购、连带、会员）</strong></li>
+            </ul>
+            <span class="mnemonic">「花多钱请客、能赚回三倍才划算」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-traffic-structure">
+          <div class="qa-q"><span class="q-mark">Q23</span>怎么判断店铺流量结构健不健康？</div>
+          <div class="qa-a">
+            <ul>
+              <li>看三类占比：<strong>免费/付费/私域</strong>——付费超 50% 依赖买量；免费低于 30% 商品权重差</li>
+              <li>看来源构成：<strong>搜索（主动需求）vs 推荐（被动兴趣）</strong>比例失衡说明人群不精准</li>
+              <li>看转化差异：<strong>搜索转化率应显著高于推荐</strong>；若推荐转化接近搜索，说明产品力强</li>
+              <li>看趋势：<strong>流量结构变化先于销量变化</strong>——免费流量下滑要查权重/违规，付费下滑查预算/质量分</li>
+            </ul>
+            <span class="mnemonic">「付费不超五、搜索不能低，先看结构再看量」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-free-traffic">
+          <div class="qa-q"><span class="q-mark">Q24</span>新店没有预算怎么获取免费流量？</div>
+          <div class="qa-a">
+            <ul>
+              <li>搜索端：<strong>长尾词打爆单 SKU</strong>，低价引流款聚转化权重</li>
+              <li>推荐端：<strong>上架节奏稳定、保持动销率</strong>（每周有销量），参加新店扶持活动</li>
+              <li>内容端：<strong>短视频/图文/逛逛内容</strong>拿内容流量入口</li>
+              <li>活动端：<strong>平台新店活动、秒杀/试用/官方频道</strong>报名，换流量</li>
+              <li>私域端：<strong>老客复购 + 评价有礼 + 社群拼团</strong>撬动店铺权重</li>
+            </ul>
+            <span class="mnemonic">「长尾词、动销率、内容报名一起上」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch4">
+        <h2><span class="num">04</span>活动运营与促销</h2>
+
+        <div class="qa hot" id="eco-promo-rhythm">
+          <div class="qa-q"><span class="q-mark">Q25</span>大促（双 11/618）的运营节奏怎么拆？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>蓄水期（提前 3-4 周）</strong>：预热种草、老客触达、收藏加购、派券蓄量</li>
+              <li><strong>预热期（前 1 周）</strong>：预告机制（定金/预售）、氛围造势、直播间蓄水</li>
+              <li><strong>爆发期（1-3 天）</strong>：全量投放、盯库存防断货、实时盯转化、催付</li>
+              <li><strong>返场期（后 1 周）</strong>：收割犹豫人群、清尾货、复盘数据</li>
+              <li>核心数据：<strong>蓄水看加购率，爆发看转化与 GMV 分钟级曲线，返场看 ROI</strong></li>
+            </ul>
+            <span class="mnemonic">「蓄水预热爆发返场，四段各有 KPI」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-manjian">
+          <div class="qa-q"><span class="q-mark">Q26</span>满减/满折的门槛怎么设计？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>设计原则：<strong>门槛要「跳一跳够得着」</strong>——略高于客单价，逼凑单</li>
+              <li>公式：<strong>门槛 = 客单价 ×（1 + 15%~30%）</strong>；如客单 80 → 满 99 减 10</li>
+              <li>档位设计：<strong>两档比一档好</strong>（满 99 减 10 / 满 199 减 30），高客单档拉客单</li>
+              <li>力度测算：满减金额 ÷ 门槛 <strong>≤ 毛利率</strong>，否则亏本（满 99 减 10，毛利率 30% 可承受）</li>
+              <li>避坑：<strong>满减与券叠加要算「极限到手价」</strong>，防止双叠加击穿毛利</li>
+            </ul>
+            <span class="mnemonic">「门槛过客单、力度不过毛利，两档好过一档」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-coupon">
+          <div class="qa-q"><span class="q-mark">Q27</span>优惠券体系怎么搭？不同券的作用？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>无门槛券</strong>：拉新促首单、清尾货（注意防羊毛党）</li>
+              <li><strong>满减券</strong>：提客单价、凑单转化</li>
+              <li><strong>品类券</strong>：清滞销品类、引导品类渗透</li>
+              <li><strong>会员券/老客券</strong>：复购激活、忠诚度运营</li>
+              <li><strong>分享券/裂变券</strong>：老带新（拼多多砍一刀逻辑）</li>
+              <li>发放节奏：<strong>日常小额养习惯、大促大额促转化</strong>；券要「限时限量」制造紧迫感</li>
+            </ul>
+            <span class="mnemonic">「无门槛拉新、满减提客单、裂变做增长」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-stack">
+          <div class="qa-q"><span class="q-mark">Q28</span>优惠叠加规则怎么管理？怎么防击穿毛利？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>常见叠加：<strong>店铺券 + 平台券 + 满减 + 红包 + 会员折扣</strong>可同时生效</li>
+              <li>管理手段：<strong>设「不可叠加」标签、限制定制券、控制券种数量、价保监控</strong></li>
+              <li>测算方法：<strong>建「极限到手价」测算表</strong>，把最大叠加场景算出来（最坏情况净利率 ≥ 0）</li>
+              <li>面试点：主动讲出「<strong>先算后发</strong>」——每张券上线前跑一遍叠加测算，比出事再补救强</li>
+            </ul>
+            <span class="mnemonic">「先算极限价、再发券；宁可少发不可击穿」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-price-protect">
+          <div class="qa-q"><span class="q-mark">Q29</span>价格保护机制是什么？为什么重要？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定义：<strong>大促后一段时间内，若商品降价，可申请退还差价</strong>（京东、天猫均有价保服务）</li>
+              <li>作用：打消用户「<strong>买完就降价</strong>」的顾虑，提升大促前转化与信任</li>
+              <li>运营注意：<strong>控价体系</strong>——各渠道（天猫/京东/拼多多/直播间）价格一致，避免比价流失与价保赔付</li>
+              <li>关联指标：<strong>价保赔付率过高 = 定价或活动规划失误</strong></li>
+            </ul>
+            <span class="mnemonic">「价保吃信任，控价防比价」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-blast">
+          <div class="qa-q"><span class="q-mark">Q30</span>怎么打造一个爆款？</div>
+          <div class="qa-a">
+            <ul>
+              <li>选品先行：<strong>市场有需求、自己有毛利、能差异化</strong></li>
+              <li>基础优化：<strong>标题、主图（点击率）、详情（转化）、评价（信任）</strong>四项打底</li>
+              <li>测款验证：<strong>小额投放测 CTR/CVR，数据达标再放量</strong>；不达标及时止损换款</li>
+              <li>放量打爆：<strong>递增式投放 + 活动资源位 + 内容种草协同</strong>，冲销量权重</li>
+              <li>生命周期管理：成长期冲量 → 成熟期收割利润 → <strong>衰退期上新替位，防止爆款老化拖死店铺</strong></li>
+            </ul>
+            <span class="mnemonic">「选测放收四步走，数据不达标就换」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-clear">
+          <div class="qa-q"><span class="q-mark">Q31</span>库存积压了，清库存活动怎么做？</div>
+          <div class="qa-a">
+            <ul>
+              <li>分级处理：<strong>新款滞销（降价+赠品挽救）、老款积压（清仓+组合搭售）、临期品（限时秒杀）</strong></li>
+              <li>玩法组合：<strong>第二件半价、买一送一、满赠、福袋盲盒、主播专场</strong></li>
+              <li>渠道消化：<strong>直播低价场、私域老客、分销/尾货平台（1688 批发、唯品会特卖）</strong></li>
+              <li>避坑：<strong>清仓价不能长期挂</strong>，否则伤品牌价盘；用「限时限量」制造稀缺</li>
+              <li>复盘：清完要回答<strong>为什么积压</strong>（预测失误/推新失败/季节性）——避免重犯</li>
+            </ul>
+            <span class="mnemonic">「分级清、组合卖、多渠道，别伤价盘」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-retro">
+          <div class="qa-q"><span class="q-mark">Q32</span>活动结束后怎么做复盘？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>看目标达成</strong>：GMV、订单量、客单价、毛利 vs 目标，差多少差在哪</li>
+              <li><strong>看流量质量</strong>：各渠道贡献与 ROI，付费值不值</li>
+              <li><strong>看转化链路</strong>：曝光→点击→加购→下单每一步转化率，找卡点</li>
+              <li><strong>看用户资产</strong>：新客占比、老客复购、会员增长、私域沉淀</li>
+              <li><strong>输出结论</strong>：三件做对的、三件要改的、下次的<strong>可复用 SOP</strong></li>
+            </ul>
+            <span class="mnemonic">「量、流、转、人四维复盘，好赖各三条成 SOP」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-gmv-split">
+          <div class="qa-q"><span class="q-mark">Q33</span>GMV 怎么拆解？哪些杠杆可以拉？</div>
+          <div class="qa-a">
+            <ul>
+              <li>核心公式：<strong>GMV = 访客数 × 转化率 × 客单价</strong></li>
+              <li>再拆：访客数 = 免费 + 付费 + 私域；转化率受<strong>价格、评价、详情、客服</strong>影响；客单价受<strong>满减、连带、套餐</strong>影响</li>
+              <li>叠加复购：<strong>GMV = 新客 GMV + 老客 GMV</strong>（老客靠会员/私域提频）</li>
+              <li>杠杆优先级：<strong>先提转化（成本低见效快）→ 再提客单（不增流量）→ 最后加流量（花钱）</strong></li>
+            </ul>
+            <span class="mnemonic">「量转客三杠杆，先转化后客单再买量」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch5">
+        <h2><span class="num">05</span>用户运营</h2>
+
+        <div class="qa hot" id="eco-aarrr">
+          <div class="qa-q"><span class="q-mark">Q34</span>AARRR 漏斗模型是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>五个环节：<strong>获取 Acquisition → 激活 Activation → 留存 Retention → 变现 Revenue → 传播 Referral</strong></li>
+              <li>获取：拉新渠道与成本（CAC）</li>
+              <li>激活：用户完成<strong>关键动作</strong>（注册/首购/加购）</li>
+              <li>留存：<strong>回访率、复购率</strong>——健康度核心</li>
+              <li>变现：客单价、毛利、LTV</li>
+              <li>传播：老带新、分享裂变（<strong>K 因子</strong>）</li>
+              <li>电商场景延伸：<strong>首单→复购→忠诚→推荐</strong>的完整用户旅程</li>
+            </ul>
+            <span class="mnemonic">「获激留变传，首单复购到推荐」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-rfm">
+          <div class="qa-q"><span class="q-mark">Q35</span>RFM 模型怎么用？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>三维度：<strong>R 最近一次购买时间、F 购买频次、M 消费金额</strong></li>
+              <li>分层方法：每个维度按中位数分高低，得到<strong>8 类用户</strong>（或简化 3 维 2 分）</li>
+              <li>重点人群：<strong>重要价值客户（R高F高M高）→ 专属维护；重要发展（M高但R低）→ 召回；一般挽留（全低）→ 低价唤醒</strong></li>
+              <li>运营动作：不同人群<strong>不同触达策略与预算</strong>，避免「一刀切」</li>
+            </ul>
+            <span class="mnemonic">「最近、频次、金额三分天下，八类人群分而治之」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-acquire">
+          <div class="qa-q"><span class="q-mark">Q36</span>新客拉新有哪些方法？</div>
+          <div class="qa-a">
+            <ul>
+              <li>平台内：<strong>付费推广（拉新人群包）、活动资源位、新客立减/首单礼、内容种草</strong></li>
+              <li>平台外：<strong>社交媒体种草（小红书/抖音）、KOL 带货、异业合作、线下扫码</strong></li>
+              <li>裂变：<strong>老带新（邀请返利）、拼团、砍价、分享得券</strong></li>
+              <li>判断标准：<strong>新客占比、首单转化率、新客 LTV</strong>——拉新不是终点，首单后的留存才是</li>
+            </ul>
+            <span class="mnemonic">「平台内付费、平台外种草、老客裂变三路并进」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-retention">
+          <div class="qa-q"><span class="q-mark">Q37</span>怎么提升用户留存和复购？</div>
+          <div class="qa-a">
+            <ul>
+              <li>产品端：<strong>品质与体验是根</strong>，复购的前提是满意度</li>
+              <li>激励端：<strong>复购券、积分体系、会员等级权益、满额返券</strong></li>
+              <li>触达端：<strong>私域定期触达（上新/活动/福利）、短信/企微召回沉默用户</strong></li>
+              <li>习惯端：<strong>订阅制/周期购、关联推荐（复购品如耗材）、老客专享价</strong></li>
+              <li>指标：<strong>月度复购率、回购周期、会员续费率</strong></li>
+            </ul>
+            <span class="mnemonic">「品质打底、权益激励、私域触达、习惯养成」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-member">
+          <div class="qa-q"><span class="q-mark">Q38</span>会员体系怎么设计？</div>
+          <div class="qa-a">
+            <ul>
+              <li>价值定位：<strong>提升 LTV</strong>——会员比普通用户复购更高、客单更高</li>
+              <li>等级权益：<strong>成长值/积分攒等级，权益分「价格权益（折扣券）+ 服务权益（包邮/优先）+ 情感权益（专属客服/生日礼）」</strong></li>
+              <li>付费会员（如京东 PLUS）：<strong>权益要「算得过来账」</strong>——用户付 99 元，权益价值感要超 300 元才愿意买</li>
+              <li>运营节奏：<strong>入会钩子（首单送积分）→ 升级激励（差多少升级）→ 保级提醒 → 流失预警</strong></li>
+              <li>核心指标：<strong>会员数、会员复购率、会员 GMV 占比、续费率</strong></li>
+            </ul>
+            <span class="mnemonic">「积分攒等级、权益超会费、入会升保拉一整套」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-community">
+          <div class="qa-q"><span class="q-mark">Q39</span>社群运营怎么做不变成死群？</div>
+          <div class="qa-a">
+            <ul>
+              <li>建群目的先明确：<strong>福利群（卖货）/ 服务群（答疑）/ 兴趣群（圈层）</strong>——一个群一个主题</li>
+              <li>日常节奏：<strong>固定栏目化运营</strong>（周一上新、周三秒杀、周五福利），有节奏不刷屏</li>
+              <li>内容配比：<strong>干货 30% + 互动 30% + 福利 30% + 广告 10%</strong>，广告感太强必死</li>
+              <li>激活动作：<strong>签到、打卡、接龙、问答、晒单有奖</strong>，让用户参与而不是围观</li>
+              <li>淘汰机制：<strong>定期清理潜水号/广告号</strong>，控制群规模（100-300 人活跃度最佳）</li>
+            </ul>
+            <span class="mnemonic">「一主题、有节奏、三三七一、常互动勤清理」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-recall">
+          <div class="qa-q"><span class="q-mark">Q40</span>沉默老客怎么召回？</div>
+          <div class="qa-a">
+            <ul>
+              <li>先分层：<strong>轻度沉默（30-60 天）→ 利益召回；中度（60-90 天）→ 强刺激；深度（90 天+）→ 低成本唤醒</strong></li>
+              <li>触达方式：<strong>短信/企微/App push/直邮</strong>——按用户偏好渠道，控制频次防骚扰</li>
+              <li>召回钩子：<strong>专属大额券、新品尝鲜价、生日/会员日权益、老客专属款</strong></li>
+              <li>指标：<strong>召回触达率 → 打开率 → 回流率 → 回流后 30 天复购</strong></li>
+              <li>避坑：<strong>召回不是无限发券</strong>——用户不回来说明需求没被激活，要先想「为什么走」</li>
+            </ul>
+            <span class="mnemonic">「分层给钩子、渠道按偏好、先问为什么走」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-user-split">
+          <div class="qa-q"><span class="q-mark">Q41</span>用户分层除了 RFM 还有什么方法？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>生命周期分层</strong>：新客→活跃→成熟→衰退→流失，不同阶段不同策略</li>
+              <li><strong>价值分层</strong>：高价值/中价值/低价值（按贡献毛利）</li>
+              <li><strong>行为分层</strong>：价格敏感型/品质型/冲动型/理性型（按购买行为）</li>
+              <li><strong>偏好分层</strong>：品类偏好、渠道偏好、内容偏好（用于精准推送）</li>
+              <li>原则：<strong>分层要能指导动作</strong>——每一层都要对应明确的运营策略与触点</li>
+            </ul>
+            <span class="mnemonic">「生命周期分阶段、价值行为分策略」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch6">
+        <h2><span class="num">06</span>内容与直播电商</h2>
+
+        <div class="qa hot" id="eco-live-3">
+          <div class="qa-q"><span class="q-mark">Q42</span>直播间「人货场」怎么搭？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>人</strong>：主播（讲解力、亲和力、逼单力）+ 助播（配合、气氛）+ 场控（节奏、逼单）</li>
+              <li><strong>货</strong>：排品结构——<strong>引流款（拉停留）→ 福利款（促转化）→ 利润款（赚钱）→ 形象款（拉调性）</strong></li>
+              <li><strong>场</strong>：场景布置、灯光、设备、贴片（卖点/限时限量）、背景音乐</li>
+              <li>核心指标：<strong>停留时长、互动率、转粉率、GPM（千次观看成交额）</strong></li>
+            </ul>
+            <span class="mnemonic">「人负责卖、货负责排、场负责留」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-live-rhythm">
+          <div class="qa-q"><span class="q-mark">Q43</span>直播间的节奏和话术怎么设计？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>开播：<strong>福利开场拉停留</strong>（限时秒杀/抽奖），30 分钟内把人留住</li>
+              <li>过款节奏：<strong>爆款单点循环 + 平款穿插</strong>；每 15-20 分钟一个「小高潮」（上福利/抽奖）</li>
+              <li>逼单话术五件套：<strong>限时限量（只剩 X 单）、赠品加码、价格对比（专柜价/历史价）、从众（已拍 X 单）、催单（马上下架）</strong></li>
+              <li>憋单：<strong>「低价福利款」先不放链接，讲价值做铺垫，到点放单引爆</strong></li>
+              <li>结束：<strong>预告下场福利，引导关注</strong>，承接回访流量</li>
+            </ul>
+            <span class="mnemonic">「开场福利留人、爆款循环、五件套逼单、憋单引爆」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-live-product">
+          <div class="qa-q"><span class="q-mark">Q44</span>直播选品结构怎么排？</div>
+          <div class="qa-a">
+            <ul>
+              <li>比例参考：<strong>引流款 20% + 福利款 30% + 利润款 40% + 形象款 10%</strong>（可灵活调整）</li>
+              <li>引流款：<strong>9.9-29.9 低客单</strong>，负责拉停留、拉互动、拉新客</li>
+              <li>福利款：<strong>性价比高、冲动易购</strong>，负责走量冲 GPM</li>
+              <li>利润款：<strong>毛利 ≥ 50%</strong>，负责赚钱</li>
+              <li>形象款：高客单/品牌款，<strong>拉调性、抬直播间权重</strong></li>
+            </ul>
+            <span class="mnemonic">「引福利形二三四一，引流留人利润赚钱」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-live-data">
+          <div class="qa-q"><span class="q-mark">Q45</span>直播核心数据指标有哪些？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>GPM</strong>（千次观看成交额）= GMV ÷ 观看人数 × 1000——<strong>平台推流最重要的考核指标</strong></li>
+              <li>人气指标：<strong>进入率、停留时长、互动率（评论/点赞/关注）</strong></li>
+              <li>转化指标：<strong>点击率（进商详）、成交转化率、UV 价值</strong></li>
+              <li>货品指标：<strong>售罄率、退款率、客单价</strong></li>
+              <li>ROI：<strong>投放 ROI = 广告 GMV ÷ 广告花费</strong>；整体 ROI = 总 GMV ÷ 总成本</li>
+            </ul>
+            <span class="mnemonic">「GPM 是命根，停留互动是燃料，转化是油门」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-content-seed">
+          <div class="qa-q"><span class="q-mark">Q46</span>短视频怎么给直播间引流？</div>
+          <div class="qa-a">
+            <ul>
+              <li>内容类型：<strong>直播切片（精彩片段）、产品种草、剧透直播福利、开箱测评</strong></li>
+              <li>发布节奏：<strong>开播前 1-2 小时发引流视频</strong>，配合开播标签加热</li>
+              <li>数据链路：<strong>视频曝光 → 点击头像/直播间 → 进入直播间</strong>——考核「引流进房率」</li>
+              <li>投放配合：<strong>视频加热（抖+）打「直播间引流」目标</strong>，ROI 单独核算</li>
+            </ul>
+            <span class="mnemonic">「开播前发视频、带福利剧透、投加热引进来」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-kol">
+          <div class="qa-q"><span class="q-mark">Q47</span>达人带货怎么合作？怎么判断达人值不值？</div>
+          <div class="qa-a">
+            <ul>
+              <li>合作模式：<strong>纯佣（CPS）、坑位费+佣、自播代运营、分销团长</strong></li>
+              <li>选达人：<strong>看带货类目匹配度 &gt; 看粉丝量</strong>——粉丝不精准等于无效流量</li>
+              <li>核心数据：<strong>近 30 天场均 GMV、转化率、退货率、粉丝画像重合度</strong></li>
+              <li>避坑：<strong>刷数据达人（粉丝互动率奇低）、低价冲量达人（伤价盘）、高坑位低产出</strong></li>
+              <li>合作前算账：<strong>坑位费 + 佣金 ≤ 预期毛利</strong>，否则不投</li>
+            </ul>
+            <span class="mnemonic">「匹配大于粉丝、数据看场均、坑费佣金不过毛利」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-live-sop">
+          <div class="qa-q"><span class="q-mark">Q48</span>一场直播的 SOP 流程怎么拆？</div>
+          <div class="qa-a">
+            <ul>
+              <li>播前：<strong>选品排品 → 脚本撰写 → 场景布置 → 设备调试 → 预告视频/私域通知</strong></li>
+              <li>播中：<strong>开场福利 → 按排品过款 → 数据盯盘（在线/转化/逼单）→ 突发处理</strong></li>
+              <li>播后：<strong>数据复盘（GPM/转化/ROI）→ 售后跟进 → 下期优化 → 切片剪辑</strong></li>
+              <li>盯盘重点：<strong>在线人数下滑先发福利、转化下降换过款节奏、投放 ROI 低于目标调预算</strong></li>
+            </ul>
+            <span class="mnemonic">「播前备货备稿、播中盯盘逼单、播后复盘切片」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch7">
+        <h2><span class="num">07</span>数据分析与指标体系</h2>
+
+        <div class="qa hot" id="eco-northstar">
+          <div class="qa-q"><span class="q-mark">Q49</span>什么是北极星指标？电商的北极星指标是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>北极星指标：<strong>唯一能反映产品核心价值的指标</strong>——所有团队对齐它，防止各自为政</li>
+              <li>电商候选：<strong>GMV 太粗（可被刷单/降价堆出来）、订单量太浅</strong>——常用「<strong>有效成交用户数 / 有效 GMV（剔除退款）</strong>」</li>
+              <li>更进阶：平台看 <strong>年活跃买家（AAC）</strong>，品牌看 <strong>复购用户数或会员 GMV 占比</strong></li>
+              <li>特点：<strong>可拆解（能分解到团队动作）、能反映用户价值、不受短期操纵</strong></li>
+            </ul>
+            <span class="mnemonic">「一个指标定方向，剔除注水看真金」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-funnel">
+          <div class="qa-q"><span class="q-mark">Q50</span>转化漏斗怎么搭？怎么找问题？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>标准漏斗：<strong>曝光 → 点击（CTR）→ 进店 → 浏览/停留 → 加购 → 下单 → 支付 → 收货</strong></li>
+              <li>关键转化率：<strong>点击率（内容/主图）、加购率（价格/详情）、支付转化率（信任/流程）</strong></li>
+              <li>找问题法：<strong>与行业均值/自身历史对比</strong>——哪一层掉得最狠，问题就在哪一层</li>
+              <li>常见对应：<strong>CTR 低→主图/价格；加购低→详情/评价；支付低→流程/运费/信任</strong></li>
+            </ul>
+            <span class="mnemonic">「哪层掉得狠、问题在哪层；CTR 看主图、支付看信任」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-ab">
+          <div class="qa-q"><span class="q-mark">Q51</span>A/B 测试怎么做才科学？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>核心流程：<strong>提出假设 → 设计变量 → 分流（随机/同质）→ 跑周期 → 显著性检验 → 决策</strong></li>
+              <li>要点 1：<strong>一次只测一个变量</strong>，改多个分不清是谁的功劳</li>
+              <li>要点 2：<strong>样本量足够、跑够周期</strong>（至少覆盖 1-2 个完整转化周期，避开大促）</li>
+              <li>要点 3：<strong>看显著性（p 值/置信区间）</strong>，不是看着高一点就赢</li>
+              <li>电商常用场景：<strong>主图、标题、价格、详情页首屏、优惠券力度</strong></li>
+            </ul>
+            <span class="mnemonic">「一变量、足样本、跑周期、看显著」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-kpi">
+          <div class="qa-q"><span class="q-mark">Q52</span>电商核心指标的口径都怎么定义？</div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>UV</strong>：独立访客数（去重）；<strong>PV</strong>：浏览量（含重复）</li>
+              <li><strong>CTR</strong>：点击 ÷ 曝光；<strong>CVR</strong>：成交人数（或订单）÷ 访客</li>
+              <li><strong>客单价</strong>：GMV ÷ 成交人数；<strong>UV 价值</strong>：GMV ÷ 访客数</li>
+              <li><strong>复购率</strong>：周期内≥2 次购买用户 ÷ 总购买用户（口径要统一：按人数不是订单）</li>
+              <li><strong>退款率</strong>：退款金额 ÷ 销售额（区分「仅退款/退货退款」口径）</li>
+              <li>面试加分：强调<strong>口径统一</strong>——「团队先对口径，再谈数据」</li>
+            </ul>
+            <span class="mnemonic">「UV 人 PV 看、CTR 曝光转 CVR、客单 UV 值一把抓」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-attribution">
+          <div class="qa-q"><span class="q-mark">Q53</span>怎么判断一个渠道的贡献？归因怎么做？</div>
+          <div class="qa-a">
+            <ul>
+              <li>归因模型：<strong>末次点击（简单常用，低估种草渠道）、首次点击（看重拉新）、线性/时间衰减（看全程）、数据驱动（算法）</strong></li>
+              <li>电商实践：<strong>「先看到后买到」太常见</strong>——抖音种草、淘宝成交，只算末次会误杀内容渠道</li>
+              <li>落地方法：<strong>UTM 参数全链路打标、人群包回传、增量测试（关掉某渠道看大盘掉多少）</strong></li>
+              <li>面试点：能说「<strong>归因没有绝对正确，按业务目的选模型，并保持口径一致</strong>」</li>
+            </ul>
+            <span class="mnemonic">「种草归首看、成交归末次，全程看线性」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-dashboard">
+          <div class="qa-q"><span class="q-mark">Q54</span>运营数据看板应该包含哪些内容？</div>
+          <div class="qa-a">
+            <ul>
+              <li>第一层 <strong>结果指标</strong>：GMV、订单量、毛利、ROI（老板看）</li>
+              <li>第二层 <strong>过程指标</strong>：流量、转化率、客单价、复购率（运营盯）</li>
+              <li>第三层 <strong>明细指标</strong>：各渠道数据、各 SKU 数据、活动数据（执行看）</li>
+              <li>看板要求：<strong>日更自动、异常标红、可下钻、趋势对比（环比/同比）</strong></li>
+              <li>加分项：<strong>每个指标配「阈值告警」</strong>（转化率低于 X 自动提醒）</li>
+            </ul>
+            <span class="mnemonic">「结果给老板、过程给运营、明细给执行」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-anomaly">
+          <div class="qa-q"><span class="q-mark">Q55</span>数据突然异常波动，怎么排查？</div>
+          <div class="qa-a">
+            <ul>
+              <li>第一步 <strong>确认事实</strong>：数据口径对不对？统计延迟？不是假异常</li>
+              <li>第二步 <strong>内外因素</strong>：内部（活动/改价/改版/库存/违规）、外部（竞品/平台规则/季节/舆情）</li>
+              <li>第三步 <strong>拆解定位</strong>：按「渠道 × 品类 × 时段」拆，锁定波动源</li>
+              <li>第四步 <strong>动作响应</strong>：能救的救（补流量/调价），不能救的评估影响面</li>
+              <li>方法论：<strong>「先查口径、再分内外、三拆维度、四给动作」</strong></li>
+            </ul>
+            <span class="mnemonic">「口内外拆四步走，先证事实再找因」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-uv-value">
+          <div class="qa-q"><span class="q-mark">Q56</span>UV 价值是什么？怎么提升？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定义：<strong>UV 价值 = GMV ÷ 访客数</strong>——每个访客贡献多少钱，衡量流量变现效率</li>
+              <li>拆解：UV 价值 = <strong>转化率 × 客单价</strong>，两个方向都能拉</li>
+              <li>提升手段：<strong>提转化（详情/评价/价格）、提客单（满减/连带/套餐）、引精准流量</strong></li>
+              <li>应用：投放时看 UV 价值，<strong>UV 价值 &lt; 获客成本 = 亏钱</strong></li>
+            </ul>
+            <span class="mnemonic">「一个访客值多少，转化客单两大招」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-cohort">
+          <div class="qa-q"><span class="q-mark">Q57</span>什么是同期群分析（Cohort Analysis）？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定义：<strong>把用户按首次购买（或首次进入）时间分组，跟踪各组后续的留存/复购表现</strong></li>
+              <li>价值：<strong>识别「用户质量变化」</strong>——新客 N 月复购率持续下滑 = 拉新质量下降，而不是运营动作问题</li>
+              <li>案例：6 月新客 30 天复购率 25%，7 月新客只有 15% → 是 7 月渠道/活动拉来了低质用户</li>
+              <li>与普通留存区别：普通留存混着新老客，<strong>同期群把人群切齐了比</strong>，结论更准</li>
+            </ul>
+            <span class="mnemonic">「同批人一起比，质量变化看得清」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch8">
+        <h2><span class="num">08</span>转化率优化</h2>
+
+        <div class="qa hot" id="eco-detail">
+          <div class="qa-q"><span class="q-mark">Q58</span>详情页的转化逻辑是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>详情页本质：<strong>「说服用户下单」的销售员</strong>——按购买决策心理层层递进</li>
+              <li>黄金结构：<strong>首屏利益点（价格/活动）→ 卖点 FAB → 使用场景 → 信任背书（资质/工厂/好评）→ 规格参数 → 售后说明</strong></li>
+              <li>FAB 法则：<strong>Feature 属性 → Advantage 优势 → Benefit 利益</strong>（「纯棉→透气→夏天穿凉快」）</li>
+              <li>数据检查：<strong>首屏 3 秒留存率、详情页停留时长、跳失率</strong></li>
+              <li>避坑：<strong>信息堆砌无主次、卖点不说人话、无信任背书</strong></li>
+            </ul>
+            <span class="mnemonic">「利益打头、场景共情、背书收尾」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-mainimg">
+          <div class="qa-q"><span class="q-mark">Q59</span>主图怎么提升点击率？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>主图是「<strong>货架上的包装</strong>」——在信息流里 0.5 秒内决定点不点</li>
+              <li>提升要素：<strong>产品主体大而清晰、卖点一句话、价格/促销信息、场景化展示、与竞品差异化</strong></li>
+              <li>五张图分工：<strong>第一张引流（点击）、第二张卖点、第三张细节、第四张场景、第五张信任/白底图（平台要求）</strong></li>
+              <li>测试方法：<strong>A/B 测主图</strong>，CTR 提升 1 个点对大盘影响巨大</li>
+            </ul>
+            <span class="mnemonic">「一张引流二卖点、三大细节四场景、五张信任白底」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-review">
+          <div class="qa-q"><span class="q-mark">Q60</span>评价管理怎么做？差评怎么处理？</div>
+          <div class="qa-a">
+            <ul>
+              <li>评价的价值：<strong>信任转化利器</strong>——有评价的商品转化率明显更高</li>
+              <li>好评运营：<strong>晒单有礼（合规红线：不引导虚假）、售后跟进、追评运营</strong></li>
+              <li>差评处理：<strong>第一时间回复（态度）→ 私信解决（补偿/换货）→ 协商处理（符合平台规则时）→ 分析差评原因改进</strong></li>
+              <li>差评分析：<strong>按「质量/物流/描述不符/客服」分类统计</strong>，反哺选品与详情页</li>
+              <li>红线：<strong>威胁/利诱用户改差评会违规处罚</strong></li>
+            </ul>
+            <span class="mnemonic">「好评做信任、差评先回复、分类反哺改产品」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-service">
+          <div class="qa-q"><span class="q-mark">Q61</span>客服话术怎么影响转化？</div>
+          <div class="qa-a">
+            <ul>
+              <li>客服是<strong>临门一脚</strong>——犹豫用户 70% 靠客服促成</li>
+              <li>关键能力：<strong>响应速度（30 秒内）、专业答疑（参数/尺码/使用）、异议处理（贵/怕不好用）、催单话术</strong></li>
+              <li>自动化：<strong>快捷回复库 + 机器人兜底 + 复杂问题转人工</strong>；大促前做 FAQ 预埋</li>
+              <li>指标：<strong>响应时长、询单转化率、客服满意度</strong></li>
+            </ul>
+            <span class="mnemonic">「快响应、懂专业、会催单，询单转化看客服」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-cart">
+          <div class="qa-q"><span class="q-mark">Q62</span>加购率高但转化低怎么办？</div>
+          <div class="qa-a">
+            <ul>
+              <li>加购高转化低 = <strong>「喜欢但还没下定决心」</strong>，卡在信任或价格</li>
+              <li>排查方向：<strong>价格是否高于心理预期、评价是否不足、是否有竞品对比、是否在等降价</strong></li>
+              <li>动作：<strong>购物车营销（对加购人群发券）、限时优惠提醒、满减凑单引导、稀缺感营造</strong></li>
+              <li>平台工具：<strong>购物车营销/优惠券定向投放加购人群</strong></li>
+            </ul>
+            <span class="mnemonic">「加购是心动、转化靠推一把：券、限时、凑单」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-upsell">
+          <div class="qa-q"><span class="q-mark">Q63</span>怎么提升客单价？连带销售怎么做？</div>
+          <div class="qa-a">
+            <ul>
+              <li>方法一 <strong>满减满赠</strong>：满 99 包邮/满 199 减 30，逼凑单</li>
+              <li>方法二 <strong>关联推荐</strong>：搭配购买（手机→壳膜）、「加购组合更省」</li>
+              <li>方法三 <strong>升级推荐</strong>：加价购（+19 元升级大容量）、套餐对比</li>
+              <li>方法四 <strong>多件优惠</strong>：第二件半价、3 件 7 折（清库存/提件单价）</li>
+              <li>注意：<strong>提客单不能牺牲转化</strong>——组合要「确实更划算」而非强买强卖</li>
+            </ul>
+            <span class="mnemonic">「满减凑单、关联搭配、加价升级、多件优惠」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-pay-loss">
+          <div class="qa-q"><span class="q-mark">Q64</span>下单不支付（支付流失）怎么挽回？</div>
+          <div class="qa-a">
+            <ul>
+              <li>原因：<strong>犹豫比价、运费吓退、支付流程繁琐、冲动冷却</strong></li>
+              <li>系统动作：<strong>自动催付（15/30/60 分钟短信+App push）、优惠券挽留、运费优化</strong></li>
+              <li>页面优化：<strong>一键支付、免密支付引导、支付方式齐全</strong></li>
+              <li>大促场景：<strong>尾款催付按时间分层，配合专属券</strong>；「未支付订单」是零成本 GMV</li>
+            </ul>
+            <span class="mnemonic">「三催一券一优化，未付订单零成本 GMV」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-ctr-cvr">
+          <div class="qa-q"><span class="q-mark">Q65</span>点击率高但转化低，和转化率高但点击低，分别怎么办？</div>
+          <div class="qa-a">
+            <ul>
+              <li>点击高转化低：<strong>「把人骗进来但没接住」</strong>——详情/价格/评价与主图承诺不符，优化<strong>详情页与价格策略、兑现主图承诺</strong></li>
+              <li>转化高点击低：<strong>「货好但没人看」</strong>——主图/标题/曝光渠道问题，优化<strong>主图点击率、关键词精准度、曝光量</strong></li>
+              <li>核心心法：<strong>CTR 管「进门」，CVR 管「成交」</strong>，两个都要，但问题别治错地方</li>
+            </ul>
+            <span class="mnemonic">「点高转低修内功，转高点半修门面」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch9">
+        <h2><span class="num">09</span>平台规则与合规</h2>
+
+        <div class="qa hot" id="eco-adlaw">
+          <div class="qa-q"><span class="q-mark">Q66</span>广告法有哪些电商高频违禁词？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>绝对化用语</strong>：最、第一、顶级、国家级、唯一、绝无仅有</li>
+              <li><strong>极限词</strong>：全网最低价、销量第一、100% 有效、纯天然（需资质）、包治百病（医疗红线）</li>
+              <li><strong>虚假宣传</strong>：夸大功效、虚构销量/评价、傍名牌（xx同款需授权）</li>
+              <li><strong>其他红线</strong>：国旗国徽、党和国家领导人形象、未成年人不当使用</li>
+              <li>处罚：<strong>虚假广告罚 20-100 万起</strong>，职业打假人借机索赔是常态——上架前过一遍违禁词库</li>
+            </ul>
+            <span class="mnemonic">「最第一唯一国家级，绝对虚假全禁说」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-platform-rule">
+          <div class="qa-q"><span class="q-mark">Q67</span>主流平台的规则差异有哪些？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <div class="table-wrap">
+              <table>
+                <tr><th>平台</th><th>核心规则/机制</th><th>违规重灾区</th></tr>
+                <tr><td>淘宝/天猫</td><td>DSR 评分、搜索权重、活动报名门槛</td><td>虚假交易、售假、极限词</td></tr>
+                <tr><td>京东</td><td>自营扣点、服务分、价保规则</td><td>虚假宣传、售后纠纷率</td></tr>
+                <tr><td>拼多多</td><td>低价优先、仅退款政策、百亿补贴</td><td>仅退款滥用、虚假发货</td></tr>
+                <tr><td>抖音</td><td>体验分（商品/物流/服务）、千川管控</td><td>虚假宣传、夸大功效、违规引流</td></tr>
+              </table>
+            </div>
+            <ul>
+              <li>底层逻辑：<strong>平台规则都在保护「消费者体验 + 平台抽佣」</strong>——运营要顺着机制做，别对抗</li>
+              <li>通用红线：<strong>售假、虚假交易、导流站外（多数平台禁止）、数据造假</strong></li>
+            </ul>
+            <span class="mnemonic">「体验分是命、虚假是雷、导流是禁」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-dsr">
+          <div class="qa-q"><span class="q-mark">Q68</span>DSR 评分/体验分是什么？怎么提升？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定义：买家对店铺<strong>商品质量、物流服务、服务态度</strong>的打分（1-5 星），是<strong>店铺权重与流量分配的重要依据</strong></li>
+              <li>抖音体验分：<strong>商品体验 + 物流体验 + 服务体验</strong>三块加权</li>
+              <li>提升方法：<strong>商品描述准确（少描述不符）、发货快（揽收及时）、客服响应快态度好</strong></li>
+              <li>维护动作：<strong>监控每日分值、异常订单及时处理、避免纠纷率上升</strong></li>
+              <li>影响：<strong>低于行业均值 → 流量下降、活动报不上</strong></li>
+            </ul>
+            <span class="mnemonic">「品质物流服务三碗水，低了流量就缩水」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-after-sale">
+          <div class="qa-q"><span class="q-mark">Q69</span>售后规则（退换货）要懂哪些？</div>
+          <div class="qa-a">
+            <ul>
+              <li>基础规则：<strong>7 天无理由退货（法定）、运费按责任方、食品/定制类除外</strong></li>
+              <li>退款时效：<strong>平台规定响应时限</strong>（如 48 小时内处理），超时会自动退款并计纠纷</li>
+              <li>售后指标：<strong>退款率、纠纷率、仅退款占比、投诉率</strong>——都影响体验分</li>
+              <li>处理策略：<strong>小金额直接退（省纠纷）、高价值协商换货/维修、恶意退款走平台申诉</strong></li>
+            </ul>
+            <span class="mnemonic">「七天真无理由、响应限时限、小退大协商」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-fake">
+          <div class="qa-q"><span class="q-mark">Q70</span>平台怎么查虚假交易？运营为什么要避免？</div>
+          <div class="qa-a">
+            <ul>
+              <li>稽查维度：<strong>账号关联（同 IP/设备/支付）、转化异常（远超类目均值）、操作模式（集中下单/秒拍秒退）、物流异常（空包）</strong></li>
+              <li>后果：<strong>销量清零、降权、扣分、限制参加活动，严重封店</strong>——得不偿失</li>
+              <li>正确姿势：<strong>用真实需求做增长</strong>（老客复购、内容种草、付费投放），权重才稳</li>
+              <li>面试点：主动说「<strong>刷单短期有用长期致命，平台稽查越来越聪明</strong>」是加分回答</li>
+            </ul>
+            <span class="mnemonic">「关联异常秒退空包都是痕，清销降权封店一条龙」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-ipr">
+          <div class="qa-q"><span class="q-mark">Q71</span>知识产权风险怎么避？</div>
+          <div class="qa-a">
+            <ul>
+              <li>三大类：<strong>商标（品牌/logo）、专利（外观/实用新型/发明）、著作权（图片/文案/视频）</strong></li>
+              <li>高发场景：<strong>图片直接抄竞品、标题蹭品牌词（xx 同款）、进货无授权、原创素材被搬运</strong></li>
+              <li>预防：<strong>素材自产自用、进货保留授权链路、上架前商标/专利检索</strong></li>
+              <li>应对被投诉：<strong>保留授权凭证、平台申诉通道、必要时法律途径</strong></li>
+            </ul>
+            <span class="mnemonic">「图文别抄、品牌别蹭、授权留痕」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-invoice">
+          <div class="qa-q"><span class="q-mark">Q72</span>发票与税务上运营要注意什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>发票义务：<strong>买家索要必须开</strong>（平台有发票保障规则），电子发票是主流</li>
+              <li>税务要点：<strong>收入确认、平台手续费发票取得、个税（直播打赏/佣金分成）</strong></li>
+              <li>运营提醒：<strong>活动让利要算税后利润</strong>；大促 GMV 高但开票成本也要算进成本</li>
+              <li>风险：<strong>虚开发票、走账不合规</strong>是刑事红线，找代运营/达人合作要签正规协议</li>
+            </ul>
+            <span class="mnemonic">「要票必开、成本含税、协议正规」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-compliance">
+          <div class="qa-q"><span class="q-mark">Q73</span>遇到职业打假/恶意退款怎么办？</div>
+          <div class="qa-a">
+            <ul>
+              <li>先自检：<strong>自己有没有违规（极限词/虚假宣传/标签不合规）</strong>——有则速改，别硬刚</li>
+              <li>应对流程：<strong>保留证据 → 平台申诉（提供资质/合规证明）→ 拒绝不合理诉求 → 必要时报警/法务</strong></li>
+              <li>预防：<strong>详情页合规审查、资质公示齐全、发货留痕、打包视频</strong></li>
+              <li>心态：<strong>合法经营是最好的防御</strong>；打假人专挑软柿子</li>
+            </ul>
+            <span class="mnemonic">「先自检、留证据、走申诉、合法是盾」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch10">
+        <h2><span class="num">10</span>广告投放与推广</h2>
+
+        <div class="qa hot" id="eco-zsx">
+          <div class="qa-q"><span class="q-mark">Q74</span>直通车的核心原理是什么？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>本质：<strong>买搜索关键词的竞价广告位</strong>——出价 × 质量分决定排名</li>
+              <li>排名公式：<strong>广告排名 = 出价 × 质量分</strong>（淘宝称「质量分」= 点击率 × 相关性 × 账户表现）</li>
+              <li>扣费公式（GSP 二价）：<strong>实际扣费 = 下一名出价 × 下一名质量分 ÷ 自己质量分 + 0.01</strong></li>
+              <li>含义：<strong>质量分越高，越便宜拿到好位置</strong>——所以「养词」比「砸钱」重要</li>
+              <li>运营动作：<strong>选词（精准长尾）→ 测图（提点击率）→ 提分 → 放量</strong></li>
+            </ul>
+            <span class="mnemonic">「出价乘质量定排名，二价扣费分高省」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-keyword">
+          <div class="qa-q"><span class="q-mark">Q75</span>关键词怎么选？怎么养质量分？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>选词来源：<strong>生意参谋搜词排行、系统推荐词、竞品标题拆分、下拉词</strong></li>
+              <li>选词结构：<strong>核心大词（曝光）+ 精准长尾词（转化）+ 人群词</strong>——新店先打长尾</li>
+              <li>质量分维度：<strong>创意质量（点击率）、相关性（词与商品匹配）、买家体验（转化/DSR）</strong></li>
+              <li>养分方法：<strong>精准匹配 + 高点击率主图 + 高转化详情 + 适当出价卡位</strong>，3-7 天提分</li>
+              <li>淘汰逻辑：<strong>无展现删、高花费低转化降出价、优质词加价放量</strong></li>
+            </ul>
+            <span class="mnemonic">「大词曝、长尾转、图好词相关分自然高」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-bid">
+          <div class="qa-q"><span class="q-mark">Q76</span>出价策略怎么做？ROI 怎么算？</div>
+          <div class="qa-a">
+            <ul>
+              <li>保本 ROI：<strong>保本 ROI = 1 ÷ 毛利率</strong>（毛利率 40% → 保本 ROI 2.5）</li>
+              <li>出价上限：<strong>PPC 上限 = 客单价 × 转化率 × 毛利率</strong>（客单 100、转化 2%、毛利 40% → PPC ≤ 0.8 元）</li>
+              <li>阶段策略：<strong>测款期高出价抢数据 → 成长期中出价卡位 → 成熟期低出价收割利润</strong></li>
+              <li>实操：<strong>分组管理（高 ROI 词加价、低 ROI 词降价）、时段折扣、人群溢价</strong></li>
+            </ul>
+            <span class="mnemonic">「保本一除毛利，上限单价乘转乘毛」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-wxt">
+          <div class="qa-q"><span class="q-mark">Q77</span>万相台/引力魔方（推荐流量广告）怎么用？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定位：<strong>淘系推荐流量广告</strong>（猜你喜欢等场景），与直通车（搜索）互补</li>
+              <li>万相台：<strong>智能投放（AI 自动找人群）</strong>，适合放量拉新、活动拉 GMV</li>
+              <li>引力魔方：<strong>人群包投放（自定义人群）</strong>，适合种草、拉新、定向收割</li>
+              <li>场景选择：<strong>新品冷启动用万相台拉曝光、老品放量用引力魔方收割人群、大促用全场景覆盖</strong></li>
+              <li>注意：推荐流量转化率天然低于搜索，<strong>ROI 标准要分渠道设定</strong></li>
+            </ul>
+            <span class="mnemonic">「智能放量万相台、人群收割引力魔方」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-qianchuan">
+          <div class="qa-q"><span class="q-mark">Q78</span>抖音千川投放的关键点？</div>
+          <div class="qa-a">
+            <ul>
+              <li>投放目标：<strong>直播间成交（直播场景）/ 商品购买（短视频场景）</strong>——先定场景</li>
+              <li>计划结构：<strong>专业版自定义 vs 极速版智能</strong>；新店先用极速版跑通模型</li>
+              <li>核心数据：<strong>千次展现成本 CPM、点击率 CTR、成交转化率、GPM、ROI</strong></li>
+              <li>优化动作：<strong>素材是王道（多素材赛马）、人群包（莱卡/达人相似）、直播间承接（配合话术）</strong></li>
+              <li>放量逻辑：<strong>跑量计划 = 好素材 × 合理出价 × 充足预算</strong>；ROI 达标后「复制计划」扩量</li>
+            </ul>
+            <span class="mnemonic">「先场景、素材赛马、ROI 达标就复制」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-audience">
+          <div class="qa-q"><span class="q-mark">Q79</span>人群包/人群标签怎么圈？</div>
+          <div class="qa-a">
+            <ul>
+              <li>基础定向：<strong>性别、年龄、地域、消费力</strong>——先按商品属性圈</li>
+              <li>行为定向：<strong>类目行为（看过/买过相关品类）、店铺行为（收藏加购未买）</strong></li>
+              <li>相似人群：<strong>达摩盘/巨量引擎「相似人群拓展」</strong>——种子人群越精准，扩展越有效</li>
+              <li>应用场景：<strong>拉新圈相似人群、转化圈高意向人群（加购未付款）、老客圈复购人群</strong></li>
+              <li>原则：<strong>人群不是越窄越好</strong>——太窄没量，太宽不精准，按数据迭代</li>
+            </ul>
+            <span class="mnemonic">「属性打底、行为加码、相似扩展、拉新老客分场景」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-budget">
+          <div class="qa-q"><span class="q-mark">Q80</span>推广预算怎么分配？</div>
+          <div class="qa-a">
+            <ul>
+              <li>总量逻辑：<strong>预算 = 目标 GMV ÷ 预期整体 ROI</strong>（目标 100 万、整体 ROI 5 → 预算 20 万）</li>
+              <li>渠道分配：<strong>按各渠道 ROI 与容量分配</strong>——高 ROI 渠道优先加预算直到边际递减</li>
+              <li>结构分配：<strong>拉新 40% + 收割 40% + 品牌/种草 20%</strong>（不同阶段调整）</li>
+              <li>节奏分配：<strong>日常平稳 + 大促 3-5 倍</strong>；蓄水期投种草、爆发期投收割</li>
+              <li>动态调整：<strong>每周复盘 ROI，砍低效、加高效</strong>——预算跟着数据走</li>
+            </ul>
+            <span class="mnemonic">「目标除 ROI 定总量、渠道按回报、大促三五倍」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-roi-low">
+          <div class="qa-q"><span class="q-mark">Q81</span>投放 ROI 低，怎么排查优化？</div>
+          <div class="qa-a">
+            <ul>
+              <li>拆解 ROI：<strong>ROI = 客单价 × 转化率 ÷ PPC（单次点击成本）</strong>——三个变量找短板</li>
+              <li><strong>转化率低</strong>：详情/价格/评价问题 → 先优化承接再投</li>
+              <li><strong>客单价低</strong>：人群偏低价、无连带 → 提客单手段</li>
+              <li><strong>PPC 高</strong>：质量分低/竞争激烈 → 养分、换词、错峰</li>
+              <li>还有可能<strong>人群不精准</strong>（投放人群与商品不匹配）→ 收窄人群重测</li>
+            </ul>
+            <span class="mnemonic">「ROI 三变量客转本，转化先修、分要养、人群要精」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch11">
+        <h2><span class="num">11</span>私域运营与复购</h2>
+
+        <div class="qa hot" id="eco-private-form">
+          <div class="qa-q"><span class="q-mark">Q82</span>私域运营的载体和链路怎么搭？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>载体矩阵：<strong>企微（一对一+社群）+ 公众号（内容触达）+ 小程序（交易）+ 视频号（直播）+ 会员体系（权益）</strong></li>
+              <li>引流链路：<strong>包裹卡/短信/订单页 → 加企微 → 入群 → 首购引导 → 复购培育</strong></li>
+              <li>承接链路：<strong>企微「活码」自动分流、欢迎语带利益点（领券）、AI 自动打标签</strong></li>
+              <li>转化链路：<strong>日常种草 + 活动日集中转化 + 会员日复购</strong>——私域不是发广告，是养关系</li>
+            </ul>
+            <span class="mnemonic">「包裹卡进企微、活码分流领券、养关系再成交」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-private-sop">
+          <div class="qa-q"><span class="q-mark">Q83</span>私域 SOP 怎么做？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>时间 SOP：<strong>按天/按周固定动作</strong>——早报上新、午间干货、晚间福利、周末活动</li>
+              <li>用户 SOP：<strong>按生命周期自动化触达</strong>——加粉 1 天欢迎+首单礼、7 天未购发券、30 天沉默召回</li>
+              <li>内容 SOP：<strong>产品内容 40% + 用户案例 20% + 干货 20% + 互动福利 20%</strong></li>
+              <li>工具：<strong>企微「自动回复/群发/标签/群机器人」+ SCRM 工具（会话存档、SOP 引擎）</strong></li>
+            </ul>
+            <span class="mnemonic">「时间有节奏、用户按阶段、内容四二二二」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-repurchase-rate">
+          <div class="qa-q"><span class="q-mark">Q84</span>复购率怎么算？怎么提升？</div>
+          <div class="qa-a">
+            <ul>
+              <li>公式：<strong>周期内购买 ≥2 次的人数 ÷ 周期内总购买人数</strong>（按月/按季看，口径先统一）</li>
+              <li>提升路径：<strong>产品（品质/耗材属性）→ 权益（复购券/会员价）→ 触达（私域提醒）→ 习惯（周期购）</strong></li>
+              <li>关键人群：<strong>首购满意度高的人复购概率最大</strong>——首单后 7 天做好体验与二次触达</li>
+              <li>行业参考：<strong>标品快消复购率远高于耐用品</strong>，对比要同品类比</li>
+            </ul>
+            <span class="mnemonic">「二次购买除总人，品质权益触达习惯四管齐下」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-member-day">
+          <div class="qa-q"><span class="q-mark">Q85</span>会员日/超级品牌日怎么策划？</div>
+          <div class="qa-a">
+            <ul>
+              <li>目的：<strong>集中收割会员复购 + 提升会员权益感知</strong>——固定节奏（每月 8 号）养成习惯</li>
+              <li>权益设计：<strong>会员专享价、双倍积分、专属赠品、限量款、积分兑换</strong></li>
+              <li>预热：<strong>提前 3-5 天私域通知 + 悬念海报 + 会员专属预告</strong></li>
+              <li>爆发：<strong>限时限量制造紧迫感，配合直播/小程序专场</strong></li>
+              <li>复盘：<strong>会员参与率、会员 GMV 占比、拉新会员数、复购率提升</strong></li>
+            </ul>
+            <span class="mnemonic">「固定节奏、权益分层、私域预热、限时引爆」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-k-factor">
+          <div class="qa-q"><span class="q-mark">Q86</span>裂变（老带新）怎么做？K 因子是什么？</div>
+          <div class="qa-a">
+            <ul>
+              <li>K 因子 = <strong>平均每个用户带来的新用户数</strong>（K = 分享率 × 分享带来的转化率）；K &gt; 1 才能自增长</li>
+              <li>裂变玩法：<strong>邀请有礼（双方得券）、拼团、砍价、分销返佣、集赞兑换</strong></li>
+              <li>关键设计：<strong>利益点双方可得、路径短（一键分享）、门槛低（邀请 1 人即得）</strong></li>
+              <li>防滥用：<strong>风控（设备/IP 限制）、成本可控（券防羊毛）</strong></li>
+            </ul>
+            <span class="mnemonic">「K 破一才自转，双方有礼路径短」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-private-data">
+          <div class="qa-q"><span class="q-mark">Q87</span>私域运营看哪些数据？</div>
+          <div class="qa-a">
+            <ul>
+              <li>规模：<strong>私域用户数、月净增</strong></li>
+              <li>健康：<strong>好友通过率、退群率、打开率、互动率</strong></li>
+              <li>转化：<strong>私域 GMV、私域转化率、客单价</strong></li>
+              <li>价值：<strong>私域 LTV、复购率、私域 GMV 占总盘比例</strong></li>
+              <li>核心：<strong>私域要看「单位用户产出」</strong>——人数增长 ≠ 价值增长</li>
+            </ul>
+            <span class="mnemonic">「规模健康转化价值四层看，单位产出是核心」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-private-vs-public">
+          <div class="qa-q"><span class="q-mark">Q88</span>为什么现在都在做私域？私域是万能药吗？</div>
+          <div class="qa-a">
+            <ul>
+              <li>背景：<strong>公域流量红利见顶、获客成本升高</strong>——必须经营存量用户</li>
+              <li>价值：<strong>低成本触达、高复购、抗平台波动（用户资产自有）</strong></li>
+              <li>局限：<strong>私域做不了增量拉新、需要内容与运营投入、过度打扰反伤品牌</strong></li>
+              <li>正确姿势：<strong>公域拉新 + 私域养熟 + 反哺公域（老客销量权重撬公域流量）</strong>，形成闭环</li>
+            </ul>
+            <span class="mnemonic">「公域拉新私域养，闭环才是不败药」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch12">
+        <h2><span class="num">12</span>场景题</h2>
+
+        <div class="qa hot" id="eco-s1">
+          <div class="qa-q"><span class="q-mark">Q89</span>店铺 GMV 连续下滑，怎么排查？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>拆公式：<strong>GMV = 流量 × 转化率 × 客单价</strong>——先看哪块在掉</li>
+              <li>流量下滑：查<strong>搜索权重（销量/DSR/违规）、付费预算、活动资源、竞品截流、行业大盘</strong></li>
+              <li>转化下滑：查<strong>价格竞争力、评价变化、详情页改版、客服质量、比价环境</strong></li>
+              <li>客单下滑：查<strong>低价引流款占比上升、满减力度减弱、连带减少</strong></li>
+              <li>外部因素：<strong>平台流量规则变化、大促虹吸、季节性</strong></li>
+              <li>输出：<strong>定位 1-2 个主因 → 出 3 个动作 → 设观察周期复查</strong></li>
+            </ul>
+            <span class="mnemonic">「量转客三拆，内外部双查，主因动作复查」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-s2">
+          <div class="qa-q"><span class="q-mark">Q90</span>转化率低于同行，怎么优化？<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>先对标：<strong>确认对比口径（同品类、同价格带、同渠道）</strong>，避免误判</li>
+              <li>查漏斗：<strong>点击→进店→加购→下单→支付</strong>哪层掉得最多</li>
+              <li>价格端：<strong>对比竞品到手价，是否有 10% 以上劣势</strong>；促销是否不够直接</li>
+              <li>信任端：<strong>评价数量与质量、DSR、资质背书</strong></li>
+              <li>体验端：<strong>详情页首屏、SKU 选择复杂度、运费、支付流程</strong></li>
+              <li>动作优先级：<strong>先价格与评价（影响最大），再详情与流程</strong></li>
+            </ul>
+            <span class="mnemonic">「先对口径再拆漏斗，价评先行详程跟上」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s3">
+          <div class="qa-q"><span class="q-mark">Q91</span>大促前备货怎么定？卖不完怎么办？</div>
+          <div class="qa-a">
+            <ul>
+              <li>备货量：<strong>日常日均销量 × 大促期预估倍数（2-5 倍）± 活动力度系数</strong>，参考去年同时段</li>
+              <li>产能约束：<strong>供应商产能、仓库容量、发货时效</strong>要提前确认</li>
+              <li>风险预案：<strong>爆单断货（预售承接）、卖不完（预留返场清货动作）</strong></li>
+              <li>资金约束：<strong>备货占款算清楚</strong>，别把现金流压死在库存上</li>
+              <li>复盘：<strong>售罄率 = 卖出 ÷ 备货</strong>，理想 80-95%；过低说明预测过激</li>
+            </ul>
+            <span class="mnemonic">「日均乘倍数、产能资金双确认、售罄八成五」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s4">
+          <div class="qa-q"><span class="q-mark">Q92</span>被竞品恶意差评/恶意投诉怎么办？</div>
+          <div class="qa-a">
+            <ul>
+              <li>判断：<strong>差评内容无购买记录/批量小号/与商品无关</strong> = 疑似恶意</li>
+              <li>应对：<strong>保留证据 → 平台举报（虚假交易/恶意差评通道）→ 申诉提供物流与聊天记录</strong></li>
+              <li>正面回应：<strong>对真实差评诚恳回复补救</strong>，展示态度反而加分</li>
+              <li>预防：<strong>关键节点（上新/大促前）留好发货与沟通留痕</strong></li>
+            </ul>
+            <span class="mnemonic">「无记录批量即可疑，留痕申诉正面回应」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s5">
+          <div class="qa-q"><span class="q-mark">Q93</span>新店冷启动怎么做？</div>
+          <div class="qa-a">
+            <ul>
+              <li>定位先行：<strong>选细分人群/细分品类切入</strong>，别一上来打大而全</li>
+              <li>基础搭建：<strong>店铺装修、商品 10-20 个、详情完善、评价积累（老客/试用）</strong></li>
+              <li>流量破零：<strong>上新活动 + 内容种草 + 低价引流款 + 小额投放</strong></li>
+              <li>权重积累：<strong>动销率、转化率、DSR 保持健康</strong>——平台才会给流量</li>
+              <li>节奏：<strong>第一个月养数据，第二个月测款放量，第三个月冲爆款</strong></li>
+            </ul>
+            <span class="mnemonic">「细分切入、基础打牢、破零养权、三月三步」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s6">
+          <div class="qa-q"><span class="q-mark">Q94</span>老板定了不合理的 KPI，怎么沟通？</div>
+          <div class="qa-a">
+            <ul>
+              <li>先拆解：<strong>把 KPI 拆成公式</strong>，算出需要多少流量/转化才能达成——用数据说话</li>
+              <li>找差距：<strong>对比现状与目标的缺口</strong>，量化「差多少、为什么差」</li>
+              <li>给方案：<strong>带 2-3 个可行路径 + 所需资源/预算</strong>，而不是只抱怨</li>
+              <li>谈节奏：<strong>分阶段目标（如 Q1 先做到 X）</strong>，让老板看到路径</li>
+              <li>心态：<strong>目标是压力更是资源谈判筹码</strong>——「要完成这个数，我需要 XX 预算/人力」</li>
+            </ul>
+            <span class="mnemonic">「拆公式、找差距、给路径、谈资源」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s7">
+          <div class="qa-q"><span class="q-mark">Q95</span>双 11 预算只有 10 万，怎么分配？</div>
+          <div class="qa-a">
+            <ul>
+              <li>原则：<strong>钱花在确定性最高的地方</strong>——优先老客与高转化人群</li>
+              <li>分配参考：<strong>蓄水期 30%（种草/加购人群蓄量）、预热期 20%（收藏加购收割）、爆发期 40%（成交投放）、返场 10%</strong></li>
+              <li>重点人群：<strong>加购未付款人群（转化率最高）＞ 老客召回 ＞ 拉新</strong></li>
+              <li>盯盘：<strong>ROI 不达标即时砍预算、达标计划加码</strong>，每 4 小时复盘一次</li>
+            </ul>
+            <span class="mnemonic">「蓄三预二爆四返一，加购老客优先喂」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s8">
+          <div class="qa-q"><span class="q-mark">Q96</span>详情页改版后转化反而下降了，怎么办？</div>
+          <div class="qa-a">
+            <ul>
+              <li>先确认：<strong>数据口径与对比周期</strong>（排除大促/流量结构变化干扰）</li>
+              <li>回滚：<strong>第一时间回到旧版</strong>，止损优先</li>
+              <li>定位：<strong>新老版本逐屏对比</strong>——首屏利益点没了？卖点顺序乱了？信任背书删了？</li>
+              <li>小步验证：<strong>改回后用 A/B 测试单屏迭代</strong>，别大改</li>
+              <li>复盘：<strong>改版要有「假设 → 验证 → 决策」机制</strong>，别凭感觉拍板</li>
+            </ul>
+            <span class="mnemonic">「先回滚止损、逐屏找差异、A/B 小步走」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-s9">
+          <div class="qa-q"><span class="q-mark">Q97</span>直播突然没流量了，怎么排查？</div>
+          <div class="qa-a">
+            <ul>
+              <li>查直播间承接：<strong>停留时长、互动率、GPM 是否下滑</strong>——数据差平台降推流</li>
+              <li>查货盘：<strong>福利款是否上完、排品是否重复、价格是否失去吸引力</strong></li>
+              <li>查主播状态：<strong>话术是否疲软、节奏是否拖沓</strong></li>
+              <li>查外部：<strong>同赛道大主播开播抢量、平台流量分配波动</strong></li>
+              <li>急救：<strong>上福利拉停留、换排品、加投放预算</strong>；长期靠稳定开播养账号权重</li>
+            </ul>
+            <span class="mnemonic">「先查 GPM 再查货盘，福利急救养权重」</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="eco-ch13">
+        <h2><span class="num">13</span>手写方案与计算题</h2>
+
+        <div class="qa hot" id="eco-w1">
+          <div class="qa-q"><span class="q-mark">Q98</span>手写：一场大促的活动方案框架<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【618 大促活动方案 · 框架】
+一、目标
+  · GMV 目标：100 万（日常 40 万 × 2.5 倍）
+  · 拆解：流量 20 万 × 转化 5% × 客单 100 元
+二、节奏（蓄水-预热-爆发-返场）
+  · 蓄水期（T-21~T-8）：内容种草 + 私域蓄客 + 收藏加购目标 3 万
+  · 预热期（T-7~T-1）：定金预售 + 优惠券发放 + 直播间预热
+  · 爆发期（T0~T+2）：全量投放 + 库存监控 + 实时盯盘
+  · 返场期（T+3~T+7）：收割未付款 + 清尾货 + 复盘
+三、货品策略
+  · 引流款 10%：9.9 元 1000 件（拉新）
+  · 利润款 60%：满 199 减 30（主力 GMV）
+  · 清仓款 30%：第二件半价（清库存）
+四、流量与预算（总 10 万）
+  · 直通车 40% + 万相台 30% + 内容/种草 20% + 私域工具 10%
+五、风险预案
+  · 断货：预售承接 / 爆单：限购 / 价格问题：价保规则</code></pre>
+            <ul>
+              <li>框架记忆：<strong>目标 → 节奏 → 货品 → 流量预算 → 风险</strong>；面试要能说出「四段节奏」和「三类货品」</li>
+            </ul>
+            <span class="mnemonic">「目标节奏货流险，五段一气呵成」</span>
+          </div>
+        </div>
+
+        <div class="qa hot" id="eco-w2">
+          <div class="qa-q"><span class="q-mark">Q99</span>手写：定价与毛利计算题<span class="hot-badge">🔥 高频</span></div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【计算题】成本 60 元，目标毛利率 40%，售价定多少？
+  售价 = 成本 ÷ (1 - 毛利率) = 60 ÷ 0.6 = 100 元
+  验算：毛利 = 100 - 60 = 40 元，毛利率 = 40/100 = 40% ✓
+
+【进阶】平台佣金 5%，运费 8 元，推广占比 20%，保本售价？
+  设售价 X：X - 60 - 5%X - 8 - 20%X = 0
+  X(1 - 0.25) = 68 → X = 90.7 元（这是保本价，不是目标价）
+
+【推广预算题】客单价 200，转化率 2%，毛利率 50%
+  保本 ROI = 1 / 50% = 2
+  单点击最高成本 = 200 × 2% × 50% = 2 元
+  若每天 1000 次点击 → 预算 2000 元 → 成交 20 单 → GMV 4000 → ROI 2</code></pre>
+            <ul>
+              <li>核心公式：<strong>售价 = 成本 ÷（1 − 毛利率）</strong>；保本 ROI = 1 ÷ 毛利率</li>
+              <li>注意：<strong>平台佣金和推广费都按「售价比例」算</strong>，别漏项</li>
+            </ul>
+            <span class="mnemonic">「售价除一减毛利，保本一除毛利，点击成本客乘转乘毛」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-w3">
+          <div class="qa-q"><span class="q-mark">Q100</span>手写：会员体系设计方案</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【会员体系方案 · 框架】
+一、目标：会员 GMV 占比 30%+，复购率提升 10pct
+二、等级设计（成长值 = 消费 1 元 = 1 成长值）
+  · L1 普通会员（注册即得）：积分 1 倍
+  · L2 银卡（累计 2000 成长值）：积分 1.2 倍 + 生日礼
+  · L3 金卡（累计 8000 成长值）：9.5 折 + 包邮 + 优先客服
+  · L4 黑金（累计 2 万成长值）：9 折 + 新品优先购 + 专属活动
+三、积分体系：消费得积分 → 积分抵现/兑礼（100 积分 = 1 元）
+四、权益清单（价值感 &gt; 成本）
+  · 价格权益：等级折扣、会员日专享价
+  · 服务权益：包邮、7 天无理由延长、优先发货
+  · 情感权益：生日礼、周年礼、专属客服
+五、运营节奏：入会钩子 → 升级提醒 → 保级提示 → 流失预警
+六、核心指标：会员数、会员复购率、会员 GMV 占比、续费率</code></pre>
+            <ul>
+              <li>记忆框架：<strong>目标 → 等级 → 积分 → 权益 → 节奏 → 指标</strong>；权益要「价值感超成本」</li>
+            </ul>
+            <span class="mnemonic">「目标等级积分权益节奏指标，六步设计法」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-w4">
+          <div class="qa-q"><span class="q-mark">Q101</span>手写：直播带货脚本框架</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【直播间脚本 · 框架】（90 分钟场）
+一、开场 0-10 分钟：拉停留
+  · 福利款 9.9 元 100 单限量秒杀 + 抽奖（关注+评论参与）
+二、过款 10-70 分钟：循环「爆款单点 + 平款穿插」
+  · 每款 15 分钟：痛点 → 卖点（FAB）→ 展示 → 价格对比 → 逼单
+三、逼单话术五件套
+  1. 限时限量：「只剩最后 20 单，拍完下架」
+  2. 赠品加码：「现在下单加送 XX」
+  3. 价格对比：「专柜价 399，今天 199」
+  4. 从众：「刚有 200 位姐妹拍了」
+  5. 催单：「倒数 5 秒上链接」
+四、中场 40 分钟：抽奖/问答拉互动，稳在线人数
+五、结尾 70-90 分钟：清库存专场 + 下场预告 + 引导关注</code></pre>
+            <ul>
+              <li>核心：<strong>开场福利、爆款循环、五件套逼单、节奏带数据</strong></li>
+            </ul>
+            <span class="mnemonic">「开拉停留、中稳互动、尾清库存，爆款循环五逼单」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-w5">
+          <div class="qa-q"><span class="q-mark">Q102</span>手写：运营周报/数据复盘模板</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【运营周报 · 模板】
+一、本周核心结果（对比上周/去年同期）
+  · GMV、订单量、客单价、毛利、ROI
+二、流量结构
+  · 免费/付费/私域占比变化
+  · 各渠道表现：UV、转化率、ROI（表格）
+三、商品表现
+  · TOP5 SKU 销量与毛利、滞销品、库存预警
+四、活动与内容
+  · 活动效果（GMV 贡献、ROI）、直播/内容数据
+五、用户资产
+  · 新客数、复购率、会员增长、私域新增
+六、问题与动作
+  · 3 个问题（数据支撑）+ 3 个动作（下周转）
+七、下周计划：目标、预算、重点动作</code></pre>
+            <ul>
+              <li>逻辑：<strong>结果 → 拆解 → 问题 → 动作</strong>，每条问题必须带数据，每个动作要能执行</li>
+            </ul>
+            <span class="mnemonic">「结果流量商品活用户，问题动作计划七段」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-w6">
+          <div class="qa-q"><span class="q-mark">Q103</span>手写：A/B 测试方案设计</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【A/B 测试方案 · 主图点击率优化】
+一、假设
+  · 当前主图信息过满，主体不突出 → 点击率低
+  · 新主图：主体放大 + 卖点精简为一句 → CTR 提升
+二、变量：仅主图（唯一变量）
+三、分组：50/50 随机分流，控制人群与时段一致
+四、样本与周期
+  · 预计日曝光 5 万，CTR 2% → 日均点击 1000
+  · 跑 7 天（覆盖完整一周波动），样本 &gt; 7000
+五、评估
+  · 主指标：CTR；次要：进店转化率（防 CTR 虚高）
+  · 显著性：p &lt; 0.05 才算有效，不显著维持原版
+六、决策：胜出版全量上线，并沉淀为「主图规范」</code></pre>
+            <ul>
+              <li>要点：<strong>一变量、足样本、跑周期、看显著</strong>；避免「看两天数据就下结论」</li>
+            </ul>
+            <span class="mnemonic">「假设唯一变、样本过千、周期一周、p 值定胜负」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-w7">
+          <div class="qa-q"><span class="q-mark">Q104</span>手写：年度运营规划框架</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【年度运营规划 · 框架】
+一、现状盘点（SWOT）
+  · 优势/劣势/机会/威胁，含关键数据基线
+二、年度目标（SMART）
+  · GMV 从 500 万 → 800 万（+60%）
+  · 拆解：新客 200 万 + 老客复购 300 万 + 大促 300 万
+三、四大策略
+  · 货品：爆款矩阵 3+8（3 款主爆 + 8 款潜力）
+  · 流量：付费 40% + 内容 30% + 私域 30%
+  · 用户：会员化运营，会员 GMV 占比 40%
+  · 组织：SOP 沉淀 + 数据看板自动化
+四、季度节奏
+  · Q1 养数据（测款/基础优化）
+  · Q2 冲 618 + 打造爆款
+  · Q3 稳增长（私域深化）
+  · Q4 双 11 冲刺 + 来年蓄水
+五、资源与预算：人力、推广预算、供应链
+六、复盘机制：月度回顾 + 季度复盘 + 年度总结</code></pre>
+            <ul>
+              <li>框架记忆：<strong>盘点 → 目标 → 策略 → 节奏 → 资源 → 复盘</strong>；目标是「可拆解、有依据」</li>
+            </ul>
+            <span class="mnemonic">「盘目策节资复六步，目标拆到动作里」</span>
+          </div>
+        </div>
+
+        <div class="qa" id="eco-w8">
+          <div class="qa-q"><span class="q-mark">Q105</span>手写：私域用户运营 SOP 示例</div>
+          <div class="qa-a">
+            <pre><button class="copy-btn" onclick="copyCode(this)">复制</button><code>【私域用户 SOP · 示例（新客 30 天培育）】
+D0  加粉欢迎：自动欢迎语 + 首单无门槛券（10 元）
+D1  首购引导：推爆款 + 晒单返积分
+D3  体验关怀：确认收货 + 使用小贴士
+D7  首购满意度：求评价 + 复购券（满 99 减 15）
+D15 品类渗透：推关联品/新品（结合购买记录）
+D21 权益唤醒：积分到期提醒 + 会员日活动预告
+D30 复购收割：会员日专场 + 专属价
+—— 沉默用户（30 天未购）：
+  D31 召回：短信/企微发专属 30 元大额券
+  D45 二次召回：推新品/清仓款，低成本钩子
+  D60 减频：仅重大活动触达，防骚扰</code></pre>
+            <ul>
+              <li>核心：<strong>按用户生命周期设自动化触达</strong>，每条消息都带「价值点」</li>
+            </ul>
+            <span class="mnemonic">「七日一节点、三十天养熟、沉默分层召回」</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      style="
+        text-align: center;
+        padding: 40px 0 20px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      ">
+      <p>
+        🛒 电商运营面试题总结 · 100+ 高频考点 &nbsp;|&nbsp;
+        <a
+          href="../indexRandomNotes.html"
+          style="color: var(--link-blue); text-decoration: none"
+          >返回随手记目录</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      function copyCode(btn) {
+        const pre = btn.parentElement
+        const code = pre.querySelector('code').innerText
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '已复制 ✓'
+          setTimeout(() => {
+            btn.textContent = '复制'
+          }, 1500)
+        })
+      }
+
+      // 侧边栏当前章节高亮
+      const sections = document.querySelectorAll('.section')
+      const navLinks = document.querySelectorAll('.toc li a')
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              navLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === `#${id}`,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-10% 0px -70% 0px' },
+      )
+      sections.forEach((s) => observer.observe(s))
+
+      // 移动端点击链接关闭侧边栏
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          document.querySelector('.sidebar').classList.remove('open')
+        })
+      })
+
+      document.addEventListener('pointerdown', (event) => {
+        const sidebar = document.querySelector('.sidebar')
+        const menuToggle = document.querySelector('.menu-toggle')
+        if (
+          sidebar.classList.contains('open') &&
+          !sidebar.contains(event.target) &&
+          !menuToggle.contains(event.target)
+        ) {
+          sidebar.classList.remove('open')
+        }
+      })
+    </script>
+  </body>
+</html>

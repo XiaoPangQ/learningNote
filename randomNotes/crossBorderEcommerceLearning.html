@@ -1,0 +1,2477 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>跨境电商从入门到精通 · 学习笔记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #2563eb;
+        --accent-soft: rgba(37, 99, 235, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #2563eb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🌊</span> 跨境电商学习笔记</h2>
+        <p>从入门到精通 · 出海全景图</p>
+      </div>
+      <a class="home-link" href="../indexRandomNotes.html">← 返回随手记</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. 行业认知与商业模式</a></li>
+        <li><a href="#ch02">2. 主流平台选型</a></li>
+        <li><a href="#ch03">3. 术语与核心指标</a></li>
+        <li><a href="#ch04">4. 开店与账号准备</a></li>
+        <li><a href="#ch05">5. 选品方法论</a></li>
+        <li><a href="#ch06">6. 供应链与采购</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. Listing 与详情页优化</a></li>
+        <li><a href="#ch08">8. 定价与利润核算</a></li>
+        <li><a href="#ch09">9. 物流与仓储</a></li>
+        <li><a href="#ch10">10. 站内广告投放</a></li>
+        <li><a href="#ch11">11. 站外引流与社媒</a></li>
+        <li><a href="#ch12">12. 客服与售后</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch13">13. 数据分析与报表</a></li>
+        <li><a href="#ch14">14. 合规与风控</a></li>
+        <li><a href="#ch15">15. 独立站与品牌化</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch16">16. 团队管理与规模化</a></li>
+        <li><a href="#ch17">17. 常见坑与避坑指南</a></li>
+        <li><a href="#ch18">18. 学习路线与成长路径</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🌐 出海实战手册</span>
+        <h1>跨境电商从入门到精通</h1>
+        <p>
+          一份系统化的跨境电商学习笔记，覆盖行业认知、平台选型、选品供应链、Listing
+          优化、物流广告、合规风控、独立站品牌到团队规模的完整路径，配套公式、模板与避坑指南。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>20+ 公式与模板</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 行业认知与商业模式</h2>
+
+        <h3>什么是跨境电商</h3>
+        <p>
+          跨境电商是<strong>分属不同关境的交易主体，通过互联网完成展示、交易、支付，并通过跨境物流完成交付</strong>的贸易活动。
+          与传统外贸相比，它的核心变化是<strong>「零售化、数字化、去中间化」</strong>——工厂可以直接把货卖给海外消费者，中间商被压缩。
+        </p>
+
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          传统外贸是「批发给海外客户，人家自己卖」；跨境电商是「直接开店卖给海外消费者，自己就是零售商」。差价更大，但运营、物流、售后全都要自己扛。
+        </div>
+
+        <h3>模式分类：出口 vs 进口 × B2B vs B2C</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>出口电商</th>
+                <th>进口电商</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>方向</td>
+                <td>中国货 → 海外消费者（<strong>主力市场</strong>）</td>
+                <td>海外货 → 中国消费者（保税仓、直邮）</td>
+              </tr>
+              <tr>
+                <td>代表玩家</td>
+                <td>亚马逊卖家、速卖通、Shopee、TikTok Shop</td>
+                <td>天猫国际、京东国际、考拉海购</td>
+              </tr>
+              <tr>
+                <td>门槛</td>
+                <td>需懂选品、物流、外语、平台规则</td>
+                <td>需进口资质、保税资质，多为大平台</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>B2B（企业对企业）</th>
+                <th>B2C（企业对消费者）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>单量/客单</td>
+                <td>大单、低客单毛利、走量</td>
+                <td>小单、高客单毛利、走心智</td>
+              </tr>
+              <tr>
+                <td>平台</td>
+                <td>阿里巴巴国际站、中国制造网</td>
+                <td>亚马逊、速卖通、Shopify 独立站</td>
+              </tr>
+              <tr>
+                <td>核心能力</td>
+                <td>供应链、外贸谈判、跟单</td>
+                <td>选品、运营、流量、用户</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>平台模式 vs 独立站</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>平台模式（亚马逊/速卖通）</th>
+                <th>独立站（Shopify/自建）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>流量来源</td>
+                <td>平台自带流量，<strong>按规则分配</strong></td>
+                <td>全部自己买/自己引，<strong>流量是核心竞争力</strong></td>
+              </tr>
+              <tr>
+                <td>客户资产</td>
+                <td>属于平台，<strong>拿不到客户邮箱</strong></td>
+                <td>属于自己，可反复触达（邮件/私域）</td>
+              </tr>
+              <tr>
+                <td>规则与成本</td>
+                <td>规则多，佣金 + 仓储 + 广告费</td>
+                <td>规则少，支付/工具费 + 广告费</td>
+              </tr>
+              <tr>
+                <td>起手难度</td>
+                <td>低，适合新手（有流量红利）</td>
+                <td>高，适合有产品力/内容力的团队</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>跨境人货场：运营的总框架</h3>
+        <div class="diagram">
+          <pre>
+              跨境生意的三个基本盘
+┌───────────┐   ┌───────────┐   ┌───────────┐
+│   人      │   │   货      │   │   场      │
+│ 目标市场  │   │ 选品能力  │   │ 渠道与流量│
+│ 消费人群  │   │ 供应链    │   │ 平台/独立站│
+│ 文化偏好  │   │ 成本利润  │   │ 广告与内容│
+└───────────┘   └───────────┘   └───────────┘
+   先选市场       再定产品       后搭渠道
+  「卖给谁」      「卖什么」      「在哪卖」
+          </pre>
+        </div>
+        <p>
+          新手最容易犯的错是<strong>先学「场」（平台操作）而跳过「货」（选品）</strong>。
+          记住顺序：<strong>人 → 货 → 场</strong>。市场没想清楚，选品没验证，操作再熟练也是给平台交学费。
+        </p>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>跨境三件事，人货场别乱：先想卖给谁，再定卖什么，最后在哪卖</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 主流平台选型</h2>
+
+        <h3>主要平台一览</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>🇺🇸 亚马逊 Amazon</h4>
+            <p>欧美最大，客单价高、重品牌重评论，FBA 模式成熟。新手首选但竞争激烈，适合有资金实力与合规意识的卖家。</p>
+          </div>
+          <div class="card">
+            <h4>🇪🇺 速卖通 AliExpress</h4>
+            <p>阿里系，俄罗斯/西班牙/巴西等新兴市场，主打性价比小件，客单价低、量大，适合铺货型新手。</p>
+          </div>
+          <div class="card">
+            <h4>🇸🇬 Shopee / Lazada</h4>
+            <p>东南亚双雄，低价走量、移动端为主，适合低价标品与本土化运营，Shopee 更适合新手起步。</p>
+          </div>
+          <div class="card">
+            <h4>🎵 TikTok Shop</h4>
+            <p>内容电商新贵，短视频 + 直播带货出海版，英美东南亚美区开放，适合有内容能力/供应链优势者。</p>
+          </div>
+          <div class="card">
+            <h4>🏬 eBay / Wish</h4>
+            <p>老牌 C2C 与低价移动端，eBay 适合汽配/二手/收藏品，Wish 已式微，两者均非新手首选。</p>
+          </div>
+          <div class="card">
+            <h4>🛍️ 独立站 Shopify</h4>
+            <p>不是平台而是建站工具，配 PayPal/Stripe 收款 + 广告引流，适合品牌化、高毛利、可复购品类。</p>
+          </div>
+        </div>
+
+        <h3>平台横向对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>亚马逊</th>
+                <th>速卖通</th>
+                <th>Shopee</th>
+                <th>TikTok Shop</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>主力市场</td>
+                <td>欧美日</td>
+                <td>俄/西/巴</td>
+                <td>东南亚</td>
+                <td>英美东南亚</td>
+              </tr>
+              <tr>
+                <td>佣金</td>
+                <td>8%～15%</td>
+                <td>5%～8%</td>
+                <td>约 5%～6%</td>
+                <td>约 2%～8%（视品类）</td>
+              </tr>
+              <tr>
+                <td>流量类型</td>
+                <td>搜索（主动购买）</td>
+                <td>搜索 + 活动</td>
+                <td>活动 + 社交裂变</td>
+                <td>内容推荐（被动种草）</td>
+              </tr>
+              <tr>
+                <td>物流</td>
+                <td>FBA 为主</td>
+                <td>平台仓 + 直发</td>
+                <td>SLS 官方物流</td>
+                <td>商家自寄 + 官方仓</td>
+              </tr>
+              <tr>
+                <td>适合人群</td>
+                <td>有资金、重合规</td>
+                <td>供应链型铺货</td>
+                <td>低价标品、新手</td>
+                <td>内容创作者/工厂</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>怎么选平台：四问法</h3>
+        <ol>
+          <li><strong>有没有产品优势？</strong>工厂/供应链强 → 亚马逊/TikTok 重产品；无产品轻资产 → Shopee/速卖通试错。</li>
+          <li><strong>资金与合规能力？</strong>FBA 备货 + 海外仓占用资金大，亚马逊对品牌/税务要求高。</li>
+          <li><strong>擅长内容还是搜索？</strong>会拍视频做直播 → TikTok Shop；会看数据调广告 → 亚马逊/独立站。</li>
+          <li><strong>目标市场在哪？</strong>东南亚低价 → Shopee；欧美品质 → 亚马逊；新兴市场 → 速卖通。</li>
+        </ol>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 不要「全平台开花」——<strong>新手先死磕一个平台一个站点</strong>，跑通再复制；② 平台政策（佣金、封号）变化快，做决定前先看最新招商政策；③ 多平台运营最大的隐性成本是<strong>库存无法互通</strong>，备货前想清楚渠道分配。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>有货有资金上亚马逊，轻资产铺货去速卖通，东南亚低价找虾皮，会做内容 TikTok</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 术语与核心指标</h2>
+
+        <h3>必须背下来的行业黑话</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>术语</th>
+                <th>含义</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SKU</td>
+                <td>最小库存单位（颜色/尺码组合）</td>
+                <td>一个链接下可有多个 SKU</td>
+              </tr>
+              <tr>
+                <td>ASIN</td>
+                <td>亚马逊商品唯一标识</td>
+                <td>相当于亚马逊的「身份证号」</td>
+              </tr>
+              <tr>
+                <td>FBA / FBM</td>
+                <td>亚马逊仓代发 / 卖家自发货</td>
+                <td>FBA 有流量加权但费用高</td>
+              </tr>
+              <tr>
+                <td>Listing</td>
+                <td>商品详情页（标题+五点+图片+描述）</td>
+                <td>Listing 质量决定转化率</td>
+              </tr>
+              <tr>
+                <td>Review / Rating</td>
+                <td>商品评论 / 店铺评分</td>
+                <td>Review 影响转化与广告竞价</td>
+              </tr>
+              <tr>
+                <td>Feedback</td>
+                <td>买家对卖家的服务评价</td>
+                <td>影响账号健康度</td>
+              </tr>
+              <tr>
+                <td>Buy Box（购物车）</td>
+                <td>产品页「加入购物车」按钮归属</td>
+                <td>抢到才有订单</td>
+              </tr>
+              <tr>
+                <td>跟卖</td>
+                <td>多个卖家共用一个 Listing</td>
+                <td>价格战来源，也常被恶搞</td>
+              </tr>
+              <tr>
+                <td>A+ 页面</td>
+                <td>图文品牌详情页</td>
+                <td>提升转化 3%～10%</td>
+              </tr>
+              <tr>
+                <td>头程 / 尾程</td>
+                <td>国内→目的国仓库 / 目的国仓库→买家</td>
+                <td>运费大头在头程</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>运营核心指标：从曝光到回款</h3>
+        <div class="diagram">
+          <pre>
+              流量漏斗与对应指标
+曝光量 → 点击量 → 加购量 → 下单量 → 回款额
+  │         │         │        │        │
+ CTR      CVR(点击→购买)  客单价    回款周期
+（点击率）  （转化率）    （AOV）   （资金占用）
+          </pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>指标</th>
+                <th>公式</th>
+                <th>健康参考</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CTR 点击率</td>
+                <td>点击量 ÷ 曝光量</td>
+                <td>0.3%～0.8%（受主图影响大）</td>
+              </tr>
+              <tr>
+                <td>CVR 转化率</td>
+                <td>订单量 ÷ 点击量</td>
+                <td>5%～15% 常见（品类差异大）</td>
+              </tr>
+              <tr>
+                <td>ACOS 广告花费占比</td>
+                <td>广告花费 ÷ 广告销售额</td>
+                <td>低于毛利率即盈利</td>
+              </tr>
+              <tr>
+                <td>ROAS 广告回报</td>
+                <td>广告销售额 ÷ 广告花费</td>
+                <td>≥ 3 为健康</td>
+              </tr>
+              <tr>
+                <td>动销率</td>
+                <td>有销量 SKU ÷ 全部 SKU</td>
+                <td>≥ 70% 不压货</td>
+              </tr>
+              <tr>
+                <td>库存周转天数</td>
+                <td>平均库存 ÷ 日均销量</td>
+                <td>30～60 天合理</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>一个最简单的毛利模型（Excel 可落地）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 单件利润速算（金额单位：人民币）</span>
+售价     = <span class="var">99.99</span>  <span class="comment"># 美元定价</span>
+汇率     = <span class="var">7.2</span>
+采购成本 = <span class="var">35</span>      <span class="comment"># 1688 拿货价</span>
+头程运费 = <span class="var">18</span>      <span class="comment"># 海运摊到每件</span>
+平台佣金 = 售价 * <span class="var">0.15</span>  <span class="comment"># 15% 佣金</span>
+FBA 费用 = <span class="var">5.5</span>  <span class="var">* 7.2</span>  <span class="comment"># 仓储配送费（美元）</span>
+广告占比 = 售价 * 汇率 * <span class="var">0.1</span> <span class="comment"># 假设 ACOS 10%</span>
+
+收入     = 售价 * 汇率
+成本     = 采购成本 + 头程运费 + 佣金*汇率 + FBA 费用 + 广告占比
+单件利润 = 收入 - 成本
+<span class="kw">print</span>(<span class="str">f"单件利润: {单件利润:.2f} 元"</span>)</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>曝光点击加购下单一条线，CTR 看主图 CVR 看详情，ACOS 低于毛利才赚钱</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 开店与账号准备</h2>
+
+        <h3>开店必备资料清单</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>资料</th>
+                <th>说明</th>
+                <th>要点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>营业执照</td>
+                <td>企业/个体工商户均可（多数平台要求企业）</td>
+                <td>经营范围尽量写广，含电商/贸易</td>
+              </tr>
+              <tr>
+                <td>法人身份证</td>
+                <td>与执照法人一致</td>
+                <td>用于平台实名与 KYC 审核</td>
+              </tr>
+              <tr>
+                <td>双币信用卡</td>
+                <td>Visa / Mastercard</td>
+                <td>用于支付平台月租（如亚马逊 39.99 美元）</td>
+              </tr>
+              <tr>
+                <td>收款账户</td>
+                <td>连连 / PingPong / 万里汇 / 空中云汇</td>
+                <td>平台结算 → 收款平台 → 国内银行卡</td>
+              </tr>
+              <tr>
+                <td>邮箱电话</td>
+                <td>独立且未注册过平台的</td>
+                <td>防止账号关联</td>
+              </tr>
+              <tr>
+                <td>商标/品牌（可选）</td>
+                <td>R 标或 TM 标</td>
+                <td>品牌备案后才能做 A+、防跟卖</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>开店流程（以亚马逊为例）</h3>
+        <ol class="steps">
+          <li><strong>注册账号</strong>：官网提交资料，填写公司/法人/收款信息，全程约 1～2 周。</li>
+          <li><strong>资质审核</strong>：部分站点需地址验证（明信片）与 KYC（欧洲站），材料真实一致。</li>
+          <li><strong>品牌备案（可选）</strong>：注册品牌 + 亚马逊 Brand Registry，解锁 A+、品牌广告。</li>
+          <li><strong>绑定收款</strong>：连连/PingPong 开通店铺收款账户，绑定到后台。</li>
+          <li><strong>开通销售权限</strong>：确定站点（美国站最容易上手），缴纳月租即可上架。</li>
+        </ol>
+
+        <h3>账号关联：最容易被忽略的「死刑条款」</h3>
+        <div class="callout danger">
+          <div class="callout-title">⛔ 红线警示</div>
+          亚马逊<strong>禁止一个主体拥有多个账号</strong>。判定关联的要素：同一网络 IP、同一电脑/浏览器指纹、同一收款账号、同一营业执照、同一手机号/邮箱。一旦关联，<strong>轻则强制关店，重则关联所有账号一并封禁</strong>。多账号运营必须做到「一店一网一机一收款」。
+        </div>
+
+        <h3>收款渠道对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>渠道</th>
+                <th>费率（提现）</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>连连支付 LianLian</td>
+                <td>约 0.7%（活动期更低）</td>
+                <td>支持平台多，提现快，有 VAT 代缴</td>
+              </tr>
+              <tr>
+                <td>PingPong</td>
+                <td>约 1% 封顶</td>
+                <td>主打欧美主流平台，本土账号收款</td>
+              </tr>
+              <tr>
+                <td>万里汇 WorldFirst</td>
+                <td>约 0.3%～1%</td>
+                <td>阿里系，与速卖通/亚马逊兼容好</td>
+              </tr>
+              <tr>
+                <td>空中云汇 Airwallex</td>
+                <td>约 0.5%～1%</td>
+                <td>多币种账户，适合独立站</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>执照身份证信用卡，收款邮箱要独立；一店一网一机器，账号关联是红线</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> 选品方法论</h2>
+
+        <h3>选品是生意的生死线</h3>
+        <p>
+          「七分选品，三分运营」不是鸡汤。Listing 再差，产品对也能卖；运营再好，产品不对全白干。选品的本质是找到<strong>「有需求、有利润、能差异化、可稳定供货」</strong>的交集。
+        </p>
+
+        <h3>选品十大原则</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>① 需求真实</h4>
+            <p>用搜索量、类目销量验证，不是「我觉得会有人买」。</p>
+          </div>
+          <div class="card">
+            <h4>② 利润达标</h4>
+            <p>单件毛利 ≥ 30%，扣除广告后仍有利润空间。</p>
+          </div>
+          <div class="card">
+            <h4>③ 轻小件优先</h4>
+            <p>头程便宜、FBA 仓储费低、退货少，新手首选。</p>
+          </div>
+          <div class="card">
+            <h4>④ 不易碎不怕压</h4>
+            <p>运输损耗率直接吃掉利润。</p>
+          </div>
+          <div class="card">
+            <h4>⑤ 无侵权风险</h4>
+            <p>避开外观专利、商标、卡通形象，出事即下架封店。</p>
+          </div>
+          <div class="card">
+            <h4>⑥ 非季节性（或长季节）</h4>
+            <p>圣诞、万圣节爆款备货压款风险高，新手慎入。</p>
+          </div>
+          <div class="card">
+            <h4>⑦ 可差异化</h4>
+            <p>颜色/功能/组合/包装上能做出差异，避免纯价格战。</p>
+          </div>
+          <div class="card">
+            <h4>⑧ 有评价空间</h4>
+            <p>新品期 Review 少也能起量，不被老链接锁死。</p>
+          </div>
+          <div class="card">
+            <h4>⑨ 供应链稳定</h4>
+            <p>能持续补货、品质稳定、供应商好沟通。</p>
+          </div>
+          <div class="card">
+            <h4>⑩ 自己看得懂</h4>
+            <p>产品问题自己能排查，售后不吃亏。</p>
+          </div>
+        </div>
+
+        <h3>需求验证三步</h3>
+        <ol class="steps">
+          <li><strong>看数据</strong>：卖家精灵/Helium10 查关键词搜索量、竞品月销、上架时间（新品能起来 = 有机会）。</li>
+          <li><strong>看趋势</strong>：Google Trends 看近 1～3 年是否稳定增长、有无季节性大起大落。</li>
+          <li><strong>看竞争</strong>：首页竞品 Review 数量与质量——<strong>Review 超过 1000 且价格很低</strong>的类目，新手别进。</li>
+        </ol>
+
+        <h3>利润测算模板（选品用）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 选品利润验证：把每个候选产品套一遍</span>
+<span class="kw">def</span> <span class="var">check_product</span>(售价_usd, 采购价, 头程每件, 佣金率=<span class="var">0.15</span>, fba_usd=<span class="var">4.5</span>, 汇率=<span class="var">7.2</span>):
+    收入 = 售价_usd * 汇率
+    成本 = 采购价 + 头程每件 + 售价_usd*佣金率*汇率 + fba_usd*汇率
+    毛利 = 收入 - 成本
+    毛利率 = 毛利 / 收入
+    回本广告费 = 毛利 * <span class="var">0.5</span>  <span class="comment"># 最多拿一半毛利打广告</span>
+    <span class="kw">return</span> <span class="str">f"毛利 {毛利:.0f} 元 / 毛利率 {毛利率:.0%}"</span>
+
+<span class="kw">print</span>(check_product(<span class="var">19.99</span>, <span class="var">18</span>, <span class="var">6</span>))   <span class="comment"># 小件轻货</span>
+<span class="kw">print</span>(check_product(<span class="var">39.99</span>, <span class="var">45</span>, <span class="var">20</span>))  <span class="comment"># 中件</span></code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 别只算「账面毛利」，要扣掉<strong>广告、退货损耗、汇率差、平台费用调整</strong>；② 「供应链友好型」选品（可二次开发、可定制）比「跟风爆款」更长久；③ 侵权排查别只看名称——<strong>图片上的图案、形状、配色都可能侵权</strong>。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>轻小不易碎，毛利三成起，无侵权能差异，有数据有利润才下手</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 供应链与采购</h2>
+
+        <h3>供应链全链路</h3>
+        <div class="diagram">
+          <pre>
+              采购 → 验货 → 头程 → 入仓 → 补货 → 再采购
+                │                  │
+             供应商管理          库存预警
+            （比价/交期/质量）   （周转率/断货率）
+          </pre>
+        </div>
+
+        <h3>采购流程（1688 为例）</h3>
+        <ol class="steps">
+          <li><strong>找品找厂</strong>：搜索关键词 → 按销量/回头率筛选 → 看实力商家/工厂认证。</li>
+          <li><strong>索样验证</strong>：先买样品（1～5 件）自己测质量、包装、尺寸重量，别直接下单。</li>
+          <li><strong>谈价谈条款</strong>：MOQ（起订量）、单价阶梯、交期、运费、售后约定（补发/退换）。</li>
+          <li><strong>小单试水</strong>：首批只备 1～2 个月的量，验证销量后再放大。</li>
+          <li><strong>验货付款</strong>：量大了找第三方验货（如行业验货服务）或自己抽检，再安排发货。</li>
+        </ol>
+
+        <h3>供应商评估表</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>评估维度</th>
+                <th>考察方式</th>
+                <th>一票否决项</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>质量稳定性</td>
+                <td>多次样品对比、客户差评反馈</td>
+                <td>样品合格率 &lt; 80%</td>
+              </tr>
+              <tr>
+                <td>交期可靠性</td>
+                <td>询单承诺 vs 实际发货记录</td>
+                <td>连续 2 次延期</td>
+              </tr>
+              <tr>
+                <td>沟通响应</td>
+                <td>问题反馈处理速度、是否专业</td>
+                <td>出问题就失联</td>
+              </tr>
+              <tr>
+                <td>价格与账期</td>
+                <td>比价 + 是否支持账期</td>
+                <td>价格低但无质量保障</td>
+              </tr>
+              <tr>
+                <td>配合度</td>
+                <td>是否接受小批量、换包装、定制</td>
+                <td>拒绝任何改动</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>备货逻辑：安全库存公式</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 安全库存 = 日均销量 × 补货周期天数 × 安全系数</span>
+日均销量    = <span class="var">10</span>      <span class="comment"># 近 30 天平均</span>
+补货周期    = <span class="var">45</span>      <span class="comment"># 下单到入仓的天数（采购+头程+上架）</span>
+安全系数    = <span class="var">1.5</span>     <span class="comment"># 销量波动大取 1.5~2，稳定取 1.2</span>
+安全库存    = 日均销量 * 补货周期 * 安全系数
+<span class="kw">print</span>(<span class="str">f"建议最大备货: {安全库存:.0f} 件"</span>)
+
+<span class="comment"># 库存健康度检查</span>
+周转天数 = 平均库存 / 日均销量
+<span class="kw">if</span> 周转天数 &gt; <span class="var">90</span>: <span class="kw">print</span>(<span class="str">"⚠️ 库存过重，停止补货并促销清仓"</span>)
+<span class="kw">elif</span> 周转天数 &lt; <span class="var">30</span>: <span class="kw">print</span>(<span class="str">"✅ 健康，按计划补货"</span>)</code></pre>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">⛔ 库存两大杀手</div>
+          <strong>断货</strong>：排名/权重断崖下跌，恢复要重新花钱养；<strong>滞销</strong>：仓储费 + 资金占用 + 最后清仓亏损。对策就一条：<strong>用小单高频补货代替大单赌命</strong>，宁可偶尔断货补空运，也不要一次备半年。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>先样品后大单，小单试水再放大；安全库存乘系数，断货滞销两头怕</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> Listing 与详情页优化</h2>
+
+        <h3>Listing 是「不会说话的销售员」</h3>
+        <p>
+          Listing 承担两个任务：<strong>被搜到</strong>（关键词埋词）和<strong>被买下</strong>（视觉 + 信任）。
+          优化的顺序永远是：<strong>先关键词，后视觉，再详情</strong>——搜不到，页面再美也白搭。
+        </p>
+
+        <h3>标题公式：核心词 + 属性词 + 场景词</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 标题公式（亚马逊，约 180 字符内）</span>
+[品牌] + [核心关键词] + [特性/材质] + [规格/数量] + [场景/人群] + [差异化卖点]
+
+<span class="comment"># 例子（无线充电器）</span>
+<span class="var">Mifuny</span> Wireless Charger, <span class="var">15W</span> Fast Charging Pad
+for iPhone <span class="var">15</span>/<span class="var">14</span>/<span class="var">13</span>/Samsung, LED Indicator,
+Slim Anti-Slip Charging Stand, for Bedside Nightstand</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>部分</th>
+                <th>写法要点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>核心关键词</td>
+                <td>放最前面，买家搜索最多的词</td>
+              </tr>
+              <tr>
+                <td>特性材质</td>
+                <td>强化卖点：防水、不锈钢、Type-C</td>
+              </tr>
+              <tr>
+                <td>规格数量</td>
+                <td>数量/尺寸/容量——别让买家猜</td>
+              </tr>
+              <tr>
+                <td>场景人群</td>
+                <td>卧室、旅行、礼物、男士——拉高相关度</td>
+              </tr>
+              <tr>
+                <td>差异化卖点</td>
+                <td>独有功能放最后，如「LED 呼吸灯」</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>五点描述（Bullet Points）写法</h3>
+        <ul>
+          <li><strong>第 1 点：最大卖点 + 利益</strong>——「15W 快充：比普通充电器快 30%」</li>
+          <li><strong>第 2 点：功能/规格</strong>——兼容机型、功率、材质、尺寸</li>
+          <li><strong>第 3 点：使用场景</strong>——卧室、办公室、旅行</li>
+          <li><strong>第 4 点：包装清单</strong>——含充电器、数据线、说明书，减少疑虑</li>
+          <li><strong>第 5 点：售后承诺</strong>——12 个月质保、24 小时响应，提升下单信心</li>
+        </ul>
+
+        <h3>图片规范（亚马逊标准）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>图片</th>
+                <th>要求</th>
+                <th>作用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>主图</td>
+                <td>纯白底、产品占 85%、无文字水印</td>
+                <td>决定 CTR，第一印象</td>
+              </tr>
+              <tr>
+                <td>场景图</td>
+                <td>真实使用场景</td>
+                <td>让买家想象「拥有后的生活」</td>
+              </tr>
+              <tr>
+                <td>尺寸图</td>
+                <td>与常见物品对比</td>
+                <td>降低「比想象中小」的差评</td>
+              </tr>
+              <tr>
+                <td>卖点图</td>
+                <td>标注核心功能参数</td>
+                <td>替代文字的快速阅读</td>
+              </tr>
+              <tr>
+                <td>对比图</td>
+                <td>与竞品/旧款对比</td>
+                <td>建立差异化认知</td>
+              </tr>
+              <tr>
+                <td>包装图</td>
+                <td>包装清单展示</td>
+                <td>降低「缺件」疑虑</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>关键词埋词与后台优化</h3>
+        <ul>
+          <li><strong>Search Terms 后台关键词</strong>：填买家会搜但标题放不下的词，不用逗号，<strong>不要重复标题已有词</strong>。</li>
+          <li><strong>A+ 页面（品牌备案后）</strong>：图文模块讲品牌故事与卖点，转化提升 3%～10%。</li>
+          <li><strong>Q&amp;A</strong>：主动埋常见问题，也用小号/买家提问覆盖「会不会、能不能、多大」类问题。</li>
+          <li><strong>变体设置</strong>：颜色/尺寸合理的变体共享 Review，少做「无意义变体」。</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 标题堆砌无关关键词会被降权；② 主图带促销文字（如 SALE）会被拒；③ 五点描述<strong>不要违反广告法式夸张</strong>（best、#1）——海外平台同样管虚假宣称；④ 图片尺寸不达标直接失去搜索结果展示资格。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>先埋词再美图，标题公式前中后；主图白底占 85，五点卖点按序走</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 定价与利润核算</h2>
+
+        <h3>定价公式：从目标利润率反推</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 定价 = 总成本 ÷ (1 - 目标毛利率)</span>
+<span class="kw">def</span> <span class="var">price</span>(成本, 目标毛利率):
+    <span class="kw">return</span> 成本 / (<span class="var">1</span> - 目标毛利率)
+
+<span class="comment"># 例：单件总成本 60 元，想赚 30% 毛利</span>
+<span class="kw">print</span>(<span class="str">f"定价: {price(60, 0.30):.2f} 元 → 美元 {price(60, 0.30)/7.2:.2f}"</span>)
+
+<span class="comment"># 反过来：已知售价算实际毛利率</span>
+<span class="kw">def</span> <span class="var">margin</span>(售价, 总成本):
+    <span class="kw">return</span> (售价 - 总成本) / 售价
+
+<span class="kw">print</span>(<span class="str">f"毛利率: {margin(99.99*7.2, 78):.1%}"</span>)</code></pre>
+        </div>
+
+        <h3>成本拆解表：一项都不能漏</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>成本项</th>
+                <th>说明</th>
+                <th>约占售价</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>采购成本</td>
+                <td>1688 拿货价 + 国内运费</td>
+                <td>15%～30%</td>
+              </tr>
+              <tr>
+                <td>头程运费</td>
+                <td>海运/空运摊到每件</td>
+                <td>5%～15%</td>
+              </tr>
+              <tr>
+                <td>平台佣金</td>
+                <td>亚马逊 8%～15%，速卖通 5%～8%</td>
+                <td>5%～15%</td>
+              </tr>
+              <tr>
+                <td>仓储配送费</td>
+                <td>FBA 费 / 海外仓操作费</td>
+                <td>10%～25%</td>
+              </tr>
+              <tr>
+                <td>广告费</td>
+                <td>按 ACOS 折算</td>
+                <td>5%～20%</td>
+              </tr>
+              <tr>
+                <td>退货损耗</td>
+                <td>退货率 × 货损率</td>
+                <td>1%～5%</td>
+              </tr>
+              <tr>
+                <td>汇率/手续费</td>
+                <td>提现费 + 汇率差</td>
+                <td>1%～2%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>盈亏平衡点：ACOS 的生死线</h3>
+        <div class="callout info">
+          <div class="callout-title">📌 一句话理解</div>
+          <strong>ACOS = 广告花费 ÷ 广告销售额</strong>。当 ACOS 等于毛利率时，广告带来的每一单利润都被广告费吃光——这叫<strong>盈亏平衡 ACOS（Break-even ACOS）</strong>。广告只打「低于盈亏平衡」的词，超了就降竞价或否定。
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 盈亏平衡 ACOS = 毛利率（只算可变成本）</span>
+毛利 = <span class="var">99.99</span>*<span class="var">7.2</span> - <span class="var">78</span>       <span class="comment"># 售价-总成本</span>
+毛利率 = 毛利 / (<span class="var">99.99</span>*<span class="var">7.2</span>)
+<span class="kw">print</span>(<span class="str">f"盈亏平衡 ACOS ≈ {毛利率:.1%}（广告占比低于它才赚）"</span>)</code></pre>
+        </div>
+
+        <h3>汇率与调价策略</h3>
+        <ul>
+          <li><strong>汇率风险</strong>：美元结算 → 人民币入账，人民币升值 = 利润缩水。应对：<strong>锁汇</strong>（收款平台远期结汇）、定价留 3%～5% 汇率缓冲。</li>
+          <li><strong>调价时机</strong>：旺季前小幅上调、清仓前下调；<strong>不要频繁大起大落</strong>，影响购物车与权重。</li>
+          <li><strong>比价工具</strong>：用 Keepa 看竞品价格历史，定价时避开「价格战红线」。</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>成本除以一减毛利，七项成本别漏记；ACOS 低于毛利率，汇率缓冲留三厘</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 物流与仓储</h2>
+
+        <h3>跨境物流全景</h3>
+        <div class="diagram">
+          <pre>
+            国内工厂 → 头程 → 目的国仓库 → 尾程 → 海外买家
+                            │              │
+                   FBA/海外仓入仓     平台配送/本地快递
+                   （整批，慢而便宜）   （单件，快而贵）
+          </pre>
+        </div>
+
+        <h3>头程方式对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方式</th>
+                <th>时效</th>
+                <th>价格</th>
+                <th>适合</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>国际快递（DHL/UPS/FedEx）</td>
+                <td>3～7 天</td>
+                <td>最贵</td>
+                <td>急件、补货救急、高价值小件</td>
+              </tr>
+              <tr>
+                <td>空运（专线）</td>
+                <td>7～15 天</td>
+                <td>中高</td>
+                <td>中等时效要求的常规补货</td>
+              </tr>
+              <tr>
+                <td>海运整柜/拼箱</td>
+                <td>30～45 天</td>
+                <td>最便宜</td>
+                <td>大批量、体积大、不着急</td>
+              </tr>
+              <tr>
+                <td>中欧铁路</td>
+                <td>18～30 天</td>
+                <td>中低</td>
+                <td>欧洲大件，时效介于空海运</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>FBA vs 自发货 vs 海外仓</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>FBA（亚马逊仓）</th>
+                <th>FBM（自发货）</th>
+                <th>第三方海外仓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>流量权重</td>
+                <td>最高（Prime 标）</td>
+                <td>较低</td>
+                <td>无平台加成</td>
+              </tr>
+              <tr>
+                <td>配送时效</td>
+                <td>2 天达</td>
+                <td>7～20 天</td>
+                <td>2～5 天（本地派）</td>
+              </tr>
+              <tr>
+                <td>费用结构</td>
+                <td>仓储费 + 配送费（长期仓租贵）</td>
+                <td>仅运费（自己发）</td>
+                <td>仓储 + 操作费（相对灵活）</td>
+              </tr>
+              <tr>
+                <td>适用</td>
+                <td>标品、稳定出单、冲排名</td>
+                <td>大件、定制、测品</td>
+                <td>多平台共用库存、退换货处理</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>发货流程（FBA 为例）</h3>
+        <ol class="steps">
+          <li><strong>建发货计划</strong>：后台创建 FBA 入库计划，确认发货地址与目的仓。</li>
+          <li><strong>贴标</strong>：每个产品贴 FNSKU 条码，外箱贴箱唛（数量、SKU、重量）。</li>
+          <li><strong>选物流</strong>：按时效/价格选快递/空运/海运，找货代询价。</li>
+          <li><strong>报关</strong>：货代代办出口报关，需提供箱单、发票、申报要素。</li>
+          <li><strong>跟踪入仓</strong>：海运到港 → 清关 → 预约入仓 → 后台显示可售。</li>
+        </ol>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 标签贴错/箱唛不符会导致<strong>入仓被拒或上架延迟</strong>；② 亚马逊 2024 年起对「低量库存」收取附加费，<strong>断货和慢周转都会挨罚</strong>；③ 选货代看三样：时效承诺、丢件赔付条款、清关能力——<strong>便宜 ≠ 划算</strong>，丢一柜货全赔进去。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>急件走快递，常规走空运，大批走海运；FBA 抢流量，海外仓打配合</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 站内广告投放</h2>
+
+        <h3>广告是「花钱买测试数据」</h3>
+        <p>
+          新手常把广告当「花钱买流量」，高手把广告当<strong>「花钱买数据」</strong>——用广告验证关键词、验证 Listing、验证利润模型。
+          广告永远服务于一个目标：<strong>让自然排名上去，让 ACOS 降下来</strong>。
+        </p>
+
+        <h3>广告结构：自动 → 手动 → 精准 三层</h3>
+        <ol class="steps">
+          <li><strong>自动广告（跑词）</strong>：开 2～4 周，让系统推荐词，收集搜索词报告。</li>
+          <li><strong>手动广泛/词组（验证词）</strong>：把自动广告里高转化的词单独开手动，控预算。</li>
+          <li><strong>精准广告（放大词）</strong>：表现稳定的词转精确匹配，逐步提高出价抢排名。</li>
+        </ol>
+
+        <h3>关键词匹配三种类型</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>匹配类型</th>
+                <th>示例（词：running shoes）</th>
+                <th>流量/转化</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>广泛匹配</td>
+                <td>sports shoes、best shoes</td>
+                <td>流量大、转化低</td>
+                <td>拓词、测词</td>
+              </tr>
+              <tr>
+                <td>词组匹配</td>
+                <td>running shoes for men</td>
+                <td>中等</td>
+                <td>验证词根</td>
+              </tr>
+              <tr>
+                <td>精确匹配</td>
+                <td>running shoes</td>
+                <td>流量小、转化高</td>
+                <td>放大主力词</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>ACOS 优化四板斧</h3>
+        <ul>
+          <li><strong>降竞价</strong>：ACOS 高于盈亏线 → 逐步降价（每次 10%～20%），观察 3 天。</li>
+          <li><strong>否定词</strong>：高花费零转化的词 → 否定；不相干大词 → 否定精准。</li>
+          <li><strong>调结构</strong>：把预算从广泛组挪向精准组，砍掉低效广告组。</li>
+          <li><strong>提转化</strong>：广告没问题时优化 Listing（主图/价格/Review）——<strong>转化率是 ACOS 的底层解</strong>。</li>
+        </ul>
+
+        <h3>广告诊断清单</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 广告数据自查（周维度）</span>
+<span class="kw">def</span> <span class="var">diagnose</span>(花费, 销售额, 点击, 订单):
+    acos = 花费 / 销售额
+    cpc  = 花费 / 点击
+    cvr  = 订单 / 点击
+    <span class="kw">print</span>(<span class="str">f"ACOS {acos:.0%} | CPC {cpc:.2f} 美元 | CVR {cvr:.0%}"</span>)
+    <span class="kw">if</span> acos &gt; <span class="var">0.3</span>:   <span class="kw">print</span>(<span class="str">"→ 先查: 是否高花费零转化词? 降竞价/否定"</span>)
+    <span class="kw">elif</span> cvr &lt; <span class="var">0.08</span>: <span class="kw">print</span>(<span class="str">"→ 转化率低: 检查 Listing/价格/Review"</span>)
+    <span class="kw">else</span>:            <span class="kw">print</span>(<span class="str">"→ 健康，可加大预算放量"</span>)</code></pre>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">⛔ 烧钱三大坑</div>
+          ① <strong>一上来就手动精准</strong>：没跑出数据就猛投，预算烧在猜词上；② <strong>ACOS 高就关广告</strong>：新品期 ACOS 高是正常的，先看它有没有带来自然排名；③ <strong>从不看搜索词报告</strong>：自动广告的钱全白花，报告里全是你的关键词金矿。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>自动跑词手动验，精准放大高转词；ACOS 超线降价否，转化不行修页面</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 站外引流与社媒营销</h2>
+
+        <h3>为什么要做站外</h3>
+        <p>
+          平台站内流量天花板明显且越来越贵。站外引流的意义不只是「多卖几单」，更是<strong>给 Listing 注入站外流量信号</strong>（提升类目排名）、积累<strong>品牌用户资产</strong>、降低对平台流量的依赖。
+        </p>
+
+        <h3>主流站外渠道</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>🎵 TikTok 短视频</h4>
+            <p>内容种草 + 挂车，适合颜值/新奇/演示类产品，算法对新号友好。</p>
+          </div>
+          <div class="card">
+            <h4>📸 Instagram</h4>
+            <p>图片种草 + Reels + 红人合作，适合时尚、家居、美妆。</p>
+          </div>
+          <div class="card">
+            <h4>▶️ YouTube</h4>
+            <p>开箱/评测长视频，转化慢但信任度极高，适合高客单产品。</p>
+          </div>
+          <div class="card">
+            <h4>💰 Deal 站</h4>
+            <p>Slickdeals、DealNews 等折扣站，短时间冲量清库存利器。</p>
+          </div>
+          <div class="card">
+            <h4>📧 邮件营销</h4>
+            <p>独立站标配，唤醒老客复购，ROI 高于广告。</p>
+          </div>
+          <div class="card">
+            <h4>🔗 联盟营销</h4>
+            <p>Amazon Associates、独立站联盟计划，按成交付费。</p>
+          </div>
+        </div>
+
+        <h3>红人营销流程</h3>
+        <ol class="steps">
+          <li><strong>找红人</strong>：平台站内找（TikTok/IG 搜索产品词）、工具找（Upfluence/Heepsy）、竞品评论区找。</li>
+          <li><strong>筛红人</strong>：看粉丝画像、互动率（不是粉丝数）、是否带过同品类——<strong>互动率 &gt; 3% 才算有效</strong>。</li>
+          <li><strong>谈合作</strong>：免费寄样 + 佣金（或一口价），先小预算试 3～5 个。</li>
+          <li><strong>给素材给角度</strong>：提供卖点、脚本方向、合规话术（避广告法）。</li>
+          <li><strong>复盘</strong>：追踪链接/折扣码统计 ROI，放大表现好的红人。</li>
+        </ol>
+
+        <h3>独立站 SEO 基础</h3>
+        <ul>
+          <li><strong>关键词布局</strong>：每个产品页一个主关键词，标题/描述/URL 三处一致。</li>
+          <li><strong>内容站</strong>：写「best xxx for yyy」类博客文章，吃长尾搜索流量。</li>
+          <li><strong>技术 SEO</strong>：移动端适配、页面加载速度（Core Web Vitals）、sitemap 提交。</li>
+          <li><strong>Google Merchant Center</strong>：免费购物广告 + Performance Max，独立站流量基石。</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① Deal 站用户「薅羊毛」比例高，<strong>清库存可以，养品牌不行</strong>；② 红人数据造假严重，看互动率比看粉丝数靠谱；③ 站外引流落地页必须<strong>与广告内容一致</strong>，否则跳出率会教做人。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>TikTok 种草 Instagram 图，YouTube 评测建信任；红人看互动，Deal 站清库存</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 客服与售后</h2>
+
+        <h3>客服不是成本中心，是利润中心</h3>
+        <p>
+          一个及时、专业的回复，能挽回一个差评、一次退货、甚至一个长期客户。跨境客服的核心指标：<strong>24 小时内回复率</strong>（平台硬指标）、<strong>Feedback 好评率</strong>、<strong>退货率</strong>。
+        </p>
+
+        <h3>客服邮件模板</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 售前咨询模板（通用框架）</span>
+Subject: Re: Your question about [Product]
+
+Dear [Customer Name],
+
+Thank you for reaching out! Yes, [answer the question clearly,
+address the core concern with specifics: size, compatibility, usage].
+
+Here are a few details that may help:
+1. [detail 1]
+2. [detail 2]
+
+If you have any other questions, just reply to this email —
+we usually respond within 24 hours.
+
+Best regards,
+[Store Name] Customer Service Team</code></pre>
+        </div>
+
+        <h3>差评处理 SOP</h3>
+        <ol class="steps">
+          <li><strong>先判断类型</strong>：产品问题 / 物流问题 / 恶意差评——三类处理方式完全不同。</li>
+          <li><strong>产品问题</strong>：道歉 + 补发/退款 + 改进建议，<strong>态度先于理由</strong>。</li>
+          <li><strong>物流问题</strong>：道歉 + 提供跟踪号 + 说明时效，必要时补发或退运费。</li>
+          <li><strong>恶意/违规差评</strong>：保留证据，向平台举报申请移除（如亚马逊 Feedback 政策）。</li>
+          <li><strong>复盘归因</strong>：差评集中在某个问题 → 改产品/改描述，避免同类再犯。</li>
+        </ol>
+
+        <h3>退货退款流程与红线</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>正确做法</th>
+                <th>常见错误</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>买家申请退货</td>
+                <td>按平台时限响应，同意退款或提供退货地址</td>
+                <td>拖延，触发 A-to-Z 索赔</td>
+              </tr>
+              <tr>
+                <td>货物在途损坏</td>
+                <td>先退款安抚，再向货代/物流索赔</td>
+                <td>让买家等「理赔结果」</td>
+              </tr>
+              <tr>
+                <td>退货率偏高</td>
+                <td>查原因（尺寸/描述/质量），修改 Listing</td>
+                <td>靠「拒绝退款」压制</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">⛔ A-to-Z 索赔（亚马逊）</div>
+          买家发起 A-to-Z 后，<strong>平台直接冻结资金、计入 ODR 绩效</strong>，处理不当会关店。应对原则：<strong>响应要快（48 小时内）、证据要全（物流轨迹/聊天记录）、能退就退</strong>——为几十美元扛一个绩效记录，得不偿失。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>24 小时内必回复，差评先分类再处理；A-to-Z 快响应留证据，能退就退保绩效</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 数据分析与运营报表</h2>
+
+        <h3>运营 = 数据驱动的决策循环</h3>
+        <div class="diagram">
+          <pre>
+            定目标 → 拆指标 → 采数据 → 找问题 → 做动作 → 再复盘
+              ↑                                        │
+              └──────────────── 循环迭代 ←──────────────┘
+          </pre>
+        </div>
+        <p>
+          数据不是「事后看看」，而是<strong>决策的唯一依据</strong>。单量跌了别慌，先拆：是流量少了（曝光/点击），还是转化差了（CVR），还是客单低了？
+        </p>
+
+        <h3>流量漏斗与问题定位</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>环节</th>
+                <th>指标</th>
+                <th>异常 → 排查方向</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>曝光</td>
+                <td>曝光量</td>
+                <td>下降 → 排名跌/类目变更/被限流</td>
+              </tr>
+              <tr>
+                <td>点击</td>
+                <td>CTR</td>
+                <td>下降 → 主图/价格/Review 差</td>
+              </tr>
+              <tr>
+                <td>加购</td>
+                <td>加购率</td>
+                <td>下降 → 详情页/运费/库存疑虑</td>
+              </tr>
+              <tr>
+                <td>下单</td>
+                <td>CVR</td>
+                <td>下降 → 差评/竞品低价/物流时效</td>
+              </tr>
+              <tr>
+                <td>回款</td>
+                <td>客单价/复购</td>
+                <td>低 → 促销力度/关联销售不足</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>GMV 拆解：量 × 客单 × 频次</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># GMV = 访客 × 转化率 × 客单价 × 购买频次</span>
+<span class="kw">def</span> <span class="var">gmv</span>(访客, 转化率, 客单价, 频次=<span class="var">1</span>):
+    <span class="kw">return</span> 访客 * 转化率 * 客单价 * 频次
+
+<span class="comment"># 周报自查：GMV 下滑先拆三因子</span>
+<span class="kw">def</span> <span class="var">diagnose_gmv</span>(上周, 本周):
+    <span class="kw">for</span> k <span class="kw">in</span> [<span class="str">"访客"</span>, <span class="str">"转化率"</span>, <span class="str">"客单价"</span>]:
+        d = (本周[k] - 上周[k]) / 上周[k]
+        <span class="kw">print</span>(<span class="str">f"{k}: {d:+.1%}"</span>)
+    <span class="comment"># 哪项负得最多，就是主因</span></code></pre>
+        </div>
+
+        <h3>运营周报模板</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>【本周运营周报】W23（06.03–06.09）
+一、核心数据
+  GMV  xxx 元（环比 +x%）
+  订单数 / 客单价 / 转化率 / ACOS
+二、流量结构
+  自然流量 xx% | 广告 xx% | 站外 xx%
+三、重点动作与结果
+  ① 优化 A 款主图 → CTR +0.5pp
+  ② B 款降竞价 → ACOS 32% → 22%
+四、问题与风险
+  C 款库存仅剩 2 周，需补货（空运）
+  D 款出现 3 条 1 星差评，已跟进
+五、下周计划
+  ① 上架新品 E（已完成图片/文案）
+  ② 开启 F 款自动广告
+  ③ 复盘大促活动数据</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 别只盯 GMV——<strong>毛利和现金流才是生存线</strong>；② 数据周期要拉长看（7 天/30 天），单日波动别急着动刀；③ 广告数据要<strong>区分「新品期」和「稳定期」</strong>，两套评判标准。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>GMV 三因子，量客单频次；下滑先拆数据，再谈改动作</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 合规与风控</h2>
+
+        <h3>合规是「不出事」的能力，也是「能做大」的前提</h3>
+        <p>
+          跨境合规不是「等被查了再补救」，而是<strong>从选品那一刻就要规避</strong>。合规翻车通常是灾难性的：产品下架、资金冻结、店铺封禁，甚至被起诉。
+        </p>
+
+        <h3>税务合规：VAT 与关税</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>市场</th>
+                <th>要点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>欧盟（VAT）</td>
+                <td>货到欧盟需注册当地 VAT（或 IOSS 进口申报），低价值豁免已取消，<strong>漏税会追溯补缴 + 罚款</strong>。</td>
+              </tr>
+              <tr>
+                <td>英国</td>
+                <td>脱欧后独立 VAT 体系，超 £135 包裹需平台代收关税。</td>
+              </tr>
+              <tr>
+                <td>美国</td>
+                <td>联邦无 VAT，但<strong>各州销售税</strong>按 nexus 规则代收（平台通常代扣）；进口关税按 HS 编码与货值。</td>
+              </tr>
+              <tr>
+                <td>东南亚</td>
+                <td>各国陆续开征进口税/增值税（如印尼对低价包裹征税），规则更新快。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>产品认证清单（按品类）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>认证</th>
+                <th>适用地区/品类</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CE</td>
+                <td>欧盟（电子产品、玩具、机械等）</td>
+                <td>含 EMC/LVD 等指令，无 CE 不得销售</td>
+              </tr>
+              <tr>
+                <td>FCC</td>
+                <td>美国（无线/电子设备）</td>
+                <td>分 SDoC 与认证两类，违规下架</td>
+              </tr>
+              <tr>
+                <td>CPC</td>
+                <td>美国（儿童产品）</td>
+                <td>儿童玩具/用品必备，含邻苯检测</td>
+              </tr>
+              <tr>
+                <td>FDA</td>
+                <td>美国（化妆品、医疗器械、食品接触）</td>
+                <td>如硅胶餐具、美容仪需注册</td>
+              </tr>
+              <tr>
+                <td>RoHS/REACH</td>
+                <td>欧盟（化学物质限制）</td>
+                <td>重金属/有害物质超标会被召回</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>知识产权：跨境第一高压线</h3>
+        <div class="callout danger">
+          <div class="callout-title">⛔ 侵权三件套</div>
+          ① <strong>商标侵权</strong>：标题/图片/包装用了别人的品牌词或图形；② <strong>外观专利</strong>：产品长得像别人已申请外观专利的款；③ <strong>版权</strong>：图片、卡通形象、文案直接搬运。后果：<strong>Listing 下架 → 资金冻结 → 起诉索赔 → 店铺封禁</strong>。选品时务必用平台专利库/美国专利商标局（USPTO）检索过一遍。
+        </div>
+
+        <h3>封店常见原因与对策</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>原因</th>
+                <th>表现</th>
+                <th>对策</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>账号关联</td>
+                <td>多账号同 IP/收款被系统识别</td>
+                <td>一店一网一收款，用紫鸟/云登隔离</td>
+              </tr>
+              <tr>
+                <td>绩效超标</td>
+                <td>ODR &gt; 1%、迟发率超标</td>
+                <td>客服提速、及时发货、申诉计划书</td>
+              </tr>
+              <tr>
+                <td>刷单/刷评</td>
+                <td>操纵评论、变体违规</td>
+                <td>绝不触碰，申诉难且易二次封</td>
+              </tr>
+              <tr>
+                <td>产品合规</td>
+                <td>无认证、禁售品、危险品</td>
+                <td>上架前做认证核对清单</td>
+              </tr>
+              <tr>
+                <td>税务问题</td>
+                <td>VAT 缺失被平台代扣或关闭</td>
+                <td>合规注册并按时申报</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>税务认证要先行，商标专利早排查；关联刷单是死穴，合规才能做得大</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 独立站与品牌化</h2>
+
+        <h3>为什么要做独立站</h3>
+        <p>
+          平台做销量，独立站做<strong>资产</strong>。独立站的核心价值：客户数据归自己、复购可经营、品牌溢价空间大。
+          但前提是<strong>有流量获取能力</strong>——没有流量，独立站只是个「好看的收款页面」。
+        </p>
+
+        <h3>Shopify 建站七步</h3>
+        <ol class="steps">
+          <li><strong>注册开店</strong>：选套餐（基础版起步），绑定域名（品牌域名，别用二级域名）。</li>
+          <li><strong>选主题</strong>：移动端优先的付费主题，品牌调性一致。</li>
+          <li><strong>接支付</strong>：Shopify Payments / PayPal / Stripe，注意目的国支付习惯。</li>
+          <li><strong>上产品</strong>：产品页模板化，标题/描述/图片参考平台 Listing 经验。</li>
+          <li><strong>配物流</strong>：设置运费模板（包邮/阶梯/按地区），发货方式对接。</li>
+          <li><strong>装应用</strong>：邮件订阅（Klaviyo）、评价（Judge.me）、数据分析（GA4）。</li>
+          <li><strong>接广告</strong>：Facebook Pixel + Google Tag 埋点，打通转化追踪。</li>
+        </ol>
+
+        <h3>独立站流量结构</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>渠道</th>
+                <th>特点</th>
+                <th>启动建议</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Meta 广告（FB/IG）</td>
+                <td>人群定向强，适合冲动型品类</td>
+                <td>首推，测试素材最快</td>
+              </tr>
+              <tr>
+                <td>Google 购物广告</td>
+                <td>高购买意图，搜索即需求</td>
+                <td>有基础后必开</td>
+              </tr>
+              <tr>
+                <td>SEO 内容</td>
+                <td>慢热但复利，免费流量</td>
+                <td>同步铺博客内容</td>
+              </tr>
+              <tr>
+                <td>TikTok 广告</td>
+                <td>年轻用户、新奇特品类</td>
+                <td>素材能力强再上</td>
+              </tr>
+              <tr>
+                <td>邮件营销</td>
+                <td>复购发动机，ROI 最高</td>
+                <td>从第一天就收集邮箱</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>品牌化与复购模型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code><span class="comment"># 客户终身价值 CLV：判断「广告预算上限」</span>
+客单价   = <span class="var">50</span>      <span class="comment"># 美元</span>
+毛利率   = <span class="var">0.5</span>
+年均频次 = <span class="var">3</span>       <span class="comment"># 每年买 3 次</span>
+客户年限 = <span class="var">2</span>       <span class="comment"># 平均留存 2 年</span>
+
+CLV = 客单价 * 毛利率 * 年均频次 * 客户年限
+<span class="kw">print</span>(<span class="str">f"CLV ≈ {CLV:.0f} 美元，单个新客获客成本应 &lt; {CLV*0.3:.0f} 美元"</span>)
+
+<span class="comment"># 复购抓手：邮件流（Welcome → 追单 → 复购 → 挽回）</span>
+<span class="kw">print</span>(<span class="str">"Welcome 流: 首单后发优惠码促第二单"</span>)
+<span class="kw">print</span>(<span class="str">"挽回流: 加购未付款 / 弃单邮件 24h 内发送"</span>)</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① <strong>没有流量能力别先做独立站</strong>——先跑通平台，再沉淀品牌；② 独立站 70% 流量来自广告，<strong>广告政策变化（如 iOS 隐私）会直接冲击营收</strong>，要提前布局邮件/SEO 对冲；③ 收款费率与拒付率（Chargeback）是隐性成本，欺诈订单要设风控规则。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>平台做销量，独立站做资产；流量是前提，邮件做复购，CLV 算预算</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 团队管理与规模化</h2>
+
+        <h3>从一人公司到小团队</h3>
+        <p>
+          跨境电商前 1～2 年往往是「超级个体」：选品、运营、客服、物流一个人全包。
+          规模化不是「加几个人」，而是<strong>先把流程 SOP 化，再找人复制</strong>——没有 SOP 的扩张只是把混乱放大。
+        </p>
+
+        <h3>小团队分工参考</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>岗位</th>
+                <th>职责</th>
+                <th>人数规模建议</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>运营（操盘手）</td>
+                <td>选品、Listing、广告、数据</td>
+                <td>1 人管 1～2 个店</td>
+              </tr>
+              <tr>
+                <td>供应链专员</td>
+                <td>采购、验货、物流、库存</td>
+                <td>10 SKU 以上配 1 人</td>
+              </tr>
+              <tr>
+                <td>客服/美工</td>
+                <td>售后、邮件、图片视频制作</td>
+                <td>订单量 100+/天配 1 人</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>多店铺矩阵与多平台扩张</h3>
+        <ul>
+          <li><strong>为什么要多店</strong>：分散风险（单店封店不至于全挂）、类目隔离、测试不同打法。</li>
+          <li><strong>前提</strong>：单店模型已跑通、有稳定现金流——<strong>别用多店掩盖单店没做好的事实</strong>。</li>
+          <li><strong>多平台扩张</strong>：同一产品 Amazon → Walmart/eBay/TikTok，库存复用、Listing 复用。</li>
+          <li><strong>系统化</strong>：ERP（店小秘/领星）管订单库存，别靠 Excel 撑到 1000 单/天。</li>
+        </ul>
+
+        <h3>资金与现金流管理</h3>
+        <div class="callout danger">
+          <div class="callout-title">⛔ 跨境倒闭第一原因：现金流断裂</div>
+          回款周期 2～3 周，备货压钱 30～60 天，广告每日扣款——<strong>利润是纸面的，现金流才是命</strong>。三条铁律：① 每月<strong>预留 2 个月运营资金</strong>不动；② 扩张速度 <strong>别超过回款速度</strong>；③ 每季度做一次「库存 × 应收 × 应付」三表盘点。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>先 SOP 再招人，先单店跑通再多店；现金流是命，利润是纸面</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> 常见坑与避坑指南</h2>
+
+        <h3>新手最容易踩的十个坑</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>① 不选品就上架</h4>
+            <p>凭感觉选品 → 库存压死。先做数据验证，先小单试水。</p>
+          </div>
+          <div class="card">
+            <h4>② 侵权而不自知</h4>
+            <p>长得像某大牌、图案有卡通 → 直接下架冻结。上架前必查专利商标。</p>
+          </div>
+          <div class="card">
+            <h4>③ 盲目跟卖</h4>
+            <p>跟卖大卖链接 → 被投诉/被恶搞，新手建议做自有 Listing。</p>
+          </div>
+          <div class="card">
+            <h4>④ 广告无脑烧</h4>
+            <p>不设预算上限、不看搜索词 → ACOS 100%+。先自动跑词再手动。</p>
+          </div>
+          <div class="card">
+            <h4>⑤ 一次备半年货</h4>
+            <p>滞销 + 仓储费 + 资金冻结。小单高频补货。</p>
+          </div>
+          <div class="card">
+            <h4>⑥ 忽视汇率</h4>
+            <p>人民币升值直接吃掉利润。定价留缓冲，大额锁汇。</p>
+          </div>
+          <div class="card">
+            <h4>⑦ 差评硬刚</h4>
+            <p>跟买家吵架 → 差评更多 + 绩效受损。先道歉后解决。</p>
+          </div>
+          <div class="card">
+            <h4>⑧ 物流只图便宜</h4>
+            <p>丢件/清关卡死 → 上架延迟 + 断货。货代看赔付条款。</p>
+          </div>
+          <div class="card">
+            <h4>⑨ 多账号不隔离</h4>
+            <p>同 IP 同收款 → 关联封店。一店一网一机器。</p>
+          </div>
+          <div class="card">
+            <h4>⑩ 不做复盘</h4>
+            <p>同样的错反复犯。每周周报、每月复盘、每季度迭代 SOP。</p>
+          </div>
+        </div>
+
+        <h3>遇到「恶搞」怎么办</h3>
+        <ul>
+          <li><strong>被恶意差评</strong>：举报 + 保留证据 + 联系买家核实，正常沟通移除。</li>
+          <li><strong>被恶意跟卖/抢占购物车</strong>：品牌备案 + 透明计划（Transparency）防跟卖。</li>
+          <li><strong>被投诉侵权</strong>：先自查，确认不侵权就申诉（提供授权/原创证明），侵权就下架止损。</li>
+          <li><strong>被恶意下单/退货</strong>：记录订单，向平台举报滥用，启用买家黑名单。</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 心态避坑</div>
+          跨境是「<strong>慢生意</strong>」：从选品到回款，一个周期 2～3 个月很正常。别信「7 天日出千单」的割韭菜课，也別因为前三个月没爆单就放弃——<strong>能坚持跑完 3 个选品周期的，已经超过 90% 的新手</strong>。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>选品先验证，侵权先排查；小单勤补货，多号要隔离；差评先道歉，复盘周周做</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 学习路线与成长路径</h2>
+
+        <h3>成长路线图</h3>
+        <div class="diagram">
+          <pre>
+            新手 0-3 月         成长 3-12 月        成熟 1-2 年         操盘手 2 年+
+   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+   │ 平台/术语/开店 │→  │ 选品/Listing/ │→  │ 广告/数据/     │→  │ 供应链/品牌/   │
+   │ 跑通第一单     │   │ 定价/物流     │   │ 合规/独立站    │   │ 团队/多平台    │
+   └──────────────┘   └──────────────┘   └──────────────┘   └──────────────┘
+    核心任务:          核心任务:          核心任务:          核心任务:
+    熟悉规则、发首单    打造 2-3 个爆款    优化利润模型        沉淀资产与组织
+          </pre>
+        </div>
+
+        <h3>各阶段能力清单</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>阶段</th>
+                <th>必须掌握</th>
+                <th>检验标准</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>新手期</td>
+                <td>平台规则、术语指标、开店流程、后台操作</td>
+                <td>独立完成首单发货</td>
+              </tr>
+              <tr>
+                <td>成长期</td>
+                <td>选品验证、Listing 优化、广告基础、成本核算</td>
+                <td>跑出 1 个稳定盈利 SKU</td>
+              </tr>
+              <tr>
+                <td>成熟期</td>
+                <td>广告精细化、数据分析、合规风控、供应链管理</td>
+                <td>月利润稳定，库存周转健康</td>
+              </tr>
+              <tr>
+                <td>操盘手</td>
+                <td>品牌化、独立站、团队管理、多平台布局</td>
+                <td>可复制打法的体系与团队</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>学习资源建议</h3>
+        <ul>
+          <li><strong>官方文档优先</strong>：亚马逊卖家大学、Shopify Help Center——规则以官方为准。</li>
+          <li><strong>工具清单</strong>：选品（卖家精灵/Helium10）、数据（Keepa）、ERP（店小秘/领星）、收款（连连/PingPong）。</li>
+          <li><strong>信息源</strong>：雨果跨境、亿恩网了解行业动态；细分品类圈子比大而全的社群更有价值。</li>
+          <li><strong>避坑原则</strong>：付费课程的「速成」承诺一律存疑——<strong>最好的老师是你自己的数据和复盘</strong>。</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>新手跑通第一单，成长打造两爆款，成熟优化利润模型，操盘沉淀体系与团队</strong>」
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 最后的话</div>
+          跨境电商的本质是<strong>「把中国供应链的确定性，卖给全球消费者的不确定性」</strong>。它不像写代码有标准答案，更像创业——<strong>选品定生死，数据定方向，合规定成败，现金流定活多久</strong>。把这四句话刻在心里，比任何技巧都值钱。祝出海顺利。🌊
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>跨境电商从入门到精通 · 学习笔记 | 持续更新</p>
+        <p style="margin-top: 8px; font-size: 0.8rem">
+          Go Global, Sell Smarter. 🌊
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>
+

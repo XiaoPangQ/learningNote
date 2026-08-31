@@ -394,6 +394,26 @@
         transition: transform 0.2s ease;
       }
 
+      .card.more-card {
+        border-style: dashed;
+        background: rgba(148, 163, 184, 0.03);
+        cursor: default;
+      }
+      .card.more-card::before {
+        display: none;
+      }
+      .card.more-card:hover {
+        transform: none;
+        border-color: var(--border);
+        box-shadow: none;
+      }
+      .card.more-card .card-icon {
+        background: rgba(148, 163, 184, 0.08);
+      }
+      .card.more-card .card-arrow {
+        color: var(--text-secondary);
+      }
+
       /* ========== Coming Soon Card ========== */
       .card.placeholder {
         border-style: dashed;
@@ -515,7 +535,7 @@
         </p>
         <div class="hero-stats">
           <div class="stat">
-            <div class="stat-num">14</div>
+            <div class="stat-num">15</div>
             <div class="stat-label">笔记专题</div>
           </div>
           <div class="stat">
@@ -894,13 +914,46 @@
             <span class="card-arrow">开始阅读 →</span>
           </div>
         </a>
-        <div class="card placeholder">
-          <div class="card-icon">＋</div>
-          <h3>更多笔记</h3>
-          <p class="card-desc">新的技术专题正在整理中，敬请期待。</p>
+        <!-- Database Card -->
+        <a
+          href="learning/learningDatabase.html"
+          class="card"
+          style="
+            --card-accent: #3b82f6;
+            --card-accent-soft: rgba(59, 130, 246, 0.12);
+            --card-glow: rgba(59, 130, 246, 0.06);
+          ">
+          <div class="card-icon">🗄️</div>
+          <div class="card-tag">数据存储</div>
+          <h3>数据库从入门到精通</h3>
+          <p class="card-desc">
+            从基础概念与 SQL 语法出发，掌握索引、事务、性能优化，再到主从复制、分库分表与
+            NoSQL 选型，系统构建数据存储能力。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>19 章</span>
+            <span><span class="dot"></span>SQL · 索引 · 事务 · 分布式</span>
+          </div>
           <div class="card-footer">
-            <span class="chapters">即将推出</span>
-            <span class="card-arrow">—</span>
+            <span class="chapters"><strong>19</strong> 个章节</span>
+            <span class="card-arrow">开始阅读 →</span>
+          </div>
+        </a>
+
+        <div class="card more-card">
+          <div class="card-icon">＋</div>
+          <div class="card-tag">持续更新</div>
+          <h3>更多内容</h3>
+          <p class="card-desc">
+            更多技术专题和案例仍在持续整理中，后续内容会持续补充。
+          </p>
+          <div class="card-meta">
+            <span><span class="dot"></span>持续更新</span>
+            <span><span class="dot"></span>后续补充</span>
+          </div>
+          <div class="card-footer">
+            <span class="chapters">更多内容</span>
+            <span class="card-arrow">持续更新</span>
           </div>
         </div>
       </div>
