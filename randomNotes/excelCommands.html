@@ -1,0 +1,1959 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Excel 命令大全 · 函数/快捷键/操作速查手册</title>
+    <style>
+      :root {
+        --bg: #14100a;
+        --panel: #1d1811;
+        --panel-hover: #2a2215;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #f5eee2;
+        --text-secondary: #b8a88c;
+        --border: #3a2f1d;
+        --accent: #f59e0b;
+        --accent-soft: rgba(245, 158, 11, 0.12);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #4a3d24;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 1060px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #f5eee2 0%, #f59e0b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 680px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        white-space: nowrap;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: top;
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.8rem;
+      }
+      .fn {
+        white-space: nowrap;
+        color: var(--code-green);
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">📚</span> Excel 命令大全</h2>
+        <p>函数 · 快捷键 · 操作 速查手册</p>
+      </div>
+      <a class="home-link" href="../indexRandomNotes.html">← 返回随手记</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">函数篇 · 逻辑与数学</li>
+        <li><a href="#cmd01">1. 逻辑函数</a></li>
+        <li><a href="#cmd02">2. 数学与三角函数</a></li>
+        <li><a href="#cmd03">3. 统计函数</a></li>
+        <li class="toc-section-title">函数篇 · 查找与文本</li>
+        <li><a href="#cmd04">4. 查找与引用</a></li>
+        <li><a href="#cmd05">5. 文本函数</a></li>
+        <li><a href="#cmd06">6. 日期与时间</a></li>
+        <li class="toc-section-title">函数篇 · 专项</li>
+        <li><a href="#cmd07">7. 数据库与信息</a></li>
+        <li><a href="#cmd08">8. 财务函数</a></li>
+        <li class="toc-section-title">操作篇</li>
+        <li><a href="#cmd09">9. 快捷键大全</a></li>
+        <li><a href="#cmd10">10. 数据功能区命令</a></li>
+        <li><a href="#cmd11">11. 数据透视表命令</a></li>
+        <li><a href="#cmd12">12. 图表与可视化</a></li>
+        <li><a href="#cmd13">13. 格式与视图命令</a></li>
+        <li class="toc-section-title">排查篇</li>
+        <li><a href="#cmd14">14. 错误值排查</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">📚 速查手册 · 随查随用</span>
+        <h1>Excel 命令大全</h1>
+        <p>
+          一份拿来即用的 Excel 速查手册：8 大类 130+ 函数、9 组快捷键、6 大功能区操作命令与错误值排查表。
+          不追求讲解原理，只求「看到就能用、查了就会写」。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>130+ 函数</span>
+          <span><span class="dot"></span>80+ 快捷键</span>
+          <span><span class="dot"></span>14 大分类</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="cmd01">
+        <h2><span class="num">01</span> 逻辑函数</h2>
+        <p>逻辑函数的核心是「<strong>判断</strong>」：条件成立返回什么、不成立返回什么。所有返回 TRUE / FALSE 的函数都能直接配合 IF 使用。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">IF</td>
+                <td><code>IF(条件, 真值, 假值)</code> 基础判断</td>
+                <td><code>=IF(A1&gt;=60,"及格","不及格")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">IFS</td>
+                <td><code>IFS(条件1,值1,条件2,值2,…)</code> 多条件依次判断，替代嵌套 IF</td>
+                <td><code>=IFS(A1&gt;=90,"优",A1&gt;=80,"良",A1&gt;=60,"中","差")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">IFERROR</td>
+                <td><code>IFERROR(公式, 出错时返回值)</code> 公式错误时兜底</td>
+                <td><code>=IFERROR(A1/B1,"除数为0")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">IFNA</td>
+                <td><code>IFNA(公式, 值)</code> 只拦截 #N/A，其他错误照常显示</td>
+                <td><code>=IFNA(VLOOKUP(A1,B:C,2,0),"无此编号")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">AND</td>
+                <td><code>AND(条件1,…)</code> 全部成立才 TRUE</td>
+                <td><code>=AND(A1&gt;0,B1&gt;0)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">OR</td>
+                <td><code>OR(条件1,…)</code> 任一成立即 TRUE</td>
+                <td><code>=OR(A1="华东",B1="华东")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">NOT</td>
+                <td><code>NOT(条件)</code> 取反</td>
+                <td><code>=NOT(A1="停用")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">SWITCH</td>
+                <td><code>SWITCH(值, 匹配1, 结果1,…, 默认)</code> 精确匹配多分支</td>
+                <td><code>=SWITCH(A1,"A","优","B","良","其他")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">TRUE / FALSE</td>
+                <td>返回逻辑值本身</td>
+                <td><code>=IF(TRUE,"永远成立","不会到这")</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>IF 单条件，IFS 多条件，IFERROR 兜错误；AND 全真、OR 一真、NOT 反着来</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="cmd02">
+        <h2><span class="num">02</span> 数学与三角函数</h2>
+        <p>求和、取整、舍入、随机数——最常用的一族函数。重点记 <code>SUMIF / SUMIFS</code> 的参数顺序差异。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">SUM</td>
+                <td><code>SUM(数1,数2,…)</code> 求和</td>
+                <td><code>=SUM(A1:A10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">SUMIF</td>
+                <td><code>SUMIF(条件区, 条件, 求和区)</code> 单条件求和</td>
+                <td><code>=SUMIF(B:B,"华东",C:C)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">SUMIFS</td>
+                <td><code>SUMIFS(求和区, 条件区1, 条件1, …)</code> 多条件求和，求和区在前</td>
+                <td><code>=SUMIFS(C:C,A:A,"华东",B:B,"&gt;100")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">SUMPRODUCT</td>
+                <td><code>SUMPRODUCT(数组1,数组2,…)</code> 乘积求和 / 万能多条件计数</td>
+                <td><code>=SUMPRODUCT((A:A="华东")*(B:B&gt;100))</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ROUND</td>
+                <td><code>ROUND(数, 位数)</code> 四舍五入</td>
+                <td><code>=ROUND(A1,2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ROUNDUP</td>
+                <td><code>ROUNDUP(数, 位数)</code> 向上（远离零）舍入</td>
+                <td><code>=ROUNDUP(3.01,0)</code> → 4</td>
+              </tr>
+              <tr>
+                <td class="fn">ROUNDDOWN</td>
+                <td><code>ROUNDDOWN(数, 位数)</code> 向下（靠近零）舍入</td>
+                <td><code>=ROUNDDOWN(3.99,0)</code> → 3</td>
+              </tr>
+              <tr>
+                <td class="fn">INT</td>
+                <td><code>INT(数)</code> 向下取整（负数注意！）</td>
+                <td><code>=INT(-3.5)</code> → -4</td>
+              </tr>
+              <tr>
+                <td class="fn">TRUNC</td>
+                <td><code>TRUNC(数)</code> 截断小数（不四舍五入）</td>
+                <td><code>=TRUNC(3.99)</code> → 3</td>
+              </tr>
+              <tr>
+                <td class="fn">MOD</td>
+                <td><code>MOD(被除数, 除数)</code> 取余数</td>
+                <td><code>=MOD(10,3)</code> → 1</td>
+              </tr>
+              <tr>
+                <td class="fn">ABS</td>
+                <td><code>ABS(数)</code> 绝对值</td>
+                <td><code>=ABS(-5)</code> → 5</td>
+              </tr>
+              <tr>
+                <td class="fn">POWER</td>
+                <td><code>POWER(底, 幂)</code> 乘幂（或 ^ 运算符）</td>
+                <td><code>=POWER(2,10)</code> → 1024</td>
+              </tr>
+              <tr>
+                <td class="fn">SQRT</td>
+                <td><code>SQRT(数)</code> 平方根</td>
+                <td><code>=SQRT(16)</code> → 4</td>
+              </tr>
+              <tr>
+                <td class="fn">RAND</td>
+                <td><code>RAND()</code> 0~1 随机小数（易失，F9 重算变）</td>
+                <td><code>=RAND()</code></td>
+              </tr>
+              <tr>
+                <td class="fn">RANDBETWEEN</td>
+                <td><code>RANDBETWEEN(最小, 最大)</code> 区间随机整数</td>
+                <td><code>=RANDBETWEEN(1,100)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">CEILING / FLOOR</td>
+                <td><code>CEILING(数, 倍数)</code> 向上/向下取倍数</td>
+                <td><code>=CEILING(4.2,0.5)</code> → 4.5</td>
+              </tr>
+              <tr>
+                <td class="fn">SUM 系列特殊</td>
+                <td><code>SUBTOTAL(9,区域)</code> 忽略被筛选隐藏的行求和（9=求和，109 忽略手工隐藏）</td>
+                <td><code>=SUBTOTAL(9,A1:A100)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <strong>SUMIF 是「条件区, 条件, 求和区」，SUMIFS 是「求和区, 条件区1, 条件1, …」</strong>——带 S 的求和区打头。筛选后想「只算看得见的行」，用 <code>SUBTOTAL(9,…)</code> 别用 SUM。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="cmd03">
+        <h2><span class="num">03</span> 统计函数</h2>
+        <p>数个数、算平均、找最大最小、排名——统计家族记牢「<strong>COUNT 数的是数字，COUNTA 数的是非空</strong>」这一条就不容易混。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">COUNT</td>
+                <td><code>COUNT(区域)</code> 只数数字个数</td>
+                <td><code>=COUNT(A1:A100)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">COUNTA</td>
+                <td><code>COUNTA(区域)</code> 数非空单元格（文本也算）</td>
+                <td><code>=COUNTA(A:A)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">COUNTBLANK</td>
+                <td><code>COUNTBLANK(区域)</code> 数空单元格</td>
+                <td><code>=COUNTBLANK(A:A)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">COUNTIF</td>
+                <td><code>COUNTIF(区域, 条件)</code> 单条件计数</td>
+                <td><code>=COUNTIF(B:B,"&gt;60")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">COUNTIFS</td>
+                <td><code>COUNTIFS(区域1, 条件1, …)</code> 多条件计数</td>
+                <td><code>=COUNTIFS(A:A,"华东",B:B,"&gt;60")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">AVERAGE</td>
+                <td><code>AVERAGE(区域)</code> 平均值（忽略文本）</td>
+                <td><code>=AVERAGE(A1:A10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">AVERAGEIF</td>
+                <td><code>AVERAGEIF(条件区, 条件, 平均区)</code> 单条件平均</td>
+                <td><code>=AVERAGEIF(B:B,"华东",C:C)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">AVERAGEIFS</td>
+                <td><code>AVERAGEIFS(平均区, 条件区1, 条件1, …)</code> 多条件平均</td>
+                <td><code>=AVERAGEIFS(C:C,A:A,"华东")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">MAX / MIN</td>
+                <td><code>MAX(区域)</code> / <code>MIN(区域)</code> 最大 / 最小</td>
+                <td><code>=MAX(A1:A10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">MAXIFS / MINIFS</td>
+                <td><code>MAXIFS(区域, 条件区, 条件)</code> 条件最大/最小</td>
+                <td><code>=MAXIFS(C:C,A:A,"华东")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">LARGE / SMALL</td>
+                <td><code>LARGE(区域, k)</code> 第 k 大 / 第 k 小</td>
+                <td><code>=LARGE(A:A,2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">RANK</td>
+                <td><code>RANK(值, 区域)</code> 排名（区域要绝对引用）</td>
+                <td><code>=RANK(A1,$A$1:$A$10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">MEDIAN</td>
+                <td><code>MEDIAN(区域)</code> 中位数（抗极端值）</td>
+                <td><code>=MEDIAN(A1:A10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">MODE</td>
+                <td><code>MODE(区域)</code> 众数（出现最多）</td>
+                <td><code>=MODE(A1:A10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">STDEV / VAR</td>
+                <td><code>STDEV(区域)</code> 标准差 / <code>VAR</code> 方差（离散度）</td>
+                <td><code>=STDEV(A1:A10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">PERCENTILE</td>
+                <td><code>PERCENTILE(区域, k)</code> 第 k 百分位</td>
+                <td><code>=PERCENTILE(A:A,0.9)</code> 90 分位</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>COUNT 数数字，COUNTA 数非空；IF 加在函数后就是条件版；RANK 区域要锁 $，LARGE 第几大</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="cmd04">
+        <h2><span class="num">04</span> 查找与引用</h2>
+        <p>面试和实战都逃不开的一族。VLOOKUP 用着最顺手，但 <code>INDEX + MATCH</code> 才是万能解，新版本还有 <code>XLOOKUP</code> 一统江湖。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">VLOOKUP</td>
+                <td><code>VLOOKUP(查找值, 区域, 列号, 0)</code> 垂直查找，第 4 参必写 0</td>
+                <td><code>=VLOOKUP(A2,D:E,2,0)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">HLOOKUP</td>
+                <td><code>HLOOKUP(查找值, 区域, 行号, 0)</code> 水平查找</td>
+                <td><code>=HLOOKUP(B1,A1:D2,2,0)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">XLOOKUP</td>
+                <td><code>XLOOKUP(查找值, 查找列, 返回列, [未找到值])</code> 无方向限制</td>
+                <td><code>=XLOOKUP(A2,B:B,C:C,"无")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">LOOKUP</td>
+                <td><code>LOOKUP(查找值, 查找列, 返回列)</code> 旧式查找（近似，慎用）</td>
+                <td><code>=LOOKUP(85,A:A,B:B)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">INDEX</td>
+                <td><code>INDEX(区域, 行号, [列号])</code> 按位置取区域中的值</td>
+                <td><code>=INDEX(B2:E10,3,2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">MATCH</td>
+                <td><code>MATCH(查找值, 区域, 0)</code> 返回位置（第 3 参 0 = 精确）</td>
+                <td><code>=MATCH("手机",A:A,0)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">INDEX+MATCH</td>
+                <td><code>INDEX(返回区, MATCH(查找值, 查找区, 0))</code> 万能双向查找</td>
+                <td><code>=INDEX(A:A,MATCH(B1,B:B,0))</code></td>
+              </tr>
+              <tr>
+                <td class="fn">CHOOSE</td>
+                <td><code>CHOOSE(序号, 值1, 值2, …)</code> 按下标取值</td>
+                <td><code>=CHOOSE(WEEKDAY(A1,2),"一","二","三","四","五","六","日")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">INDIRECT</td>
+                <td><code>INDIRECT("引用文本")</code> 文本转引用（易失函数）</td>
+                <td><code>=SUM(INDIRECT("B"&amp;A1&amp;":B"&amp;A2))</code></td>
+              </tr>
+              <tr>
+                <td class="fn">OFFSET</td>
+                <td><code>OFFSET(基准, 行偏, 列偏, [高], [宽])</code> 动态区域（易失）</td>
+                <td><code>=SUM(OFFSET(A1,0,0,10,1))</code></td>
+              </tr>
+              <tr>
+                <td class="fn">TRANSPOSE</td>
+                <td><code>TRANSPOSE(区域)</code> 行列转置（需数组输入）</td>
+                <td><code>=TRANSPOSE(A1:C3)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ROW / COLUMN</td>
+                <td><code>ROW([单元格])</code> 返回行号 / 列号</td>
+                <td><code>=ROW(A5)</code> → 5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          VLOOKUP 三坑：① 查找值必须在区域<strong>第一列</strong>；② 第 4 参漏写 0 会近似匹配出奇怪结果；③ 查找值或数据带<strong>空格</strong>会查不到——先 TRIM 再查。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="cmd05">
+        <h2><span class="num">05</span> 文本函数</h2>
+        <p>清洗和拼接文本全靠这一族。牢记「<strong>提取三剑客 LEFT / RIGHT / MID</strong>」「<strong>替换两兄弟 SUBSTITUTE / REPLACE</strong>」。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">LEFT</td>
+                <td><code>LEFT(文本, [位数])</code> 从左边取</td>
+                <td><code>=LEFT("ABC123",3)</code> → ABC</td>
+              </tr>
+              <tr>
+                <td class="fn">RIGHT</td>
+                <td><code>RIGHT(文本, [位数])</code> 从右边取</td>
+                <td><code>=RIGHT("ABC123",2)</code> → 23</td>
+              </tr>
+              <tr>
+                <td class="fn">MID</td>
+                <td><code>MID(文本, 起始位, 位数)</code> 从中间取</td>
+                <td><code>=MID("ABC123",2,3)</code> → BC1</td>
+              </tr>
+              <tr>
+                <td class="fn">LEN</td>
+                <td><code>LEN(文本)</code> 字符个数</td>
+                <td><code>=LEN("你好AB")</code> → 4</td>
+              </tr>
+              <tr>
+                <td class="fn">FIND</td>
+                <td><code>FIND(找什么, 在哪找, [起始])</code> 找位置（区分大小写）</td>
+                <td><code>=FIND("@","a@b")</code> → 2</td>
+              </tr>
+              <tr>
+                <td class="fn">SEARCH</td>
+                <td><code>SEARCH(找什么, 在哪找)</code> 找位置（不区分大小写，支持通配符）</td>
+                <td><code>=SEARCH("B","abc")</code> → 2</td>
+              </tr>
+              <tr>
+                <td class="fn">SUBSTITUTE</td>
+                <td><code>SUBSTITUTE(文本, 旧, 新, [第几次])</code> 替换全部/指定次</td>
+                <td><code>=SUBSTITUTE(A1,"-","")</code> 去横杠</td>
+              </tr>
+              <tr>
+                <td class="fn">REPLACE</td>
+                <td><code>REPLACE(文本, 起始位, 位数, 新文本)</code> 按位置替换</td>
+                <td><code>=REPLACE("13812345678",4,4,"****")</code> 脱敏</td>
+              </tr>
+              <tr>
+                <td class="fn">TRIM</td>
+                <td><code>TRIM(文本)</code> 去首尾及中间多余空格</td>
+                <td><code>=TRIM("  a  b  ")</code> → "a b"</td>
+              </tr>
+              <tr>
+                <td class="fn">CONCAT / CONCATENATE</td>
+                <td><code>CONCAT(文本1,文本2,…)</code> 拼接；<code>&amp;</code> 运算符更快</td>
+                <td><code>=A2&amp;"-"&amp;B2</code></td>
+              </tr>
+              <tr>
+                <td class="fn">TEXTJOIN</td>
+                <td><code>TEXTJOIN(分隔符, TRUE, 区域)</code> 用分隔符合并区域（忽略空）</td>
+                <td><code>=TEXTJOIN("、",TRUE,A1:A5)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">TEXT</td>
+                <td><code>TEXT(值, "格式")</code> 按格式转文本（结果不可计算）</td>
+                <td><code>=TEXT(A1,"yyyy年mm月dd日")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">VALUE</td>
+                <td><code>VALUE(文本数字)</code> 文本转数字</td>
+                <td><code>=VALUE("123")</code> → 123</td>
+              </tr>
+              <tr>
+                <td class="fn">UPPER / LOWER / PROPER</td>
+                <td>转大写 / 小写 / 首字母大写</td>
+                <td><code>=UPPER("abc")</code> → ABC</td>
+              </tr>
+              <tr>
+                <td class="fn">TEXTSPLIT</td>
+                <td><code>TEXTSPLIT(文本, 分隔符)</code> 拆成多列（新函数）</td>
+                <td><code>=TEXTSPLIT(A1,",")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">CHAR / CODE</td>
+                <td><code>CHAR(编号)</code> 编号转字符 / <code>CODE</code> 反向</td>
+                <td><code>=CHAR(10)</code> 换行符</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>LEFT 左、RIGHT 右、MID 中间；LEN 数长度；TRIM 去空格；拼接用 &amp;，TEXT 改格式</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="cmd06">
+        <h2><span class="num">06</span> 日期与时间</h2>
+        <p>日期在 Excel 里本质是数字（1900-01-01 = 1），所以能直接加减！<code>今天 - 入职日期 = 工作天数</code>。注意 <code>TODAY()</code> 会每天变。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">TODAY</td>
+                <td><code>TODAY()</code> 今天日期（每天自动更新）</td>
+                <td><code>=TODAY()</code></td>
+              </tr>
+              <tr>
+                <td class="fn">NOW</td>
+                <td><code>NOW()</code> 当前日期 + 时间</td>
+                <td><code>=NOW()</code></td>
+              </tr>
+              <tr>
+                <td class="fn">DATE</td>
+                <td><code>DATE(年, 月, 日)</code> 拼出日期</td>
+                <td><code>=DATE(2026,9,1)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">YEAR / MONTH / DAY</td>
+                <td>提取年 / 月 / 日</td>
+                <td><code>=YEAR(A1)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">DATEDIF</td>
+                <td><code>DATEDIF(起始, 结束, "y"|"m"|"d")</code> 间隔年/月/天</td>
+                <td><code>=DATEDIF(B2,TODAY(),"y")</code> 年龄</td>
+              </tr>
+              <tr>
+                <td class="fn">WEEKDAY</td>
+                <td><code>WEEKDAY(日期, 2)</code> 星期几（2=周一为 1）</td>
+                <td><code>=WEEKDAY(A1,2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">WEEKNUM</td>
+                <td><code>WEEKNUM(日期)</code> 一年第几周</td>
+                <td><code>=WEEKNUM(A1)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">EDATE</td>
+                <td><code>EDATE(日期, 月数)</code> 加/减 N 个月</td>
+                <td><code>=EDATE(A1,3)</code> 3 个月后</td>
+              </tr>
+              <tr>
+                <td class="fn">EOMONTH</td>
+                <td><code>EOMONTH(日期, 月数)</code> 月末日期</td>
+                <td><code>=EOMONTH(TODAY(),0)</code> 本月最后一天</td>
+              </tr>
+              <tr>
+                <td class="fn">WORKDAY</td>
+                <td><code>WORKDAY(起始, 天数)</code> 加 N 个工作日（跳过周末）</td>
+                <td><code>=WORKDAY(TODAY(),10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">NETWORKDAYS</td>
+                <td><code>NETWORKDAYS(起始, 结束)</code> 两日期间工作日数</td>
+                <td><code>=NETWORKDAYS(A1,A2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">HOUR / MINUTE / SECOND</td>
+                <td>提取时 / 分 / 秒</td>
+                <td><code>=HOUR(NOW())</code></td>
+              </tr>
+              <tr>
+                <td class="fn">TIME</td>
+                <td><code>TIME(时, 分, 秒)</code> 拼出时间</td>
+                <td><code>=TIME(18,30,0)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ISOWEEKNUM</td>
+                <td><code>ISOWEEKNUM(日期)</code> ISO 周数（周一为一周开始）</td>
+                <td><code>=ISOWEEKNUM(A1)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 日期被存成<strong>文本</strong>（左对齐）就不能加减了，用分列 → 日期转换；② <code>DATEDIF</code> 是隐藏函数，没有函数向导提示，但能用；③ 想输入<strong>固定</strong>的今天日期用 <code>Ctrl+;</code>，别用 TODAY()（会变）。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="cmd07">
+        <h2><span class="num">07</span> 数据库与信息函数</h2>
+        <p>数据库函数（D 开头）按「条件区域」统计——条件区要自己搭一个带表头的小表。信息函数（IS 开头）用来判断数据类型，常和 IF 配合做「格式体检」。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">DSUM</td>
+                <td><code>DSUM(数据区, 字段列, 条件区)</code> 按条件区求和</td>
+                <td><code>=DSUM(A1:D100,"销售额",F1:G2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">DCOUNT / DCOUNTA</td>
+                <td>按条件区数数字 / 数非空</td>
+                <td><code>=DCOUNTA(A1:D100,"姓名",F1:G2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">DAVERAGE</td>
+                <td>按条件区求平均</td>
+                <td><code>=DAVERAGE(A1:D100,"销售额",F1:G2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">DMAX / DMIN</td>
+                <td>按条件区求最大 / 最小</td>
+                <td><code>=DMAX(A1:D100,"销售额",F1:G2)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ISNUMBER</td>
+                <td><code>ISNUMBER(值)</code> 是不是数字（查文本型数字）</td>
+                <td><code>=IF(ISNUMBER(A1),"数字","文本")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ISTEXT / ISBLANK</td>
+                <td>是不是文本 / 是不是空</td>
+                <td><code>=ISBLANK(A1)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ISERROR / ISERR</td>
+                <td>是否任意错误 / 是否非 #N/A 错误</td>
+                <td><code>=IF(ISERROR(A1),"有错","OK")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ISLOGICAL</td>
+                <td>是不是逻辑值 TRUE/FALSE</td>
+                <td><code>=ISLOGICAL(A1)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">CELL</td>
+                <td><code>CELL("info_type", [单元格])</code> 单元格信息（格式/地址等）</td>
+                <td><code>=CELL("address")</code></td>
+              </tr>
+              <tr>
+                <td class="fn">ERROR.TYPE</td>
+                <td><code>ERROR.TYPE(错误值)</code> 错误值对应编号</td>
+                <td><code>=ERROR.TYPE(A1)</code> #N/A → 7</td>
+              </tr>
+              <tr>
+                <td class="fn">N / T</td>
+                <td><code>N(值)</code> 转数字 / <code>T(值)</code> 转文本</td>
+                <td><code>=N(TRUE)</code> → 1</td>
+              </tr>
+              <tr>
+                <td class="fn">NA</td>
+                <td><code>NA()</code> 主动制造 #N/A</td>
+                <td><code>=IF(A1="",NA(),A1)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>D 开头按条件区统计，条件区要带表头；IS 开头做体检，配上 IF 自动判</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="cmd08">
+        <h2><span class="num">08</span> 财务函数</h2>
+        <p>算房贷、算投资回报的专用函数。记住<strong>现金流符号约定：流出为负、流入为正</strong>，参数就能摆对。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>语法 / 说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">PMT</td>
+                <td><code>PMT(利率, 期数, 现值)</code> 等额还款额（房贷月供）</td>
+                <td><code>=PMT(4.9%/12, 360, 1000000)</code> 月供</td>
+              </tr>
+              <tr>
+                <td class="fn">FV</td>
+                <td><code>FV(利率, 期数, 每期投入)</code> 终值（定投未来值）</td>
+                <td><code>=FV(5%/12, 120, -1000)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">PV</td>
+                <td><code>PV(利率, 期数, 每期回收)</code> 现值（反推现在值多少）</td>
+                <td><code>=PV(5%, 10, -10000)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">RATE</td>
+                <td><code>RATE(期数, 每期, 现值)</code> 反推利率</td>
+                <td><code>=RATE(12, -1000, 10000)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">NPER</td>
+                <td><code>NPER(利率, 每期, 现值)</code> 反推期数（多久还完）</td>
+                <td><code>=NPER(1%, -1000, 50000)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">IRR</td>
+                <td><code>IRR(现金流区域)</code> 内部收益率（项目回报率）</td>
+                <td><code>=IRR(B2:B10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">NPV</td>
+                <td><code>NPV(折现率, 现金流)</code> 净现值（&gt;0 项目可行）</td>
+                <td><code>=NPV(10%, B2:B10)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">SLN</td>
+                <td><code>SLN(原值, 残值, 年限)</code> 直线折旧</td>
+                <td><code>=SLN(100000, 10000, 5)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">DB / DDB</td>
+                <td><code>DB(原值, 残值, 年限, 期)</code> 余额递减折旧</td>
+                <td><code>=DB(100000,10000,5,1)</code></td>
+              </tr>
+              <tr>
+                <td class="fn">XIRR / XNPV</td>
+                <td>带日期的 IRR / NPV（现金流日期不均）</td>
+                <td><code>=XIRR(B2:B10,A2:A10)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>PMT 月供、FV 未来、PV 现值、RATE 反推利率；IRR 看项目回报，现金流流出记负</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="cmd09">
+        <h2><span class="num">09</span> 快捷键大全</h2>
+        <p>效率的尽头是键盘。按功能分组整理，标 ★ 的是「<strong>每天都要用</strong>」的。</p>
+
+        <h3>Ctrl 系（编辑与导航）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>快捷键</th>
+                <th>功能</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Ctrl+C / Ctrl+X / Ctrl+V</code></td>
+                <td>复制 / 剪切 / 粘贴 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+Z / Ctrl+Y</code></td>
+                <td>撤销 / 重做 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+S</code></td>
+                <td>保存 ★（改一点存一点）</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+A</code></td>
+                <td>全选（再按一次选整表）★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+1</code></td>
+                <td>设置单元格格式 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+方向键</code></td>
+                <td>跳到数据边缘 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+Shift+方向键</code></td>
+                <td>选中到数据边缘 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+Enter</code></td>
+                <td>批量填充选中区 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+D / Ctrl+R</code></td>
+                <td>向下 / 向右填充</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+; / Ctrl+Shift+;</code></td>
+                <td>插入今天日期 / 当前时间（固定值）★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+F / Ctrl+H</code></td>
+                <td>查找 / 替换 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+G（或 F5）</code></td>
+                <td>定位条件 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+Shift+L</code></td>
+                <td>开 / 关筛选 ★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+T</code></td>
+                <td>创建超级表 ★（自动扩展）</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+PageUp/PageDown</code></td>
+                <td>切换工作表</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+F3</code></td>
+                <td>名称管理器</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+`</code></td>
+                <td>显示公式 / 显示值 切换 ★（查错神器）</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+Shift+Enter</code></td>
+                <td>传统数组公式输入</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+Alt+V</code></td>
+                <td>选择性粘贴（值/格式/转置…）★</td>
+              </tr>
+              <tr>
+                <td><code>Ctrl+- / Ctrl+Shift+=</code></td>
+                <td>删除单元格 / 插入单元格</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Alt 系（功能区捷径）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>快捷键</th>
+                <th>功能</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Alt+=</code></td>
+                <td>自动求和 ★</td>
+              </tr>
+              <tr>
+                <td><code>Alt+; </code></td>
+                <td>只选可见单元格 ★（筛选后复制）</td>
+              </tr>
+              <tr>
+                <td><code>Alt+Enter</code></td>
+                <td>单元格内换行 ★</td>
+              </tr>
+              <tr>
+                <td><code>Alt+F1</code></td>
+                <td>一键插入图表</td>
+              </tr>
+              <tr>
+                <td><code>Alt+F5 / Ctrl+Alt+F5</code></td>
+                <td>刷新透视表 / 全部刷新</td>
+              </tr>
+              <tr>
+                <td><code>Alt+F8</code></td>
+                <td>打开宏对话框</td>
+              </tr>
+              <tr>
+                <td><code>Alt+PageDown/Up</code></td>
+                <td>向右 / 向左翻一屏</td>
+              </tr>
+              <tr>
+                <td><code>Alt+H+O+I</code></td>
+                <td>自动调整列宽（H 开始 O 对齐 I）</td>
+              </tr>
+              <tr>
+                <td><code>Alt+↓</code></td>
+                <td>显示下拉列表（列内已有值）★</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Shift / F 系（选择与功能键）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>快捷键</th>
+                <th>功能</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Shift+空格 / Ctrl+空格</code></td>
+                <td>选中整行 / 整列</td>
+              </tr>
+              <tr>
+                <td><code>Shift+F11</code></td>
+                <td>新建工作表</td>
+              </tr>
+              <tr>
+                <td><code>Shift+F2</code></td>
+                <td>插入批注 / 编辑批注</td>
+              </tr>
+              <tr>
+                <td><code>F2</code></td>
+                <td>编辑当前单元格 ★</td>
+              </tr>
+              <tr>
+                <td><code>F4</code></td>
+                <td>重复上一步 / 公式中切换引用 ★</td>
+              </tr>
+              <tr>
+                <td><code>F5</code></td>
+                <td>定位（同 Ctrl+G）</td>
+              </tr>
+              <tr>
+                <td><code>F7</code></td>
+                <td>拼写检查</td>
+              </tr>
+              <tr>
+                <td><code>F9</code></td>
+                <td>重算所有公式 ★（手动模式下救急）</td>
+              </tr>
+              <tr>
+                <td><code>F11</code></td>
+                <td>插入柱状图表</td>
+              </tr>
+              <tr>
+                <td><code>F12</code></td>
+                <td>另存为</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>Ctrl+1 格式、Ctrl+Shift+L 筛选、Alt+= 求和、Alt+; 只选可见、F4 引用切换、F9 重算</strong>」——这六招先背熟，效率立涨一半。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="cmd10">
+        <h2><span class="num">10</span> 数据功能区命令</h2>
+        <p>「数据」选项卡是数据处理的指挥中心，下面是每个命令的用途与使用时机。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>命令</th>
+                <th>位置</th>
+                <th>用途 / 时机</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">分列</td>
+                <td>数据 → 分列</td>
+                <td>一列拆多列；治文本型数字、日期乱码（按分隔符 / 固定宽度）</td>
+              </tr>
+              <tr>
+                <td class="fn">删除重复项</td>
+                <td>数据 → 删除重复项</td>
+                <td>直接删掉重复行（选多列 = 组合判重；操作前备份）</td>
+              </tr>
+              <tr>
+                <td class="fn">高级筛选</td>
+                <td>数据 → 高级</td>
+                <td>条件区筛选、提取唯一值（勾选「选择不重复的记录」）</td>
+              </tr>
+              <tr>
+                <td class="fn">合并计算</td>
+                <td>数据 → 合并计算</td>
+                <td>把多个区域按行/列标签汇总（求和/平均/计数）</td>
+              </tr>
+              <tr>
+                <td class="fn">模拟分析</td>
+                <td>数据 → 模拟分析</td>
+                <td>单变量求解（倒推值）、模拟运算表（假设矩阵）、方案管理器</td>
+              </tr>
+              <tr>
+                <td class="fn">预测工作表</td>
+                <td>数据 → 预测工作表</td>
+                <td>基于历史数据一键生成未来趋势预测 + 置信区间</td>
+              </tr>
+              <tr>
+                <td class="fn">关系 / 管理关系</td>
+                <td>数据 → 关系</td>
+                <td>在数据模型里建立表间关系（配合透视表多表分析）</td>
+              </tr>
+              <tr>
+                <td class="fn">数据验证</td>
+                <td>数据 → 数据验证</td>
+                <td>限制输入（下拉列表、数值范围、自定义公式）；圈释无效数据</td>
+              </tr>
+              <tr>
+                <td class="fn">分类汇总</td>
+                <td>数据 → 分类汇总</td>
+                <td>按某列分组后自动小计/合计（先排序再分类汇总）</td>
+              </tr>
+              <tr>
+                <td class="fn">从表格/区域</td>
+                <td>数据 → 从表格/区域</td>
+                <td>进入 Power Query 编辑器清洗数据（可刷新重跑）</td>
+              </tr>
+              <tr>
+                <td class="fn">获取数据</td>
+                <td>数据 → 获取数据</td>
+                <td>从文件/数据库/网页/API 导入外部数据</td>
+              </tr>
+              <tr>
+                <td class="fn">规划求解</td>
+                <td>数据 → 规划求解（需加载项）</td>
+                <td>线性规划求最优解：目标 + 可变单元格 + 约束</td>
+              </tr>
+              <tr>
+                <td class="fn">数据分析</td>
+                <td>数据 → 数据分析（需分析工具库）</td>
+                <td>描述统计、直方图、相关系数、回归分析一键出</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>分列治乱、去重防错、高级筛选带条件；验证限输入、模拟分析倒推值、PQ 洗数据</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="cmd11">
+        <h2><span class="num">11</span> 数据透视表命令</h2>
+        <p>透视表是 Excel 的「报表发动机」。下面按「建表 → 配置 → 维护」三个阶段列命令。</p>
+
+        <h3>建表与字段配置</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>操作</th>
+                <th>路径 / 说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">创建透视表</td>
+                <td>选中明细任意单元格 → 插入 → 数据透视表 → 确定</td>
+              </tr>
+              <tr>
+                <td class="fn">推荐透视表</td>
+                <td>插入 → 推荐的数据透视表（AI 建议，新手起步神器）</td>
+              </tr>
+              <tr>
+                <td class="fn">字段四区域</td>
+                <td>筛选 / 行 / 列 / 值：拖字段即生成报表</td>
+              </tr>
+              <tr>
+                <td class="fn">值字段设置</td>
+                <td>值区右键 → 值字段设置 → 求和/计数/平均/最大值</td>
+              </tr>
+              <tr>
+                <td class="fn">值显示方式</td>
+                <td>值区右键 → 值显示方式 → 占比/差异/排名（百分比分析）</td>
+              </tr>
+              <tr>
+                <td class="fn">字段分组</td>
+                <td>日期/数字字段右键 → 组合 → 按月/季度/年、数值区间</td>
+              </tr>
+              <tr>
+                <td class="fn">插入切片器</td>
+                <td>分析 → 插入切片器 → 勾选字段（可视化筛选按钮）</td>
+              </tr>
+              <tr>
+                <td class="fn">插入时间线</td>
+                <td>分析 → 插入时间线（日期字段的专用切片器）</td>
+              </tr>
+              <tr>
+                <td class="fn">字段列表开关</td>
+                <td>分析 → 字段列表；或右键 → 显示字段列表</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>维护与高级</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>操作</th>
+                <th>路径 / 说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">刷新</td>
+                <td>右键 → 刷新（Alt+F5）；Ctrl+Alt+F5 全部刷新</td>
+              </tr>
+              <tr>
+                <td class="fn">更改数据源</td>
+                <td>分析 → 更改数据源（加了新列/新行后扩区域）</td>
+              </tr>
+              <tr>
+                <td class="fn">钻取明细</td>
+                <td>双击透视表任意数字 → 展开底层明细表</td>
+              </tr>
+              <tr>
+                <td class="fn">删除字段</td>
+                <td>字段列表取消勾选；或把字段拖出列表</td>
+              </tr>
+              <tr>
+                <td class="fn">透视表选项</td>
+                <td>右键 → 数据透视表选项（显示、布局、汇总方式）</td>
+              </tr>
+              <tr>
+                <td class="fn">布局美化</td>
+                <td>设计 → 报表布局 → 以表格形式显示（比压缩形式好读）</td>
+              </tr>
+              <tr>
+                <td class="fn">总计开关</td>
+                <td>设计 → 总计 → 对行和列禁用（去掉不想要的合计）</td>
+              </tr>
+              <tr>
+                <td class="fn">多表分析</td>
+                <td>数据 → 关系 建立表关系后，透视表可跨表汇总</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          透视表<strong>不会自动感知新数据</strong>：源区域加行要刷新，加列要「更改数据源」。明细表头改名字后，透视表字段也要重新选。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="cmd12">
+        <h2><span class="num">12</span> 图表与可视化</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>操作</th>
+                <th>路径 / 说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">快速插入图表</td>
+                <td>选中数据 → Alt+F1（默认图表）；或 插入 → 选择类型</td>
+              </tr>
+              <tr>
+                <td class="fn">图表类型切换</td>
+                <td>右键 → 更改图表类型（柱↔线↔饼随意换）</td>
+              </tr>
+              <tr>
+                <td class="fn">组合图</td>
+                <td>插入 → 组合图 → 自定义组合（主轴柱 + 次轴线）</td>
+              </tr>
+              <tr>
+                <td class="fn">加数据标签</td>
+                <td>选中图表 → 右上角「+」→ 数据标签（可右键设位置/格式）</td>
+              </tr>
+              <tr>
+                <td class="fn">加趋势线</td>
+                <td>选中系列 → 图表元素「+」→ 趋势线 → 线性/移动平均</td>
+              </tr>
+              <tr>
+                <td class="fn">误差线</td>
+                <td>图表元素「+」→ 误差线（科学图表用）</td>
+              </tr>
+              <tr>
+                <td class="fn">交换行列</td>
+                <td>图表设计 → 切换行/列（数据透视方向换一下）</td>
+              </tr>
+              <tr>
+                <td class="fn">迷你图</td>
+                <td>插入 → 迷你图 → 折线/柱状/盈亏（单元格内微型图）</td>
+              </tr>
+              <tr>
+                <td class="fn">图表另存模板</td>
+                <td>右键图表 → 另存为模板（.crtx）→ 之后 图表 → 模板 一键复用</td>
+              </tr>
+              <tr>
+                <td class="fn">条件格式</td>
+                <td>开始 → 条件格式 → 数据条/色阶/图标集/突出显示（比图表更轻量）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>Alt+F1 秒出图，右上角 + 加元素；组合图双轴，迷你图塞格子；趋势线看走势</strong>」
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="cmd13">
+        <h2><span class="num">13</span> 格式与视图命令</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>操作</th>
+                <th>路径 / 快捷键</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">单元格格式</td>
+                <td>Ctrl+1</td>
+                <td>数字/对齐/字体/边框/填充/保护六合一</td>
+              </tr>
+              <tr>
+                <td class="fn">跨列居中</td>
+                <td>Ctrl+1 → 对齐 → 水平 → 跨列居中</td>
+                <td>合并单元格的正确替代品</td>
+              </tr>
+              <tr>
+                <td class="fn">自动换行</td>
+                <td>开始 → 自动换行</td>
+                <td>单元格内强制换行：Alt+Enter</td>
+              </tr>
+              <tr>
+                <td class="fn">格式刷</td>
+                <td>开始 → 格式刷；双击连续用</td>
+                <td>复制格式（Ctrl+Shift+C/V 也可复制粘贴格式）</td>
+              </tr>
+              <tr>
+                <td class="fn">冻结窗格</td>
+                <td>视图 → 冻结窗格</td>
+                <td>先选冻结线右下角单元格再冻结</td>
+              </tr>
+              <tr>
+                <td class="fn">拆分窗口</td>
+                <td>视图 → 拆分</td>
+                <td>同一工作表两个滚动区（对比首尾）</td>
+              </tr>
+              <tr>
+                <td class="fn">隐藏行列</td>
+                <td>右键 → 隐藏；Ctrl+9 藏行 / Ctrl+0 藏列</td>
+                <td>取消隐藏：选中两侧 → 右键 → 取消隐藏</td>
+              </tr>
+              <tr>
+                <td class="fn">打印标题</td>
+                <td>页面布局 → 打印标题</td>
+                <td>多页打印每页带表头（不是冻结）</td>
+              </tr>
+              <tr>
+                <td class="fn">打印区域</td>
+                <td>页面布局 → 打印区域 → 设置</td>
+                <td>只打印指定区域；清除用「取消打印区域」</td>
+              </tr>
+              <tr>
+                <td class="fn">分页预览</td>
+                <td>视图 → 分页预览</td>
+                <td>拖动蓝色分页线手动调分页</td>
+              </tr>
+              <tr>
+                <td class="fn">缩放到一页</td>
+                <td>页面布局 → 缩放 → 宽度 1 页</td>
+                <td>超宽表打印不截断</td>
+              </tr>
+              <tr>
+                <td class="fn">工作表保护</td>
+                <td>审阅 → 保护工作表</td>
+                <td>防误改；保护工作簿 = 防删改结构</td>
+              </tr>
+              <tr>
+                <td class="fn">公式求值</td>
+                <td>公式 → 公式求值</td>
+                <td>一步步看公式计算过程（查错神器）</td>
+              </tr>
+              <tr>
+                <td class="fn">追踪引用</td>
+                <td>公式 → 追踪引用单元格 / 追踪从属</td>
+                <td>画箭头看公式上下游关系</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="cmd14">
+        <h2><span class="num">14</span> 错误值排查</h2>
+
+        <h3>七个常见错误值：一眼定位问题</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>错误值</th>
+                <th>含义</th>
+                <th>最常见的成因</th>
+                <th>排查动作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>#####</code></td>
+                <td>列宽不足 / 负日期</td>
+                <td>列太窄、日期格式为负</td>
+                <td>拉宽列；查日期是否异常</td>
+              </tr>
+              <tr>
+                <td><code>#DIV/0!</code></td>
+                <td>除以 0</td>
+                <td>分母为 0 或空单元格</td>
+                <td>IFERROR 兜底；补分母</td>
+              </tr>
+              <tr>
+                <td><code>#N/A</code></td>
+                <td>找不到匹配值</td>
+                <td>VLOOKUP/查找值不存在或带空格</td>
+                <td>写 0 精确匹配；TRIM 清洗</td>
+              </tr>
+              <tr>
+                <td><code>#VALUE!</code></td>
+                <td>参数类型不对</td>
+                <td>文本当数字运算、引用错误区域</td>
+                <td>检查引用单元格是否为文本型数字</td>
+              </tr>
+              <tr>
+                <td><code>#REF!</code></td>
+                <td>引用失效</td>
+                <td>删除了公式引用的行列</td>
+                <td>撤销删除；重写公式</td>
+              </tr>
+              <tr>
+                <td><code>#NAME?</code></td>
+                <td>名称无法识别</td>
+                <td>函数名拼错、名称未定义</td>
+                <td>检查拼写；名称管理器</td>
+              </tr>
+              <tr>
+                <td><code>#NULL!</code></td>
+                <td>区域交叉为空</td>
+                <td>引用写错（空格应为冒号）</td>
+                <td>检查区域运算符</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>公式排查三板斧</h3>
+        <ol class="steps">
+          <li><strong>Ctrl+` 切公式视图</strong>：一眼看到哪些格是公式、哪些是硬编码，公式异常一目了然</li>
+          <li><strong>公式求值</strong>：公式 → 公式求值 → 逐步看每步计算结果，定位出错的那一步</li>
+          <li><strong>追踪引用</strong>：公式 → 追踪引用单元格 → 箭头画出上下游，检查被引用的格子是否正常</li>
+        </ol>
+
+        <h3>易失函数与性能警告</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>问题</th>
+                <th>建议</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fn">OFFSET / INDIRECT</td>
+                <td>每次重算都会全部重算，大表明显卡顿</td>
+                <td>能用 INDEX 就不用 OFFSET</td>
+              </tr>
+              <tr>
+                <td class="fn">RAND / RANDBETWEEN</td>
+                <td>每次操作都重新随机，数据会变</td>
+                <td>需要固定值时粘贴为值</td>
+              </tr>
+              <tr>
+                <td class="fn">NOW / TODAY</td>
+                <td>打开文件/重算时更新</td>
+                <td>要固定日期用 Ctrl+;</td>
+              </tr>
+              <tr>
+                <td class="fn">整列引用 A:A</td>
+                <td>SUMPRODUCT 等数组函数整列引用极慢</td>
+                <td>用 A2:A10000 精确区域</td>
+              </tr>
+              <tr>
+                <td class="fn">循环引用</td>
+                <td>公式引用自己所在的单元格</td>
+                <td>状态栏提示循环引用；逐格检查箭头</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 循环引用红线</div>
+          公式引用了自己（A1 里写 <code>=A1+1</code>），Excel 会提示循环引用警告并陷入死循环计算。<strong>除非刻意做迭代计算，否则一律禁止</strong>——状态栏左下角会显示「循环引用: A1」，点它直达问题单元格。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong>#DIV/0! 查分母、#N/A 查查找、#VALUE! 查类型、#REF! 查删除；Ctrl+` 看公式、求值看步骤、追踪看箭头</strong>」
+        </div>
+      </section>
+
+      <footer class="footer">
+        Excel 命令大全 · 速查手册 | 130+ 函数 · 80+ 快捷键 · 14 大分类 | 配合《Excel 从入门到精通》学习笔记使用更佳
+      </footer>
+    </main>
+
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+    </script>
+  </body>
+</html>
+
+
