@@ -1,0 +1,3669 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/jpeg" href="../images/avatar.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>微信小程序开发 · 从入门到精通</title>
+    <style>
+      /* ========== CSS Variables ========== */
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #ff9e64;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #07c160;
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --header-h: 0px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      /* ========== Reset & Base ========== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* ========== Scrollbar ========== */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      /* ========== Sidebar ========== */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(7, 193, 96, 0.1);
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: rgba(7, 193, 96, 0.1);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: rgba(7, 193, 96, 0.06);
+        border-left-color: var(--accent);
+      }
+      .toc li a.sub {
+        padding-left: 28px;
+        font-size: 0.82rem;
+      }
+
+      /* ========== Main ========== */
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      /* ========== Hero ========== */
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(7, 193, 96, 0.1);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #07c160 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      /* ========== Sections ========== */
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(7, 193, 96, 0.1);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      /* ========== Code ========== */
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: rgba(7, 193, 96, 0.08);
+        color: var(--code-green);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      /* Syntax highlight */
+      .kw {
+        color: var(--code-green);
+      }
+      .fn {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .num {
+        color: #ff9e64;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+
+      /* Copy button */
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ========== Tables ========== */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: rgba(7, 193, 96, 0.03);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      /* ========== Callouts ========== */
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(7, 193, 96, 0.06);
+        border-color: var(--accent);
+      }
+      .callout.tip .callout-title {
+        color: var(--accent);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      /* ========== Cards Grid ========== */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* ========== Steps ========== */
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      /* ========== Mobile toggle ========== */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      /* ========== Footer ========== */
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      /* Focus visible for accessibility */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout {
+          break-inside: avoid;
+        }
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Mobile menu -->
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">📱</span> 小程序学习笔记</h2>
+        <p>从入门到精通 · 微信小程序开发手册</p>
+      </div>
+      <a class="home-link" href="../indexLearning.html">← 返回首页</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. 认识微信小程序与生态</a></li>
+        <li><a href="#ch02">2. 环境搭建与项目结构</a></li>
+        <li><a href="#ch03">3. 全局配置与 WXML 语法</a></li>
+        <li><a href="#ch04">4. WXSS 样式与 rpx 适配</a></li>
+        <li><a href="#ch05">5. 逻辑层与页面生命周期</a></li>
+        <li><a href="#ch06">6. 内置组件与基础 API</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. 网络请求与数据缓存</a></li>
+        <li><a href="#ch08">8. 自定义组件开发</a></li>
+        <li><a href="#ch09">9. 常用组件进阶实战</a></li>
+        <li><a href="#ch10">10. 云开发：云函数与数据库</a></li>
+        <li><a href="#ch11">11. 动画与交互反馈</a></li>
+        <li><a href="#ch12">12. 分包加载与性能优化</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch13">13. 组件高级：behaviors 与 relations</a></li>
+        <li><a href="#ch14">14. 安全与隐私合规</a></li>
+        <li><a href="#ch15">15. 微信开放能力深度实践</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch16">16. 工程化与架构设计</a></li>
+        <li><a href="#ch17">17. API 与组件速查手册</a></li>
+        <li><a href="#ch18">18. 实战案例、避坑与学习路线</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Hero -->
+      <header class="hero">
+        <span class="hero-badge">📱 移动端开发实战手册</span>
+        <h1>微信小程序开发 · 从入门到精通</h1>
+        <p>
+          一份系统化的微信小程序学习笔记：从生态认知、注册开发、WXML/WXSS/JS
+          三件套、组件与 API，到云开发、分包优化、安全合规、开放能力与工程化架构，配套
+          100+ 条 API 与组件速查表、速记口诀与高频报错避坑指南，让你从「会搭页面」进阶到「能独立上线一款小程序」。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>100+ API 速查</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 认识微信小程序与生态</h2>
+
+        <h3>小程序是什么</h3>
+        <p>
+          微信小程序是一种<strong>运行在微信内的「轻应用」</strong>：无需下载安装、扫码即用、用完即走。技术上它既不是纯
+          H5，也不是原生 App，而是<strong>「逻辑层（JS 引擎）+ 渲染层（WebView）」双线程架构</strong>，通过微信提供的能力桥接，能调用
+          摄像头、定位、支付、蓝牙等原生能力。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>对比项</th>
+                <th>小程序</th>
+                <th>H5（公众号网页）</th>
+                <th>原生 App</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>安装成本</td>
+                <td>无需安装，微信内即用</td>
+                <td>无需安装，浏览器打开</td>
+                <td>需下载安装包</td>
+              </tr>
+              <tr>
+                <td>体验与能力</td>
+                <td>接近原生，可调系统能力</td>
+                <td>受浏览器限制较多</td>
+                <td>体验最佳，能力最全</td>
+              </tr>
+              <tr>
+                <td>开发成本</td>
+                <td>低（前端技术栈）</td>
+                <td>低（纯 Web）</td>
+                <td>高（iOS/Android 双端）</td>
+              </tr>
+              <tr>
+                <td>获客路径</td>
+                <td>扫码/搜索/分享，用完即走</td>
+                <td>依赖浏览器与链接传播</td>
+                <td>应用商店下载，转化成本高</td>
+              </tr>
+              <tr>
+                <td>审核发布</td>
+                <td>微信审核（一般较快）</td>
+                <td>无需审核（域名需备案）</td>
+                <td>应用商店审核严格</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>双线程模型：为什么页面不卡</h3>
+        <p>
+          小程序把 JS 逻辑和界面渲染拆到两个线程：
+        </p>
+        <ul>
+          <li><strong>逻辑层（App Service）</strong>：运行 JS，处理数据与业务，不能直接操作 DOM。</li>
+          <li><strong>渲染层（WebView）</strong>：负责 WXML/WXSS 的渲染与交互响应。</li>
+          <li>两层靠 <code>setData</code> 通信：逻辑层把数据序列化后传给渲染层，驱动界面更新。</li>
+        </ul>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          双线程是为了<strong>安全与稳定</strong>：渲染层像「前台服务员」，逻辑层像「后台厨房」——前台不能碰后台数据，点单（事件）和上菜（setData）都要走传话通道。这也解释了为什么
+          <code>setData</code> 传大数据会卡：传话内容越多，上菜越慢。
+        </div>
+
+        <h3>小程序的生态全景</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>入口 / 能力</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>用户入口</td>
+                <td>扫码、搜索、分享卡片、公众号菜单、下拉任务栏</td>
+                <td>「就近展示」——附近的小程序、二维码扫码是线下核心入口</td>
+              </tr>
+              <tr>
+                <td>商业能力</td>
+                <td>微信支付、商家券、视频号带货、小程序直播</td>
+                <td>交易闭环都在微信内完成</td>
+              </tr>
+              <tr>
+                <td>流量分发</td>
+                <td>搜一搜、发现-小程序、广告投放、分享裂变</td>
+                <td>好友/群分享是天然裂变渠道</td>
+              </tr>
+              <tr>
+                <td>开放能力</td>
+                <td>登录、订阅消息、获取手机号、定位、蓝牙、NFC</td>
+                <td>基础库按需开放，部分需企业认证</td>
+              </tr>
+              <tr>
+                <td>云能力</td>
+                <td>云开发（云函数/数据库/存储/托管）</td>
+                <td>免自建服务器，适合快速起步</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          小程序有<strong>代码包体积限制</strong>：单个主包/分包不超过
+          <code>2MB</code>，所有分包总计不超过 <code>20MB</code>（平台新规已逐步放宽，以官方最新公告为准）。图片、字体、大库都别堆在代码包里，要放
+          CDN 或云存储。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >扫码即用用完走，双线程里 setData 传；轻应用要轻包装，2M 包体是红线</strong
+          >」——记住定位与约束，开发思路就对了。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 环境搭建与项目结构</h2>
+
+        <h3>注册账号与安装工具</h3>
+        <p>开发前需要完成三步准备：</p>
+        <div class="steps">
+          <div class="card">
+            <h4>Step 1 · 注册</h4>
+            <p>
+              进入「微信公众平台」（mp.weixin.qq.com）注册小程序账号，获取
+              <code>AppID</code>（个人也能注册，但支付、获取手机号等能力需企业主体）。
+            </p>
+          </div>
+          <div class="card">
+            <h4>Step 2 · 安装开发者工具</h4>
+            <p>
+              下载「微信开发者工具」（稳定版），支持 Windows/macOS，内置<strong
+                >模拟器 + 调试器 + 代码编辑器</strong
+              >。
+            </p>
+          </div>
+          <div class="card">
+            <h4>Step 3 · 创建项目</h4>
+            <p>
+              用 AppID 创建项目（没有 AppID 可选「测试号」）。模板可选
+              JavaScript / TypeScript / 云开发，学习期建议从「JS 基础模板」开始。
+            </p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>主体类型</th>
+                <th>个人</th>
+                <th>企业 / 组织</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>注册门槛</td>
+                <td>身份证即可</td>
+                <td>需营业执照、对公账户等</td>
+              </tr>
+              <tr>
+                <td>微信支付</td>
+                <td>✗ 不支持</td>
+                <td>✓ 支持（需商户号）</td>
+              </tr>
+              <tr>
+                <td>获取手机号 / 订阅消息长期类</td>
+                <td>受限</td>
+                <td>✓ 支持</td>
+              </tr>
+              <tr>
+                <td>类目覆盖</td>
+                <td>偏内容/工具类</td>
+                <td>几乎全类目（电商、餐饮等）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>项目目录结构：全局三件套 + 页面四件套</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>my-app/
+├── app.js                # 全局逻辑：App() 实例、onLaunch
+├── app.json              # 全局配置：页面路由、窗口、tabBar
+├── app.wxss              # 全局样式
+├── project.config.json   # 工具/项目配置（AppID 等）
+├── sitemap.json          # 搜索收录配置
+├── pages/
+│   ├── index/            # 一个页面 = 4 个同名文件
+│   │   ├── index.wxml    # 结构（类 HTML）
+│   │   ├── index.wxss    # 样式（类 CSS）
+│   │   ├── index.js      # 逻辑（Page() 配置）
+│   │   └── index.json    # 页面配置（导航栏、组件引用）
+│   └── logs/
+├── components/           # 自定义组件（按需创建）
+├── utils/                # 公共工具
+└── images/               # 本地静态资源（注意包体积）</code></pre>
+        </div>
+        <ul>
+          <li><strong>app.json 是「总目录」</strong>：第一项 pages 数组就是小程序启动首页。</li>
+          <li>所有用到的页面必须先在 app.json 注册，否则跳转找不到页面。</li>
+        </ul>
+
+        <h3>第一个 Hello World</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- pages/index/index.wxml --&gt;
+&lt;view class="container"&gt;
+  &lt;text&gt;Hello {{name}}!&lt;/text&gt;
+  &lt;button bindtap="onTap"&gt;点我&lt;/button&gt;
+&lt;/view&gt;</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// pages/index/index.js
+Page({
+  data: { name: '微信小程序' },
+  onTap() {
+    this.setData({ name: '开发者' })
+    wx.showToast({ title: '欢迎入门 🎉' })
+  }
+})</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          千万别在 <code>.js</code> 里写 <code>document.getElementById</code>
+          ——小程序没有 DOM/BOM！操作界面只能靠 <code>setData</code> 改数据，或通过
+          组件实例/API 间接操作。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >一个页面四件套：结构样式逻辑配；全局三件 app 开头，页面先注册再使用</strong
+          >」——目录结构记牢，后面章节都是往这四件套里填内容。
+        </div>
+      </section>
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 全局配置与 WXML 语法</h2>
+
+        <h3>app.json：小程序的「总控台」</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>{
+  "pages": ["pages/index/index", "pages/list/list"],
+  "window": {
+    "navigationBarTitleText": "我的小程序",
+    "navigationBarBackgroundColor": "#07c160",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f6f6f6",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#07c160",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/list/list", "text": "列表" }
+    ]
+  },
+  "networkTimeout": { "request": 10000 },
+  "style": "v2"
+}</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>配置项</th>
+                <th>作用</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>pages</code></td>
+                <td>页面路由表（数组）</td>
+                <td>第一项为启动首页，新增页面必须在此登记</td>
+              </tr>
+              <tr>
+                <td><code>window</code></td>
+                <td>全局窗口/导航栏样式</td>
+                <td>可被页面级 json 覆盖</td>
+              </tr>
+              <tr>
+                <td><code>tabBar</code></td>
+                <td>底部标签栏（2-5 个）</td>
+                <td>图标用本地 png，不支持网络图</td>
+              </tr>
+              <tr>
+                <td><code>networkTimeout</code></td>
+                <td>各类网络请求超时</td>
+                <td>单位毫秒</td>
+              </tr>
+              <tr>
+                <td><code>sitemapLocation</code></td>
+                <td>指定 sitemap.json</td>
+                <td>控制是否被搜索收录</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>WXML 三大核心语法</h3>
+        <p>WXML 是「类 HTML」模板，核心就三件事：<strong>绑数据、列列表、判条件</strong>。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- 1. 数据绑定：{{ }} 里写表达式 --&gt;
+&lt;view&gt;{{message}}&lt;/view&gt;
+&lt;view&gt;{{a + b}} · {{isVip ? '会员' : '普通'}}&lt;/view&gt;
+
+&lt;!-- 2. 列表渲染：wx:for + wx:key --&gt;
+&lt;view wx:for="{{list}}" wx:key="id"&gt;
+  {{index}} - {{item.name}}
+&lt;/view&gt;
+
+&lt;!-- 3. 条件渲染：wx:if 系列 --&gt;
+&lt;view wx:if="{{score &gt;= 60}}"&gt;及格&lt;/view&gt;
+&lt;view wx:elif="{{score &gt;= 30}}"&gt;加油&lt;/view&gt;
+&lt;view wx:else&gt;不及格&lt;/view&gt;
+
+&lt;!-- 属性绑定 & 事件 --&gt;
+&lt;image src="{{imgUrl}}" mode="aspectFill" /&gt;
+&lt;button bindtap="handleTap" data-id="{{item.id}}"&gt;按钮&lt;/button&gt;</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>语法</th>
+                <th>说明</th>
+                <th>注意点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>{{ }}</code></td>
+                <td>Mustache 表达式</td>
+                <td>可做简单运算、三元、字符串拼接，<strong>不能写语句</strong></td>
+              </tr>
+              <tr>
+                <td><code>wx:for</code></td>
+                <td>遍历数组渲染</td>
+                <td>默认变量 <code>item</code>/<code>index</code>，可用 <code>wx:for-item</code> 改名</td>
+              </tr>
+              <tr>
+                <td><code>wx:key</code></td>
+                <td>列表 diff 优化键</td>
+                <td>用唯一 id 或 <code>*this</code>，别用 index（列表会变时易错位）</td>
+              </tr>
+              <tr>
+                <td><code>wx:if</code></td>
+                <td>条件渲染（真移除/真创建）</td>
+                <td>切换代价高，适合低频分支</td>
+              </tr>
+              <tr>
+                <td><code>hidden</code></td>
+                <td>条件渲染（仅隐藏）</td>
+                <td>节点常驻，适合高频切换</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <strong>wx:if 与 hidden 别混用场景</strong>：列表项/表单这类「要保留状态的组件」用
+          hidden；而首屏登录态等「切走就不该存在」的用 wx:if。另外 wx:for
+          与 wx:if 写在同一节点时，<strong>wx:for 优先级更高</strong>（先循环再判断），性能差且易踩坑，建议拆开写。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >双花括号绑数据，wx:for 循环加 key；条件用 if 藏用 hidden，for 和 if 莫同框</strong
+          >」——模板三件套，背熟就够用。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> WXSS 样式与 rpx 适配</h2>
+
+        <h3>WXSS = CSS + rpx + 样式隔离</h3>
+        <p>
+          WXSS 基本就是 CSS，多了<strong>响应式单位 rpx</strong>，同时样式默认「页面隔离」：页面样式不会串到别的页面，自定义组件默认也不受页面样式影响（组件样式隔离）。
+        </p>
+        <ul>
+          <li><strong>750rpx = 屏幕宽度</strong>：任何机型上，750rpx 都恰好是一屏宽，无需媒体查询即可自适应。</li>
+          <li>设计稿按 <strong>750 宽</strong> 出图时，px 数值可直接写 rpx，1:1 换算。</li>
+          <li>全局样式写 <code>app.wxss</code>；页面样式写页面自己的 <code>.wxss</code>。</li>
+        </ul>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>单位</th>
+                <th>换算关系</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>rpx</code></td>
+                <td>750rpx = 屏宽（随机型缩放）</td>
+                <td><strong>布局、字号、间距首选</strong></td>
+              </tr>
+              <tr>
+                <td><code>px</code></td>
+                <td>固定物理逻辑像素</td>
+                <td>1px 边框、固定小元素</td>
+              </tr>
+              <tr>
+                <td><code>vh / vw</code></td>
+                <td>视口高度/宽度的 1%</td>
+                <td>全屏容器、弹层定位</td>
+              </tr>
+              <tr>
+                <td><code>%</code></td>
+                <td>相对父容器</td>
+                <td>常规百分比布局</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Flex 布局：小程序的「主流布局」</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>/* 经典：一行三个等宽卡片 */
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+.row .item {
+  width: 230rpx;   /* (750 - 2*30rpx间距 - 2*10rpx缝隙) / 3 */
+  height: 230rpx;
+}
+
+/* 垂直居中（移动端 90% 居中需求） */
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 按钮文字不换行 + 溢出省略 */
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}</code></pre>
+        </div>
+
+        <h3>尺寸换算速查（以 iPhone 6/7/8 为基准）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>设计稿宽度</th>
+                <th>换算口诀</th>
+                <th>示例（设计稿 16px）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>750px</td>
+                <td>1px = 1rpx</td>
+                <td>写 16rpx</td>
+              </tr>
+              <tr>
+                <td>375px（iPhone 逻辑宽度）</td>
+                <td>1px = 2rpx</td>
+                <td>写 32rpx</td>
+              </tr>
+              <tr>
+                <td>其他宽度 W</td>
+                <td>rpx = px × 750 ÷ W</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          记住一个基准：<strong>设计稿 750 宽 → 原样照抄 px 为 rpx</strong>。UI 给 375 宽的稿子就把数字乘
+          2。这是小程序开发最常用的「心算」。
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          部分 Web 写法在小程序里不可用：<code>*</code> 通配符选择器、<code>body/html</code>
+          标签选择器在页面中无效；本地字体/背景图<strong>不支持引用远程绝对路径外链 CSS</strong>（要用
+          <code>@import</code> 导入本地 wxss 或放到 CDN）。样式也别依赖
+          <code>!important</code> 硬怼，组件样式隔离时它救不了你。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >750 稿子 1:1 写 rpx，flex 横行打天下；页面样式互不扰，通配 body 全失效</strong
+          >」——WXSS 的差异点就这么几条，先记住再写样式。
+        </div>
+      </section>
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> 逻辑层与页面生命周期</h2>
+
+        <h3>Page()：页面的「大脑」</h3>
+        <p>每个页面由 <code>Page({...})</code> 描述，包含 data、生命周期、事件与自定义方法。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// pages/detail/detail.js
+Page({
+  // 1. 页面数据：模板里直接可用 {{id}}
+  data: { id: '', list: [], loading: true },
+
+  // 2. 生命周期
+  onLoad(options) {
+    // 页面创建时执行一次，options 是 URL 参数
+    this.setData({ id: options.id })
+    this.fetchDetail(options.id)
+  },
+  onShow() { /* 每次进入页面 */ },
+  onReady() { /* 首次渲染完成 */ },
+  onHide() { /* 页面隐藏（切后台/跳页） */ },
+  onUnload() { /* 页面销毁 */ },
+  onPullDownRefresh() { /* 下拉刷新 */ },
+  onReachBottom() { /* 触底加载更多 */ },
+
+  // 3. 自定义方法（供 bindtap 等调用）
+  fetchDetail(id) {
+    // 模拟请求
+    setTimeout(() =&gt; {
+      this.setData({ list: [{ id, title: '商品' + id }], loading: false })
+    }, 300)
+  }
+})</code></pre>
+        </div>
+
+        <h3>生命周期时序</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>阶段</th>
+                <th>回调</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="2">创建</td>
+                <td><code>onLoad(options)</code></td>
+                <td>读 URL 参数、初始化数据</td>
+              </tr>
+              <tr>
+                <td><code>onShow()</code></td>
+                <td>每次展示都触发：刷新状态、埋点</td>
+              </tr>
+              <tr>
+                <td rowspan="2">运行</td>
+                <td><code>onReady()</code></td>
+                <td>首次渲染完成，可交互（拿节点信息）</td>
+              </tr>
+              <tr>
+                <td><code>onHide()</code></td>
+                <td>切后台/跳转他页：暂停定时器、音乐</td>
+              </tr>
+              <tr>
+                <td>销毁</td>
+                <td><code>onUnload()</code></td>
+                <td>清理监听、释放资源</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>setData：唯一的「改界面通道」</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 直接改 this.data 不会更新界面！必须走 setData
+this.setData({
+  'user.name': '小明',   // 支持路径式更新深层字段
+  'cart[0].count': 2
+})
+
+// 更新后立即读取的是旧值（异步渲染），如需拿最新值用回调
+this.setData({ count: 3 }, () =&gt; {
+  console.log('渲染完成，最新值', this.data.count)
+})</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          别把整个大对象一把 setData（如整页 JSON）——数据要<strong>序列化跨线程传输</strong>，数据越大越卡。最佳实践：只更新<strong>变化的最小字段</strong>，列表类用「路径 + 下标」精准更新。
+        </div>
+
+        <h3>事件绑定：bind 与 catch</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>写法</th>
+                <th>行为</th>
+                <th>场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>bindtap</code></td>
+                <td>事件冒泡（可继续触发父级）</td>
+                <td>常规点击</td>
+              </tr>
+              <tr>
+                <td><code>catchtap</code></td>
+                <td>阻止冒泡（stopPropagation）</td>
+                <td>卡片内按钮不想触发卡片点击</td>
+              </tr>
+              <tr>
+                <td><code>mut-bind</code></td>
+                <td>互斥绑定</td>
+                <td>特殊场景（较新基础库）</td>
+              </tr>
+              <tr>
+                <td><code>capture-bind / capture-catch</code></td>
+                <td>捕获阶段监听 / 拦截</td>
+                <td>需要先于子级处理的场景</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          <code>dataset</code> 是给事件「捎话」的：<code>&lt;view data-id="5"&gt;</code> 被点击后，事件对象里
+          <code>e.currentTarget.dataset.id === '5'</code>。列表页给每项传 id 全靠它，别再用全局变量存「当前点击的是谁」。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >加载读参 onLoad，展示刷新 onShow；改界面只认 setData，最小字段最省心；冒泡用 bind，拦住用 catch</strong
+          >」——页面逻辑三板斧：生命周期 + setData + 事件。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 内置组件与基础 API</h2>
+
+        <h3>高频组件速览</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>组件</th>
+                <th>作用</th>
+                <th>关键点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>view</code></td>
+                <td>容器（≈ div）</td>
+                <td>最常用块级容器</td>
+              </tr>
+              <tr>
+                <td><code>text</code></td>
+                <td>文本（≈ span）</td>
+                <td>唯一可选中复制文本；支持 <code>user-select</code></td>
+              </tr>
+              <tr>
+                <td><code>image</code></td>
+                <td>图片</td>
+                <td>默认 320×240；<code>mode</code> 控制裁剪/缩放</td>
+              </tr>
+              <tr>
+                <td><code>button</code></td>
+                <td>按钮</td>
+                <td><code>open-type</code> 可唤起能力（分享/客服/获取头像等）</td>
+              </tr>
+              <tr>
+                <td><code>input / textarea</code></td>
+                <td>输入框</td>
+                <td>受控用 <code>value</code> + <code>bindinput</code></td>
+              </tr>
+              <tr>
+                <td><code>scroll-view</code></td>
+                <td>可滚动区域</td>
+                <td>横向滚动需 <code>scroll-x</code> + 子元素 inline-block</td>
+              </tr>
+              <tr>
+                <td><code>swiper</code></td>
+                <td>轮播容器</td>
+                <td>子项为 <code>swiper-item</code>，支持自动播放</td>
+              </tr>
+              <tr>
+                <td><code>navigator</code></td>
+                <td>页面跳转</td>
+                <td><code>open-type</code> 选 switchTab/navigateBack 等</td>
+              </tr>
+              <tr>
+                <td><code>icon / progress</code></td>
+                <td>图标 / 进度条</td>
+                <td>内置图标有限，品牌图标建议用 image</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- image 的 mode：开发最常踩的坑 --&gt;
+&lt;!-- aspectFit：完整显示（留白）；aspectFill：铺满裁剪（推荐列表图） --&gt;
+&lt;image src="{{url}}" mode="aspectFill" class="cover" /&gt;
+
+&lt;!-- navigator 跳转 --&gt;
+&lt;navigator url="/pages/detail/detail?id=10"&gt;去详情&lt;/navigator&gt;
+
+&lt;!-- button open-type：分享到好友 --&gt;
+&lt;button open-type="share"&gt;分享给好友&lt;/button&gt;
+
+&lt;!-- input 双向绑定套路 --&gt;
+&lt;input value="{{keyword}}" bindinput="onInput" placeholder="搜索" /&gt;</code></pre>
+        </div>
+
+        <h3>交互反馈 API：让用户知道「发生了什么」</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>wx.showToast({ title: '保存成功', icon: 'success' })   // 轻提示
+wx.showLoading({ title: '加载中' }); wx.hideLoading()   // 全屏加载
+wx.showModal({                                          // 对话框
+  title: '提示',
+  content: '确定删除这条记录吗？',
+  success(res) { if (res.confirm) { /* 用户点了确定 */ } }
+})
+wx.showActionSheet({                                    // 底部菜单
+  itemList: ['编辑', '删除'],
+  success(res) { console.log(res.tapIndex) }
+})</code></pre>
+        </div>
+
+        <h3>页面跳转 API 对比</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>API</th>
+                <th>行为</th>
+                <th>栈行为</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>wx.navigateTo</code></td>
+                <td>跳新页面（可返回）</td>
+                <td>入栈，<strong>最多 10 层</strong></td>
+              </tr>
+              <tr>
+                <td><code>wx.redirectTo</code></td>
+                <td>关闭当前页跳新页</td>
+                <td>替换栈顶</td>
+              </tr>
+              <tr>
+                <td><code>wx.switchTab</code></td>
+                <td>跳 tabBar 页面</td>
+                <td>关闭所有非 tab 页</td>
+              </tr>
+              <tr>
+                <td><code>wx.navigateBack</code></td>
+                <td>返回上一页</td>
+                <td><code>delta</code> 控制层数</td>
+              </tr>
+              <tr>
+                <td><code>wx.reLaunch</code></td>
+                <td>关闭全部页面重开</td>
+                <td>重置栈</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          三个高频坑：① 跳 tabBar 页面用 <code>navigateTo</code> 会报错，必须 <code>switchTab</code>；
+          ② 页面栈超过 <strong>10 层</strong>后 navigateTo 静默失败，深层链路要用 redirectTo；
+          ③ <code>wx.showToast</code> 与 <code>wx.showLoading</code> 同时调用会互相覆盖，loading 期间弹 toast 前先 hideLoading。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >反馈三兄弟 toast、loading、modal；跳页五虎将 push 用 navigate，回退 navigateBack，tab 用 switchTab，清栈 reLaunch</strong
+          >」——交互与导航，先背这组 API 就够入门。
+        </div>
+      </section>
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 网络请求与数据缓存</h2>
+
+        <h3>wx.request：请求服务器数据</h3>
+        <p>小程序发请求用 <code>wx.request</code>，注意必须先配置<strong>合法域名</strong>（开发工具可勾选「不校验域名」临时调试，真机/上线必须 HTTPS 且已在后台配置）。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>wx.request({
+  url: 'https://api.example.com/v1/goods',
+  method: 'GET',
+  data: { page: 1, size: 10 },
+  header: { Authorization: 'Bearer ' + token },
+  success(res) {
+    if (res.statusCode === 200) {
+      console.log(res.data)   // 业务数据
+    }
+  },
+  fail(err) {
+    wx.showToast({ title: '网络异常', icon: 'none' })
+  }
+})</code></pre>
+        </div>
+
+        <h3>封装 Promise 版 request（项目标配）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// utils/request.js
+const BASE_URL = 'https://api.example.com/v1'
+
+function request(path, method = 'GET', data = {}) {
+  return new Promise((resolve, reject) =&gt; {
+    wx.request({
+      url: BASE_URL + path,
+      method,
+      data,
+      header: { Authorization: wx.getStorageSync('token') || '' },
+      success(res) {
+        if (res.statusCode === 200 &amp;&amp; res.data.code === 0) {
+          resolve(res.data.data)
+        } else if (res.statusCode === 401) {
+          // token 失效：跳登录
+          wx.removeStorageSync('token')
+          wx.navigateTo({ url: '/pages/login/login' })
+          reject(res)
+        } else {
+          wx.showToast({ title: res.data.msg || '请求失败', icon: 'none' })
+          reject(res)
+        }
+      },
+      fail: reject
+    })
+  })
+}
+
+module.exports = {
+  get: (p, d) =&gt; request(p, 'GET', d),
+  post: (p, d) =&gt; request(p, 'POST', d)
+}</code></pre>
+        </div>
+
+        <h3>本地缓存：Storage</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>对比项</th>
+                <th>Storage（小程序）</th>
+                <th>Cookie（Web）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>容量</td>
+                <td>单 key 1MB，总 10MB</td>
+                <td>约 4KB</td>
+              </tr>
+              <tr>
+                <td>是否自动带请求</td>
+                <td>否，需手动读写</td>
+                <td>是，自动随请求发送</td>
+              </tr>
+              <tr>
+                <td>同步/异步</td>
+                <td>Sync 版 + 异步版都有</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>典型用途</td>
+                <td>token、用户信息、草稿、缓存列表</td>
+                <td>会话标识</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 同步 API（简单项目够用）
+wx.setStorageSync('token', 'xxx')
+const token = wx.getStorageSync('token')
+wx.removeStorageSync('token')
+wx.clearStorageSync()
+
+// 异步 API（数据大时推荐）
+wx.setStorage({ key: 'user', data: {...}, success() {} })</code></pre>
+        </div>
+
+        <h3>登录流程：code 换 session</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 1. 前端拿临时凭证 code（5 分钟有效）
+wx.login({
+  success(res) {
+    // 2. 把 code 发给自己的后端
+    wx.request({
+      url: 'https://api.example.com/v1/login',
+      method: 'POST',
+      data: { code: res.code },
+      success(r) {
+        // 3. 后端拿 code 调微信 code2session 换 openid，
+        //    再签发自己的 token 返回前端
+        wx.setStorageSync('token', r.data.token)
+      }
+    })
+  }
+})</code></pre>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          登录本质是「<strong>用微信的身份换你服务器的身份</strong>」：code 是一次性凭证，后端拿它去微信换
+          <code>openid</code>（用户在你小程序里的唯一 ID），从此你的接口认 token 不认微信。
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① code2session 的 <code>appsecret</code> 只能放<strong>后端或云函数</strong>，绝不能写进前端代码（会被逆向抓包）；
+          ② wx.login 不等于「登录成功」，它只是拿 code，真正登录要等后端校验完成；
+          ③ 缓存务必带过期处理，别让 token 永久有效。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >请求先配合法域名，code 换 token 是登录；缓存三兄弟 set、get、remove，密钥永远留后端</strong
+          >」——网络与缓存四件事：域名、封装、缓存、登录。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 自定义组件开发</h2>
+
+        <h3>组件 = 可复用的页面片段</h3>
+        <p>当同一块 UI 出现在多个页面（商品卡片、空状态、导航栏），就应抽成自定义组件。组件由四件套 + <code>Component()</code> 构造器组成。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// components/product-card/index.json —— 先声明
+{ "component": true }</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- components/product-card/index.wxml --&gt;
+&lt;view class="card" bindtap="onTap"&gt;
+  &lt;image src="{{product.cover}}" mode="aspectFill" /&gt;
+  &lt;view class="name"&gt;{{product.name}}&lt;/view&gt;
+  &lt;view class="price"&gt;¥{{product.price}}&lt;/view&gt;
+  &lt;slot /&gt;  &lt;!-- 插槽：让父级可塞自定义内容 --&gt;
+&lt;/view&gt;</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// components/product-card/index.js
+Component({
+  properties: {
+    product: {
+      type: Object,
+      value: {},
+      observer(newVal) { /* 属性变化监听 */ }
+    }
+  },
+  data: { /* 组件内部状态 */ },
+  methods: {
+    onTap() {
+      // 向父级抛自定义事件（可带数据）
+      this.triggerEvent('cardtap', { id: this.data.product.id })
+    }
+  },
+  lifetimes: {
+    attached() { /* 组件进入页面节点树 */ },
+    detached() { /* 组件被移除 */ }
+  }
+})</code></pre>
+        </div>
+
+        <h3>组件通信：三种方式一张表</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方向</th>
+                <th>方式</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>父 → 子</td>
+                <td>properties 属性传值</td>
+                <td><code>&lt;product-card product="{{item}}" /&gt;</code></td>
+              </tr>
+              <tr>
+                <td>子 → 父</td>
+                <td><code>triggerEvent</code> 抛自定义事件</td>
+                <td><code>bind:cardtap="onCardTap"</code></td>
+              </tr>
+              <tr>
+                <td>页面 ↔ 子</td>
+                <td><code>selectComponent('#id')</code> 拿实例</td>
+                <td>直接调子组件方法/属性</td>
+              </tr>
+              <tr>
+                <td>兄弟/深层</td>
+                <td>全局状态 / 事件总线（小型项目）</td>
+                <td>mobx、mitt 等</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- 页面使用组件：先在页面的 json 注册 --&gt;
+{
+  "usingComponents": {
+    "product-card": "/components/product-card/index"
+  }
+}
+
+&lt;!-- 页面 wxml --&gt;
+&lt;product-card
+  wx:for="{{products}}"
+  wx:key="id"
+  product="{{item}}"
+  bind:cardtap="goDetail"
+/&gt;
+
+&lt;!-- 页面 js --&gt;
+Page({
+  goDetail(e) {
+    wx.navigateTo({ url: '/pages/detail/detail?id=' + e.detail.id })
+  }
+})</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 组件的 <code>json</code> 必须有 <code>"component": true</code>；
+          ② 组件内 <strong>默认样式隔离</strong>，页面的 class 影响不到组件内部，需要穿透要用
+          <code>styleIsolation: 'apply-shared'</code> 或 externalClasses；
+          ③ 不要直接在组件里改 properties 对象内部属性后指望页面同步——对象是引用，遵守「单向数据流」，要改就整体 setData。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >父传子走 properties，子报信 triggerEvent；插槽留洞给父填，selectComponent 直取实例</strong
+          >」——组件通信四板斧，先学这三招够用。
+        </div>
+      </section>
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 常用组件进阶实战</h2>
+
+        <h3>列表加载：scroll-view 下拉刷新 + 触底加载</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- 页面开启下拉：index.json --&gt;
+{
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
+}</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 页面 js：下拉刷新 + 上拉加载 标准模板
+Page({
+  data: { list: [], page: 1, hasMore: true, loading: false },
+
+  onPullDownRefresh() {
+    this.setData({ page: 1, hasMore: true })
+    this.fetchList(() =&gt; wx.stopPullDownRefresh())  // 必须手动结束
+  },
+  onReachBottom() {
+    if (!this.data.hasMore || this.data.loading) return
+    this.fetchList()
+  },
+  fetchList(done) {
+    this.setData({ loading: true })
+    request('/goods?page=' + this.data.page).then((res) =&gt; {
+      const list = this.data.page === 1
+        ? res.list
+        : this.data.list.concat(res.list)
+      this.setData({
+        list,
+        loading: false,
+        hasMore: this.data.page &lt; res.totalPage,
+        page: this.data.page + 1
+      })
+    }).finally(() =&gt; done &amp;&amp; done())
+  }
+})</code></pre>
+        </div>
+
+        <h3>swiper 轮播</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;swiper
+  class="banner"
+  indicator-dots="{{true}}"
+  autoplay="{{true}}"
+  interval="4000"
+  circular="{{true}}"
+  bindchange="onBannerChange"
+&gt;
+  &lt;swiper-item wx:for="{{banners}}" wx:key="id"&gt;
+    &lt;image src="{{item.url}}" mode="aspectFill" /&gt;
+  &lt;/swiper-item&gt;
+&lt;/swiper&gt;</code></pre>
+        </div>
+
+        <h3>表单与 picker 速查</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>组件</th>
+                <th>用途</th>
+                <th>要点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>form</code></td>
+                <td>表单容器</td>
+                <td><code>bindsubmit</code> 收集 <code>name</code> 字段；<code>report-submit</code> 可带 formId（已废弃，勿依赖）</td>
+              </tr>
+              <tr>
+                <td><code>picker</code></td>
+                <td>选择器</td>
+                <td>mode: selector / multiSelector / date / time / region</td>
+              </tr>
+              <tr>
+                <td><code>switch</code> / <code>slider</code></td>
+                <td>开关 / 滑块</td>
+                <td>bindchange 取 <code>e.detail.value</code></td>
+              </tr>
+              <tr>
+                <td><code>checkbox-group</code> / <code>radio-group</code></td>
+                <td>多选 / 单选组</td>
+                <td>事件绑在 group 上</td>
+              </tr>
+              <tr>
+                <td><code>textarea</code></td>
+                <td>多行输入</td>
+                <td><code>maxlength=-1</code> 不限长度；光标问题用 <code>cursor</code> 控制</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>能力型组件：map / canvas / rich-text / web-view</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>组件</th>
+                <th>典型场景</th>
+                <th>注意事项</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>map</code></td>
+                <td>定位、门店地图</td>
+                <td>需在 app.json 声明 <code>permission</code>；真机调试要开定位权限</td>
+              </tr>
+              <tr>
+                <td><code>canvas</code></td>
+                <td>海报生成、图表、手写</td>
+                <td>新老接口差异大：canvas 2d（type="2d"）是新方向，别学旧版</td>
+              </tr>
+              <tr>
+                <td><code>rich-text</code></td>
+                <td>富文本内容（公告、文章）</td>
+                <td>nodes 支持 HTML 字符串，但<strong>事件被禁用</strong>，别指望里面能点链接跳页</td>
+              </tr>
+              <tr>
+                <td><code>web-view</code></td>
+                <td>内嵌 H5 页面</td>
+                <td>域名必须在后台配置为业务域名；个人主体不支持；与小程序通信靠 <code>postMessage</code>/URL 传参</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          选组件先问自己：<strong>这是「展示」还是「交互」？</strong>纯展示用 rich-text/image 即可；要交互就上原生组件或自定义组件——web-view
+          是「最后手段」，能不用就不用（加载慢、通信绕、审核关注多）。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >列表三件套：下拉刷新、触底加载、空态兜底；轮播 swiper，表单 picker；web-view 少用，canvas 学 2d</strong
+          >」——进阶组件，按场景记就顺。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 云开发：云函数与数据库</h2>
+
+        <h3>云开发是什么</h3>
+        <p>
+          云开发（CloudBase）让你<strong>不需要买服务器、配域名、做运维</strong>，直接在微信侧使用
+          云函数、云数据库、云存储与云托管，天然免「合法域名」配置，非常适合个人项目与快速 MVP。
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>能力</th>
+                <th>一句话说明</th>
+                <th>对应传统后端</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>云函数</td>
+                <td>在云端跑 Node.js 代码</td>
+                <td>接口服务（免服务器）</td>
+              </tr>
+              <tr>
+                <td>云数据库</td>
+                <td>文档型数据库（JSON 存储）</td>
+                <td>MongoDB</td>
+              </tr>
+              <tr>
+                <td>云存储</td>
+                <td>上传/下载文件（图片、视频）</td>
+                <td>OSS / 文件服务器</td>
+              </tr>
+              <tr>
+                <td>云托管 / 静态托管</td>
+                <td>容器化部署 / 托管前端静态资源</td>
+                <td>服务器 / CDN</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>云函数：写接口的新姿势</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// cloudfunctions/getOpenId/index.js
+const cloud = require('wx-server-sdk')
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+
+exports.main = async (event, context) =&gt; {
+  const { OPENID, APPID, UNIONID } = cloud.getWXContext()
+  return { openid: OPENID }
+}</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 前端调用云函数
+wx.cloud.callFunction({
+  name: 'getOpenId'
+}).then(res =&gt; {
+  console.log(res.result.openid)
+})
+
+// 别忘了在 app.js 初始化
+wx.cloud.init({ env: 'your-env-id', traceUser: true })</code></pre>
+        </div>
+
+        <h3>云数据库 CRUD</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>const db = wx.cloud.database()
+
+// 增
+db.collection('todos').add({ data: { title: '买菜', done: false } })
+
+// 查（前端默认最多 20 条，分页用 skip/limit）
+db.collection('todos')
+  .where({ done: false })
+  .orderBy('createTime', 'desc')
+  .skip(0).limit(20)
+  .get()
+
+// 改（doc 需传 _id）
+db.collection('todos').doc(id).update({ data: { done: true } })
+
+// 删
+db.collection('todos').doc(id).remove()
+
+// 安全兜底：复杂/批量操作放云函数里用服务端 SDK</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>权限类型</th>
+                <th>谁可读</th>
+                <th>谁可写</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>仅创建者可读写</td>
+                <td>创建者</td>
+                <td>创建者</td>
+              </tr>
+              <tr>
+                <td>所有用户可读，仅创建者可写</td>
+                <td>所有人</td>
+                <td>创建者</td>
+              </tr>
+              <tr>
+                <td>所有用户可读</td>
+                <td>所有人</td>
+                <td>仅管理端（云函数）</td>
+              </tr>
+              <tr>
+                <td>所有用户不可读写</td>
+                <td>仅管理端</td>
+                <td>仅管理端（云函数）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>云存储：上传与取文件</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 选图上传
+wx.chooseMedia({
+  count: 1,
+  success(res) {
+    const filePath = res.tempFiles[0].tempFilePath
+    const cloudPath = 'avatar/' + Date.now() + '.jpg'
+    wx.cloud.uploadFile({
+      cloudPath, filePath
+    }).then(r =&gt; {
+      console.log('fileID:', r.fileID)
+    })
+  }
+})
+
+// 拿临时链接展示（有效期）
+wx.cloud.getTempFileURL({
+  fileList: ['cloud://env-id.xxx/avatar/1.jpg']
+}).then(res =&gt; console.log(res.fileList[0].tempFileURL))</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① 云函数<strong>不是免费的</strong>：有免费额度（按量），超了要付费，发布前关注「环境-资源用量」；
+          ② 前端直连数据库虽然爽，但权限模型写错就是「脱裤」——涉及钱的读写<strong>一律放云函数</strong>用服务端 SDK + 自定义安全规则；
+          ③ 云函数冷启动有延迟（约几百 ms～1s），对首屏敏感的操作可考虑预加载或把高频只读数据放缓存。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >云函数跑后端，数据库 CRUD 随手记；存储传文件拿链接；涉及钱和密，全走云函数</strong
+          >」——云开发四件套，个人项目一把梭。
+        </div>
+      </section>
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 动画与交互反馈</h2>
+
+        <h3>CSS 过渡与关键帧动画</h3>
+        <p>轻量动画优先用 CSS：性能好、代码少、不需要 JS 参与。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>/* 过渡：状态变化时平滑移动 */
+.box {
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+.box.active {
+  transform: translateX(200rpx);
+}
+
+/* 关键帧：无限循环动画（加载菊花、红点呼吸） */
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.loading-dot {
+  animation: pulse 1.2s ease-in-out infinite;
+}</code></pre>
+        </div>
+
+        <h3>wx.createAnimation：JS 驱动的复杂动画</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 右侧滑出抽屉的经典实现
+Page({
+  data: { anim: {} },
+  showDrawer() {
+    const anim = wx.createAnimation({
+      duration: 300,
+      timingFunction: 'ease-out'
+    })
+    anim.translateX(0).step()          // 目标位置
+    this.setData({ anim: anim.export() })
+  },
+  hideDrawer() {
+    const anim = wx.createAnimation({ duration: 300 })
+    anim.translateX('100%').step()     // 移出屏幕
+    this.setData({ anim: anim.export() })
+  }
+})</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- wxml：animation 属性绑定动画对象 --&gt;
+&lt;view class="drawer" animation="{{anim}}"&gt;
+  我是抽屉
+&lt;/view&gt;</code></pre>
+        </div>
+
+        <h3>触摸事件与手势</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>事件</th>
+                <th>触发时机</th>
+                <th>常用属性</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>touchstart</code></td>
+                <td>手指按下</td>
+                <td rowspan="4">
+                  <code>touches</code>（当前触点）、<code>changedTouches</code>（变化的触点）、
+                  <code>clientX/clientY</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>touchmove</code></td>
+                <td>手指移动（高频触发）</td>
+              </tr>
+              <tr>
+                <td><code>touchend</code></td>
+                <td>手指离开</td>
+              </tr>
+              <tr>
+                <td><code>touchcancel</code></td>
+                <td>系统打断（如来电）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 滑动删除 / 手势判断的最小骨架
+Page({
+  data: { startX: 0 },
+  onTouchStart(e) {
+    this.setData({ startX: e.touches[0].clientX })
+  },
+  onTouchEnd(e) {
+    const deltaX = e.changedTouches[0].clientX - this.data.startX
+    if (deltaX &lt; -60) {
+      wx.showToast({ title: '左滑', icon: 'none' })
+    } else if (deltaX &gt; 60) {
+      wx.showToast({ title: '右滑', icon: 'none' })
+    }
+  }
+})</code></pre>
+        </div>
+
+        <h3>骨架屏：秒开体验的关键</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- 加载中显示骨架，加载完切换真实内容 --&gt;
+&lt;view wx:if="{{loading}}" class="skeleton"&gt;
+  &lt;view class="sk-image shimmer" /&gt;
+  &lt;view class="sk-line w60 shimmer" /&gt;
+  &lt;view class="sk-line w80 shimmer" /&gt;
+&lt;/view&gt;
+&lt;view wx:else&gt;真实内容&lt;/view&gt;
+
+/* shimmer 高光扫过效果 */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}</code></pre>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          动画选型按「成本」排：<strong>CSS transition/animation → wx.createAnimation → 第三方动画库</strong>。能用 CSS 的别用 JS，能省主线程的别耗逻辑层——动画卡不卡，本质是主线程忙不忙。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >轻动画走 CSS，重动画 createAnimation；手势看 touches，骨架屏保首屏</strong
+          >」——动效四件套：过渡、动画、手势、骨架。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> 分包加载与性能优化</h2>
+
+        <h3>为什么需要分包</h3>
+        <p>主包 2MB 的天花板下，业务多了必然超限。分包把代码按「访问路径」拆开：<strong>用户进哪个功能，才下载哪个包</strong>，首包更小、启动更快。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// app.json：分包配置
+{
+  "pages": ["pages/index/index", "pages/cart/cart"],
+  "subpackages": [
+    {
+      "root": "packageGoods",
+      "name": "商品模块",
+      "pages": [
+        "pages/detail/detail",
+        "pages/search/search"
+      ]
+    },
+    {
+      "root": "packageOrder",
+      "pages": ["pages/order/list/list"],
+      "independent": true    // 独立分包：不依赖主包，可单独加载
+    }
+  ],
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": ["packageGoods"]   // 首页空闲时预下载商品包
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>概念</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>普通分包</td>
+                <td>依赖主包（可访问主包资源），随主包一起下发但不随启动加载</td>
+              </tr>
+              <tr>
+                <td>独立分包</td>
+                <td>不依赖主包，可独立运行；适合分享落地页（如活动页、邀请页）</td>
+              </tr>
+              <tr>
+                <td>分包预下载</td>
+                <td>配置 preloadRule，在空闲/特定网络下提前下载分包</td>
+              </tr>
+              <tr>
+                <td>分包异步化</td>
+                <td>主包可 require 分包 JS / 引用分包组件（需基础库 2.20.1+）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          ① tabBar 页面<strong>必须放主包</strong>，不能放分包；
+          ② 分包之间不能互相 require（独立分包尤其严格）；
+          ③ 主包也要瘦身：把公共大库（如图表库）按需引入，图片一律外链；
+          ④ 上线前看「详情-代码质量-包体积」报告，超限直接上传失败。
+        </div>
+
+        <h3>性能优化 Checklist</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>手段</th>
+                <th>收益</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>启动</td>
+                <td>分包 + 预下载 + 首屏只渲染必要组件</td>
+                <td>首屏时间明显下降</td>
+              </tr>
+              <tr>
+                <td>setData</td>
+                <td>最小字段、路径更新、合并多次、<strong>节流高频更新</strong></td>
+                <td>减少跨线程通信量</td>
+              </tr>
+              <tr>
+                <td>图片</td>
+                <td>WebP/压缩、CDN、懒加载 <code>lazy-load</code>、占位图</td>
+                <td>省流量、防白屏</td>
+              </tr>
+              <tr>
+                <td>列表</td>
+                <td>分页加载、虚拟列表（recycle-view）、图片懒加载</td>
+                <td>长列表不卡</td>
+              </tr>
+              <tr>
+                <td>渲染</td>
+                <td>避免大 wx:for 嵌套、避免在 onShow 里重复拉全量数据</td>
+                <td>减少渲染压力</td>
+              </tr>
+              <tr>
+                <td>网络</td>
+                <td>接口并发、缓存幂等数据（Storage）、预请求</td>
+                <td>弱网体验更好</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          性能优化的本质是<strong>「少干活」</strong>：少传数据（setData 最小化）、少下文件（分包+图片瘦身）、少渲染（虚拟列表）、少请求（缓存）。别一上来就上框架，先按这四「少」自查。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >主包两兆是红线，分包拆开预下载；setData 要最小化，图片瘦身列表虚</strong
+          >」——性能优化记住「分包 + 四少」。
+        </div>
+      </section>
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 组件高级：behaviors 与 relations</h2>
+
+        <h3>behaviors：组件的「mixins」</h3>
+        <p>多个组件有相同的 data、方法、生命周期时，抽成 behavior 复用，类似 Vue 的 mixin。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// behaviors/loading.js —— 通用「加载中」逻辑
+module.exports = Behavior({
+  data: { loading: false, hasMore: true },
+  methods: {
+    startLoading() { this.setData({ loading: true }) },
+    finishLoading() { this.setData({ loading: false }) }
+  }
+})</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// components/goods-list/index.js —— 直接复用
+const loadingBehavior = require('../../behaviors/loading')
+
+Component({
+  behaviors: [loadingBehavior],
+  data: { list: [] },
+  methods: {
+    load() {
+      this.startLoading()   // 来自 behavior
+      // ...拉数据
+      this.finishLoading()
+    }
+  }
+})</code></pre>
+        </div>
+        <div class="callout info">
+          <div class="callout-title">💡 一句话理解</div>
+          behaviors 的合并规则要记：<strong>data 浅合并，方法直接覆盖</strong>（组件自身优先于 behavior，后引入的 behavior 优先于先引入的）；同名字段/方法，优先级
+          <code>组件 > 后 behavior > 先 behavior</code>。
+        </div>
+
+        <h3>relations：组件间的「亲属关系」</h3>
+        <p>父组件与子孙组件需要直接通信（如 tab 容器管理多个 tab-pane）时用 relations。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// components/tabs/index.js —— 父组件
+Component({
+  relations: {
+    '../tab-pane/index': {
+      type: 'child',              // 关联子组件
+      linked(target) {
+        // 子组件挂载时触发：登记起来
+        this._panes = this._panes || []
+        this._panes.push(target)
+      },
+      unlinked(target) {
+        this._panes = (this._panes || []).filter(p =&gt; p !== target)
+      }
+    }
+  },
+  methods: {
+    switchTo(index) {
+      // 通知所有子 pane 切换
+      this._panes.forEach((pane, i) =&gt; pane.setActive(i === index))
+    }
+  }
+})</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>relation 类型</th>
+                <th>含义</th>
+                <th>回调</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ancestor</code> / <code>descendant</code></td>
+                <td>祖孙关系</td>
+                <td>linked / unlinked / linkChanged</td>
+              </tr>
+              <tr>
+                <td><code>parent</code> / <code>child</code></td>
+                <td>父子关系</td>
+                <td>同上</td>
+              </tr>
+              <tr>
+                <td>兄弟联动</td>
+                <td>经由共同父组件转发</td>
+                <td>父组件里 getRelationNodes 遍历</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>抽象节点：占位组件</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- component: 列表项骨架里放一个"抽象节点"，使用方决定渲染成什么 --&gt;
+&lt;view wx:for="{{list}}" wx:key="index"&gt;
+  &lt;selectable-item item="{{item}}" /&gt;
+&lt;/view&gt;
+
+// 骨架组件 json
+{
+  "componentGenerics": {
+    "selectable-item": true
+  }
+}
+
+&lt;!-- 使用方：把抽象节点指定为具体组件 --&gt;
+&lt;generic-list generic:selectable-item="product-card" list="{{list}}" /&gt;</code></pre>
+        </div>
+
+        <h3>更多进阶能力速览</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>能力</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>多插槽</td>
+                <td><code>options: { multipleSlots: true }</code> 后可用具名 <code>slot name="title"</code></td>
+              </tr>
+              <tr>
+                <td><code>observers</code></td>
+                <td>监听 data/properties 字段变化（比 observer 更强，支持通配符 <code>**</code>）</td>
+              </tr>
+              <tr>
+                <td>外部样式类</td>
+                <td><code>externalClasses: ['my-class']</code>，父级传 class 定制组件样式</td>
+              </tr>
+              <tr>
+                <td>纯数据字段</td>
+                <td><code>options: { pureDataPattern: /^_/ }</code>，下划线开头字段不参与渲染</td>
+              </tr>
+              <tr>
+                <td>虚拟列表</td>
+                <td>官方 <code>recycle-view</code> 或第三方 minigame 方案，长列表只渲染可视区</td>
+              </tr>
+              <tr>
+                <td>Component 构造器通用性</td>
+                <td>页面也能用 Component 构造，可复用 behaviors/observers（不建议混用）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >公用逻辑用 behavior，亲属联动 relations；占位组件 generics，多插槽加 observers</strong
+          >」——组件高级四件套，先会 behavior + relations 就领先大多数人了。
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> 安全与隐私合规</h2>
+
+        <h3>网络安全：合法域名与 HTTPS</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>要求</th>
+                <th>说明</th>
+                <th>违规后果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>request 合法域名</td>
+                <td>后台配置，须 <strong>HTTPS + ICP 备案</strong></td>
+                <td>真机请求直接失败</td>
+              </tr>
+              <tr>
+                <td>socket / uploadFile 合法域名</td>
+                <td>分别配置 wss / https 域名</td>
+                <td>连接失败</td>
+              </tr>
+              <tr>
+                <td>业务域名（web-view）</td>
+                <td>需下载校验文件放到域名根目录</td>
+                <td>web-view 打不开</td>
+              </tr>
+              <tr>
+                <td>证书有效期</td>
+                <td>定期检查 TLS 证书</td>
+                <td>接口异常、审核警告</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>接口鉴权与防刷</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 后端鉴权最小实践（Node 伪代码）
+1. 登录：code + appid + secret → 微信 code2session → openid
+2. 签发 token：jwt.sign({ openid }, SECRET, { expiresIn: '7d' })
+3. 校验：每个接口解析 Authorization，验签 + 查过期
+4. 防刷：同 openid 限频（如 1 秒 1 次写操作）
+5. 敏感接口：二次校验（签名 = md5(参数 + salt + timestamp)）
+
+// 前端配合
+header: { Authorization: `Bearer ${token}`, 'X-Ts': Date.now() }</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>风险</th>
+                <th>攻击方式</th>
+                <th>防御手段</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>越权（IDOR）</td>
+                <td>改订单号/用户 ID 访问他人数据</td>
+                <td>后端一律以 token 中的 openid 为准，<strong>不信前端传的 userId</strong></td>
+              </tr>
+              <tr>
+                <td>重放</td>
+                <td>抓包重复提交订单/领券</td>
+                <td>幂等键、时间戳 + 签名、服务端去重</td>
+              </tr>
+              <tr>
+                <td>刷接口</td>
+                <td>脚本高频调用</td>
+                <td>限频、验证码、风控</td>
+              </tr>
+              <tr>
+                <td>敏感信息泄露</td>
+                <td>接口返回多余字段（手机号、openid）</td>
+                <td>最小化返回、字段脱敏</td>
+              </tr>
+              <tr>
+                <td>密钥泄露</td>
+                <td>appsecret 写进前端被打包逆向</td>
+                <td>密钥只存后端/云函数环境变量</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>隐私合规：2023 年后的用户信息规则</h3>
+        <ul>
+          <li><strong>头像昵称</strong>：不能再静默 <code>wx.getUserProfile</code> 弹窗拿头像昵称。改为：头像用 <code>button open-type="chooseAvatar"</code>，昵称用 <code>input type="nickname"</code>，让用户主动填写/选择。</li>
+          <li><strong>隐私协议</strong>：涉及收集用户信息（头像、位置、手机号等），须在「小程序管理后台-设置-服务内容声明-用户隐私保护指引」填写，并在端内用 <code>wx.requirePrivacyAuthorize</code> / 隐私弹窗组件征得同意。</li>
+          <li><strong>手机号</strong>：必须企业主体 + 用户主动点击 <code>button open-type="getPhoneNumber"</code>，且手机号组件有调用频率限制。</li>
+        </ul>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;!-- 合规的头像昵称获取 --&gt;
+&lt;button open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar"&gt;
+  &lt;image src="{{avatar}}" /&gt;
+&lt;/button&gt;
+&lt;input type="nickname" value="{{nickname}}" bindinput="onNickInput" /&gt;
+
+// 注意：此时拿到的仍是"用户主动给"的信息，
+// 不要再调用 wx.getUserProfile 弹窗授权
+Page({
+  onChooseAvatar(e) {
+    this.setData({ avatar: e.detail.avatarUrl })
+  },
+  onNickInput(e) {
+    this.setData({ nickname: e.detail.value })
+  }
+})</code></pre>
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">🚫 红线提醒</div>
+          ① 未声明用途就收集隐私信息 → <strong>审核驳回 + 能力封禁</strong>；
+          ② 强制用户授权（不授权不让用）→ 违规，须提供「拒绝仍可用」的降级路径；
+          ③ 采集位置/通讯录等敏感信息必须<strong>弹窗说明用途</strong>，且只在对应功能时请求；
+          ④ 不得诱导用户开启「始终允许位置」。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >域名 HTTPS 先备案，密钥只在后端藏；越权全凭 token 判，头像昵称靠主动填；隐私声明先写好，审核合规不踩雷</strong
+          >」——安全合规五条线，背完再上线。
+        </div>
+      </section>
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 微信开放能力深度实践</h2>
+
+        <h3>用户身份：openid / unionid</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>标识</th>
+                <th>粒度</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>openid</code></td>
+                <td>一个用户在一个小程序内唯一</td>
+                <td>业务主键，用户数据都挂它</td>
+              </tr>
+              <tr>
+                <td><code>unionid</code></td>
+                <td>同一微信开放平台账号下的多个应用共享</td>
+                <td>打通小程序 + 公众号 + App 的用户体系</td>
+              </tr>
+              <tr>
+                <td><code>session_key</code></td>
+                <td>会话密钥，加密数据解密用</td>
+                <td>配合获取手机号等敏感数据解密</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>微信支付：一次完整的支付链路</h3>
+        <div class="steps">
+          <div class="card">
+            <h4>Step 1 · 后端统一下单</h4>
+            <p>
+              前端把「订单号 + 金额」发给后端；后端调微信支付
+              <code>统一下单</code> 接口，拿到 <code>prepay_id</code>。
+            </p>
+          </div>
+          <div class="card">
+            <h4>Step 2 · 后端签名</h4>
+            <p>
+              后端用 prepay_id 生成调起支付所需参数（timeStamp、nonceStr、package、signType、paySign）——<strong>签名必须在后端做</strong>。
+            </p>
+          </div>
+          <div class="card">
+            <h4>Step 3 · 前端调起支付</h4>
+            <p>
+              前端拿到参数后调 <code>wx.requestPayment</code>，微信弹出支付面板。
+            </p>
+          </div>
+          <div class="card">
+            <h4>Step 4 · 回调验签</h4>
+            <p>
+              微信异步通知后端支付结果，后端验签 + 改订单状态，再给前端回执。
+            </p>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 前端调起支付（参数全部由后端返回）
+wx.requestPayment({
+  timeStamp: res.timeStamp,
+  nonceStr: res.nonceStr,
+  package: res.package,      // 'prepay_id=xxx'
+  signType: 'RSA',
+  paySign: res.paySign,
+  success() { wx.showToast({ title: '支付成功' }) },
+  fail() { /* 用户取消/失败，别自动重扣 */ }
+})
+
+// 支付结果以【后端回调】为准，不要信任前端的 success</code></pre>
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">🚫 红线提醒</div>
+          ① 支付金额/订单状态必须后端校验，前端传金额是重大漏洞；
+          ② 必须处理「支付成功但回调没到」：用主动查单兜底；
+          ③ 沙箱/测试别用真实金额；商户密钥泄露要立即重置。
+
+        </div>
+
+        <h3>订阅消息：触达用户的「正规通道」</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 1. 用户点击按钮授权订阅（一次性订阅：授权一次可发一条）
+wx.requestSubscribeMessage({
+  tmplIds: ['模板ID_xxx'],
+  success(res) {
+    if (res['模板ID_xxx'] === 'accept') {
+      // 2. 把结果上报后端，后端在业务时机调 subscribeMessage.send
+    }
+  }
+})
+
+// 一次性 vs 长期
+// - 一次性订阅消息：用户点一次授权，你只能发一条
+// - 长期订阅消息：仅特定行业（政务、医疗、交通等）可申请
+// - 订阅消息必须"用户主动触发 + 业务相关"，不能骚扰式群发</code></pre>
+        </div>
+
+        <h3>分享：让用户帮你传播</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 页面开启分享：监听右上角菜单"转发"
+Page({
+  onShareAppMessage() {
+    return {
+      title: '这个商品太值了！',
+      path: '/pages/detail/detail?id=' + this.data.id,
+      imageUrl: this.data.cover   // 自定义分享图 5:4
+    }
+  },
+  onShareTimeline() {  // 分享到朋友圈（需页面支持）
+    return { title: '好物推荐', query: 'id=' + this.data.id }
+  }
+})</code></pre>
+        </div>
+
+        <h3>其他高频能力速查</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>能力</th>
+                <th>调用方式</th>
+                <th>前置条件</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>获取手机号</td>
+                <td><code>button open-type="getPhoneNumber"</code></td>
+                <td>企业主体 + 已认证 + 隐私声明</td>
+              </tr>
+              <tr>
+                <td>定位</td>
+                <td><code>wx.getLocation</code> / <code>wx.chooseLocation</code></td>
+                <td>app.json 声明 permission + 用户授权</td>
+              </tr>
+              <tr>
+                <td>扫一扫</td>
+                <td><code>wx.scanCode</code></td>
+                <td>无</td>
+              </tr>
+              <tr>
+                <td>客服</td>
+                <td><code>button open-type="contact"</code></td>
+                <td>后台绑定客服微信</td>
+              </tr>
+              <tr>
+                <td>生物识别</td>
+                <td><code>wx.startSoterAuthentication</code></td>
+                <td>指纹/面容（安卓部分机型不支持）</td>
+              </tr>
+              <tr>
+                <td>蓝牙 / NFC</td>
+                <td><code>wx.openBluetoothAdapter</code> 等</td>
+                <td>硬件支持 + 权限声明</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          分享三坑：① 页面没定义 <code>onShareAppMessage</code> 时，右上角菜单「转发」置灰——想要分享的页面必须实现；
+          ② 分享出去的 path 参数要能<strong>独立打开</strong>（用户没登录态时也要能看商品）；
+          ③ 诱导分享（分享后解锁/返现）违反运营规范，会被限制分享能力。
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >登录看 openid，支付靠后端签；订阅消息点一次发一条，分享要写 onShare；手机号要企业，定位先声明</strong
+          >」——开放能力全在「资质 + 主动触发」八字里。
+        </div>
+      </section>
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 工程化与架构设计</h2>
+
+        <h3>npm 与第三方库</h3>
+        <p>小程序支持 npm 包，但要<strong>先「构建 npm」</strong>，包会被编译进 <code>miniprogram_npm</code> 目录。</p>
+        <div class="steps">
+          <div class="card">
+            <h4>① 安装依赖</h4>
+            <p>项目根目录 <code>npm init -y</code> 后 <code>npm install dayjs</code>。</p>
+          </div>
+          <div class="card">
+            <h4>② 构建 npm</h4>
+            <p>开发者工具菜单「工具 → 构建 npm」，生成 miniprogram_npm。</p>
+          </div>
+          <div class="card">
+            <h4>③ 引用</h4>
+            <p><code>const dayjs = require('dayjs')</code>。注意：依赖 DOM 的库（如 jQuery）用不了。</p>
+          </div>
+        </div>
+
+        <h3>TypeScript 开发小程序</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 新建项目时选 TypeScript 模板，或用 tsc 编译
+// 类型提示让小程序开发安全很多
+interface Product {
+  id: number
+  name: string
+  price: number
+}
+
+Page&lt;{}, { product: Product; list: Product[] }&gt;({
+  data: { product: {} as Product, list: [] },
+  onLoad(options: Record&lt;string, string&gt;) {
+    // options.id 有类型了
+  }
+})</code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// tsconfig.json 关键配置
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "types": ["miniprogram-api-typings"],
+    "noImplicitAny": true
+  }
+}</code></pre>
+        </div>
+
+        <h3>架构分层：别把逻辑全堆在 Page 里</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>层</th>
+                <th>职责</th>
+                <th>放哪</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>页面层</td>
+                <td>UI 状态、交互、事件分发</td>
+                <td>pages/*/index.js</td>
+              </tr>
+              <tr>
+                <td>服务层</td>
+                <td>接口请求、数据聚合、业务规则</td>
+                <td>services/*.js（每个领域一个）</td>
+              </tr>
+              <tr>
+                <td>工具层</td>
+                <td>请求封装、格式化、埋点、鉴权</td>
+                <td>utils/*.js</td>
+              </tr>
+              <tr>
+                <td>状态层（可选）</td>
+                <td>跨页共享的登录态、购物车等</td>
+                <td>mobx-miniprogram / 全局 store</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// services/product.js —— 页面只调服务，不裸写 wx.request
+const { get } = require('../utils/request')
+
+exports.getDetail = (id) =&gt; get('/product/' + id)
+exports.getList = (page) =&gt; get('/product/list', { page })
+
+// 页面里
+const productApi = require('../../services/product')
+Page({
+  onLoad(options) {
+    productApi.getDetail(options.id).then((data) =&gt; {
+      this.setData({ product: data })
+    })
+  }
+})</code></pre>
+        </div>
+
+        <h3>CI / CD 与发布流程</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>环节</th>
+                <th>工具/手段</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>代码检查</td>
+                <td>ESLint + miniprogram 规则集</td>
+                <td>CI 里拦截低级错误</td>
+              </tr>
+              <tr>
+                <td>自动化上传</td>
+                <td><code>miniprogram-ci</code></td>
+                <td>命令行上传代码、预览、生成体验版二维码</td>
+              </tr>
+              <tr>
+                <td>单元测试</td>
+                <td><code>miniprogram-simulate</code></td>
+                <td>组件/工具函数可测</td>
+              </tr>
+              <tr>
+                <td>发布节奏</td>
+                <td>开发版 → 体验版 → 提交审核 → 发布</td>
+                <td>灰度发布用「分阶段发布」</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// miniprogram-ci 最小示例（Node 脚本）
+const ci = require('miniprogram-ci')
+;(async () =&gt; {
+  const project = new ci.Project({
+    appid: 'wx123456',
+    type: 'miniProgram',
+    projectPath: './dist',
+    privateKeyPath: './private.key',  // 后台-开发设置-代码上传密钥
+    ignores: ['node_modules/**']
+  })
+  await ci.upload({
+    project,
+    version: '1.2.0',
+    desc: 'CI 自动上传',
+    setting: { es6: true, minify: true }
+  })
+  console.log('上传成功')
+})()</code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          工程化不是「越重越好」：个人项目用原生 + utils 分层足够，别一上来就套重型框架；多人/中大型项目再引入
+          TypeScript、状态管理、CI。代码上传密钥 <code>private.key</code> 千万别提交进 git 仓库！
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >页面薄、服务厚、工具纯；TS 加类型，CI 管发布；密钥锁进保险柜</strong
+          >」——工程化记住「分层 + 自动化 + 密钥安全」。
+        </div>
+      </section>
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> API 与组件速查手册</h2>
+        <p>
+          本章把高频 API、WXML 语法与组件浓缩成三张速查表——开发时打开对照即可，不用翻文档。
+        </p>
+
+        <h3>表 A · 全局 API 速查（按能力分组）</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>分组</th>
+                <th>API</th>
+                <th>一句话说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="7">基础</td>
+                <td><code>wx.getSystemInfoSync()</code></td>
+                <td>系统信息（窗口宽高、机型、版本）</td>
+              </tr>
+              <tr>
+                <td><code>wx.getEnvInfoSync()</code></td>
+                <td>运行环境（基础库 2.20.1+ 推荐）</td>
+              </tr>
+              <tr>
+                <td><code>wx.canIUse()</code></td>
+                <td>能力检测：判断 API/组件是否可用</td>
+              </tr>
+              <tr>
+                <td><code>wx.onAppShow / onAppHide</code></td>
+                <td>监听小程序切前后台（App 级）</td>
+              </tr>
+              <tr>
+                <td><code>wx.getUpdateManager()</code></td>
+                <td>检查更新，提示用户重启</td>
+              </tr>
+              <tr>
+                <td><code>wx.setClipboardData</code></td>
+                <td>写剪贴板（先弹授权条）</td>
+              </tr>
+              <tr>
+                <td><code>wx.getClipboardData</code></td>
+                <td>读剪贴板</td>
+              </tr>
+              <tr>
+                <td rowspan="5">路由</td>
+                <td><code>wx.navigateTo</code></td>
+                <td>跳新页面（栈 &lt;= 10）</td>
+              </tr>
+              <tr>
+                <td><code>wx.redirectTo</code></td>
+                <td>关闭当前页再跳</td>
+              </tr>
+              <tr>
+                <td><code>wx.switchTab</code></td>
+                <td>切 tabBar 页面</td>
+              </tr>
+              <tr>
+                <td><code>wx.navigateBack</code></td>
+                <td>返回（delta 层数）</td>
+              </tr>
+              <tr>
+                <td><code>wx.reLaunch</code></td>
+                <td>关所有页重开</td>
+              </tr>
+              <tr>
+                <td rowspan="6">交互反馈</td>
+                <td><code>wx.showToast</code></td>
+                <td>轻提示（icon: none/success/loading）</td>
+              </tr>
+              <tr>
+                <td><code>wx.showLoading / hideLoading</code></td>
+                <td>全屏加载</td>
+              </tr>
+              <tr>
+                <td><code>wx.showModal</code></td>
+                <td>对话框（确认/取消）</td>
+              </tr>
+              <tr>
+                <td><code>wx.showActionSheet</code></td>
+                <td>底部操作菜单</td>
+              </tr>
+              <tr>
+                <td><code>wx.showShareMenu</code></td>
+                <td>显示转发按钮（可配 withShareTicket）</td>
+              </tr>
+              <tr>
+                <td><code>wx.pageScrollTo</code></td>
+                <td>页面滚动到指定位置</td>
+              </tr>
+              <tr>
+                <td rowspan="4">网络</td>
+                <td><code>wx.request</code></td>
+                <td>HTTPS 请求</td>
+              </tr>
+              <tr>
+                <td><code>wx.uploadFile</code></td>
+                <td>上传文件（multipart）</td>
+              </tr>
+              <tr>
+                <td><code>wx.downloadFile</code></td>
+                <td>下载文件到本地</td>
+              </tr>
+              <tr>
+                <td><code>wx.connectSocket</code></td>
+                <td>WebSocket 长连接（wss）</td>
+              </tr>
+              <tr>
+                <td rowspan="4">缓存</td>
+                <td><code>wx.setStorageSync / setStorage</code></td>
+                <td>写缓存（同步/异步）</td>
+              </tr>
+              <tr>
+                <td><code>wx.getStorageSync / getStorage</code></td>
+                <td>读缓存</td>
+              </tr>
+              <tr>
+                <td><code>wx.removeStorageSync</code></td>
+                <td>删单个 key</td>
+              </tr>
+              <tr>
+                <td><code>wx.clearStorageSync</code></td>
+                <td>清空全部缓存</td>
+              </tr>
+              <tr>
+                <td rowspan="7">媒体</td>
+                <td><code>wx.chooseImage / chooseMedia</code></td>
+                <td>选图（后者可带视频，新推荐）</td>
+              </tr>
+              <tr>
+                <td><code>wx.previewImage</code></td>
+                <td>图片预览（支持多图+保存）</td>
+              </tr>
+              <tr>
+                <td><code>wx.saveImageToPhotosAlbum</code></td>
+                <td>保存图片到相册（需授权）</td>
+              </tr>
+              <tr>
+                <td><code>wx.chooseVideo</code></td>
+                <td>选视频</td>
+              </tr>
+              <tr>
+                <td><code>wx.createCameraContext</code></td>
+                <td>相机拍照/录像</td>
+              </tr>
+              <tr>
+                <td><code>wx.createInnerAudioContext</code></td>
+                <td>音频播放控制</td>
+              </tr>
+              <tr>
+                <td><code>wx.createVideoContext</code></td>
+                <td>视频播放控制</td>
+              </tr>
+              <tr>
+                <td rowspan="4">位置</td>
+                <td><code>wx.getLocation</code></td>
+                <td>获取当前位置（需授权）</td>
+              </tr>
+              <tr>
+                <td><code>wx.chooseLocation</code></td>
+                <td>打开地图选点</td>
+              </tr>
+              <tr>
+                <td><code>wx.openLocation</code></td>
+                <td>打开内置地图查看位置</td>
+              </tr>
+              <tr>
+                <td><code>map 组件 / 腾讯位置服务</code></td>
+                <td>地图展示与路线规划</td>
+              </tr>
+              <tr>
+                <td rowspan="6">用户与开放</td>
+                <td><code>wx.login</code></td>
+                <td>获取 code（登录第一步）</td>
+              </tr>
+              <tr>
+                <td><code>wx.requestPayment</code></td>
+                <td>调起微信支付</td>
+              </tr>
+              <tr>
+                <td><code>wx.requestSubscribeMessage</code></td>
+                <td>请求订阅消息授权</td>
+              </tr>
+              <tr>
+                <td><code>wx.scanCode</code></td>
+                <td>扫一扫</td>
+              </tr>
+              <tr>
+                <td><code>wx.checkSession</code></td>
+                <td>检查登录态是否过期</td>
+              </tr>
+              <tr>
+                <td><code>wx.shareAppMessage（页面方法）</code></td>
+                <td>定义转发内容 onShareAppMessage</td>
+              </tr>
+              <tr>
+                <td rowspan="4">界面节点</td>
+                <td><code>wx.createSelectorQuery()</code></td>
+                <td>查节点布局/滚动位置（拿不到就在 onReady 后）</td>
+              </tr>
+              <tr>
+                <td><code>wx.createIntersectionObserver()</code></td>
+                <td>元素进入视口监听（曝光埋点）</td>
+              </tr>
+              <tr>
+                <td><code>wx.nextTick</code></td>
+                <td>setData 渲染后回调</td>
+              </tr>
+              <tr>
+                <td><code>wx.getMenuButtonBoundingClientRect()</code></td>
+                <td>胶囊按钮位置（自定义导航栏必备）</td>
+              </tr>
+              <tr>
+                <td rowspan="4">云开发</td>
+                <td><code>wx.cloud.init</code></td>
+                <td>初始化云环境</td>
+              </tr>
+              <tr>
+                <td><code>wx.cloud.callFunction</code></td>
+                <td>调用云函数</td>
+              </tr>
+              <tr>
+                <td><code>wx.cloud.database()</code></td>
+                <td>操作云数据库</td>
+              </tr>
+              <tr>
+                <td><code>wx.cloud.uploadFile / getTempFileURL</code></td>
+                <td>云存储上传 / 取临时链接</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>表 B · WXML 语法速查</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>语法</th>
+                <th>示例</th>
+                <th>要点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>文本绑定</td>
+                <td><code>&lt;view&gt;{{name}}&lt;/view&gt;</code></td>
+                <td>表达式不能写语句、不能调函数（可放方法里预处理）</td>
+              </tr>
+              <tr>
+                <td>属性绑定</td>
+                <td><code>&lt;image src="{{url}}" /&gt;</code></td>
+                <td>布尔属性要加 {{}} 才会真转布尔：<code>disabled="{{false}}"</code></td>
+              </tr>
+              <tr>
+                <td>运算</td>
+                <td><code>{{a + b}} · {{a &gt; b ? 'x' : 'y'}}</code></td>
+                <td>支持算术/比较/三元/逻辑/字符串拼接</td>
+              </tr>
+              <tr>
+                <td>列表</td>
+                <td><code>wx:for="{{arr}}" wx:key="id"</code></td>
+                <td>item/index 可改名；嵌套循环注意变量遮蔽</td>
+              </tr>
+              <tr>
+                <td>条件</td>
+                <td><code>wx:if / wx:elif / wx:else</code></td>
+                <td>elif 需紧跟；整块移动节点</td>
+              </tr>
+              <tr>
+                <td>隐藏</td>
+                <td><code>hidden="{{flag}}"</code></td>
+                <td>仅 display:none，节点保留</td>
+              </tr>
+              <tr>
+                <td>模板</td>
+                <td><code>&lt;template name="t1"&gt;...&lt;/template&gt;</code></td>
+                <td><code>is="t1" data="{{...item}}"</code> 复用片段；WXML 里放 template 文件</td>
+              </tr>
+              <tr>
+                <td>引用</td>
+                <td><code>&lt;import src="..." /&gt;</code> / <code>&lt;include src="..." /&gt;</code></td>
+                <td>import 引入 template（作用域隔离）；include 直接拷贝片段</td>
+              </tr>
+              <tr>
+                <td>自定义组件</td>
+                <td><code>&lt;comp prop="{{x}}" bind:event="fn" /&gt;</code></td>
+                <td>json 里 usingComponents 注册；事件用 bind: 或 bind</td>
+              </tr>
+              <tr>
+                <td>事件绑定</td>
+                <td><code>bindtap / catchtap / capture-bind:tap</code></td>
+                <td>mut-bind 互斥绑定（较新）</td>
+              </tr>
+              <tr>
+                <td>dataset</td>
+                <td><code>data-id="{{id}}"</code> → <code>e.currentTarget.dataset.id</code></td>
+                <td>注意驼峰：data-my-id 取 dataset.myId</td>
+              </tr>
+              <tr>
+                <td>注释</td>
+                <td><code>&lt;!-- 注释 --&gt;</code></td>
+                <td>不能用 <!-- 内嵌 {{}} --> 会被渲染</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>表 C · 常用组件速查</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>组件</th>
+                <th>核心属性 / 事件</th>
+                <th>高频用法与坑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>view</code></td>
+                <td>hover-class 点击态</td>
+                <td>通用容器；flex 布局主力</td>
+              </tr>
+              <tr>
+                <td><code>text</code></td>
+                <td>user-select / space / decode</td>
+                <td>唯一支持复制选中的文本组件</td>
+              </tr>
+              <tr>
+                <td><code>image</code></td>
+                <td>src / mode / lazy-load / binderror</td>
+                <td>默认 320×240；列表图记得 lazy-load + 定高防抖动</td>
+              </tr>
+              <tr>
+                <td><code>button</code></td>
+                <td>open-type / loading / disabled / size</td>
+                <td>open-type: share/contact/getPhoneNumber/chooseAvatar</td>
+              </tr>
+              <tr>
+                <td><code>input</code></td>
+                <td>type / value / bindinput / focus / cursor</td>
+                <td>type 有 text/number/idcard/digit/nickname</td>
+              </tr>
+              <tr>
+                <td><code>textarea</code></td>
+                <td>maxlength / auto-height / bindinput</td>
+                <td>层级问题：真机要盖住用 cover-view 或原生弹层</td>
+              </tr>
+              <tr>
+                <td><code>scroll-view</code></td>
+                <td>scroll-x/y / bindscrolltolower / refresher</td>
+                <td>横向滚动必须 scroll-x + 内容不换行</td>
+              </tr>
+              <tr>
+                <td><code>swiper</code></td>
+                <td>autoplay / interval / circular / bindchange</td>
+                <td>子元素固定 swiper-item；current 可控</td>
+              </tr>
+              <tr>
+                <td><code>movable-area / movable-view</code></td>
+                <td>direction / inertia / bindchange</td>
+                <td>可拖拽元素（悬浮球）</td>
+              </tr>
+              <tr>
+                <td><code>cover-view / cover-image</code></td>
+                <td>覆盖在原生组件上</td>
+                <td>map/video/canvas 上的浮层只能用它</td>
+              </tr>
+              <tr>
+                <td><code>navigator</code></td>
+                <td>url / open-type / hover-class</td>
+                <td>open-type 含 switchTab/reLaunch/exit</td>
+              </tr>
+              <tr>
+                <td><code>form</code></td>
+                <td>bindsubmit / bindreset</td>
+                <td>配合 <code>button form-type="submit"</code></td>
+              </tr>
+              <tr>
+                <td><code>picker</code></td>
+                <td>mode / range / bindchange / value</td>
+                <td>mode: selector/multiSelector/time/date/region</td>
+              </tr>
+              <tr>
+                <td><code>picker-view</code></td>
+                <td>value / bindchange</td>
+                <td>自定义滚动选择器（联动省市区）</td>
+              </tr>
+              <tr>
+                <td><code>slider / switch / checkbox / radio</code></td>
+                <td>bindchange 取 e.detail.value</td>
+                <td>表单类组件事件统一在组上监听</td>
+              </tr>
+              <tr>
+                <td><code>icon</code></td>
+                <td>type / size / color</td>
+                <td>内置图标有限，商用图标自备</td>
+              </tr>
+              <tr>
+                <td><code>progress</code></td>
+                <td>percent / stroke-width / active</td>
+                <td>上传/下载进度展示</td>
+              </tr>
+              <tr>
+                <td><code>rich-text</code></td>
+                <td>nodes</td>
+                <td>支持 html 字符串；事件不可用</td>
+              </tr>
+              <tr>
+                <td><code>web-view</code></td>
+                <td>src / bindmessage</td>
+                <td>业务域名 + 个人主体不支持</td>
+              </tr>
+              <tr>
+                <td><code>map</code></td>
+                <td>latitude / longitude / markers / bindmarkertap</td>
+                <td>需 permission 声明 + 企业认证更佳</td>
+              </tr>
+              <tr>
+                <td><code>canvas</code></td>
+                <td>type="2d" / bindtouchstart</td>
+                <td>新项目统一 canvas 2d 接口</td>
+              </tr>
+              <tr>
+                <td><code>video</code></td>
+                <td>src / controls / autoplay</td>
+                <td>封面 poster、播放事件 bindtimeupdate</td>
+              </tr>
+              <tr>
+                <td><code>camera</code></td>
+                <td>device-position / flash / bindinitdone</td>
+                <td>需用户授权，慎用</td>
+              </tr>
+              <tr>
+                <td><code>open-data</code>（已废弃）</td>
+                <td>—</td>
+                <td>改由 button open-type 或后端下发</td>
+              </tr>
+              <tr>
+                <td><code>ad</code></td>
+                <td>unit-id / binderror</td>
+                <td>流量主广告；需开通广告位</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >结构 view 文本 text，图片记得定高 lazy；滚动 scroll 轮播 swiper，地图浮层 cover-view；表单一套 picker 全家，canvas 只学 2d 新接口</strong
+          >」——组件速查口诀：按「容器、媒体、滚动、表单、能力」五类记。
+        </div>
+      </section>
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 实战案例、避坑与学习路线</h2>
+
+        <h3>实战：一个电商小程序长什么样</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>shop-mini/
+├── app.json                    # tabBar: 首页/分类/购物车/我的
+├── pages/
+│   ├── index/                  # 首页：banner + 金刚区 + 商品流
+│   ├── category/               # 分类：左类目右列表
+│   ├── cart/                   # 购物车：选中/结算
+│   └── mine/                   # 我的：订单入口/设置
+├── packageGoods/               # 分包：商品详情、搜索、评价
+├── packageOrder/               # 分包：订单列表、支付结果
+├── components/                 # product-card、empty、navbar 等
+├── services/                   # product.js order.js user.js
+├── utils/                      # request.js auth.js format.js
+└── behaviors/                  # loading.js share.js
+
+// 核心链路
+// 进入 → wx.login 静默登录 → 首页拉流 → 进详情(分包预下载)
+// 加购 → 购物车(本地缓存) → 结算下单(后端) → wx.requestPayment
+// 支付成功 → 后端回调改单 → 订阅消息通知发货</code></pre>
+        </div>
+        <ul>
+          <li><strong>首页与详情拆两个包</strong>：详情走分包预下载，首包保持轻量。</li>
+          <li><strong>购物车存 Storage</strong>：未登录也能加购，登录后再同步服务端。</li>
+          <li><strong>订单状态以服务端为准</strong>：前端只展示，不做「伪成功」。</li>
+        </ul>
+
+        <h3>上线发布全流程</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>阶段</th>
+                <th>做什么</th>
+                <th>注意</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>开发</td>
+                <td>开发者工具编码调试</td>
+                <td>多机型预览、真机调试</td>
+              </tr>
+              <tr>
+                <td>上传</td>
+                <td>工具「上传」生成开发版</td>
+                <td>填版本号与备注</td>
+              </tr>
+              <tr>
+                <td>体验</td>
+                <td>设为体验版，发给测试</td>
+                <td>体验成员最多 90 人</td>
+              </tr>
+              <tr>
+                <td>审核</td>
+                <td>提交审核</td>
+                <td>备好测试账号、类目资质</td>
+              </tr>
+              <tr>
+                <td>发布</td>
+                <td>审核通过后发布</td>
+                <td>可用分阶段发布（灰度）</td>
+              </tr>
+              <tr>
+                <td>运营</td>
+                <td>数据分析、版本更新</td>
+                <td>关注「数据分析-用户/性能」</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>高频报错与解决方案</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>报错 / 现象</th>
+                <th>原因</th>
+                <th>解决</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>request:fail url not in domain list</td>
+                <td>域名未配置 / 非 HTTPS</td>
+                <td>后台加合法域名；真机禁止勾选「不校验」</td>
+              </tr>
+              <tr>
+                <td>page not found / 找不到页面</td>
+                <td>页面未注册或路径错</td>
+                <td>检查 app.json pages 与文件名大小写</td>
+              </tr>
+              <tr>
+                <td>Component is not found</td>
+                <td>usingComponents 路径错</td>
+                <td>用绝对路径 <code>/components/xx/index</code> 最稳</td>
+              </tr>
+              <tr>
+                <td>setData 报错 / 页面卡顿</td>
+                <td>数据过大或死循环更新</td>
+                <td>最小化 setData、检查观察者死循环</td>
+              </tr>
+              <tr>
+                <td>上传提示包体积超限</td>
+                <td>主包 &gt; 2MB</td>
+                <td>图片外链、大页面分包、删除无用代码</td>
+              </tr>
+              <tr>
+                <td>真机白屏 / 模拟器正常</td>
+                <td>基础库差异、域名、缓存旧版</td>
+                <td>看 vConsole 日志；清缓存；升基础库</td>
+              </tr>
+              <tr>
+                <td>授权弹窗不出现</td>
+                <td>隐私协议未配置 / 已拒绝过</td>
+                <td>后台配隐私指引；用 open-type 引导重新授权</td>
+              </tr>
+              <tr>
+                <td>getUserProfile 返回匿名</td>
+                <td>平台规则调整</td>
+                <td>改用 chooseAvatar + nickname 输入</td>
+              </tr>
+              <tr>
+                <td>审核被拒</td>
+                <td>类目不符 / 隐私 / 诱导</td>
+                <td>按拒审原因逐条整改，附测试说明</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          开发前先读一遍《微信小程序平台运营规范》与《用户隐私保护指引要求》——很多「上线前才发现的坑」（类目资质、隐私弹窗、诱导分享、虚拟支付限制）其实规范里都写了。另外
+          iOS 上<strong>虚拟支付（买会员、充值）受限</strong>，涉及虚拟商品要提前设计合规方案。
+        </div>
+
+        <h3>推荐学习路线</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>第 1 周 · 入门</h4>
+            <p>
+              注册账号、跑通 Hello World；吃透四件套 + WXML/WXSS + setData +
+              生命周期。目标：能做一个静态展示页 + 列表详情跳转。
+            </p>
+          </div>
+          <div class="card">
+            <h4>第 2 周 · 进阶</h4>
+            <p>
+              wx.request 封装、登录流程、自定义组件、表单与轮播。目标：完成一个
+              真实接口驱动的信息流小程序。
+            </p>
+          </div>
+          <div class="card">
+            <h4>第 3 周 · 高级</h4>
+            <p>
+              分包与性能优化、云开发全栈（云函数 + 云数据库）、订阅消息。目标：做一个带后端的完整小工具并发布体验版。
+            </p>
+          </div>
+          <div class="card">
+            <h4>第 4 周 · 精通</h4>
+            <p>
+              支付链路、隐私合规自查、TypeScript 改造、miniprogram-ci 自动化。目标：独立上线并持续迭代一款正式小程序。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          「<strong
+            >先跑通四件套，再封装请求做登录；分包优化提体验，云开发能全栈；合规红线心中记，独立上线是终点</strong
+          >」——按这条路线走完，你就能从「会写页面」到「能交付产品」。
+        </div>
+      </section>
+
+      <footer class="footer">微信小程序开发 · 从入门到精通 · 学习笔记 · 持续更新中</footer>
+    </main>
+
+    <script>
+      // Mobile menu toggle
+      const menuToggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+
+      // Close sidebar on link click (mobile)
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+
+      // Active TOC highlight on scroll
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect()
+          if (rect.top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+
+      // Copy code
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        const text = pre.innerText
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>
