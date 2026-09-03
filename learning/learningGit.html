@@ -643,8 +643,10 @@
         <span class="hero-badge">⑂ 版本控制实战手册</span>
         <h1>Git 从入门到精通</h1>
         <p>
-          一份系统化的 Git 学习笔记，从版本控制概念、安装配置、暂存提交、分支合并，到远程协作、冲突解决、变基整理、内部原理与团队工作流，配套 100+
-          条命令大全、速记口诀与避坑指南，让你从「Ctrl+C 备份」进阶到「熟练驾驭版本历史」。
+          一份系统化的 Git
+          学习笔记，从版本控制概念、安装配置、暂存提交、分支合并，到远程协作、冲突解决、变基整理、内部原理与团队工作流，配套
+          100+ 条命令大全、速记口诀与避坑指南，让你从「Ctrl+C
+          备份」进阶到「熟练驾驭版本历史」。
         </p>
         <div class="hero-meta">
           <span><span class="dot"></span>18 个章节</span>
@@ -659,29 +661,63 @@
 
         <h3>版本控制解决什么问题</h3>
         <p>
-          Git 是一个<strong>分布式版本控制系统（DVCS）</strong>，用来记录文件每次改动的「快照」。没有版本控制时，你只能这样备份：
+          Git
+          是一个<strong>分布式版本控制系统（DVCS）</strong>，用来记录文件每次改动的「快照」。没有版本控制时，你只能这样备份：
         </p>
         <ul>
-          <li><strong>文件名带日期</strong>：report_final_v2_最终版_改.docx（三天后又冒出一个「真最终版」）</li>
-          <li><strong>Ctrl+C 复制文件夹</strong>：改了哪个、为什么改、想回退到哪个版本，全靠记忆</li>
-          <li><strong>多人协作靠网盘互传</strong>：你改完我改，谁覆盖谁说不清</li>
+          <li>
+            <strong>文件名带日期</strong
+            >：report_final_v2_最终版_改.docx（三天后又冒出一个「真最终版」）
+          </li>
+          <li>
+            <strong>Ctrl+C 复制文件夹</strong
+            >：改了哪个、为什么改、想回退到哪个版本，全靠记忆
+          </li>
+          <li>
+            <strong>多人协作靠网盘互传</strong>：你改完我改，谁覆盖谁说不清
+          </li>
         </ul>
         <p>
-          Git 把这一切变成<strong>一条可回溯、可分支、可协作的时间线</strong>：每一次提交（Commit）都是一份完整快照，随时可以回到任意历史节点。
+          Git
+          把这一切变成<strong>一条可回溯、可分支、可协作的时间线</strong>：每一次提交（Commit）都是一份完整快照，随时可以回到任意历史节点。
         </p>
 
         <h3>集中式 vs 分布式</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>对比项</th><th>集中式（SVN）</th><th>分布式（Git）</th></tr>
+              <tr>
+                <th>对比项</th>
+                <th>集中式（SVN）</th>
+                <th>分布式（Git）</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>仓库存放</td><td>只有服务器一份中央仓库</td><td>每个开发者本地都有<strong>完整仓库</strong></td></tr>
-              <tr><td>离线工作</td><td>无法提交、无法看历史</td><td>完全离线可用，提交/回滚/分支都行</td></tr>
-              <tr><td>服务器挂了</td><td>整个团队瘫痪</td><td>任何人本地仓库都能恢复</td></tr>
-              <tr><td>分支成本</td><td>贵且慢，大家不敢乱开</td><td>极便宜，鼓励多分支并行</td></tr>
-              <tr><td>协作模型</td><td>集中提交</td><td>Pull + Push + Pull Request 多种</td></tr>
+              <tr>
+                <td>仓库存放</td>
+                <td>只有服务器一份中央仓库</td>
+                <td>每个开发者本地都有<strong>完整仓库</strong></td>
+              </tr>
+              <tr>
+                <td>离线工作</td>
+                <td>无法提交、无法看历史</td>
+                <td>完全离线可用，提交/回滚/分支都行</td>
+              </tr>
+              <tr>
+                <td>服务器挂了</td>
+                <td>整个团队瘫痪</td>
+                <td>任何人本地仓库都能恢复</td>
+              </tr>
+              <tr>
+                <td>分支成本</td>
+                <td>贵且慢，大家不敢乱开</td>
+                <td>极便宜，鼓励多分支并行</td>
+              </tr>
+              <tr>
+                <td>协作模型</td>
+                <td>集中提交</td>
+                <td>Pull + Push + Pull Request 多种</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -691,24 +727,45 @@
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>区域</th><th>比喻</th><th>怎么进入</th></tr>
+              <tr>
+                <th>区域</th>
+                <th>比喻</th>
+                <th>怎么进入</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><strong>工作区</strong>（Working Directory）</td><td>你的「办公桌」——正在编辑的文件</td><td>git init / clone 后默认就在</td></tr>
-              <tr><td><strong>暂存区</strong>（Index / Staging）</td><td>「待提交清单」——挑好要提交的文件</td><td><code>git add</code></td></tr>
-              <tr><td><strong>本地仓库</strong>（Repository）</td><td>「档案柜」——已存档的历史快照</td><td><code>git commit</code></td></tr>
+              <tr>
+                <td><strong>工作区</strong>（Working Directory）</td>
+                <td>你的「办公桌」——正在编辑的文件</td>
+                <td>git init / clone 后默认就在</td>
+              </tr>
+              <tr>
+                <td><strong>暂存区</strong>（Index / Staging）</td>
+                <td>「待提交清单」——挑好要提交的文件</td>
+                <td><code>git add</code></td>
+              </tr>
+              <tr>
+                <td><strong>本地仓库</strong>（Repository）</td>
+                <td>「档案柜」——已存档的历史快照</td>
+                <td><code>git commit</code></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          <strong>工作区 → git add → 暂存区 → git commit → 仓库</strong>。add 是「挑货」，commit 是「入库」。挑货可以反复挑、挑错了随时撤，入库后就形成历史。
+          <strong>工作区 → git add → 暂存区 → git commit → 仓库</strong>。add
+          是「挑货」，commit
+          是「入库」。挑货可以反复挑、挑错了随时撤，入库后就形成历史。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>办公桌挑货，清单暂存区，档案柜入库；add 进清单，commit 存档案</strong>」——文件流动三兄弟：工作区 → 暂存区 → 仓库。
+          「<strong
+            >办公桌挑货，清单暂存区，档案柜入库；add 进清单，commit
+            存档案</strong
+          >」——文件流动三兄弟：工作区 → 暂存区 → 仓库。
         </div>
       </section>
 
@@ -720,12 +777,32 @@
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>系统</th><th>方式</th><th>验证</th></tr>
+              <tr>
+                <th>系统</th>
+                <th>方式</th>
+                <th>验证</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>Windows</td><td>官网下载安装包，或用 winget：<code>winget install Git.Git</code></td><td rowspan="3"><code>git --version</code></td></tr>
-              <tr><td>macOS</td><td><code>brew install git</code>（或 Xcode Command Line Tools）</td></tr>
-              <tr><td>Linux</td><td><code>sudo apt install git</code>（Debian/Ubuntu）</td></tr>
+              <tr>
+                <td>Windows</td>
+                <td>
+                  官网下载安装包，或用 winget：<code
+                    >winget install Git.Git</code
+                  >
+                </td>
+                <td rowspan="3"><code>git --version</code></td>
+              </tr>
+              <tr>
+                <td>macOS</td>
+                <td>
+                  <code>brew install git</code>（或 Xcode Command Line Tools）
+                </td>
+              </tr>
+              <tr>
+                <td>Linux</td>
+                <td><code>sudo apt install git</code>（Debian/Ubuntu）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -738,34 +815,77 @@ git config --global user.email "you@example.com"
 git config --global init.defaultBranch main</code></pre>
         </div>
         <ul>
-          <li><strong>user.name / user.email</strong>：提交时记录「谁干的」，会写进每条提交历史，<strong>不配就无法提交</strong></li>
-          <li><strong>init.defaultBranch main</strong>：新版 Git 默认分支名改为 main（老版本默认 master）</li>
+          <li>
+            <strong>user.name / user.email</strong
+            >：提交时记录「谁干的」，会写进每条提交历史，<strong
+              >不配就无法提交</strong
+            >
+          </li>
+          <li>
+            <strong>init.defaultBranch main</strong>：新版 Git 默认分支名改为
+            main（老版本默认 master）
+          </li>
         </ul>
 
         <h3>推荐增强配置</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>配置</th><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>配置</th>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>颜色输出</td><td><code>git config --global color.ui auto</code></td><td>状态/分支/差异带颜色，一眼看清</td></tr>
-              <tr><td>差异算法</td><td><code>git config --global diff.algorithm histogram</code></td><td>更智能的差异对比</td></tr>
-              <tr><td>换行符（Windows）</td><td><code>git config --global core.autocrlf true</code></td><td>自动转换 CRLF/LF，避免「整文件变红」</td></tr>
-              <tr><td>默认编辑器</td><td><code>git config --global core.editor "code --wait"</code></td><td>写提交信息用 VSCode</td></tr>
-              <tr><td>常用别名</td><td><code>git config --global alias.st status</code></td><td><code>git st</code> 即 <code>git status</code></td></tr>
+              <tr>
+                <td>颜色输出</td>
+                <td><code>git config --global color.ui auto</code></td>
+                <td>状态/分支/差异带颜色，一眼看清</td>
+              </tr>
+              <tr>
+                <td>差异算法</td>
+                <td>
+                  <code>git config --global diff.algorithm histogram</code>
+                </td>
+                <td>更智能的差异对比</td>
+              </tr>
+              <tr>
+                <td>换行符（Windows）</td>
+                <td><code>git config --global core.autocrlf true</code></td>
+                <td>自动转换 CRLF/LF，避免「整文件变红」</td>
+              </tr>
+              <tr>
+                <td>默认编辑器</td>
+                <td>
+                  <code>git config --global core.editor "code --wait"</code>
+                </td>
+                <td>写提交信息用 VSCode</td>
+              </tr>
+              <tr>
+                <td>常用别名</td>
+                <td><code>git config --global alias.st status</code></td>
+                <td><code>git st</code> 即 <code>git status</code></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 配置分三级：<strong>--system（整机）/ --global（当前用户）/ --local（当前仓库）</strong>，优先级 local &gt; global &gt; system；② 查看当前所有配置用 <code>git config --list</code>；③ 公司项目<strong>邮箱要用公司邮箱</strong>，否则提交会记到个人账号下。
+          ① 配置分三级：<strong
+            >--system（整机）/ --global（当前用户）/ --local（当前仓库）</strong
+          >，优先级 local &gt; global &gt; system；② 查看当前所有配置用
+          <code>git config --list</code>；③
+          公司项目<strong>邮箱要用公司邮箱</strong>，否则提交会记到个人账号下。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>装完先配名与邮，不配提交就报错；global 管本机，local 管本仓库</strong>」——三件套：name、email、defaultBranch。
+          「<strong
+            >装完先配名与邮，不配提交就报错；global 管本机，local
+            管本仓库</strong
+          >」——三件套：name、email、defaultBranch。
         </div>
       </section>
 
@@ -777,11 +897,23 @@ git config --global init.defaultBranch main</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>场景</th><th>命令</th><th>说明</th></tr>
+              <tr>
+                <th>场景</th>
+                <th>命令</th>
+                <th>说明</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>本地已有项目</td><td><code>git init</code></td><td>在项目根目录初始化，生成隐藏的 <code>.git</code> 文件夹</td></tr>
-              <tr><td>从远程拉取</td><td><code>git clone 仓库地址</code></td><td>完整复制远程仓库（含全部历史）到本地</td></tr>
+              <tr>
+                <td>本地已有项目</td>
+                <td><code>git init</code></td>
+                <td>在项目根目录初始化，生成隐藏的 <code>.git</code> 文件夹</td>
+              </tr>
+              <tr>
+                <td>从远程拉取</td>
+                <td><code>git clone 仓库地址</code></td>
+                <td>完整复制远程仓库（含全部历史）到本地</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -790,7 +922,9 @@ git config --global init.defaultBranch main</code></pre>
         <ol class="steps">
           <li><code>git init</code>：初始化仓库</li>
           <li><code>git status</code>：查看当前状态（红 = 未跟踪/未暂存）</li>
-          <li><code>git add .</code>：把当前目录所有文件加入暂存区（绿 = 已暂存）</li>
+          <li>
+            <code>git add .</code>：把当前目录所有文件加入暂存区（绿 = 已暂存）
+          </li>
           <li><code>git commit -m "feat: 初始化项目"</code>：提交，附上说明</li>
           <li><code>git log --oneline</code>：查看提交历史</li>
         </ol>
@@ -806,17 +940,28 @@ git log --oneline</code></pre>
 
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          <code>git init</code> 只在项目里生成一个 <code>.git</code> 文件夹，它<strong>只是「档案柜」的地址，不是备份</strong>——真正产生历史的是第一次 <code>git commit</code>。
+          <code>git init</code> 只在项目里生成一个
+          <code>.git</code>
+          文件夹，它<strong>只是「档案柜」的地址，不是备份</strong>——真正产生历史的是第一次
+          <code>git commit</code>。
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① <strong>不要在别人的仓库里再 git init</strong>（会生成嵌套仓库，push 会混乱）；② <code>git add .</code> 会把所有文件都加进去，正式项目先写好 <code>.gitignore</code>（第 10 章讲）再 add；③ commit 信息用 <strong>动词开头 + 简短描述</strong>，如 <code>feat: 新增登录页</code>。
+          ① <strong>不要在别人的仓库里再 git init</strong>（会生成嵌套仓库，push
+          会混乱）；②
+          <code>git add .</code> 会把所有文件都加进去，正式项目先写好
+          <code>.gitignore</code>（第 10 章讲）再 add；③ commit 信息用
+          <strong>动词开头 + 简短描述</strong>，如
+          <code>feat: 新增登录页</code>。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>init 开档案，status 看状态，add 挑货，commit 入库，log 翻账本</strong>」——第一次提交五连，从此告别 Ctrl+C 备份。
+          「<strong
+            >init 开档案，status 看状态，add 挑货，commit 入库，log
+            翻账本</strong
+          >」——第一次提交五连，从此告别 Ctrl+C 备份。
         </div>
       </section>
 
@@ -828,48 +973,99 @@ git log --oneline</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git add 文件名</code></td><td>添加指定文件</td></tr>
-              <tr><td><code>git add .</code></td><td>添加当前目录所有改动（含新增、修改、删除）</td></tr>
-              <tr><td><code>git add -u</code></td><td>只暂存「已跟踪文件」的修改/删除（不含新增）</td></tr>
-              <tr><td><code>git add -p</code></td><td>分块暂存（交互式挑每一段，精修提交必备）</td></tr>
-              <tr><td><code>git add -A</code></td><td>= add . + 处理删除（推荐在仓库根目录用）</td></tr>
+              <tr>
+                <td><code>git add 文件名</code></td>
+                <td>添加指定文件</td>
+              </tr>
+              <tr>
+                <td><code>git add .</code></td>
+                <td>添加当前目录所有改动（含新增、修改、删除）</td>
+              </tr>
+              <tr>
+                <td><code>git add -u</code></td>
+                <td>只暂存「已跟踪文件」的修改/删除（不含新增）</td>
+              </tr>
+              <tr>
+                <td><code>git add -p</code></td>
+                <td>分块暂存（交互式挑每一段，精修提交必备）</td>
+              </tr>
+              <tr>
+                <td><code>git add -A</code></td>
+                <td>= add . + 处理删除（推荐在仓库根目录用）</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>git status 的三种状态</h3>
         <ul>
-          <li><strong>未跟踪（Untracked）</strong>：新文件，Git 还没管过 → 显示红色 <code>??</code></li>
-          <li><strong>已修改未暂存（Modified）</strong>：改过但没 add → 显示红色 <code>M</code></li>
-          <li><strong>已暂存（Staged）</strong>：add 过，等 commit → 显示绿色</li>
+          <li>
+            <strong>未跟踪（Untracked）</strong>：新文件，Git 还没管过 →
+            显示红色 <code>??</code>
+          </li>
+          <li>
+            <strong>已修改未暂存（Modified）</strong>：改过但没 add → 显示红色
+            <code>M</code>
+          </li>
+          <li>
+            <strong>已暂存（Staged）</strong>：add 过，等 commit → 显示绿色
+          </li>
         </ul>
 
         <h3>提交的讲究</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git commit -m "说明"</code></td><td>提交并写一行说明</td></tr>
-              <tr><td><code>git commit -am "说明"</code></td><td>add + commit 一步到位（只对已跟踪文件）</td></tr>
-              <tr><td><code>git commit --amend -m "新说明"</code></td><td>修改<strong>上一条</strong>提交的说明（或补内容）</td></tr>
-              <tr><td><code>git commit --amend --no-edit</code></td><td>把暂存区改动并入上一条提交，不换说明</td></tr>
+              <tr>
+                <td><code>git commit -m "说明"</code></td>
+                <td>提交并写一行说明</td>
+              </tr>
+              <tr>
+                <td><code>git commit -am "说明"</code></td>
+                <td>add + commit 一步到位（只对已跟踪文件）</td>
+              </tr>
+              <tr>
+                <td><code>git commit --amend -m "新说明"</code></td>
+                <td>修改<strong>上一条</strong>提交的说明（或补内容）</td>
+              </tr>
+              <tr>
+                <td><code>git commit --amend --no-edit</code></td>
+                <td>把暂存区改动并入上一条提交，不换说明</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① <code>git commit --amend</code> 会<strong>改写历史</strong>，如果这条提交已经 push 到远程，<strong>不要 amend</strong>（除非你清楚后果）；② 提交信息写清楚「做了什么 + 为什么」，比「改了点东西」强一百倍；③ <code>git commit -am</code> 不会包含<strong>未跟踪的新文件</strong>，新文件必须显式 add。
+          ①
+          <code>git commit --amend</code>
+          会<strong>改写历史</strong>，如果这条提交已经 push 到远程，<strong
+            >不要 amend</strong
+          >（除非你清楚后果）；② 提交信息写清楚「做了什么 +
+          为什么」，比「改了点东西」强一百倍；③
+          <code>git commit -am</code>
+          不会包含<strong>未跟踪的新文件</strong>，新文件必须显式 add。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>add 分块用 -p，提交说明写清楚；amend 改上条，push 之后别乱碰</strong>」——小步提交、原子提交，是职业习惯的分水岭。
+          「<strong
+            >add 分块用 -p，提交说明写清楚；amend 改上条，push
+            之后别乱碰</strong
+          >」——小步提交、原子提交，是职业习惯的分水岭。
         </div>
       </section>
 
@@ -881,16 +1077,40 @@ git log --oneline</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git log</code></td><td>完整提交历史（作者/时间/说明）</td></tr>
-              <tr><td><code>git log --oneline</code></td><td>一行一条，最常用</td></tr>
-              <tr><td><code>git log --oneline --graph</code></td><td>带分支图，看清分叉合并脉络</td></tr>
-              <tr><td><code>git log --oneline -5</code></td><td>只看最近 5 条</td></tr>
-              <tr><td><code>git log --author="名字"</code></td><td>只看某人的提交</td></tr>
-              <tr><td><code>git log -p 文件名</code></td><td>看某文件每次提交的具体改动</td></tr>
-              <tr><td><code>git log --oneline --grep="关键词"</code></td><td>按提交说明搜索</td></tr>
+              <tr>
+                <td><code>git log</code></td>
+                <td>完整提交历史（作者/时间/说明）</td>
+              </tr>
+              <tr>
+                <td><code>git log --oneline</code></td>
+                <td>一行一条，最常用</td>
+              </tr>
+              <tr>
+                <td><code>git log --oneline --graph</code></td>
+                <td>带分支图，看清分叉合并脉络</td>
+              </tr>
+              <tr>
+                <td><code>git log --oneline -5</code></td>
+                <td>只看最近 5 条</td>
+              </tr>
+              <tr>
+                <td><code>git log --author="名字"</code></td>
+                <td>只看某人的提交</td>
+              </tr>
+              <tr>
+                <td><code>git log -p 文件名</code></td>
+                <td>看某文件每次提交的具体改动</td>
+              </tr>
+              <tr>
+                <td><code>git log --oneline --grep="关键词"</code></td>
+                <td>按提交说明搜索</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -899,14 +1119,32 @@ git log --oneline</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git diff</code></td><td>工作区 vs 暂存区（改了什么还没 add）</td></tr>
-              <tr><td><code>git diff --staged</code></td><td>暂存区 vs 仓库（add 了什么还没 commit）</td></tr>
-              <tr><td><code>git diff HEAD</code></td><td>工作区全部改动 vs 最近一次提交</td></tr>
-              <tr><td><code>git diff 分支A 分支B</code></td><td>两个分支的差异</td></tr>
-              <tr><td><code>git diff 提交A 提交B</code></td><td>两个提交的差异</td></tr>
+              <tr>
+                <td><code>git diff</code></td>
+                <td>工作区 vs 暂存区（改了什么还没 add）</td>
+              </tr>
+              <tr>
+                <td><code>git diff --staged</code></td>
+                <td>暂存区 vs 仓库（add 了什么还没 commit）</td>
+              </tr>
+              <tr>
+                <td><code>git diff HEAD</code></td>
+                <td>工作区全部改动 vs 最近一次提交</td>
+              </tr>
+              <tr>
+                <td><code>git diff 分支A 分支B</code></td>
+                <td>两个分支的差异</td>
+              </tr>
+              <tr>
+                <td><code>git diff 提交A 提交B</code></td>
+                <td>两个提交的差异</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -915,18 +1153,31 @@ git log --oneline</code></pre>
         <ul>
           <li><strong>git show 提交号</strong>：看某次提交的完整改动</li>
           <li><strong>git show HEAD</strong>：看最近一次提交改了什么</li>
-          <li><strong>git blame 文件名</strong>：逐行标注「这行是谁、哪次提交写的」（找背锅侠必备）</li>
-          <li><strong>git reflog</strong>：<strong>救命的操作日志</strong>，记录你所有 HEAD 移动，误删分支也能找回来</li>
+          <li>
+            <strong>git blame 文件名</strong
+            >：逐行标注「这行是谁、哪次提交写的」（找背锅侠必备）
+          </li>
+          <li>
+            <strong>git reflog</strong
+            >：<strong>救命的操作日志</strong>，记录你所有 HEAD
+            移动，误删分支也能找回来
+          </li>
         </ul>
 
         <div class="callout danger">
           <div class="callout-title">🚨 红线提醒</div>
-          <code>git reflog</code> 是 Git 的「黑匣子」：即使你 <code>git reset --hard</code> 删了提交、<code>git branch -D</code> 删了分支，<strong>只要 reflog 里还在，就能用提交号找回</strong>。遇到误操作先别慌，<code>git reflog</code> 看一遍再说。
+          <code>git reflog</code> 是 Git 的「黑匣子」：即使你
+          <code>git reset --hard</code> 删了提交、<code>git branch -D</code>
+          删了分支，<strong>只要 reflog 里还在，就能用提交号找回</strong
+          >。遇到误操作先别慌，<code>git reflog</code> 看一遍再说。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>log 看历史、diff 看差异、show 看细节、blame 找背锅、reflog 是黑匣子</strong>」——查历史五件套，定位问题快三倍。
+          「<strong
+            >log 看历史、diff 看差异、show 看细节、blame 找背锅、reflog
+            是黑匣子</strong
+          >」——查历史五件套，定位问题快三倍。
         </div>
       </section>
 
@@ -936,41 +1187,78 @@ git log --oneline</code></pre>
 
         <h3>分支是什么</h3>
         <p>
-          分支就是<strong>指向某个提交的可移动指针</strong>。它让「并行开发互不干扰」成为可能：你开一个分支改新功能，主分支继续发版，改完再合并回去。创建分支的成本几乎为零，所以 Git 鼓励<strong>多开分支</strong>。
+          分支就是<strong>指向某个提交的可移动指针</strong>。它让「并行开发互不干扰」成为可能：你开一个分支改新功能，主分支继续发版，改完再合并回去。创建分支的成本几乎为零，所以
+          Git 鼓励<strong>多开分支</strong>。
         </p>
 
         <h3>分支核心命令</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git branch</code></td><td>列出本地分支（* 号标记当前分支）</td></tr>
-              <tr><td><code>git branch 分支名</code></td><td>创建分支（不切换）</td></tr>
-              <tr><td><code>git checkout 分支名</code></td><td>切换分支（老命令）</td></tr>
-              <tr><td><code>git switch 分支名</code></td><td>切换分支（新版推荐，语义更清晰）</td></tr>
-              <tr><td><code>git switch -c 分支名</code></td><td>创建并切换（= checkout -b）</td></tr>
-              <tr><td><code>git branch -d 分支名</code></td><td>删除已合并的分支（安全）</td></tr>
-              <tr><td><code>git branch -D 分支名</code></td><td>强制删除未合并分支（谨慎）</td></tr>
-              <tr><td><code>git branch -a</code></td><td>列出所有分支（含远程）</td></tr>
+              <tr>
+                <td><code>git branch</code></td>
+                <td>列出本地分支（* 号标记当前分支）</td>
+              </tr>
+              <tr>
+                <td><code>git branch 分支名</code></td>
+                <td>创建分支（不切换）</td>
+              </tr>
+              <tr>
+                <td><code>git checkout 分支名</code></td>
+                <td>切换分支（老命令）</td>
+              </tr>
+              <tr>
+                <td><code>git switch 分支名</code></td>
+                <td>切换分支（新版推荐，语义更清晰）</td>
+              </tr>
+              <tr>
+                <td><code>git switch -c 分支名</code></td>
+                <td>创建并切换（= checkout -b）</td>
+              </tr>
+              <tr>
+                <td><code>git branch -d 分支名</code></td>
+                <td>删除已合并的分支（安全）</td>
+              </tr>
+              <tr>
+                <td><code>git branch -D 分支名</code></td>
+                <td>强制删除未合并分支（谨慎）</td>
+              </tr>
+              <tr>
+                <td><code>git branch -a</code></td>
+                <td>列出所有分支（含远程）</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          <code>git switch -c dev</code> = 「<strong>新建一条叫 dev 的时间线并跳过去</strong>」。分支切换只改变你「看哪条时间线」，代码本身不会丢。
+          <code>git switch -c dev</code> = 「<strong
+            >新建一条叫 dev 的时间线并跳过去</strong
+          >」。分支切换只改变你「看哪条时间线」，代码本身不会丢。
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 切换分支前<strong>先 commit 或 stash</strong>，否则工作区未提交的改动会「跟着你走」到新分支；② <strong>分支名规范</strong>：功能 <code>feat/xxx</code>、修复 <code>fix/xxx</code>、文档 <code>docs/xxx</code>；③ 不要在主分支上直接写代码——<strong>主分支永远保持可发布状态</strong>。
+          ① 切换分支前<strong>先 commit 或 stash</strong
+          >，否则工作区未提交的改动会「跟着你走」到新分支；②
+          <strong>分支名规范</strong>：功能 <code>feat/xxx</code>、修复
+          <code>fix/xxx</code>、文档 <code>docs/xxx</code>；③
+          不要在主分支上直接写代码——<strong>主分支永远保持可发布状态</strong>。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>branch 看列表，switch 来切换，-c 建了又切，-d 安全删、-D 强删</strong>」——分支四式：看、切、建、删。
+          「<strong
+            >branch 看列表，switch 来切换，-c 建了又切，-d 安全删、-D
+            强删</strong
+          >」——分支四式：看、切、建、删。
         </div>
       </section>
 
@@ -980,18 +1268,36 @@ git log --oneline</code></pre>
 
         <h3>远程仓库（Remote）</h3>
         <p>
-          远程仓库是<strong>托管在服务器上的 Git 仓库</strong>（GitHub、GitLab、Gitee 等）。本地仓库和远程仓库通过 <code>remote</code> 关联，<strong>push（推）</strong>和 <strong>pull（拉）</strong>同步代码。
+          远程仓库是<strong>托管在服务器上的 Git 仓库</strong
+          >（GitHub、GitLab、Gitee 等）。本地仓库和远程仓库通过
+          <code>remote</code> 关联，<strong>push（推）</strong>和
+          <strong>pull（拉）</strong>同步代码。
         </p>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git remote -v</code></td><td>查看远程仓库地址</td></tr>
-              <tr><td><code>git remote add origin 地址</code></td><td>关联远程仓库（origin 是约定俗成的名字）</td></tr>
-              <tr><td><code>git remote rename old new</code></td><td>重命名远程</td></tr>
-              <tr><td><code>git remote remove 名字</code></td><td>移除远程关联（不影响本地代码）</td></tr>
+              <tr>
+                <td><code>git remote -v</code></td>
+                <td>查看远程仓库地址</td>
+              </tr>
+              <tr>
+                <td><code>git remote add origin 地址</code></td>
+                <td>关联远程仓库（origin 是约定俗成的名字）</td>
+              </tr>
+              <tr>
+                <td><code>git remote rename old new</code></td>
+                <td>重命名远程</td>
+              </tr>
+              <tr>
+                <td><code>git remote remove 名字</code></td>
+                <td>移除远程关联（不影响本地代码）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1000,22 +1306,48 @@ git log --oneline</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git push origin main</code></td><td>把本地 main 推送到远程</td></tr>
-              <tr><td><code>git push -u origin main</code></td><td>首次推送并<strong>建立跟踪关系</strong>（之后直接 git push）</td></tr>
-              <tr><td><code>git pull</code></td><td>= fetch + merge，拉取远程并合并到当前分支</td></tr>
-              <tr><td><code>git fetch</code></td><td>只拉取远程更新到本地，<strong>不自动合并</strong></td></tr>
-              <tr><td><code>git pull --rebase</code></td><td>拉取时用变基代替合并（历史更干净，见第 13 章）</td></tr>
-              <tr><td><code>git push origin --delete 分支名</code></td><td>删除远程分支</td></tr>
+              <tr>
+                <td><code>git push origin main</code></td>
+                <td>把本地 main 推送到远程</td>
+              </tr>
+              <tr>
+                <td><code>git push -u origin main</code></td>
+                <td>
+                  首次推送并<strong>建立跟踪关系</strong>（之后直接 git push）
+                </td>
+              </tr>
+              <tr>
+                <td><code>git pull</code></td>
+                <td>= fetch + merge，拉取远程并合并到当前分支</td>
+              </tr>
+              <tr>
+                <td><code>git fetch</code></td>
+                <td>只拉取远程更新到本地，<strong>不自动合并</strong></td>
+              </tr>
+              <tr>
+                <td><code>git pull --rebase</code></td>
+                <td>拉取时用变基代替合并（历史更干净，见第 13 章）</td>
+              </tr>
+              <tr>
+                <td><code>git push origin --delete 分支名</code></td>
+                <td>删除远程分支</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>SSH 免密配置（重要）</h3>
         <ol class="steps">
-          <li>生成密钥：<code>ssh-keygen -t ed25519 -C "你的邮箱"</code>（一路回车）</li>
+          <li>
+            生成密钥：<code>ssh-keygen -t ed25519 -C "你的邮箱"</code
+            >（一路回车）
+          </li>
           <li>复制公钥：<code>cat ~/.ssh/id_ed25519.pub</code></li>
           <li>粘贴到 GitHub → Settings → SSH and GPG keys → New SSH key</li>
           <li>克隆时用 SSH 地址（git@github.com:...），从此免密推送</li>
@@ -1023,12 +1355,19 @@ git log --oneline</code></pre>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① push 被拒绝说明<strong>远程有本地没有的提交</strong>：先 <code>git pull --rebase</code> 再 push；② <strong>HTTPS 地址每次要输密码/token</strong>，改用 SSH 免密；③ GitHub 2021 年起<strong>不再支持密码 push</strong>，用 token 或 SSH；④ 不要把密钥文件（id_rsa / id_ed25519 无 .pub 后缀）提交进仓库。
+          ① push 被拒绝说明<strong>远程有本地没有的提交</strong>：先
+          <code>git pull --rebase</code> 再 push；②
+          <strong>HTTPS 地址每次要输密码/token</strong>，改用 SSH 免密；③ GitHub
+          2021 年起<strong>不再支持密码 push</strong>，用 token 或 SSH；④
+          不要把密钥文件（id_rsa / id_ed25519 无 .pub 后缀）提交进仓库。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>remote 关联，push 推送，pull 拉取，fetch 只收不并；SSH 配一次，免密用到老</strong>」——远程协作四字经：关联、推送、拉取、同步。
+          「<strong
+            >remote 关联，push 推送，pull 拉取，fetch 只收不并；SSH
+            配一次，免密用到老</strong
+          >」——远程协作四字经：关联、推送、拉取、同步。
         </div>
       </section>
 
@@ -1040,11 +1379,23 @@ git log --oneline</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>形态</th><th>发生条件</th><th>特点</th></tr>
+              <tr>
+                <th>形态</th>
+                <th>发生条件</th>
+                <th>特点</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>快进合并（Fast-forward）</td><td>当前分支没新提交，目标分支只是向前走</td><td>历史是一条直线，无合并提交</td></tr>
-              <tr><td>三方合并（Merge commit）</td><td>两个分支都有各自的新提交</td><td>产生一个合并提交，历史出现分叉</td></tr>
+              <tr>
+                <td>快进合并（Fast-forward）</td>
+                <td>当前分支没新提交，目标分支只是向前走</td>
+                <td>历史是一条直线，无合并提交</td>
+              </tr>
+              <tr>
+                <td>三方合并（Merge commit）</td>
+                <td>两个分支都有各自的新提交</td>
+                <td>产生一个合并提交，历史出现分叉</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1065,7 +1416,8 @@ git merge --no-ff feat/login</code></pre>
 
         <h3>冲突（Conflict）是什么</h3>
         <p>
-          当两个分支<strong>改了同一文件的同一行</strong>，Git 不知道听谁的，就会冲突。冲突文件里会出现标记：
+          当两个分支<strong>改了同一文件的同一行</strong>，Git
+          不知道听谁的，就会冲突。冲突文件里会出现标记：
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1079,7 +1431,11 @@ git merge --no-ff feat/login</code></pre>
         <h3>解决冲突五步</h3>
         <ol class="steps">
           <li><code>git status</code> 找到冲突文件（显示 both modified）</li>
-          <li>打开文件，删掉 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> / <code>=======</code> / <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> 标记，保留正确内容</li>
+          <li>
+            打开文件，删掉 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> /
+            <code>=======</code> /
+            <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> 标记，保留正确内容
+          </li>
           <li><code>git add 冲突文件</code>（标记「已解决」）</li>
           <li><code>git commit</code>（完成合并）</li>
           <li>想放弃这次合并：<code>git merge --abort</code></li>
@@ -1087,12 +1443,21 @@ git merge --no-ff feat/login</code></pre>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① <strong>冲突不可怕，可怕的是乱删代码</strong>——先看两个版本分别是什么逻辑再决定；② 解决冲突时<strong>不要顺手删别人的代码</strong>，不确定就问；③ 小改动用 <code>git merge --abort</code> 重来，大改动逐文件慢慢解；④ 解决完冲突一定要 <code>git add</code> + <code>git commit</code>，否则 Git 一直认为冲突未解决。
+          ①
+          <strong>冲突不可怕，可怕的是乱删代码</strong
+          >——先看两个版本分别是什么逻辑再决定；②
+          解决冲突时<strong>不要顺手删别人的代码</strong>，不确定就问；③
+          小改动用 <code>git merge --abort</code> 重来，大改动逐文件慢慢解；④
+          解决完冲突一定要 <code>git add</code> + <code>git commit</code>，否则
+          Git 一直认为冲突未解决。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>合并两形态：快进直线、三方分叉；冲突看标记，删线留内容，add 再 commit</strong>」——遇到冲突别慌，先读代码再动手。
+          「<strong
+            >合并两形态：快进直线、三方分叉；冲突看标记，删线留内容，add 再
+            commit</strong
+          >」——遇到冲突别慌，先读代码再动手。
         </div>
       </section>
 
@@ -1109,18 +1474,48 @@ git merge --no-ff feat/login</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git tag</code></td><td>列出所有标签</td></tr>
-              <tr><td><code>git tag v1.0.0</code></td><td>给当前提交打轻量标签</td></tr>
-              <tr><td><code>git tag -a v1.0.0 -m "发布说明"</code></td><td>打<strong>附注标签</strong>（带打签人和说明，推荐）</td></tr>
-              <tr><td><code>git tag v1.0.0 提交号</code></td><td>给指定提交打标签</td></tr>
-              <tr><td><code>git push origin v1.0.0</code></td><td>推送指定标签到远程</td></tr>
-              <tr><td><code>git push origin --tags</code></td><td>推送全部标签</td></tr>
-              <tr><td><code>git tag -d v1.0.0</code></td><td>删除本地标签</td></tr>
-              <tr><td><code>git push origin --delete tag v1.0.0</code></td><td>删除远程标签</td></tr>
-              <tr><td><code>git checkout v1.0.0</code></td><td>切到标签对应代码（分离头指针）</td></tr>
+              <tr>
+                <td><code>git tag</code></td>
+                <td>列出所有标签</td>
+              </tr>
+              <tr>
+                <td><code>git tag v1.0.0</code></td>
+                <td>给当前提交打轻量标签</td>
+              </tr>
+              <tr>
+                <td><code>git tag -a v1.0.0 -m "发布说明"</code></td>
+                <td>打<strong>附注标签</strong>（带打签人和说明，推荐）</td>
+              </tr>
+              <tr>
+                <td><code>git tag v1.0.0 提交号</code></td>
+                <td>给指定提交打标签</td>
+              </tr>
+              <tr>
+                <td><code>git push origin v1.0.0</code></td>
+                <td>推送指定标签到远程</td>
+              </tr>
+              <tr>
+                <td><code>git push origin --tags</code></td>
+                <td>推送全部标签</td>
+              </tr>
+              <tr>
+                <td><code>git tag -d v1.0.0</code></td>
+                <td>删除本地标签</td>
+              </tr>
+              <tr>
+                <td><code>git push origin --delete tag v1.0.0</code></td>
+                <td>删除远程标签</td>
+              </tr>
+              <tr>
+                <td><code>git checkout v1.0.0</code></td>
+                <td>切到标签对应代码（分离头指针）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1129,24 +1524,49 @@ git merge --no-ff feat/login</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>版本号</th><th>含义</th><th>例子</th></tr>
+              <tr>
+                <th>版本号</th>
+                <th>含义</th>
+                <th>例子</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>主版本号</td><td>不兼容的重大变更</td><td>1.0.0 → 2.0.0</td></tr>
-              <tr><td>次版本号</td><td>新增功能（向后兼容）</td><td>1.0.0 → 1.1.0</td></tr>
-              <tr><td>修订号</td><td>修复 Bug（向后兼容）</td><td>1.1.0 → 1.1.1</td></tr>
+              <tr>
+                <td>主版本号</td>
+                <td>不兼容的重大变更</td>
+                <td>1.0.0 → 2.0.0</td>
+              </tr>
+              <tr>
+                <td>次版本号</td>
+                <td>新增功能（向后兼容）</td>
+                <td>1.0.0 → 1.1.0</td>
+              </tr>
+              <tr>
+                <td>修订号</td>
+                <td>修复 Bug（向后兼容）</td>
+                <td>1.1.0 → 1.1.1</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 标签<strong>打错了尽早删</strong>，因为标签在远程一旦被多人引用，改动代价很大；② 发布前先确认代码能跑、测试通过，<strong>「先 tag 后发布」</strong>，让每个版本都能回溯；③ checkout 到标签后处于<strong>分离头指针（detached HEAD）</strong>状态，此时提交会「悬空」——要基于标签改代码，先 <code>git switch -c 新分支名</code>。
+          ①
+          标签<strong>打错了尽早删</strong>，因为标签在远程一旦被多人引用，改动代价很大；②
+          发布前先确认代码能跑、测试通过，<strong>「先 tag 后发布」</strong
+          >，让每个版本都能回溯；③ checkout 到标签后处于<strong
+            >分离头指针（detached HEAD）</strong
+          >状态，此时提交会「悬空」——要基于标签改代码，先
+          <code>git switch -c 新分支名</code>。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>主版本破兼容，次版本加功能，修订号修 Bug；打签用 -a，发布先打签</strong>」——SemVer 三段式：X.Y.Z。
+          「<strong
+            >主版本破兼容，次版本加功能，修订号修 Bug；打签用
+            -a，发布先打签</strong
+          >」——SemVer 三段式：X.Y.Z。
         </div>
       </section>
 
@@ -1156,7 +1576,8 @@ git merge --no-ff feat/login</code></pre>
 
         <h3>.gitignore 是什么</h3>
         <p>
-          <code>.gitignore</code> 告诉 Git<strong>哪些文件不要跟踪</strong>。项目里的依赖、编译产物、本地配置、密钥等都不该进仓库。
+          <code>.gitignore</code> 告诉
+          Git<strong>哪些文件不要跟踪</strong>。项目里的依赖、编译产物、本地配置、密钥等都不该进仓库。
         </p>
 
         <h3>必须忽略的典型文件</h3>
@@ -1188,34 +1609,82 @@ Thumbs.db
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>语法</th><th>含义</th><th>示例</th></tr>
+              <tr>
+                <th>语法</th>
+                <th>含义</th>
+                <th>示例</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>文件名</code></td><td>忽略该文件</td><td><code>secret.json</code></td></tr>
-              <tr><td><code>目录/</code></td><td>忽略整个目录</td><td><code>node_modules/</code></td></tr>
-              <tr><td><code>*</code></td><td>通配符</td><td><code>*.log</code></td></tr>
-              <tr><td><code>!文件名</code></td><td>取反（重新跟踪）</td><td><code>!important.log</code></td></tr>
-              <tr><td><code>目录/子文件</code></td><td>忽略特定子路径</td><td><code>docs/build/</code></td></tr>
-              <tr><td><code>**</code></td><td>任意层级</td><td><code>**/temp/</code></td></tr>
+              <tr>
+                <td><code>文件名</code></td>
+                <td>忽略该文件</td>
+                <td><code>secret.json</code></td>
+              </tr>
+              <tr>
+                <td><code>目录/</code></td>
+                <td>忽略整个目录</td>
+                <td><code>node_modules/</code></td>
+              </tr>
+              <tr>
+                <td><code>*</code></td>
+                <td>通配符</td>
+                <td><code>*.log</code></td>
+              </tr>
+              <tr>
+                <td><code>!文件名</code></td>
+                <td>取反（重新跟踪）</td>
+                <td><code>!important.log</code></td>
+              </tr>
+              <tr>
+                <td><code>目录/子文件</code></td>
+                <td>忽略特定子路径</td>
+                <td><code>docs/build/</code></td>
+              </tr>
+              <tr>
+                <td><code>**</code></td>
+                <td>任意层级</td>
+                <td><code>**/temp/</code></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>全局忽略与配置分层</h3>
         <ul>
-          <li><strong>全局忽略</strong>：<code>git config --global core.excludesfile ~/.gitignore_global</code>（放系统文件 .DS_Store 等）</li>
-          <li><strong>配置查看</strong>：<code>git config --list</code> / <code>git config --global --list</code> / <code>git config --local --list</code></li>
-          <li><strong>删除缓存里的忽略文件</strong>：已经被跟踪的文件，gitignore 不会自动生效：<code>git rm -r --cached 目录</code> 再提交</li>
+          <li>
+            <strong>全局忽略</strong>：<code
+              >git config --global core.excludesfile ~/.gitignore_global</code
+            >（放系统文件 .DS_Store 等）
+          </li>
+          <li>
+            <strong>配置查看</strong>：<code>git config --list</code> /
+            <code>git config --global --list</code> /
+            <code>git config --local --list</code>
+          </li>
+          <li>
+            <strong>删除缓存里的忽略文件</strong>：已经被跟踪的文件，gitignore
+            不会自动生效：<code>git rm -r --cached 目录</code> 再提交
+          </li>
         </ul>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① <strong>gitignore 只对「未跟踪」文件生效</strong>——已经提交过的文件，即使写了 ignore 也照样跟踪，要用 <code>git rm --cached</code> 移出；② 密钥文件一旦提交过远程，<strong>改 gitignore 没用，必须换密钥</strong>（历史里还留着）；③ 别把整个 .vscode 都忽略，团队需要共享格式化配置时可选择性保留。
+          ①
+          <strong>gitignore 只对「未跟踪」文件生效</strong
+          >——已经提交过的文件，即使写了 ignore 也照样跟踪，要用
+          <code>git rm --cached</code> 移出；② 密钥文件一旦提交过远程，<strong
+            >改 gitignore 没用，必须换密钥</strong
+          >（历史里还留着）；③ 别把整个 .vscode
+          都忽略，团队需要共享格式化配置时可选择性保留。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>依赖密钥构建物，三样必进 ignore；* 通配 ! 取反，已跟踪要 rm --cached</strong>」——先写 ignore 再 add，安全第一条。
+          「<strong
+            >依赖密钥构建物，三样必进 ignore；* 通配 ! 取反，已跟踪要 rm
+            --cached</strong
+          >」——先写 ignore 再 add，安全第一条。
         </div>
       </section>
 
@@ -1227,34 +1696,80 @@ Thumbs.db
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>场景</th><th>命令</th><th>效果</th></tr>
+              <tr>
+                <th>场景</th>
+                <th>命令</th>
+                <th>效果</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>工作区改乱了（未 add）</td><td><code>git restore 文件名</code></td><td>丢弃工作区修改，回到暂存区/仓库版本</td></tr>
-              <tr><td>误 add 了（想移出暂存区）</td><td><code>git restore --staged 文件名</code></td><td>取消暂存，改动保留在工作区</td></tr>
-              <tr><td>撤销提交但保留改动</td><td><code>git reset --soft HEAD~1</code></td><td>回到上一个提交，改动留在暂存区</td></tr>
-              <tr><td>撤销提交且保留到工作区</td><td><code>git reset --mixed HEAD~1</code></td><td>（默认模式）改动回到工作区</td></tr>
-              <tr><td>彻底回滚（危险）</td><td><code>git reset --hard HEAD~1</code></td><td>提交和改动一起消失（可用 reflog 救）</td></tr>
-              <tr><td>已 push，撤销某次提交</td><td><code>git revert 提交号</code></td><td>生成一个「反向提交」，<strong>不改历史</strong></td></tr>
+              <tr>
+                <td>工作区改乱了（未 add）</td>
+                <td><code>git restore 文件名</code></td>
+                <td>丢弃工作区修改，回到暂存区/仓库版本</td>
+              </tr>
+              <tr>
+                <td>误 add 了（想移出暂存区）</td>
+                <td><code>git restore --staged 文件名</code></td>
+                <td>取消暂存，改动保留在工作区</td>
+              </tr>
+              <tr>
+                <td>撤销提交但保留改动</td>
+                <td><code>git reset --soft HEAD~1</code></td>
+                <td>回到上一个提交，改动留在暂存区</td>
+              </tr>
+              <tr>
+                <td>撤销提交且保留到工作区</td>
+                <td><code>git reset --mixed HEAD~1</code></td>
+                <td>（默认模式）改动回到工作区</td>
+              </tr>
+              <tr>
+                <td>彻底回滚（危险）</td>
+                <td><code>git reset --hard HEAD~1</code></td>
+                <td>提交和改动一起消失（可用 reflog 救）</td>
+              </tr>
+              <tr>
+                <td>已 push，撤销某次提交</td>
+                <td><code>git revert 提交号</code></td>
+                <td>生成一个「反向提交」，<strong>不改历史</strong></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>restore / reset / revert 对比</h3>
         <ul>
-          <li><strong>git restore</strong>：针对「文件」，把工作区/暂存区恢复到某个状态，<strong>不动历史</strong></li>
-          <li><strong>git reset</strong>：移动 HEAD 指针，<strong>改写历史</strong>（本地未 push 时用）</li>
-          <li><strong>git revert</strong>：在历史<strong>末尾追加反向提交</strong>，历史不变（已 push 时用）</li>
+          <li>
+            <strong>git restore</strong
+            >：针对「文件」，把工作区/暂存区恢复到某个状态，<strong
+              >不动历史</strong
+            >
+          </li>
+          <li>
+            <strong>git reset</strong>：移动 HEAD
+            指针，<strong>改写历史</strong>（本地未 push 时用）
+          </li>
+          <li>
+            <strong>git revert</strong
+            >：在历史<strong>末尾追加反向提交</strong>，历史不变（已 push 时用）
+          </li>
         </ul>
 
         <div class="callout danger">
           <div class="callout-title">🚨 红线提醒</div>
-          <strong>已 push 的提交绝不 reset</strong>，要用 revert。否则你和队友的历史就分叉了，下次 pull 会冲突到怀疑人生。记住：<strong>本地历史随便改，公共历史只能 revert</strong>。
+          <strong>已 push 的提交绝不 reset</strong>，要用
+          revert。否则你和队友的历史就分叉了，下次 pull
+          会冲突到怀疑人生。记住：<strong
+            >本地历史随便改，公共历史只能 revert</strong
+          >。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>未 add 用 restore，误 add 用 --staged；本地 reset 随便改，已 push 只能 revert</strong>」——撤销四兄弟：restore、reset 三档、revert。
+          「<strong
+            >未 add 用 restore，误 add 用 --staged；本地 reset 随便改，已 push
+            只能 revert</strong
+          >」——撤销四兄弟：restore、reset 三档、revert。
         </div>
       </section>
 
@@ -1264,25 +1779,58 @@ Thumbs.db
 
         <h3>git stash 是什么</h3>
         <p>
-          手头改到一半，突然要切分支改别的——又不想提交半成品。用 <code>git stash</code> 把当前改动<strong>暂时收进「口袋」</strong>，工作区恢复干净；忙完再 <code>stash pop</code> 掏出来继续。
+          手头改到一半，突然要切分支改别的——又不想提交半成品。用
+          <code>git stash</code>
+          把当前改动<strong>暂时收进「口袋」</strong>，工作区恢复干净；忙完再
+          <code>stash pop</code> 掏出来继续。
         </p>
 
         <h3>stash 命令一览</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git stash</code></td><td>暂存当前改动（默认不含未跟踪文件）</td></tr>
-              <tr><td><code>git stash -u</code></td><td>连同未跟踪文件一起暂存</td></tr>
-              <tr><td><code>git stash -m "说明"</code></td><td>带说明暂存，方便区分</td></tr>
-              <tr><td><code>git stash list</code></td><td>查看暂存列表</td></tr>
-              <tr><td><code>git stash pop</code></td><td>取出<strong>最近一次</strong>暂存并删除该记录</td></tr>
-              <tr><td><code>git stash apply</code></td><td>取出暂存但<strong>保留记录</strong>（可多次应用）</td></tr>
-              <tr><td><code>git stash drop</code></td><td>丢弃最近一次暂存</td></tr>
-              <tr><td><code>git stash clear</code></td><td>清空所有暂存（谨慎）</td></tr>
-              <tr><td><code>git stash branch 分支名</code></td><td>基于暂存新建分支并应用（解决 pop 冲突）</td></tr>
+              <tr>
+                <td><code>git stash</code></td>
+                <td>暂存当前改动（默认不含未跟踪文件）</td>
+              </tr>
+              <tr>
+                <td><code>git stash -u</code></td>
+                <td>连同未跟踪文件一起暂存</td>
+              </tr>
+              <tr>
+                <td><code>git stash -m "说明"</code></td>
+                <td>带说明暂存，方便区分</td>
+              </tr>
+              <tr>
+                <td><code>git stash list</code></td>
+                <td>查看暂存列表</td>
+              </tr>
+              <tr>
+                <td><code>git stash pop</code></td>
+                <td>取出<strong>最近一次</strong>暂存并删除该记录</td>
+              </tr>
+              <tr>
+                <td><code>git stash apply</code></td>
+                <td>取出暂存但<strong>保留记录</strong>（可多次应用）</td>
+              </tr>
+              <tr>
+                <td><code>git stash drop</code></td>
+                <td>丢弃最近一次暂存</td>
+              </tr>
+              <tr>
+                <td><code>git stash clear</code></td>
+                <td>清空所有暂存（谨慎）</td>
+              </tr>
+              <tr>
+                <td><code>git stash branch 分支名</code></td>
+                <td>基于暂存新建分支并应用（解决 pop 冲突）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1291,25 +1839,48 @@ Thumbs.db
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git clean -n</code></td><td>预览会删除哪些文件（先看再删）</td></tr>
-              <tr><td><code>git clean -f</code></td><td>删除未跟踪文件</td></tr>
-              <tr><td><code>git clean -fd</code></td><td>连同未跟踪目录一起删</td></tr>
-              <tr><td><code>git clean -fdx</code></td><td>连同被忽略文件一起删（危险）</td></tr>
+              <tr>
+                <td><code>git clean -n</code></td>
+                <td>预览会删除哪些文件（先看再删）</td>
+              </tr>
+              <tr>
+                <td><code>git clean -f</code></td>
+                <td>删除未跟踪文件</td>
+              </tr>
+              <tr>
+                <td><code>git clean -fd</code></td>
+                <td>连同未跟踪目录一起删</td>
+              </tr>
+              <tr>
+                <td><code>git clean -fdx</code></td>
+                <td>连同被忽略文件一起删（危险）</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① stash 是有<strong>存放期限</strong>的——放太久忘了，pop 时容易冲突；用完尽快取；② <code>git clean</code> 是<strong>不可恢复</strong>的删除（不进回收站），一定先 <code>-n</code> 预览；③ stash pop 冲突时，用 <code>git stash branch 新分支</code> 最稳，冲突可以慢慢解。
+          ① stash 是有<strong>存放期限</strong>的——放太久忘了，pop
+          时容易冲突；用完尽快取；②
+          <code>git clean</code>
+          是<strong>不可恢复</strong>的删除（不进回收站），一定先
+          <code>-n</code> 预览；③ stash pop 冲突时，用
+          <code>git stash branch 新分支</code> 最稳，冲突可以慢慢解。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>stash 收口袋，pop 掏出来，list 看清单；clean 删垃圾，先 -n 预览再 -f 删</strong>」——半成品先收好，垃圾文件先看再删。
+          「<strong
+            >stash 收口袋，pop 掏出来，list 看清单；clean 删垃圾，先 -n 预览再
+            -f 删</strong
+          >」——半成品先收好，垃圾文件先看再删。
         </div>
       </section>
 
@@ -1321,13 +1892,33 @@ Thumbs.db
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>对比项</th><th>git merge</th><th>git rebase</th></tr>
+              <tr>
+                <th>对比项</th>
+                <th>git merge</th>
+                <th>git rebase</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>历史形态</td><td>保留分叉，产生合并提交</td><td>把分支「重放」到最新，历史是一条直线</td></tr>
-              <tr><td>提交记录</td><td>真实记录「何时分叉合并」</td><td>重写提交时间/顺序</td></tr>
-              <tr><td>适用</td><td>公共分支、长期分支</td><td>本地个人分支、整理历史</td></tr>
-              <tr><td>风险</td><td>低</td><td>已 push 的提交禁止 rebase</td></tr>
+              <tr>
+                <td>历史形态</td>
+                <td>保留分叉，产生合并提交</td>
+                <td>把分支「重放」到最新，历史是一条直线</td>
+              </tr>
+              <tr>
+                <td>提交记录</td>
+                <td>真实记录「何时分叉合并」</td>
+                <td>重写提交时间/顺序</td>
+              </tr>
+              <tr>
+                <td>适用</td>
+                <td>公共分支、长期分支</td>
+                <td>本地个人分支、整理历史</td>
+              </tr>
+              <tr>
+                <td>风险</td>
+                <td>低</td>
+                <td>已 push 的提交禁止 rebase</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1353,27 +1944,55 @@ git rebase -i HEAD~3</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>pick</code></td><td>保留该提交（默认）</td></tr>
-              <tr><td><code>reword</code></td><td>保留提交但修改说明（r）</td></tr>
-              <tr><td><code>edit</code></td><td>保留提交但停下来修改内容（e）</td></tr>
-              <tr><td><code>squash</code></td><td>合并到上一个提交（s）</td></tr>
-              <tr><td><code>fixup</code></td><td>合并到上一个提交且丢弃说明（f）</td></tr>
-              <tr><td><code>drop</code></td><td>删除该提交（d）</td></tr>
+              <tr>
+                <td><code>pick</code></td>
+                <td>保留该提交（默认）</td>
+              </tr>
+              <tr>
+                <td><code>reword</code></td>
+                <td>保留提交但修改说明（r）</td>
+              </tr>
+              <tr>
+                <td><code>edit</code></td>
+                <td>保留提交但停下来修改内容（e）</td>
+              </tr>
+              <tr>
+                <td><code>squash</code></td>
+                <td>合并到上一个提交（s）</td>
+              </tr>
+              <tr>
+                <td><code>fixup</code></td>
+                <td>合并到上一个提交且丢弃说明（f）</td>
+              </tr>
+              <tr>
+                <td><code>drop</code></td>
+                <td>删除该提交（d）</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout danger">
           <div class="callout-title">🚨 红线提醒</div>
-          <strong>只对「未 push」的本地提交 rebase</strong>。已经 push 到远程、且其他人拉取过的提交，一旦 rebase，历史 SHA 全变，队友 pull 会直接炸开。团队协作规范：<strong>公共分支只 merge，个人分支随意 rebase</strong>。
+          <strong>只对「未 push」的本地提交 rebase</strong>。已经 push
+          到远程、且其他人拉取过的提交，一旦 rebase，历史 SHA 全变，队友 pull
+          会直接炸开。团队协作规范：<strong
+            >公共分支只 merge，个人分支随意 rebase</strong
+          >。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>merge 留真相，rebase 修直线；-i 整理历史：pick 留、squash 并、drop 删</strong>」——个人分支用 rebase 保持干净，公共分支用 merge 尊重事实。
+          「<strong
+            >merge 留真相，rebase 修直线；-i 整理历史：pick 留、squash 并、drop
+            删</strong
+          >」——个人分支用 rebase 保持干净，公共分支用 merge 尊重事实。
         </div>
       </section>
 
@@ -1382,24 +2001,51 @@ git rebase -i HEAD~3</code></pre>
         <h2><span class="num">14</span> Git 内部原理与对象模型</h2>
 
         <h3>Git 的四种对象</h3>
-        <p>Git 的核心是一个<strong>内容寻址文件系统</strong>：所有数据都以对象存储，对象名是内容的 SHA-1 哈希。</p>
+        <p>
+          Git
+          的核心是一个<strong>内容寻址文件系统</strong>：所有数据都以对象存储，对象名是内容的
+          SHA-1 哈希。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>对象</th><th>存什么</th><th>比喻</th></tr>
+              <tr>
+                <th>对象</th>
+                <th>存什么</th>
+                <th>比喻</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><strong>Blob</strong></td><td>文件内容（不含文件名）</td><td>货物本身</td></tr>
-              <tr><td><strong>Tree</strong></td><td>目录结构：文件名 → blob/tree 的映射</td><td>货物清单 + 货架编号</td></tr>
-              <tr><td><strong>Commit</strong></td><td>一次提交：作者、时间、说明、指向的 Tree、父提交</td><td>入库单据</td></tr>
-              <tr><td><strong>Tag</strong></td><td>（附注标签）指向某个 commit 的签名信息</td><td>贴在货架上的标签</td></tr>
+              <tr>
+                <td><strong>Blob</strong></td>
+                <td>文件内容（不含文件名）</td>
+                <td>货物本身</td>
+              </tr>
+              <tr>
+                <td><strong>Tree</strong></td>
+                <td>目录结构：文件名 → blob/tree 的映射</td>
+                <td>货物清单 + 货架编号</td>
+              </tr>
+              <tr>
+                <td><strong>Commit</strong></td>
+                <td>一次提交：作者、时间、说明、指向的 Tree、父提交</td>
+                <td>入库单据</td>
+              </tr>
+              <tr>
+                <td><strong>Tag</strong></td>
+                <td>（附注标签）指向某个 commit 的签名信息</td>
+                <td>贴在货架上的标签</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>一次提交的「链条」</h3>
         <p>
-          每个 commit 都指向<strong>父提交</strong>，形成一条链。分支就是指向链尾 commit 的指针，HEAD 指向当前分支。所以「切分支」只是<strong>换了个指针</strong>，快得飞起。
+          每个 commit
+          都指向<strong>父提交</strong>，形成一条链。分支就是指向链尾 commit
+          的指针，HEAD
+          指向当前分支。所以「切分支」只是<strong>换了个指针</strong>，快得飞起。
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1417,28 +2063,57 @@ ls .git
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>路径</th><th>作用</th></tr>
+              <tr>
+                <th>路径</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>HEAD</code></td><td>当前指向哪个分支/提交</td></tr>
-              <tr><td><code>config</code></td><td>本仓库配置（local 级）</td></tr>
-              <tr><td><code>refs/heads/</code></td><td>本地分支指针</td></tr>
-              <tr><td><code>refs/tags/</code></td><td>标签指针</td></tr>
-              <tr><td><code>objects/</code></td><td>对象库（blob/tree/commit）</td></tr>
-              <tr><td><code>index</code></td><td>暂存区（staging area）</td></tr>
-              <tr><td><code>logs/</code></td><td>reflog 操作日志</td></tr>
+              <tr>
+                <td><code>HEAD</code></td>
+                <td>当前指向哪个分支/提交</td>
+              </tr>
+              <tr>
+                <td><code>config</code></td>
+                <td>本仓库配置（local 级）</td>
+              </tr>
+              <tr>
+                <td><code>refs/heads/</code></td>
+                <td>本地分支指针</td>
+              </tr>
+              <tr>
+                <td><code>refs/tags/</code></td>
+                <td>标签指针</td>
+              </tr>
+              <tr>
+                <td><code>objects/</code></td>
+                <td>对象库（blob/tree/commit）</td>
+              </tr>
+              <tr>
+                <td><code>index</code></td>
+                <td>暂存区（staging area）</td>
+              </tr>
+              <tr>
+                <td><code>logs/</code></td>
+                <td>reflog 操作日志</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          <strong>内容相同 = 哈希相同</strong>，Git 靠这个去重：同一个文件不管存在多少分支、多少版本，仓库里只存一份 blob。这也是 Git 仓库「虽小却全」的原因。
+          <strong>内容相同 = 哈希相同</strong>，Git
+          靠这个去重：同一个文件不管存在多少分支、多少版本，仓库里只存一份
+          blob。这也是 Git 仓库「虽小却全」的原因。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>blob 存内容、tree 存目录、commit 存快照、tag 钉版本；分支是指针，HEAD 指当前</strong>」——理解了对象模型，Git 再无黑魔法。
+          「<strong
+            >blob 存内容、tree 存目录、commit 存快照、tag
+            钉版本；分支是指针，HEAD 指当前</strong
+          >」——理解了对象模型，Git 再无黑魔法。
         </div>
       </section>
 
@@ -1448,19 +2123,45 @@ ls .git
 
         <h3>Git Hooks 是什么</h3>
         <p>
-          钩子是<strong>在 Git 特定事件发生时自动执行的脚本</strong>，存放在 <code>.git/hooks/</code> 目录（带 <code>.sample</code> 后缀的是示例，去掉后缀才生效）。最常用的钩子：
+          钩子是<strong>在 Git 特定事件发生时自动执行的脚本</strong>，存放在
+          <code>.git/hooks/</code> 目录（带
+          <code>.sample</code> 后缀的是示例，去掉后缀才生效）。最常用的钩子：
         </p>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr>
+              <tr>
+                <th>钩子</th>
+                <th>触发时机</th>
+                <th>典型用途</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>pre-commit</code></td><td>commit 前</td><td>跑代码检查（eslint）、格式化、查密钥</td></tr>
-              <tr><td><code>commit-msg</code></td><td>commit 前</td><td>校验提交信息格式（如必须带类型前缀）</td></tr>
-              <tr><td><code>pre-push</code></td><td>push 前</td><td>跑测试、阻止直接推 main</td></tr>
-              <tr><td><code>post-commit</code></td><td>commit 后</td><td>通知、备份</td></tr>
-              <tr><td><code>post-merge</code></td><td>合并后</td><td>自动装依赖（npm install）</td></tr>
+              <tr>
+                <td><code>pre-commit</code></td>
+                <td>commit 前</td>
+                <td>跑代码检查（eslint）、格式化、查密钥</td>
+              </tr>
+              <tr>
+                <td><code>commit-msg</code></td>
+                <td>commit 前</td>
+                <td>校验提交信息格式（如必须带类型前缀）</td>
+              </tr>
+              <tr>
+                <td><code>pre-push</code></td>
+                <td>push 前</td>
+                <td>跑测试、阻止直接推 main</td>
+              </tr>
+              <tr>
+                <td><code>post-commit</code></td>
+                <td>commit 后</td>
+                <td>通知、备份</td>
+              </tr>
+              <tr>
+                <td><code>post-merge</code></td>
+                <td>合并后</td>
+                <td>自动装依赖（npm install）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1476,7 +2177,12 @@ if git diff --cached --name-only | grep -E "\.(env|pem|key)$"; then
   exit 1
 fi</code></pre>
         </div>
-        <p>注意：<code>.git/hooks/</code> 里的钩子<strong>不随仓库共享</strong>。团队共享钩子用 <strong>Husky</strong>（Node 生态）或 <code>core.hooksPath</code> 指向仓库内目录。</p>
+        <p>
+          注意：<code>.git/hooks/</code>
+          里的钩子<strong>不随仓库共享</strong>。团队共享钩子用
+          <strong>Husky</strong>（Node 生态）或
+          <code>core.hooksPath</code> 指向仓库内目录。
+        </p>
 
         <h3>husky + lint-staged 实践</h3>
         <div class="code-wrap">
@@ -1495,12 +2201,19 @@ fi</code></pre>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 钩子脚本要有<strong>执行权限</strong>（chmod +x），Windows 上注意脚本解释器；② <code>--no-verify</code> 可跳过钩子（<code>git commit --no-verify</code>），但这是「紧急通道」，别当常态；③ 钩子只防君子不防小人——真正的质量门禁要靠 CI。
+          ① 钩子脚本要有<strong>执行权限</strong>（chmod +x），Windows
+          上注意脚本解释器；② <code>--no-verify</code> 可跳过钩子（<code
+            >git commit --no-verify</code
+          >），但这是「紧急通道」，别当常态；③
+          钩子只防君子不防小人——真正的质量门禁要靠 CI。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>pre-commit 查代码、commit-msg 查格式、pre-push 查测试；钩子不共享，husky 来帮忙</strong>」——把规范交给机器，别靠自觉。
+          「<strong
+            >pre-commit 查代码、commit-msg 查格式、pre-push
+            查测试；钩子不共享，husky 来帮忙</strong
+          >」——把规范交给机器，别靠自觉。
         </div>
       </section>
 
@@ -1512,12 +2225,28 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>工作流</th><th>分支模型</th><th>适用场景</th></tr>
+              <tr>
+                <th>工作流</th>
+                <th>分支模型</th>
+                <th>适用场景</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><strong>GitHub Flow</strong></td><td>只有 main + 功能分支；功能分支 → PR → 合并</td><td>持续部署的互联网项目（最流行）</td></tr>
-              <tr><td><strong>GitFlow</strong></td><td>main + develop + feature + release + hotfix 五类分支</td><td>有明确版本发布周期的项目</td></tr>
-              <tr><td><strong>主干开发（Trunk-Based）</strong></td><td>所有人直接在 main 上小步提交</td><td>高度自动化的 CI/CD 团队</td></tr>
+              <tr>
+                <td><strong>GitHub Flow</strong></td>
+                <td>只有 main + 功能分支；功能分支 → PR → 合并</td>
+                <td>持续部署的互联网项目（最流行）</td>
+              </tr>
+              <tr>
+                <td><strong>GitFlow</strong></td>
+                <td>main + develop + feature + release + hotfix 五类分支</td>
+                <td>有明确版本发布周期的项目</td>
+              </tr>
+              <tr>
+                <td><strong>主干开发（Trunk-Based）</strong></td>
+                <td>所有人直接在 main 上小步提交</td>
+                <td>高度自动化的 CI/CD 团队</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1534,47 +2263,111 @@ fi</code></pre>
 
         <h3>PR（Pull Request）注意事项</h3>
         <ul>
-          <li><strong>PR 要小</strong>：一个 PR 只做一个功能，几百行以内的 diff 才好 review</li>
+          <li>
+            <strong>PR 要小</strong>：一个 PR 只做一个功能，几百行以内的 diff
+            才好 review
+          </li>
           <li><strong>PR 标题/描述写清楚</strong>：做了什么、为什么、怎么测</li>
-          <li><strong>合并前先同步 main</strong>：<code>git pull --rebase origin main</code>，减少冲突</li>
-          <li><strong>Review 是双向的</strong>：评论要具体、礼貌，被 review 要虚心改</li>
+          <li>
+            <strong>合并前先同步 main</strong>：<code
+              >git pull --rebase origin main</code
+            >，减少冲突
+          </li>
+          <li>
+            <strong>Review 是双向的</strong>：评论要具体、礼貌，被 review
+            要虚心改
+          </li>
         </ul>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 千万别直接往 main 推代码（除非你一个人用）；② 一个 PR 拖太久容易和 main 脱节产生大冲突——<strong>小步快跑，频繁同步</strong>；③ 合并策略团队统一：squash merge（历史干净）还是 merge commit（保留过程），<strong>说好就别换</strong>。
+          ① 千万别直接往 main 推代码（除非你一个人用）；② 一个 PR 拖太久容易和
+          main 脱节产生大冲突——<strong>小步快跑，频繁同步</strong>；③
+          合并策略团队统一：squash merge（历史干净）还是 merge
+          commit（保留过程），<strong>说好就别换</strong>。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>功能分支 + 小步提交 + PR 评审 + CI 把关 + 自动部署</strong>」——GitHub Flow 五连，互联网团队标配。
+          「<strong>功能分支 + 小步提交 + PR 评审 + CI 把关 + 自动部署</strong
+          >」——GitHub Flow 五连，互联网团队标配。
         </div>
       </section>
 
       <!-- ===== Chapter 17 ===== -->
       <section class="section" id="ch17">
         <h2><span class="num">17</span> Git 命令大全</h2>
-        <p>按用途分类整理的 Git 命令速查表，覆盖日常工作 95% 场景，共 100+ 条。</p>
+        <p>
+          按用途分类整理的 Git 命令速查表，覆盖日常工作 95% 场景，共 100+ 条。
+        </p>
 
         <h3>1. 配置类</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git config --global user.name "名字"</code></td><td>设置全局用户名</td></tr>
-              <tr><td><code>git config --global user.email "邮箱"</code></td><td>设置全局邮箱</td></tr>
-              <tr><td><code>git config --list</code></td><td>查看所有配置</td></tr>
-              <tr><td><code>git config --global --list</code></td><td>查看全局配置</td></tr>
-              <tr><td><code>git config user.name</code></td><td>查看指定配置项</td></tr>
-              <tr><td><code>git config --global color.ui auto</code></td><td>开启彩色输出</td></tr>
-              <tr><td><code>git config --global init.defaultBranch main</code></td><td>默认分支名设为 main</td></tr>
-              <tr><td><code>git config --global core.editor "code --wait"</code></td><td>设置默认编辑器</td></tr>
-              <tr><td><code>git config --global core.autocrlf true</code></td><td>Windows 自动转换换行符</td></tr>
-              <tr><td><code>git config --global core.excludesfile ~/.gitignore_global</code></td><td>指定全局忽略文件</td></tr>
-              <tr><td><code>git config --global alias.co checkout</code></td><td>设置别名（co = checkout）</td></tr>
-              <tr><td><code>git config --global --unset 配置项</code></td><td>删除某个配置</td></tr>
+              <tr>
+                <td><code>git config --global user.name "名字"</code></td>
+                <td>设置全局用户名</td>
+              </tr>
+              <tr>
+                <td><code>git config --global user.email "邮箱"</code></td>
+                <td>设置全局邮箱</td>
+              </tr>
+              <tr>
+                <td><code>git config --list</code></td>
+                <td>查看所有配置</td>
+              </tr>
+              <tr>
+                <td><code>git config --global --list</code></td>
+                <td>查看全局配置</td>
+              </tr>
+              <tr>
+                <td><code>git config user.name</code></td>
+                <td>查看指定配置项</td>
+              </tr>
+              <tr>
+                <td><code>git config --global color.ui auto</code></td>
+                <td>开启彩色输出</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>git config --global init.defaultBranch main</code>
+                </td>
+                <td>默认分支名设为 main</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>git config --global core.editor "code --wait"</code>
+                </td>
+                <td>设置默认编辑器</td>
+              </tr>
+              <tr>
+                <td><code>git config --global core.autocrlf true</code></td>
+                <td>Windows 自动转换换行符</td>
+              </tr>
+              <tr>
+                <td>
+                  <code
+                    >git config --global core.excludesfile
+                    ~/.gitignore_global</code
+                  >
+                </td>
+                <td>指定全局忽略文件</td>
+              </tr>
+              <tr>
+                <td><code>git config --global alias.co checkout</code></td>
+                <td>设置别名（co = checkout）</td>
+              </tr>
+              <tr>
+                <td><code>git config --global --unset 配置项</code></td>
+                <td>删除某个配置</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1583,17 +2376,44 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git init</code></td><td>初始化新仓库</td></tr>
-              <tr><td><code>git init 目录名</code></td><td>在指定目录初始化</td></tr>
-              <tr><td><code>git clone 地址</code></td><td>克隆远程仓库</td></tr>
-              <tr><td><code>git clone 地址 目录名</code></td><td>克隆到指定目录</td></tr>
-              <tr><td><code>git clone --depth 1 地址</code></td><td>浅克隆（只拉最新提交，省时间）</td></tr>
-              <tr><td><code>git clone --branch 分支名 地址</code></td><td>克隆指定分支</td></tr>
-              <tr><td><code>git worktree add 路径 分支名</code></td><td>同一仓库开多个工作目录</td></tr>
-              <tr><td><code>git archive -o 包.zip HEAD</code></td><td>导出当前版本代码压缩包</td></tr>
+              <tr>
+                <td><code>git init</code></td>
+                <td>初始化新仓库</td>
+              </tr>
+              <tr>
+                <td><code>git init 目录名</code></td>
+                <td>在指定目录初始化</td>
+              </tr>
+              <tr>
+                <td><code>git clone 地址</code></td>
+                <td>克隆远程仓库</td>
+              </tr>
+              <tr>
+                <td><code>git clone 地址 目录名</code></td>
+                <td>克隆到指定目录</td>
+              </tr>
+              <tr>
+                <td><code>git clone --depth 1 地址</code></td>
+                <td>浅克隆（只拉最新提交，省时间）</td>
+              </tr>
+              <tr>
+                <td><code>git clone --branch 分支名 地址</code></td>
+                <td>克隆指定分支</td>
+              </tr>
+              <tr>
+                <td><code>git worktree add 路径 分支名</code></td>
+                <td>同一仓库开多个工作目录</td>
+              </tr>
+              <tr>
+                <td><code>git archive -o 包.zip HEAD</code></td>
+                <td>导出当前版本代码压缩包</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1602,21 +2422,60 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git status</code></td><td>查看工作区状态</td></tr>
-              <tr><td><code>git status -s</code></td><td>精简状态（一行一文件）</td></tr>
-              <tr><td><code>git add 文件</code></td><td>暂存指定文件</td></tr>
-              <tr><td><code>git add .</code></td><td>暂存当前目录全部改动</td></tr>
-              <tr><td><code>git add -u</code></td><td>暂存已跟踪文件的修改/删除</td></tr>
-              <tr><td><code>git add -p</code></td><td>分块交互式暂存</td></tr>
-              <tr><td><code>git restore 文件</code></td><td>丢弃工作区修改</td></tr>
-              <tr><td><code>git restore --staged 文件</code></td><td>取消暂存</td></tr>
-              <tr><td><code>git rm 文件</code></td><td>删除文件并暂存删除</td></tr>
-              <tr><td><code>git rm -r --cached 目录</code></td><td>移出跟踪但不删本地文件</td></tr>
-              <tr><td><code>git mv 旧名 新名</code></td><td>重命名/移动文件并暂存</td></tr>
-              <tr><td><code>git clean -n / -f / -fd</code></td><td>预览 / 删除未跟踪文件 / 含目录</td></tr>
+              <tr>
+                <td><code>git status</code></td>
+                <td>查看工作区状态</td>
+              </tr>
+              <tr>
+                <td><code>git status -s</code></td>
+                <td>精简状态（一行一文件）</td>
+              </tr>
+              <tr>
+                <td><code>git add 文件</code></td>
+                <td>暂存指定文件</td>
+              </tr>
+              <tr>
+                <td><code>git add .</code></td>
+                <td>暂存当前目录全部改动</td>
+              </tr>
+              <tr>
+                <td><code>git add -u</code></td>
+                <td>暂存已跟踪文件的修改/删除</td>
+              </tr>
+              <tr>
+                <td><code>git add -p</code></td>
+                <td>分块交互式暂存</td>
+              </tr>
+              <tr>
+                <td><code>git restore 文件</code></td>
+                <td>丢弃工作区修改</td>
+              </tr>
+              <tr>
+                <td><code>git restore --staged 文件</code></td>
+                <td>取消暂存</td>
+              </tr>
+              <tr>
+                <td><code>git rm 文件</code></td>
+                <td>删除文件并暂存删除</td>
+              </tr>
+              <tr>
+                <td><code>git rm -r --cached 目录</code></td>
+                <td>移出跟踪但不删本地文件</td>
+              </tr>
+              <tr>
+                <td><code>git mv 旧名 新名</code></td>
+                <td>重命名/移动文件并暂存</td>
+              </tr>
+              <tr>
+                <td><code>git clean -n / -f / -fd</code></td>
+                <td>预览 / 删除未跟踪文件 / 含目录</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1625,18 +2484,48 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git commit -m "说明"</code></td><td>提交并写说明</td></tr>
-              <tr><td><code>git commit -am "说明"</code></td><td>add 已跟踪文件 + 提交</td></tr>
-              <tr><td><code>git commit --amend -m "新说明"</code></td><td>修改上一条提交说明</td></tr>
-              <tr><td><code>git commit --amend --no-edit</code></td><td>并入暂存改动，不换说明</td></tr>
-              <tr><td><code>git commit -m "标题" -m "正文"</code></td><td>多段提交信息</td></tr>
-              <tr><td><code>git commit --allow-empty -m "说明"</code></td><td>创建空提交（触发 CI 用）</td></tr>
-              <tr><td><code>git commit --no-verify -m "说明"</code></td><td>跳过钩子提交</td></tr>
-              <tr><td><code>git cherry-pick 提交号</code></td><td>把别的分支某次提交「摘」过来</td></tr>
-              <tr><td><code>git cherry-pick 提交号1 提交号2</code></td><td>连续摘多个提交</td></tr>
+              <tr>
+                <td><code>git commit -m "说明"</code></td>
+                <td>提交并写说明</td>
+              </tr>
+              <tr>
+                <td><code>git commit -am "说明"</code></td>
+                <td>add 已跟踪文件 + 提交</td>
+              </tr>
+              <tr>
+                <td><code>git commit --amend -m "新说明"</code></td>
+                <td>修改上一条提交说明</td>
+              </tr>
+              <tr>
+                <td><code>git commit --amend --no-edit</code></td>
+                <td>并入暂存改动，不换说明</td>
+              </tr>
+              <tr>
+                <td><code>git commit -m "标题" -m "正文"</code></td>
+                <td>多段提交信息</td>
+              </tr>
+              <tr>
+                <td><code>git commit --allow-empty -m "说明"</code></td>
+                <td>创建空提交（触发 CI 用）</td>
+              </tr>
+              <tr>
+                <td><code>git commit --no-verify -m "说明"</code></td>
+                <td>跳过钩子提交</td>
+              </tr>
+              <tr>
+                <td><code>git cherry-pick 提交号</code></td>
+                <td>把别的分支某次提交「摘」过来</td>
+              </tr>
+              <tr>
+                <td><code>git cherry-pick 提交号1 提交号2</code></td>
+                <td>连续摘多个提交</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1645,23 +2534,68 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git branch</code></td><td>列出本地分支</td></tr>
-              <tr><td><code>git branch -a</code></td><td>列出所有分支（含远程）</td></tr>
-              <tr><td><code>git branch -v</code></td><td>分支 + 最新提交</td></tr>
-              <tr><td><code>git branch 分支名</code></td><td>创建分支</td></tr>
-              <tr><td><code>git switch 分支名</code></td><td>切换分支</td></tr>
-              <tr><td><code>git switch -c 分支名</code></td><td>创建并切换分支</td></tr>
-              <tr><td><code>git checkout -b 分支名</code></td><td>老写法：创建并切换</td></tr>
-              <tr><td><code>git branch -d 分支名</code></td><td>安全删除分支</td></tr>
-              <tr><td><code>git branch -D 分支名</code></td><td>强制删除分支</td></tr>
-              <tr><td><code>git branch -m 新名</code></td><td>重命名当前分支</td></tr>
-              <tr><td><code>git branch --merged</code></td><td>列出已合并分支（可清理）</td></tr>
-              <tr><td><code>git branch --unmerged</code></td><td>列出未合并分支</td></tr>
-              <tr><td><code>git branch --set-upstream-to=origin/main</code></td><td>设置上游跟踪分支</td></tr>
-              <tr><td><code>git push origin --delete 分支名</code></td><td>删除远程分支</td></tr>
+              <tr>
+                <td><code>git branch</code></td>
+                <td>列出本地分支</td>
+              </tr>
+              <tr>
+                <td><code>git branch -a</code></td>
+                <td>列出所有分支（含远程）</td>
+              </tr>
+              <tr>
+                <td><code>git branch -v</code></td>
+                <td>分支 + 最新提交</td>
+              </tr>
+              <tr>
+                <td><code>git branch 分支名</code></td>
+                <td>创建分支</td>
+              </tr>
+              <tr>
+                <td><code>git switch 分支名</code></td>
+                <td>切换分支</td>
+              </tr>
+              <tr>
+                <td><code>git switch -c 分支名</code></td>
+                <td>创建并切换分支</td>
+              </tr>
+              <tr>
+                <td><code>git checkout -b 分支名</code></td>
+                <td>老写法：创建并切换</td>
+              </tr>
+              <tr>
+                <td><code>git branch -d 分支名</code></td>
+                <td>安全删除分支</td>
+              </tr>
+              <tr>
+                <td><code>git branch -D 分支名</code></td>
+                <td>强制删除分支</td>
+              </tr>
+              <tr>
+                <td><code>git branch -m 新名</code></td>
+                <td>重命名当前分支</td>
+              </tr>
+              <tr>
+                <td><code>git branch --merged</code></td>
+                <td>列出已合并分支（可清理）</td>
+              </tr>
+              <tr>
+                <td><code>git branch --unmerged</code></td>
+                <td>列出未合并分支</td>
+              </tr>
+              <tr>
+                <td><code>git branch --set-upstream-to=origin/main</code></td>
+                <td>设置上游跟踪分支</td>
+              </tr>
+              <tr>
+                <td><code>git push origin --delete 分支名</code></td>
+                <td>删除远程分支</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1670,23 +2604,68 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git remote -v</code></td><td>查看远程地址</td></tr>
-              <tr><td><code>git remote add origin 地址</code></td><td>添加远程仓库</td></tr>
-              <tr><td><code>git remote remove origin</code></td><td>移除远程关联</td></tr>
-              <tr><td><code>git remote rename old new</code></td><td>重命名远程</td></tr>
-              <tr><td><code>git remote set-url origin 新地址</code></td><td>修改远程地址</td></tr>
-              <tr><td><code>git push</code></td><td>推送当前分支</td></tr>
-              <tr><td><code>git push origin main</code></td><td>推送到指定远程分支</td></tr>
-              <tr><td><code>git push -u origin main</code></td><td>首次推送并建立跟踪</td></tr>
-              <tr><td><code>git push --force</code></td><td>强制推送（危险）</td></tr>
-              <tr><td><code>git push --force-with-lease</code></td><td>安全强推（远程没变才推）</td></tr>
-              <tr><td><code>git pull</code></td><td>拉取并合并</td></tr>
-              <tr><td><code>git pull --rebase</code></td><td>拉取并变基（推荐）</td></tr>
-              <tr><td><code>git fetch</code></td><td>只拉取不合并</td></tr>
-              <tr><td><code>git fetch --prune</code></td><td>拉取并清理已删除的远程分支</td></tr>
+              <tr>
+                <td><code>git remote -v</code></td>
+                <td>查看远程地址</td>
+              </tr>
+              <tr>
+                <td><code>git remote add origin 地址</code></td>
+                <td>添加远程仓库</td>
+              </tr>
+              <tr>
+                <td><code>git remote remove origin</code></td>
+                <td>移除远程关联</td>
+              </tr>
+              <tr>
+                <td><code>git remote rename old new</code></td>
+                <td>重命名远程</td>
+              </tr>
+              <tr>
+                <td><code>git remote set-url origin 新地址</code></td>
+                <td>修改远程地址</td>
+              </tr>
+              <tr>
+                <td><code>git push</code></td>
+                <td>推送当前分支</td>
+              </tr>
+              <tr>
+                <td><code>git push origin main</code></td>
+                <td>推送到指定远程分支</td>
+              </tr>
+              <tr>
+                <td><code>git push -u origin main</code></td>
+                <td>首次推送并建立跟踪</td>
+              </tr>
+              <tr>
+                <td><code>git push --force</code></td>
+                <td>强制推送（危险）</td>
+              </tr>
+              <tr>
+                <td><code>git push --force-with-lease</code></td>
+                <td>安全强推（远程没变才推）</td>
+              </tr>
+              <tr>
+                <td><code>git pull</code></td>
+                <td>拉取并合并</td>
+              </tr>
+              <tr>
+                <td><code>git pull --rebase</code></td>
+                <td>拉取并变基（推荐）</td>
+              </tr>
+              <tr>
+                <td><code>git fetch</code></td>
+                <td>只拉取不合并</td>
+              </tr>
+              <tr>
+                <td><code>git fetch --prune</code></td>
+                <td>拉取并清理已删除的远程分支</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1695,21 +2674,60 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git merge 分支名</code></td><td>合并分支</td></tr>
-              <tr><td><code>git merge --no-ff 分支名</code></td><td>强制生成合并提交</td></tr>
-              <tr><td><code>git merge --ff-only 分支名</code></td><td>只允许快进合并</td></tr>
-              <tr><td><code>git merge --abort</code></td><td>放弃本次合并</td></tr>
-              <tr><td><code>git merge --continue</code></td><td>解决冲突后继续合并</td></tr>
-              <tr><td><code>git rebase 分支名</code></td><td>变基到目标分支</td></tr>
-              <tr><td><code>git rebase -i HEAD~N</code></td><td>交互式整理最近 N 条提交</td></tr>
-              <tr><td><code>git rebase --continue</code></td><td>解决冲突后继续变基</td></tr>
-              <tr><td><code>git rebase --abort</code></td><td>放弃本次变基</td></tr>
-              <tr><td><code>git rebase --skip</code></td><td>跳过当前冲突的提交</td></tr>
-              <tr><td><code>git squash（配合 -i）</code></td><td>合并多个提交为一个</td></tr>
-              <tr><td><code>git diff 分支A 分支B</code></td><td>比较两分支差异</td></tr>
+              <tr>
+                <td><code>git merge 分支名</code></td>
+                <td>合并分支</td>
+              </tr>
+              <tr>
+                <td><code>git merge --no-ff 分支名</code></td>
+                <td>强制生成合并提交</td>
+              </tr>
+              <tr>
+                <td><code>git merge --ff-only 分支名</code></td>
+                <td>只允许快进合并</td>
+              </tr>
+              <tr>
+                <td><code>git merge --abort</code></td>
+                <td>放弃本次合并</td>
+              </tr>
+              <tr>
+                <td><code>git merge --continue</code></td>
+                <td>解决冲突后继续合并</td>
+              </tr>
+              <tr>
+                <td><code>git rebase 分支名</code></td>
+                <td>变基到目标分支</td>
+              </tr>
+              <tr>
+                <td><code>git rebase -i HEAD~N</code></td>
+                <td>交互式整理最近 N 条提交</td>
+              </tr>
+              <tr>
+                <td><code>git rebase --continue</code></td>
+                <td>解决冲突后继续变基</td>
+              </tr>
+              <tr>
+                <td><code>git rebase --abort</code></td>
+                <td>放弃本次变基</td>
+              </tr>
+              <tr>
+                <td><code>git rebase --skip</code></td>
+                <td>跳过当前冲突的提交</td>
+              </tr>
+              <tr>
+                <td><code>git squash（配合 -i）</code></td>
+                <td>合并多个提交为一个</td>
+              </tr>
+              <tr>
+                <td><code>git diff 分支A 分支B</code></td>
+                <td>比较两分支差异</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1718,21 +2736,60 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git restore 文件</code></td><td>丢弃工作区修改</td></tr>
-              <tr><td><code>git restore --staged 文件</code></td><td>取消暂存</td></tr>
-              <tr><td><code>git restore --source=提交号 文件</code></td><td>从指定提交恢复文件</td></tr>
-              <tr><td><code>git reset --soft HEAD~1</code></td><td>软回退（保留暂存）</td></tr>
-              <tr><td><code>git reset HEAD~1</code></td><td>混合回退（保留工作区）</td></tr>
-              <tr><td><code>git reset --hard HEAD~1</code></td><td>硬回退（危险，改动全丢）</td></tr>
-              <tr><td><code>git reset --hard 提交号</code></td><td>硬回退到指定提交</td></tr>
-              <tr><td><code>git revert 提交号</code></td><td>反向提交（安全撤销）</td></tr>
-              <tr><td><code>git revert --no-commit 提交号</code></td><td>反向改动但不自动提交</td></tr>
-              <tr><td><code>git checkout 提交号 -- 文件</code></td><td>从历史版本恢复某文件</td></tr>
-              <tr><td><code>git reflog</code></td><td>查看操作日志（找回丢失提交）</td></tr>
-              <tr><td><code>git fsck --lost-found</code></td><td>找回悬空对象（最后手段）</td></tr>
+              <tr>
+                <td><code>git restore 文件</code></td>
+                <td>丢弃工作区修改</td>
+              </tr>
+              <tr>
+                <td><code>git restore --staged 文件</code></td>
+                <td>取消暂存</td>
+              </tr>
+              <tr>
+                <td><code>git restore --source=提交号 文件</code></td>
+                <td>从指定提交恢复文件</td>
+              </tr>
+              <tr>
+                <td><code>git reset --soft HEAD~1</code></td>
+                <td>软回退（保留暂存）</td>
+              </tr>
+              <tr>
+                <td><code>git reset HEAD~1</code></td>
+                <td>混合回退（保留工作区）</td>
+              </tr>
+              <tr>
+                <td><code>git reset --hard HEAD~1</code></td>
+                <td>硬回退（危险，改动全丢）</td>
+              </tr>
+              <tr>
+                <td><code>git reset --hard 提交号</code></td>
+                <td>硬回退到指定提交</td>
+              </tr>
+              <tr>
+                <td><code>git revert 提交号</code></td>
+                <td>反向提交（安全撤销）</td>
+              </tr>
+              <tr>
+                <td><code>git revert --no-commit 提交号</code></td>
+                <td>反向改动但不自动提交</td>
+              </tr>
+              <tr>
+                <td><code>git checkout 提交号 -- 文件</code></td>
+                <td>从历史版本恢复某文件</td>
+              </tr>
+              <tr>
+                <td><code>git reflog</code></td>
+                <td>查看操作日志（找回丢失提交）</td>
+              </tr>
+              <tr>
+                <td><code>git fsck --lost-found</code></td>
+                <td>找回悬空对象（最后手段）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1741,24 +2798,72 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git log</code></td><td>提交历史</td></tr>
-              <tr><td><code>git log --oneline</code></td><td>一行历史</td></tr>
-              <tr><td><code>git log --graph</code></td><td>图形化分支图</td></tr>
-              <tr><td><code>git log -N</code></td><td>最近 N 条</td></tr>
-              <tr><td><code>git log -p 文件</code></td><td>文件每次改动的细节</td></tr>
-              <tr><td><code>git log --author="名字"</code></td><td>按作者筛选</td></tr>
-              <tr><td><code>git log --since="2 weeks ago"</code></td><td>按时间筛选</td></tr>
-              <tr><td><code>git log --grep="关键词"</code></td><td>按说明搜索</td></tr>
-              <tr><td><code>git log -S"函数名"</code></td><td>按代码内容搜索（找改动）</td></tr>
-              <tr><td><code>git diff</code></td><td>工作区 vs 暂存区</td></tr>
-              <tr><td><code>git diff --staged</code></td><td>暂存区 vs 仓库</td></tr>
-              <tr><td><code>git diff HEAD</code></td><td>工作区 vs 最近提交</td></tr>
-              <tr><td><code>git show 提交号</code></td><td>查看某次提交详情</td></tr>
-              <tr><td><code>git blame 文件</code></td><td>逐行追溯作者与提交</td></tr>
-              <tr><td><code>git shortlog -sn</code></td><td>按提交数排名（团队统计）</td></tr>
+              <tr>
+                <td><code>git log</code></td>
+                <td>提交历史</td>
+              </tr>
+              <tr>
+                <td><code>git log --oneline</code></td>
+                <td>一行历史</td>
+              </tr>
+              <tr>
+                <td><code>git log --graph</code></td>
+                <td>图形化分支图</td>
+              </tr>
+              <tr>
+                <td><code>git log -N</code></td>
+                <td>最近 N 条</td>
+              </tr>
+              <tr>
+                <td><code>git log -p 文件</code></td>
+                <td>文件每次改动的细节</td>
+              </tr>
+              <tr>
+                <td><code>git log --author="名字"</code></td>
+                <td>按作者筛选</td>
+              </tr>
+              <tr>
+                <td><code>git log --since="2 weeks ago"</code></td>
+                <td>按时间筛选</td>
+              </tr>
+              <tr>
+                <td><code>git log --grep="关键词"</code></td>
+                <td>按说明搜索</td>
+              </tr>
+              <tr>
+                <td><code>git log -S"函数名"</code></td>
+                <td>按代码内容搜索（找改动）</td>
+              </tr>
+              <tr>
+                <td><code>git diff</code></td>
+                <td>工作区 vs 暂存区</td>
+              </tr>
+              <tr>
+                <td><code>git diff --staged</code></td>
+                <td>暂存区 vs 仓库</td>
+              </tr>
+              <tr>
+                <td><code>git diff HEAD</code></td>
+                <td>工作区 vs 最近提交</td>
+              </tr>
+              <tr>
+                <td><code>git show 提交号</code></td>
+                <td>查看某次提交详情</td>
+              </tr>
+              <tr>
+                <td><code>git blame 文件</code></td>
+                <td>逐行追溯作者与提交</td>
+              </tr>
+              <tr>
+                <td><code>git shortlog -sn</code></td>
+                <td>按提交数排名（团队统计）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1767,33 +2872,90 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>命令</th><th>作用</th></tr>
+              <tr>
+                <th>命令</th>
+                <th>作用</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td><code>git stash</code></td><td>暂存改动</td></tr>
-              <tr><td><code>git stash -u</code></td><td>连同未跟踪文件暂存</td></tr>
-              <tr><td><code>git stash list</code></td><td>暂存列表</td></tr>
-              <tr><td><code>git stash pop</code></td><td>取出并删除最近暂存</td></tr>
-              <tr><td><code>git stash apply</code></td><td>取出但保留记录</td></tr>
-              <tr><td><code>git stash drop</code></td><td>丢弃最近暂存</td></tr>
-              <tr><td><code>git stash clear</code></td><td>清空全部暂存</td></tr>
-              <tr><td><code>git stash branch 分支名</code></td><td>暂存内容开新分支应用</td></tr>
-              <tr><td><code>git tag</code></td><td>列出标签</td></tr>
-              <tr><td><code>git tag -a v1.0.0 -m "说明"</code></td><td>打附注标签</td></tr>
-              <tr><td><code>git push origin --tags</code></td><td>推送全部标签</td></tr>
-              <tr><td><code>git describe --tags</code></td><td>显示当前最近的标签（定位版本）</td></tr>
-              <tr><td><code>git bisect start</code></td><td>开始二分查找（定位 Bug 引入提交）</td></tr>
-              <tr><td><code>git bisect good / bad</code></td><td>标记好/坏版本继续二分</td></tr>
-              <tr><td><code>git submodule add 地址 路径</code></td><td>添加子模块</td></tr>
-              <tr><td><code>git grep "关键词"</code></td><td>在仓库历史内容中搜索</td></tr>
-              <tr><td><code>git help 命令</code></td><td>查看命令帮助</td></tr>
+              <tr>
+                <td><code>git stash</code></td>
+                <td>暂存改动</td>
+              </tr>
+              <tr>
+                <td><code>git stash -u</code></td>
+                <td>连同未跟踪文件暂存</td>
+              </tr>
+              <tr>
+                <td><code>git stash list</code></td>
+                <td>暂存列表</td>
+              </tr>
+              <tr>
+                <td><code>git stash pop</code></td>
+                <td>取出并删除最近暂存</td>
+              </tr>
+              <tr>
+                <td><code>git stash apply</code></td>
+                <td>取出但保留记录</td>
+              </tr>
+              <tr>
+                <td><code>git stash drop</code></td>
+                <td>丢弃最近暂存</td>
+              </tr>
+              <tr>
+                <td><code>git stash clear</code></td>
+                <td>清空全部暂存</td>
+              </tr>
+              <tr>
+                <td><code>git stash branch 分支名</code></td>
+                <td>暂存内容开新分支应用</td>
+              </tr>
+              <tr>
+                <td><code>git tag</code></td>
+                <td>列出标签</td>
+              </tr>
+              <tr>
+                <td><code>git tag -a v1.0.0 -m "说明"</code></td>
+                <td>打附注标签</td>
+              </tr>
+              <tr>
+                <td><code>git push origin --tags</code></td>
+                <td>推送全部标签</td>
+              </tr>
+              <tr>
+                <td><code>git describe --tags</code></td>
+                <td>显示当前最近的标签（定位版本）</td>
+              </tr>
+              <tr>
+                <td><code>git bisect start</code></td>
+                <td>开始二分查找（定位 Bug 引入提交）</td>
+              </tr>
+              <tr>
+                <td><code>git bisect good / bad</code></td>
+                <td>标记好/坏版本继续二分</td>
+              </tr>
+              <tr>
+                <td><code>git submodule add 地址 路径</code></td>
+                <td>添加子模块</td>
+              </tr>
+              <tr>
+                <td><code>git grep "关键词"</code></td>
+                <td>在仓库历史内容中搜索</td>
+              </tr>
+              <tr>
+                <td><code>git help 命令</code></td>
+                <td>查看命令帮助</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          命令大全总口诀：「<strong>配置一次、克隆就位、add 挑货、commit 入库、branch 分流、push 同步、pull 更新、log 复盘</strong>」——背熟这八步，Git 日常已够用。
+          命令大全总口诀：「<strong
+            >配置一次、克隆就位、add 挑货、commit 入库、branch 分流、push
+            同步、pull 更新、log 复盘</strong
+          >」——背熟这八步，Git 日常已够用。
         </div>
       </section>
 
@@ -1805,26 +2967,74 @@ fi</code></pre>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>事故场景</th><th>症状</th><th>补救方案</th></tr>
+              <tr>
+                <th>事故场景</th>
+                <th>症状</th>
+                <th>补救方案</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>commit 写错说明</td><td>上一条提交信息是乱码</td><td><code>git commit --amend -m "正确说明"</code></td></tr>
-              <tr><td>误删分支</td><td>分支没了</td><td><code>git reflog</code> 找提交号 → <code>git branch 分支名 提交号</code></td></tr>
-              <tr><td>reset --hard 删了提交</td><td>代码没了</td><td><code>git reflog</code> → <code>git reset --hard 提交号</code></td></tr>
-              <tr><td>push 被拒绝</td><td>远程有更新</td><td><code>git pull --rebase</code> 再 push</td></tr>
-              <tr><td>切分支带走了改动</td><td>改动跑到别的分支</td><td>先 commit/stash，再切回原分支处理</td></tr>
-              <tr><td>误提交密钥文件</td><td>密钥进了历史</td><td>立即<strong>撤销密钥</strong> + 清理历史（filter-repo）</td></tr>
-              <tr><td>pull 冲突</td><td>merge conflict</td><td>看冲突标记，手动解决后 add + commit</td></tr>
-              <tr><td>amend/rebase 后 push 失败</td><td>历史不一致</td><td>本地未共享可强推；共享了<strong>禁止强推</strong></td></tr>
+              <tr>
+                <td>commit 写错说明</td>
+                <td>上一条提交信息是乱码</td>
+                <td><code>git commit --amend -m "正确说明"</code></td>
+              </tr>
+              <tr>
+                <td>误删分支</td>
+                <td>分支没了</td>
+                <td>
+                  <code>git reflog</code> 找提交号 →
+                  <code>git branch 分支名 提交号</code>
+                </td>
+              </tr>
+              <tr>
+                <td>reset --hard 删了提交</td>
+                <td>代码没了</td>
+                <td>
+                  <code>git reflog</code> → <code>git reset --hard 提交号</code>
+                </td>
+              </tr>
+              <tr>
+                <td>push 被拒绝</td>
+                <td>远程有更新</td>
+                <td><code>git pull --rebase</code> 再 push</td>
+              </tr>
+              <tr>
+                <td>切分支带走了改动</td>
+                <td>改动跑到别的分支</td>
+                <td>先 commit/stash，再切回原分支处理</td>
+              </tr>
+              <tr>
+                <td>误提交密钥文件</td>
+                <td>密钥进了历史</td>
+                <td>立即<strong>撤销密钥</strong> + 清理历史（filter-repo）</td>
+              </tr>
+              <tr>
+                <td>pull 冲突</td>
+                <td>merge conflict</td>
+                <td>看冲突标记，手动解决后 add + commit</td>
+              </tr>
+              <tr>
+                <td>amend/rebase 后 push 失败</td>
+                <td>历史不一致</td>
+                <td>本地未共享可强推；共享了<strong>禁止强推</strong></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>新手十大避坑要点</h3>
         <ol>
-          <li><strong>每天上班先 git pull --rebase</strong>，别让本地落后太多</li>
-          <li><strong>小步提交</strong>：一次提交只做一件事，说明写「做了什么 + 为什么」</li>
-          <li><strong>不要提交密钥/大文件/依赖目录</strong>，先写 .gitignore</li>
+          <li>
+            <strong>每天上班先 git pull --rebase</strong>，别让本地落后太多
+          </li>
+          <li>
+            <strong>小步提交</strong>：一次提交只做一件事，说明写「做了什么 +
+            为什么」
+          </li>
+          <li>
+            <strong>不要提交密钥/大文件/依赖目录</strong>，先写 .gitignore
+          </li>
           <li><strong>公共分支绝不 reset / 强推</strong>，统一用 revert</li>
           <li><strong>切分支前先看 status</strong>，确认工作区干净</li>
           <li><strong>重要节点打 tag</strong>，发布版本可回溯</li>
@@ -1838,36 +3048,53 @@ fi</code></pre>
         <div class="card-grid">
           <div class="card">
             <h4>第 1 周 · 基础</h4>
-            <p>安装配置、init/add/commit、status/log、分支的增删切。目标：能用 Git 管理个人项目。</p>
+            <p>
+              安装配置、init/add/commit、status/log、分支的增删切。目标：能用
+              Git 管理个人项目。
+            </p>
           </div>
           <div class="card">
             <h4>第 2 周 · 协作</h4>
-            <p>clone/push/pull、远程仓库、SSH、冲突解决、GitHub PR 流程。目标：能参与团队协作。</p>
+            <p>
+              clone/push/pull、远程仓库、SSH、冲突解决、GitHub PR
+              流程。目标：能参与团队协作。
+            </p>
           </div>
           <div class="card">
             <h4>第 3 周 · 进阶</h4>
-            <p>reset/revert/restore 三兄弟、stash、cherry-pick、tag 发布、.gitignore 规范。</p>
+            <p>
+              reset/revert/restore 三兄弟、stash、cherry-pick、tag
+              发布、.gitignore 规范。
+            </p>
           </div>
           <div class="card">
             <h4>第 4 周 · 精通</h4>
-            <p>rebase -i 整理历史、Git 对象模型、hooks、GitFlow/GitHub Flow、bisect 调试。</p>
+            <p>
+              rebase -i 整理历史、Git 对象模型、hooks、GitFlow/GitHub
+              Flow、bisect 调试。
+            </p>
           </div>
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          学 Git 最大的误区是「<strong>背命令</strong>」——命令是背不完的。正确姿势：先理解<strong>三个区域 + 对象模型</strong>，再记「场景 → 命令」的映射，最后靠 <code>git help</code> 和 <code>git status</code> 的提示边用边查。
+          学 Git
+          最大的误区是「<strong>背命令</strong>」——命令是背不完的。正确姿势：先理解<strong
+            >三个区域 + 对象模型</strong
+          >，再记「场景 → 命令」的映射，最后靠 <code>git help</code> 和
+          <code>git status</code> 的提示边用边查。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>理解模型 > 背命令；场景映射记得牢；遇事不决 reflog，公共历史只 revert</strong>」——Git 学成，走遍开发不慌。
+          「<strong
+            >理解模型 > 背命令；场景映射记得牢；遇事不决 reflog，公共历史只
+            revert</strong
+          >」——Git 学成，走遍开发不慌。
         </div>
       </section>
 
-      <footer class="footer">
-        Git 从入门到精通 · 学习笔记 · 持续更新中
-      </footer>
+      <footer class="footer">Git 从入门到精通 · 学习笔记 · 持续更新中</footer>
     </main>
 
     <script>

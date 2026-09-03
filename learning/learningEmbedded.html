@@ -639,7 +639,8 @@
         <span class="hero-badge">🔩 完整学习手册</span>
         <h1>嵌入式开发从入门到精通</h1>
         <p>
-          一份系统化的嵌入式开发学习笔记，覆盖硬件基础、嵌入式 C、单片机外设、RTOS、通信协议、嵌入式
+          一份系统化的嵌入式开发学习笔记，覆盖硬件基础、嵌入式
+          C、单片机外设、RTOS、通信协议、嵌入式
           Linux、驱动开发到项目实战的完整路径。
         </p>
         <div class="hero-meta">
@@ -764,7 +765,10 @@
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>裸机简单实时强，RTOS 多任务帮忙，Linux 生态大而全，按需选型不慌张</strong>」
+          「<strong
+            >裸机简单实时强，RTOS 多任务帮忙，Linux
+            生态大而全，按需选型不慌张</strong
+          >」
         </div>
 
         <h3>应用领域</h3>
@@ -834,21 +838,36 @@
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>MCU 一片全搞定，MPU 外挂才能行；要跑 Linux 找 A 核，省电实时 M 核赢</strong>」
+          「<strong
+            >MCU 一片全搞定，MPU 外挂才能行；要跑 Linux 找 A 核，省电实时 M
+            核赢</strong
+          >」
         </div>
 
         <h3>常见 ARM Cortex 内核</h3>
         <ul>
-          <li><strong>Cortex-M0/M0+</strong>：超低功耗入门核，M0+ 是史上能效比最高的核之一</li>
+          <li>
+            <strong>Cortex-M0/M0+</strong>：超低功耗入门核，M0+
+            是史上能效比最高的核之一
+          </li>
           <li><strong>Cortex-M3</strong>：经典主流，全 Thumb-2 指令</li>
           <li><strong>Cortex-M4</strong>：带 DSP 指令，可选单精度 FPU</li>
-          <li><strong>Cortex-M7</strong>：高性能，6 级流水线，带 Cache 与双精度 FPU</li>
-          <li><strong>Cortex-A 系列</strong>：应用处理器，带 MMU，跑 Linux/Android</li>
-          <li><strong>Cortex-R 系列</strong>：实时处理器，用于硬盘控制器、汽车安全件</li>
+          <li>
+            <strong>Cortex-M7</strong>：高性能，6 级流水线，带 Cache 与双精度
+            FPU
+          </li>
+          <li>
+            <strong>Cortex-A 系列</strong>：应用处理器，带 MMU，跑 Linux/Android
+          </li>
+          <li>
+            <strong>Cortex-R 系列</strong
+            >：实时处理器，用于硬盘控制器、汽车安全件
+          </li>
         </ul>
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          M = Microcontroller（单片机）、A = Application（应用/Linux）、R = Real-time（实时硬核）。M 系列是嵌入式入门主线。
+          M = Microcontroller（单片机）、A = Application（应用/Linux）、R =
+          Real-time（实时硬核）。M 系列是嵌入式入门主线。
         </div>
 
         <h3>必须懂的硬件常识</h3>
@@ -883,7 +902,7 @@
                 <td>GPIO 默认输出模式</td>
               </tr>
               <tr>
-                <td> datasheet / 参考手册</td>
+                <td>datasheet / 参考手册</td>
                 <td>芯片数据手册 / 外设详解</td>
                 <td>嵌入式的「武功秘籍」，先查再问</td>
               </tr>
@@ -913,7 +932,9 @@
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          不要陷入「收集开发板」的怪圈。一块 STM32 最小系统板 + 面包板 + 杜邦线 + 几个传感器（不到 100 元）足以完成入门阶段 90% 的练习。<strong>买十块板不如吃透一块板</strong>。
+          不要陷入「收集开发板」的怪圈。一块 STM32 最小系统板 + 面包板 + 杜邦线
+          + 几个传感器（不到 100 元）足以完成入门阶段 90%
+          的练习。<strong>买十块板不如吃透一块板</strong>。
         </div>
       </section>
 
@@ -923,7 +944,8 @@
 
         <h3>嵌入式 C 与普通 C 的区别</h3>
         <p>
-          嵌入式 C 直接操作<strong>寄存器和内存地址</strong>，对资源极度敏感：没有充裕的堆、没有操作系统兜底、
+          嵌入式 C
+          直接操作<strong>寄存器和内存地址</strong>，对资源极度敏感：没有充裕的堆、没有操作系统兜底、
           每个字节都要精打细算。以下知识点是嵌入式面试与实战的绝对核心。
         </p>
 
@@ -967,7 +989,8 @@ REG = (REG &amp; ~(<span class="str">0xF</span> &lt;&lt; <span class="str">4</sp
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>置 1 用或，清 0 用与取反，翻转用异或，判断用与</strong>」——|、&amp;~、^、&amp; 四兄弟记牢。
+          「<strong>置 1 用或，清 0 用与取反，翻转用异或，判断用与</strong
+          >」——|、&amp;~、^、&amp; 四兄弟记牢。
         </div>
 
         <h4>③ static 与 extern</h4>
@@ -1021,7 +1044,10 @@ REG = (REG &amp; ~(<span class="str">0xF</span> &lt;&lt; <span class="str">4</sp
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          对齐规则：成员偏移必须是其自身大小（或 pack 值）的整数倍，总大小是最大成员的整数倍。RAM 只有几十 KB 时，「<strong>大成员在前、小成员在后</strong>」能实打实省内存；通信协议结构体慎用 <code>#pragma pack</code> 压缩（性能与原子性会受影响）。
+          对齐规则：成员偏移必须是其自身大小（或 pack
+          值）的整数倍，总大小是最大成员的整数倍。RAM 只有几十 KB
+          时，「<strong>大成员在前、小成员在后</strong>」能实打实省内存；通信协议结构体慎用
+          <code>#pragma pack</code> 压缩（性能与原子性会受影响）。
         </div>
 
         <h4>⑤ 指针与内存分区</h4>
@@ -1043,12 +1069,16 @@ STM32 典型内存布局（Flash 高地址 → 低地址）
         </div>
         <div class="callout danger">
           <div class="callout-title">🚨 经典错误</div>
-          ① 返回局部变量地址（栈帧已销毁）；② 中断里 malloc/printf（不可重入）；③ 数组越界写穿栈；④ 忘记 volatile 导致轮询死循环。嵌入式没有段错误提示，往往直接 <strong>HardFault</strong> 或复位，排查更难。
+          ① 返回局部变量地址（栈帧已销毁）；② 中断里
+          malloc/printf（不可重入）；③ 数组越界写穿栈；④ 忘记 volatile
+          导致轮询死循环。嵌入式没有段错误提示，往往直接
+          <strong>HardFault</strong> 或复位，排查更难。
         </div>
 
         <h4>⑥ 回调函数与状态机</h4>
         <p>
-          嵌入式没有丰富的框架，<strong>回调 + 状态机</strong>就是最常用的「设计模式」：
+          嵌入式没有丰富的框架，<strong>回调 + 状态机</strong
+          >就是最常用的「设计模式」：
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1079,7 +1109,8 @@ STM32 典型内存布局（Flash 高地址 → 低地址）
 
         <h3>什么是交叉编译</h3>
         <p>
-          在 x86 的 PC 上编译出 ARM 平台能运行的代码，就叫<strong>交叉编译</strong>。
+          在 x86 的 PC 上编译出 ARM
+          平台能运行的代码，就叫<strong>交叉编译</strong>。
           因为目标板资源太少（可能没有屏幕、键盘、甚至跑不动编译器），编译必须在宿主机（Host）完成，产物下载到目标机（Target）运行。
         </p>
 
@@ -1148,30 +1179,46 @@ arm-none-eabi-size firmware.elf           <span class="comment"># text/data/bss 
 
         <h3>编译到运行的完整流程</h3>
         <ol class="steps">
-          <li><strong>预处理</strong>（.i）：展开 #include、#define——「文本替换」</li>
+          <li>
+            <strong>预处理</strong>（.i）：展开 #include、#define——「文本替换」
+          </li>
           <li><strong>编译</strong>（.s）：C → 汇编</li>
           <li><strong>汇编</strong>（.o）：汇编 → 机器码目标文件</li>
-          <li><strong>链接</strong>（.elf）：按链接脚本（.ld）分配地址，合并段</li>
+          <li>
+            <strong>链接</strong>（.elf）：按链接脚本（.ld）分配地址，合并段
+          </li>
           <li><strong>格式转换</strong>（.hex/.bin）：生成烧录文件</li>
-          <li><strong>烧录</strong>：ST-Link / J-Link / DAP-Link 下载到 Flash</li>
+          <li>
+            <strong>烧录</strong>：ST-Link / J-Link / DAP-Link 下载到 Flash
+          </li>
           <li><strong>调试</strong>：SWD/JTAG 在线断点调试</li>
         </ol>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>预编汇链转烧调，七步成环不能少；hex 记地址 bin 纯数据，elf 调试是王道</strong>」
+          「<strong
+            >预编汇链转烧调，七步成环不能少；hex 记地址 bin 纯数据，elf
+            调试是王道</strong
+          >」
         </div>
 
         <h3>烧录与调试器</h3>
         <ul>
           <li><strong>ST-Link</strong>：STM32 官方，便宜（十几元），够用</li>
           <li><strong>J-Link</strong>：支持芯片最全、速度快，贵但强</li>
-          <li><strong>DAP-Link / CMSIS-DAP</strong>：开源方案，VSCode 生态友好</li>
-          <li><strong>串口 ISP</strong>：不用调试器，Bootloader 进下载模式（出厂最常用）</li>
+          <li>
+            <strong>DAP-Link / CMSIS-DAP</strong>：开源方案，VSCode 生态友好
+          </li>
+          <li>
+            <strong>串口 ISP</strong>：不用调试器，Bootloader
+            进下载模式（出厂最常用）
+          </li>
         </ul>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          「芯片连不上」排查三板斧：① 调试器驱动装了吗；② SWDIO/SWCLK/RESET 接线对吗（还共地了吗）；③ 芯片被低功耗或复用关掉了 SWD 引脚吗（用「连接复位模式 Under Reset」救砖）。
+          「芯片连不上」排查三板斧：① 调试器驱动装了吗；② SWDIO/SWCLK/RESET
+          接线对吗（还共地了吗）；③ 芯片被低功耗或复用关掉了 SWD
+          引脚吗（用「连接复位模式 Under Reset」救砖）。
         </div>
       </section>
 
@@ -1236,7 +1283,10 @@ arm-none-eabi-size firmware.elf           <span class="comment"># text/data/bss 
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>输出推挽最常用，开漏线与配 I2C；输入按键上拉接，模拟采样选 AN</strong>」
+          「<strong
+            >输出推挽最常用，开漏线与配 I2C；输入按键上拉接，模拟采样选
+            AN</strong
+          >」
         </div>
 
         <h4>寄存器点亮 LED（标准库/HAL 之前先懂原理）</h4>
@@ -1283,13 +1333,21 @@ HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
         <div class="callout danger">
           <div class="callout-title">🚨 中断三大铁律</div>
-          ① <strong>ISR 越短越好</strong>——只置标志/拷数据，业务放主循环；② <strong>不要在 ISR 里用 printf、malloc、delay</strong>（不可重入/阻塞）；③ <strong>共享变量必须 volatile</strong>，多字节共享要关中断保护。
+          ① <strong>ISR 越短越好</strong>——只置标志/拷数据，业务放主循环；②
+          <strong>不要在 ISR 里用 printf、malloc、delay</strong
+          >（不可重入/阻塞）；③
+          <strong>共享变量必须 volatile</strong>，多字节共享要关中断保护。
         </div>
 
         <h3>NVIC 优先级：抢占与子优先级</h3>
         <ul>
-          <li><strong>抢占优先级（Preempt）</strong>：数值越小越优先，可以打断正在执行的低优先级中断——「嵌套」</li>
-          <li><strong>子优先级（Sub）</strong>：同时挂起时谁先执行，但不能嵌套</li>
+          <li>
+            <strong>抢占优先级（Preempt）</strong
+            >：数值越小越优先，可以打断正在执行的低优先级中断——「嵌套」
+          </li>
+          <li>
+            <strong>子优先级（Sub）</strong>：同时挂起时谁先执行，但不能嵌套
+          </li>
           <li>STM32 用 4 位分组，常用「全部给抢占」（NVIC_PRIORITYGROUP_4）</li>
         </ul>
         <div class="callout tip">
@@ -1304,7 +1362,8 @@ HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
         <h3>定时器是什么</h3>
         <p>
-          定时器本质是一个<strong>按固定节拍自增的计数器</strong>，数到设定值（ARR 自动重装载）就产生更新事件/中断。
+          定时器本质是一个<strong>按固定节拍自增的计数器</strong>，数到设定值（ARR
+          自动重装载）就产生更新事件/中断。
           它是嵌入式里最重要的外设：延时、PWM、输入捕获、编码器、时间片轮转全靠它。
         </p>
 
@@ -1322,12 +1381,16 @@ TIM2-&gt;CR1 |= <span class="str">1</span>;     <span class="comment">// 使能�
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>PSC 分频定节奏，ARR 装满就溢出；周期等于两者积，除以时钟别记错</strong>」——T = (ARR+1)(PSC+1)/f。
+          「<strong
+            >PSC 分频定节奏，ARR
+            装满就溢出；周期等于两者积，除以时钟别记错</strong
+          >」——T = (ARR+1)(PSC+1)/f。
         </div>
 
         <h3>PWM：脉宽调制</h3>
         <p>
-          PWM 用<strong>固定频率、可变占空比</strong>的方波「模拟」出连续效果：调光、调速、舵机、蜂鸣器、开关电源全靠它。
+          PWM
+          用<strong>固定频率、可变占空比</strong>的方波「模拟」出连续效果：调光、调速、舵机、蜂鸣器、开关电源全靠它。
         </p>
         <div class="diagram">
           <pre>
@@ -1404,7 +1467,11 @@ HAL_TIM_PWM_Start(&amp;htim3, TIM_CHANNEL_1);
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 高级定时器输出 PWM 必须<strong>同时使能主输出</strong>（MOE 位 / HAL_TIMEx_...）；② HAL_Delay 依赖 SysTick 中断，<strong>在 SysTick 优先级更低的中断里调用会死锁</strong>；③ 看门狗要在主循环「喂」，不要在定时器中断里喂（否则程序卡在中断里也饿不死狗）。
+          ① 高级定时器输出 PWM 必须<strong>同时使能主输出</strong>（MOE 位 /
+          HAL_TIMEx_...）；② HAL_Delay 依赖 SysTick 中断，<strong
+            >在 SysTick 优先级更低的中断里调用会死锁</strong
+          >；③
+          看门狗要在主循环「喂」，不要在定时器中断里喂（否则程序卡在中断里也饿不死狗）。
         </div>
       </section>
 
@@ -1460,14 +1527,26 @@ HAL_TIM_PWM_Start(&amp;htim3, TIM_CHANNEL_1);
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>串口两点一对一，I2C 两线带地址，SPI 四线片选快，慢速省线高速 SPI</strong>」
+          「<strong
+            >串口两点一对一，I2C 两线带地址，SPI 四线片选快，慢速省线高速
+            SPI</strong
+          >」
         </div>
 
         <h3>UART：万能调试口</h3>
         <ul>
-          <li><strong>帧格式</strong>：起始位(1) + 数据位(8) + 校验位(可选) + 停止位(1)</li>
-          <li><strong>常见坑</strong>：波特率不匹配 → 乱码；TX/RX <strong>交叉连接</strong>；共地！</li>
-          <li><strong>printf 重定向</strong>：重写 fputc（Keil）或 _write（GCC）即可用 printf 调试</li>
+          <li>
+            <strong>帧格式</strong>：起始位(1) + 数据位(8) + 校验位(可选) +
+            停止位(1)
+          </li>
+          <li>
+            <strong>常见坑</strong>：波特率不匹配 → 乱码；TX/RX
+            <strong>交叉连接</strong>；共地！
+          </li>
+          <li>
+            <strong>printf 重定向</strong>：重写 fputc（Keil）或
+            _write（GCC）即可用 printf 调试
+          </li>
         </ul>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1498,18 +1577,30 @@ HAL_TIM_PWM_Start(&amp;htim3, TIM_CHANNEL_1);
         <ol class="steps">
           <li><strong>起始条件</strong>：SCL 高时 SDA 由高拉低</li>
           <li><strong>寻址</strong>：主发 7 位地址 + 读/写位，从机回 ACK</li>
-          <li><strong>数据传输</strong>：每字节后跟 ACK/NACK，SCL 高时 SDA 必须稳定</li>
+          <li>
+            <strong>数据传输</strong>：每字节后跟 ACK/NACK，SCL 高时 SDA
+            必须稳定
+          </li>
           <li><strong>停止条件</strong>：SCL 高时 SDA 由低拉高</li>
         </ol>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 上拉电阻必须有（4.7kΩ 常用），否则总线拉不高；② 地址 7 位 vs 8 位写法要分清（8 位地址 = 7 位左移一位 + R/W）；③ 总线卡死（从机拉死 SDA）的救法：<strong>手动发 9 个 SCL 时钟</strong>让从机释放 SDA 再发 STOP。
+          ① 上拉电阻必须有（4.7kΩ 常用），否则总线拉不高；② 地址 7 位 vs 8
+          位写法要分清（8 位地址 = 7 位左移一位 + R/W）；③ 总线卡死（从机拉死
+          SDA）的救法：<strong>手动发 9 个 SCL 时钟</strong>让从机释放 SDA 再发
+          STOP。
         </div>
 
         <h3>SPI：四线跑得快</h3>
         <ul>
-          <li><strong>CPOL</strong>：空闲时钟电平；<strong>CPHA</strong>：第 1 还是第 2 个边沿采样 → 组成 4 种模式（Mode 0~3）</li>
-          <li>主从<strong> CS 拉低</strong>选中，传输是<strong>全双工</strong>（发一个字节同时收一个字节）</li>
+          <li>
+            <strong>CPOL</strong>：空闲时钟电平；<strong>CPHA</strong>：第 1
+            还是第 2 个边沿采样 → 组成 4 种模式（Mode 0~3）
+          </li>
+          <li>
+            主从<strong> CS 拉低</strong
+            >选中，传输是<strong>全双工</strong>（发一个字节同时收一个字节）
+          </li>
           <li>读 Flash 状态寄存器等场景要发 dummy 字节「换」数据</li>
         </ul>
         <div class="code-wrap">
@@ -1536,10 +1627,21 @@ CS_HIGH();</code></pre>
 
         <h3>ADC 核心概念</h3>
         <ul>
-          <li><strong>分辨率</strong>：12 位 ADC → 4096 档；量化电压 = Vref / 4096</li>
-          <li><strong>采样时间</strong>：信号源内阻大就加长采样时间，让采样电容充满</li>
-          <li><strong>参考电压 Vref</strong>：精度天花板，最好用独立基准芯片（如 TL431）</li>
-          <li><strong>采样定理</strong>：采样率 ≥ 2 倍信号最高频率（工程上留 5~10 倍）</li>
+          <li>
+            <strong>分辨率</strong>：12 位 ADC → 4096 档；量化电压 = Vref / 4096
+          </li>
+          <li>
+            <strong>采样时间</strong
+            >：信号源内阻大就加长采样时间，让采样电容充满
+          </li>
+          <li>
+            <strong>参考电压 Vref</strong>：精度天花板，最好用独立基准芯片（如
+            TL431）
+          </li>
+          <li>
+            <strong>采样定理</strong>：采样率 ≥ 2 倍信号最高频率（工程上留 5~10
+            倍）
+          </li>
         </ul>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1615,12 +1717,16 @@ HAL_ADC_PollForConversion(&amp;hadc1, <span class="str">100</span>);
           </div>
           <div class="card">
             <h4>HC-SR04 超声波</h4>
-            <p>Trig 触发 + Echo 高电平宽度即距离（340m/s 换算，回波捕获测宽）。</p>
+            <p>
+              Trig 触发 + Echo 高电平宽度即距离（340m/s 换算，回波捕获测宽）。
+            </p>
           </div>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>模拟量走 ADC，数字量看时序；先读裸值再滤波，标定换算不能离</strong>」——传感器 = 读原始值 + 滤波 + 标定三步。
+          「<strong
+            >模拟量走 ADC，数字量看时序；先读裸值再滤波，标定换算不能离</strong
+          >」——传感器 = 读原始值 + 滤波 + 标定三步。
         </div>
       </section>
 
@@ -1630,8 +1736,10 @@ HAL_ADC_PollForConversion(&amp;hadc1, <span class="str">100</span>);
 
         <h3>为什么需要 RTOS</h3>
         <p>
-          裸机的「大 while 循环 + 中断」在任务变多后会陷入<strong>回调地狱</strong>：任务间时序耦合、
-          阻塞操作拖垮全局。RTOS 用<strong>任务 + 优先级抢占调度</strong>把每个业务独立成任务，
+          裸机的「大 while 循环 +
+          中断」在任务变多后会陷入<strong>回调地狱</strong>：任务间时序耦合、
+          阻塞操作拖垮全局。RTOS 用<strong>任务 + 优先级抢占调度</strong
+          >把每个业务独立成任务，
           实时性由调度器保证——「系统永远在运行最高优先级的就绪任务」。
         </p>
 
@@ -1716,18 +1824,27 @@ QueueHandle_t xQueueTemp;
 
         <h3>优先级翻转与优先级继承</h3>
         <p>
-          经典场景：低优先级任务持有锁 → 高优先级任务等锁 → 中优先级任务抢占低任务 →
-          <strong>高任务反被中任务间接卡住</strong>。解决方案：互斥锁（Mutex）自带<strong>优先级继承</strong>——
+          经典场景：低优先级任务持有锁 → 高优先级任务等锁 →
+          中优先级任务抢占低任务 →
+          <strong>高任务反被中任务间接卡住</strong
+          >。解决方案：互斥锁（Mutex）自带<strong>优先级继承</strong>——
           持有者临时继承等锁最高任务的优先级，尽快跑完释放。
         </p>
         <div class="callout danger">
           <div class="callout-title">🚨 RTOS 三大死法</div>
-          ① <strong>在中断里调用非 FromISR API</strong>（必须用 xQueueSendFromISR 等）；② <strong>互斥锁不能在 ISR 用</strong>（优先级继承依赖任务上下文）；③ <strong>栈溢出</strong>——开 configCHECK_FOR_STACK_OVERFLOW = 2 + 钩子函数捕获。
+          ① <strong>在中断里调用非 FromISR API</strong>（必须用
+          xQueueSendFromISR 等）；②
+          <strong>互斥锁不能在 ISR 用</strong>（优先级继承依赖任务上下文）；③
+          <strong>栈溢出</strong>——开 configCHECK_FOR_STACK_OVERFLOW = 2 +
+          钩子函数捕获。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>任务优先级抢占忙，队列传信锁护乡；中断要用 FromISR，栈溢出钩子来帮忙</strong>」
+          「<strong
+            >任务优先级抢占忙，队列传信锁护乡；中断要用
+            FromISR，栈溢出钩子来帮忙</strong
+          >」
         </div>
       </section>
 
@@ -1796,7 +1913,11 @@ HAL_FLASH_Lock();</code></pre>
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① Flash 只能把 1 写成 0，<strong>改写必须先擦</strong>；擦的最小单位是页/扇区，写是页/字；② 写参数别用「每次直接写」，用<strong>追加 + 标记</strong>或磨损均衡（EEPROM 模拟）；③ STM32 运行中擦写自己的 Flash，若代码在同一个 Bank 会停住总线——把擦写代码放 RAM 或双 Bank。
+          ① Flash 只能把 1 写成
+          0，<strong>改写必须先擦</strong>；擦的最小单位是页/扇区，写是页/字；②
+          写参数别用「每次直接写」，用<strong>追加 + 标记</strong
+          >或磨损均衡（EEPROM 模拟）；③ STM32 运行中擦写自己的
+          Flash，若代码在同一个 Bank 会停住总线——把擦写代码放 RAM 或双 Bank。
         </div>
 
         <h3>OTA：固件在线升级</h3>
@@ -1805,7 +1926,9 @@ HAL_FLASH_Lock();</code></pre>
           <li>设备运行在 <strong>App 分区 A</strong>，检查服务器版本</li>
           <li>下载新固件到 <strong>备份分区 B</strong>，边收边校验 CRC</li>
           <li>写入<strong>升级标志</strong>到 EEPROM/备份寄存器，复位</li>
-          <li><strong>Bootloader</strong> 检查标志：有效则搬 B → A（或直接跳 B）</li>
+          <li>
+            <strong>Bootloader</strong> 检查标志：有效则搬 B → A（或直接跳 B）
+          </li>
           <li>新固件自检 + 上报版本；失败则回滚旧分区</li>
         </ol>
         <div class="diagram">
@@ -1825,7 +1948,8 @@ Flash 布局（双分区方案）
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>双区轮流坐庄，下载先校验，标志定去留，失败能回滚</strong>」——OTA 四要素：双分区、校验、标志、回滚。
+          「<strong>双区轮流坐庄，下载先校验，标志定去留，失败能回滚</strong>」——OTA
+          四要素：双分区、校验、标志、回滚。
         </div>
       </section>
 
@@ -1835,9 +1959,13 @@ Flash 布局（双分区方案）
 
         <h3>功耗从哪来</h3>
         <ul>
-          <li><strong>动态功耗</strong> ∝ 电压² × 频率 × 翻转率——降频降压最有效</li>
+          <li>
+            <strong>动态功耗</strong> ∝ 电压² × 频率 × 翻转率——降频降压最有效
+          </li>
           <li><strong>静态/漏电流</strong>——休眠时主导，与温度、工艺相关</li>
-          <li><strong>外设功耗</strong>——传感器、无线模块往往比 MCU 本体耗电大得多</li>
+          <li>
+            <strong>外设功耗</strong>——传感器、无线模块往往比 MCU 本体耗电大得多
+          </li>
         </ul>
 
         <h3>STM32 低功耗模式对比</h3>
@@ -1903,7 +2031,10 @@ Flash 布局（双分区方案）
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 低功耗五大坑</div>
-          ① Stop 唤醒后<strong>时钟回落到 HSI，必须重配</strong>；② 引脚悬空会「漏电」——未用引脚设<strong>模拟输入</strong>；③ 调试口 SWD 引脚开着也耗电；④ 上拉电阻上有电平差就有电流（电阻别乱加）；⑤ 万用表测 μA 级要用串联采样电阻 + 示波器看动态波形。
+          ① Stop 唤醒后<strong>时钟回落到 HSI，必须重配</strong>；②
+          引脚悬空会「漏电」——未用引脚设<strong>模拟输入</strong>；③ 调试口 SWD
+          引脚开着也耗电；④ 上拉电阻上有电平差就有电流（电阻别乱加）；⑤ 万用表测
+          μA 级要用串联采样电阻 + 示波器看动态波形。
         </div>
 
         <div class="callout tip">
@@ -1918,10 +2049,19 @@ Flash 布局（双分区方案）
 
         <h3>CAN 总线：汽车的血管</h3>
         <ul>
-          <li><strong>差分两线</strong>（CAN_H/CAN_L），抗干扰强，最远 10km@5kbps</li>
-          <li><strong>多主竞争</strong>：显性 0 覆盖隐性 1，<strong>ID 越小优先级越高</strong>（仲裁）</li>
+          <li>
+            <strong>差分两线</strong>（CAN_H/CAN_L），抗干扰强，最远 10km@5kbps
+          </li>
+          <li>
+            <strong>多主竞争</strong>：显性 0 覆盖隐性 1，<strong
+              >ID 越小优先级越高</strong
+            >（仲裁）
+          </li>
           <li><strong>位填充</strong>：连续 5 个同位插入反位，保证跳变沿</li>
-          <li><strong>错误处理</strong>：CRC 校验 + 错误计数器，坏节点自动「离线」隔离</li>
+          <li>
+            <strong>错误处理</strong>：CRC 校验 +
+            错误计数器，坏节点自动「离线」隔离
+          </li>
         </ul>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1948,7 +2088,10 @@ HAL_CAN_ConfigFilter(&amp;hcan1, &amp;f);</code></pre>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>差分两线抗干扰，ID 小者先说话；显性覆盖隐性位，仲裁失败自动退</strong>」
+          「<strong
+            >差分两线抗干扰，ID
+            小者先说话；显性覆盖隐性位，仲裁失败自动退</strong
+          >」
         </div>
 
         <h3>USB 与以太网速览</h3>
@@ -2032,7 +2175,9 @@ HAL_CAN_ConfigFilter(&amp;hcan1, &amp;f);</code></pre>
         </div>
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          MQTT 是物联网的「微信公众号」——设备只管「订阅主题」和「发布消息」，不用关心对方是谁在哪；Broker 负责转发。
+          MQTT
+          是物联网的「微信公众号」——设备只管「订阅主题」和「发布消息」，不用关心对方是谁在哪；Broker
+          负责转发。
         </div>
       </section>
 
@@ -2128,7 +2273,10 @@ HAL_CAN_ConfigFilter(&amp;hcan1, &amp;f);</code></pre>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>硬件长在设备树，驱动匹配 compatible；树里 status 要 okay，引脚占用 pinctrl</strong>」
+          「<strong
+            >硬件长在设备树，驱动匹配 compatible；树里 status 要 okay，引脚占用
+            pinctrl</strong
+          >」
         </div>
 
         <h3>常用开发环境命令</h3>
@@ -2157,9 +2305,11 @@ cat /sys/class/thermal/thermal_zone0/temp   <span class="comment"># 读温度</s
 
         <h3>Linux 驱动的世界观</h3>
         <p>
-          Linux 驱动的核心思想：<strong>「一切皆文件」</strong>。应用程序不管底层是 GPIO 还是传感器，
-          统一用 <code>open / read / write / ioctl / close</code> 系统调用访问设备文件，
-          驱动负责把系统调用「翻译」成硬件操作。
+          Linux
+          驱动的核心思想：<strong>「一切皆文件」</strong>。应用程序不管底层是
+          GPIO 还是传感器， 统一用
+          <code>open / read / write / ioctl / close</code>
+          系统调用访问设备文件， 驱动负责把系统调用「翻译」成硬件操作。
         </p>
 
         <h4>字符设备驱动骨架（内核模块）</h4>
@@ -2251,12 +2401,19 @@ cat /dev/mydev</code></pre>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 驱动开发避坑</div>
-          ① <strong>内核空间不能直接用用户态指针</strong>，必须 copy_to_user/copy_from_user；② 驱动崩溃会带崩整个内核（oops/panic），打印用 printk，级别要看 dmesg；③ 「先写用户态模拟，再下沉到内核」能大幅降低调试成本——能用 sysfs/libgpiod 就别急着写内核模块。
+          ① <strong>内核空间不能直接用用户态指针</strong>，必须
+          copy_to_user/copy_from_user；②
+          驱动崩溃会带崩整个内核（oops/panic），打印用 printk，级别要看 dmesg；③
+          「先写用户态模拟，再下沉到内核」能大幅降低调试成本——能用
+          sysfs/libgpiod 就别急着写内核模块。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>一切设备皆文件，open read 就能玩；probe 匹配才上电，copy 用户保安全</strong>」
+          「<strong
+            >一切设备皆文件，open read 就能玩；probe 匹配才上电，copy
+            用户保安全</strong
+          >」
         </div>
       </section>
 
@@ -2283,8 +2440,12 @@ cat /dev/mydev</code></pre>
         <h3>HardFault 排查流程（MCU 必备技能）</h3>
         <ol class="steps">
           <li>调试器暂停，看 PC/LR 落在哪个函数附近</li>
-          <li>读 <strong>SCB-&gt;CFSR</strong>：区分总线错误/用法错误/存储错误</li>
-          <li>读 <strong>SCB-&gt;HFSR</strong>：FORCED 位说明下层异常升级而来</li>
+          <li>
+            读 <strong>SCB-&gt;CFSR</strong>：区分总线错误/用法错误/存储错误
+          </li>
+          <li>
+            读 <strong>SCB-&gt;HFSR</strong>：FORCED 位说明下层异常升级而来
+          </li>
           <li>出栈看压栈的 PC（异常返回地址）定位出错指令</li>
           <li>常见根因：野指针、栈溢出、未对齐访问、除零、函数指针为空</li>
         </ol>
@@ -2345,7 +2506,10 @@ HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>先测量再优化，莫凭感觉瞎忙活；printf 带走体积，DMA 释放 CPU；翻脚量化最朴素</strong>」
+          「<strong
+            >先测量再优化，莫凭感觉瞎忙活；printf 带走体积，DMA 释放
+            CPU；翻脚量化最朴素</strong
+          >」
         </div>
       </section>
 
@@ -2414,20 +2578,33 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8
 
         <div class="callout info">
           <div class="callout-title">📌 一句话理解</div>
-          Buildroot 是「一键套餐」，Yocto 是「中央厨房体系」——前者快速出餐，后者适合长生命周期产品线持续迭代。
+          Buildroot 是「一键套餐」，Yocto
+          是「中央厨房体系」——前者快速出餐，后者适合长生命周期产品线持续迭代。
         </div>
 
         <h3>init 进程与服务自启动</h3>
         <ul>
-          <li>内核最后启动 <strong>/sbin/init</strong>（PID 1），读 /etc/inittab 或 systemd</li>
-          <li>BusyBox init：inittab 中 <code>::sysinit:/etc/init.d/rcS</code> 跑初始化脚本</li>
+          <li>
+            内核最后启动 <strong>/sbin/init</strong>（PID 1），读 /etc/inittab
+            或 systemd
+          </li>
+          <li>
+            BusyBox init：inittab 中
+            <code>::sysinit:/etc/init.d/rcS</code> 跑初始化脚本
+          </li>
           <li>systemd：<code>systemctl enable/disable</code> 管理服务单元</li>
-          <li>应用开机自启三招：rcS 脚本 / systemd service / inittab respawn（崩溃自动拉起）</li>
+          <li>
+            应用开机自启三招：rcS 脚本 / systemd service / inittab
+            respawn（崩溃自动拉起）
+          </li>
         </ul>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>U-Boot 搬内核，kernel 挂根fs；init 是 PID1，respawn 崩溃能回魂</strong>」
+          「<strong
+            >U-Boot 搬内核，kernel 挂根fs；init 是 PID1，respawn
+            崩溃能回魂</strong
+          >」
         </div>
       </section>
 
@@ -2494,17 +2671,22 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8
           <li>RS485/Modbus 采集多路下位机数据（用户态 libmodbus）</li>
           <li>SQLite 本地缓存 + MQTT 上云（断网续传）</li>
           <li>写一个 platform 字符设备驱动（如继电器控制），DTS 绑定</li>
-          <li> systemd 服务管理 + OTA（swupdate / 双分区）</li>
+          <li>systemd 服务管理 + OTA（swupdate / 双分区）</li>
         </ol>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>MCU 项目练外设，Linux 项目练体系；一个闭环控电机，一个网关通协议</strong>」——简历上的两大杀器。
+          「<strong
+            >MCU 项目练外设，Linux
+            项目练体系；一个闭环控电机，一个网关通协议</strong
+          >」——简历上的两大杀器。
         </div>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 简历避坑</div>
-          不要写「点亮 LED、跑官方例程」当项目。面试官追问三连：<strong>「为什么这样设计？遇到什么坑？数据指标是多少？」</strong>——项目要有量化指标（功耗从 80mA 降到 12mA、上报成功率 99.5%）和踩坑复盘。
+          不要写「点亮
+          LED、跑官方例程」当项目。面试官追问三连：<strong>「为什么这样设计？遇到什么坑？数据指标是多少？」</strong>——项目要有量化指标（功耗从
+          80mA 降到 12mA、上报成功率 99.5%）和踩坑复盘。
         </div>
       </section>
 
@@ -2514,10 +2696,23 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8
 
         <h3>四阶段成长路线</h3>
         <ol class="steps">
-          <li><strong>筑基期（1~2 月）</strong>：C 语言强化（指针/位操作/volatile）+ 数电常识 + STM32 裸机外设逐个点亮</li>
-          <li><strong>进阶期（2~3 月）</strong>：FreeRTOS + 通信协议 + 做完 1~2 个完整项目 + 学会用示波器/逻辑分析仪</li>
-          <li><strong>分化期（3~6 月）</strong>：选方向深挖——电机控制（FOC）/ 低功耗物联网 / 嵌入式 Linux 驱动 / 汽车电子</li>
-          <li><strong>精通期（持续）</strong>：系统构建（Yocto）、性能优化、功能安全（MISRA C / ISO 26262）、架构设计能力</li>
+          <li>
+            <strong>筑基期（1~2 月）</strong>：C
+            语言强化（指针/位操作/volatile）+ 数电常识 + STM32 裸机外设逐个点亮
+          </li>
+          <li>
+            <strong>进阶期（2~3 月）</strong>：FreeRTOS + 通信协议 + 做完 1~2
+            个完整项目 + 学会用示波器/逻辑分析仪
+          </li>
+          <li>
+            <strong>分化期（3~6 月）</strong>：选方向深挖——电机控制（FOC）/
+            低功耗物联网 / 嵌入式 Linux 驱动 / 汽车电子
+          </li>
+          <li>
+            <strong>精通期（持续）</strong
+            >：系统构建（Yocto）、性能优化、功能安全（MISRA C / ISO
+            26262）、架构设计能力
+          </li>
         </ol>
 
         <h3>方向怎么选</h3>
@@ -2585,21 +2780,40 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8
 
         <h3>学习方法论</h3>
         <ul>
-          <li><strong>datasheet 先行</strong>：遇到外设问题，第一反应是查参考手册，而不是搜博客</li>
-          <li><strong>单元验证</strong>：每个外设先写最小可运行 demo（打印寄存器值），再集成进项目</li>
-          <li><strong>量化一切</strong>：周期、功耗、内存占用都量出来，优化有据可依</li>
-          <li><strong>版本管理</strong>：从第一个工程就上 Git，外设驱动封装成可复用模块</li>
-          <li><strong>写博客复盘</strong>：踩过的坑写下来，比看十篇教程记得牢</li>
+          <li>
+            <strong>datasheet 先行</strong
+            >：遇到外设问题，第一反应是查参考手册，而不是搜博客
+          </li>
+          <li>
+            <strong>单元验证</strong>：每个外设先写最小可运行
+            demo（打印寄存器值），再集成进项目
+          </li>
+          <li>
+            <strong>量化一切</strong
+            >：周期、功耗、内存占用都量出来，优化有据可依
+          </li>
+          <li>
+            <strong>版本管理</strong>：从第一个工程就上
+            Git，外设驱动封装成可复用模块
+          </li>
+          <li>
+            <strong>写博客复盘</strong>：踩过的坑写下来，比看十篇教程记得牢
+          </li>
         </ul>
 
         <div class="callout tip">
           <div class="callout-title">🧠 总口诀</div>
-          「<strong>C 语言打地基，寄存器外设练手感；RTOS 学调度，Linux 见天地；项目复盘加量化，嵌运高手就是你</strong>」
+          「<strong
+            >C 语言打地基，寄存器外设练手感；RTOS 学调度，Linux
+            见天地；项目复盘加量化，嵌运高手就是你</strong
+          >」
         </div>
 
         <div class="callout info">
           <div class="callout-title">📌 最后的话</div>
-          嵌入式的学习曲线前陡后缓：<strong>前 3 个月最痛苦</strong>（软硬件问题交织、资料分散），熬过去后每个新芯片、新协议都是「换汤不换药」。核心能力只有一条——<strong>面对黑盒问题时的系统性排查能力</strong>：分层定位（硬件？驱动？逻辑？），逐段验证，缩小包围圈。这比背 100 个 API 更值钱。
+          嵌入式的学习曲线前陡后缓：<strong>前 3 个月最痛苦</strong
+          >（软硬件问题交织、资料分散），熬过去后每个新芯片、新协议都是「换汤不换药」。核心能力只有一条——<strong>面对黑盒问题时的系统性排查能力</strong>：分层定位（硬件？驱动？逻辑？），逐段验证，缩小包围圈。这比背
+          100 个 API 更值钱。
         </div>
       </section>
 

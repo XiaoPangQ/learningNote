@@ -667,50 +667,115 @@
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>术语</th><th>英文</th><th>比喻</th><th>说明</th></tr>
+              <tr>
+                <th>术语</th>
+                <th>英文</th>
+                <th>比喻</th>
+                <th>说明</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>数据库</td><td>Database</td><td>仓库</td><td>数据的集合</td></tr>
-              <tr><td>数据库管理系统</td><td>DBMS</td><td>管理员</td><td>MySQL、Oracle、SQL Server 等软件</td></tr>
-              <tr><td>数据库系统</td><td>DBS</td><td>仓库 + 管理员 + 规章制度</td><td>DBMS + 数据 + 应用 + 人员的整体</td></tr>
-              <tr><td>SQL</td><td>Structured Query Language</td><td>和管理员对话的语言</td><td>操作数据库的标准语言</td></tr>
+              <tr>
+                <td>数据库</td>
+                <td>Database</td>
+                <td>仓库</td>
+                <td>数据的集合</td>
+              </tr>
+              <tr>
+                <td>数据库管理系统</td>
+                <td>DBMS</td>
+                <td>管理员</td>
+                <td>MySQL、Oracle、SQL Server 等软件</td>
+              </tr>
+              <tr>
+                <td>数据库系统</td>
+                <td>DBS</td>
+                <td>仓库 + 管理员 + 规章制度</td>
+                <td>DBMS + 数据 + 应用 + 人员的整体</td>
+              </tr>
+              <tr>
+                <td>SQL</td>
+                <td>Structured Query Language</td>
+                <td>和管理员对话的语言</td>
+                <td>操作数据库的标准语言</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>为什么不用文件或 Excel？</h3>
-        <p>很多人第一反应：存数据用 Excel 或记事本不就行了？当数据量小、只有一个人用时确实可以，但会暴露出致命问题：</p>
+        <p>
+          很多人第一反应：存数据用 Excel
+          或记事本不就行了？当数据量小、只有一个人用时确实可以，但会暴露出致命问题：
+        </p>
         <ul>
-          <li><strong>并发问题</strong>：多人同时改一个文件，谁覆盖谁？数据库用「锁」和「事务」解决。</li>
-          <li><strong>数据一致性</strong>：一个文件写了一半就断电，数据就坏了。数据库有崩溃恢复机制。</li>
-          <li><strong>查询效率</strong>：Excel 里在百万行里找一行很慢，数据库有「索引」可以秒查。</li>
-          <li><strong>安全与权限</strong>：数据库可以精确控制「谁能看、谁能改」。</li>
+          <li>
+            <strong>并发问题</strong
+            >：多人同时改一个文件，谁覆盖谁？数据库用「锁」和「事务」解决。
+          </li>
+          <li>
+            <strong>数据一致性</strong
+            >：一个文件写了一半就断电，数据就坏了。数据库有崩溃恢复机制。
+          </li>
+          <li>
+            <strong>查询效率</strong>：Excel
+            里在百万行里找一行很慢，数据库有「索引」可以秒查。
+          </li>
+          <li>
+            <strong>安全与权限</strong>：数据库可以精确控制「谁能看、谁能改」。
+          </li>
         </ul>
 
         <h3>关系型 vs 非关系型</h3>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>对比项</th><th>关系型（SQL）</th><th>非关系型（NoSQL）</th></tr>
+              <tr>
+                <th>对比项</th>
+                <th>关系型（SQL）</th>
+                <th>非关系型（NoSQL）</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>代表产品</td><td>MySQL、Oracle、PostgreSQL、SQL Server</td><td>Redis、MongoDB、ES、HBase</td></tr>
-              <tr><td>数据结构</td><td>表（行列固定）</td><td>键值 / 文档 / 列族 / 图</td></tr>
-              <tr><td>一致性</td><td>强（支持 ACID 事务）</td><td>最终一致性居多</td></tr>
-              <tr><td>扩展方式</td><td>垂直扩展为主</td><td>水平扩展（集群）</td></tr>
-              <tr><td>适用场景</td><td>事务型业务（订单、账户）</td><td>高并发缓存、海量日志、搜索</td></tr>
+              <tr>
+                <td>代表产品</td>
+                <td>MySQL、Oracle、PostgreSQL、SQL Server</td>
+                <td>Redis、MongoDB、ES、HBase</td>
+              </tr>
+              <tr>
+                <td>数据结构</td>
+                <td>表（行列固定）</td>
+                <td>键值 / 文档 / 列族 / 图</td>
+              </tr>
+              <tr>
+                <td>一致性</td>
+                <td>强（支持 ACID 事务）</td>
+                <td>最终一致性居多</td>
+              </tr>
+              <tr>
+                <td>扩展方式</td>
+                <td>垂直扩展为主</td>
+                <td>水平扩展（集群）</td>
+              </tr>
+              <tr>
+                <td>适用场景</td>
+                <td>事务型业务（订单、账户）</td>
+                <td>高并发缓存、海量日志、搜索</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
-          关系型重<strong>一致</strong>，非关系型重<strong>扩展</strong>；要事务选 SQL，要高并发选 NoSQL。
+          关系型重<strong>一致</strong>，非关系型重<strong>扩展</strong>；要事务选
+          SQL，要高并发选 NoSQL。
         </div>
 
         <div class="callout info">
           <div class="callout-title">💡 提示</div>
-          本文以 MySQL 为主要示例（最流行、最易上手），但 90% 的 SQL 语法和思想在 Oracle、PostgreSQL、SQL Server 中通用，只差少量方言。
+          本文以 MySQL 为主要示例（最流行、最易上手），但 90% 的 SQL
+          语法和思想在 Oracle、PostgreSQL、SQL Server 中通用，只差少量方言。
         </div>
       </section>
 
@@ -723,26 +788,63 @@
           关系型数据库把数据组织成一张张<strong>表（Table）</strong>。表由行和列构成：
         </p>
         <ul>
-          <li><strong>列（字段，Column/Field）</strong>：数据的属性，比如「姓名」「年龄」，决定了这一列存什么类型的数据。</li>
-          <li><strong>行（记录，Row/Record）</strong>：一条完整的数据实体，比如「张三，25 岁」。</li>
+          <li>
+            <strong>列（字段，Column/Field）</strong
+            >：数据的属性，比如「姓名」「年龄」，决定了这一列存什么类型的数据。
+          </li>
+          <li>
+            <strong>行（记录，Row/Record）</strong
+            >：一条完整的数据实体，比如「张三，25 岁」。
+          </li>
         </ul>
         <p>一张 <code>users</code> 表长这样：</p>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>id</th><th>name</th><th>age</th><th>city</th></tr></thead>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>age</th>
+                <th>city</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>1</td><td>张三</td><td>25</td><td>北京</td></tr>
-              <tr><td>2</td><td>李四</td><td>30</td><td>上海</td></tr>
-              <tr><td>3</td><td>王五</td><td>28</td><td>深圳</td></tr>
+              <tr>
+                <td>1</td>
+                <td>张三</td>
+                <td>25</td>
+                <td>北京</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>李四</td>
+                <td>30</td>
+                <td>上海</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>王五</td>
+                <td>28</td>
+                <td>深圳</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>键（Key）</h3>
         <ul>
-          <li><strong>主键（Primary Key, PK）</strong>：唯一标识一行记录的列，不能重复、不能为空。相当于每个人的「身份证号」。</li>
-          <li><strong>外键（Foreign Key, FK）</strong>：引用另一张表主键的列，用来建立表之间的「关系」。</li>
-          <li><strong>唯一键（Unique Key）</strong>：值不能重复，但可以为空（NULL），可以有多个。</li>
+          <li>
+            <strong>主键（Primary Key, PK）</strong
+            >：唯一标识一行记录的列，不能重复、不能为空。相当于每个人的「身份证号」。
+          </li>
+          <li>
+            <strong>外键（Foreign Key, FK）</strong
+            >：引用另一张表主键的列，用来建立表之间的「关系」。
+          </li>
+          <li>
+            <strong>唯一键（Unique Key）</strong
+            >：值不能重复，但可以为空（NULL），可以有多个。
+          </li>
         </ul>
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
@@ -752,15 +854,45 @@
         <h3>常见数据类型</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>类别</th><th>类型</th><th>说明</th></tr></thead>
+            <thead>
+              <tr>
+                <th>类别</th>
+                <th>类型</th>
+                <th>说明</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td rowspan="2">数值</td><td><code>INT</code> / <code>BIGINT</code></td><td>整数（4 字节 / 8 字节）</td></tr>
-              <tr><td><code>DECIMAL(M,D)</code></td><td>精确小数，如金额；M 总位数，D 小数位</td></tr>
-              <tr><td rowspan="3">字符串</td><td><code>CHAR(n)</code></td><td>定长字符串，固定占 n 个字符</td></tr>
-              <tr><td><code>VARCHAR(n)</code></td><td>变长字符串，最多 n 个字符，更省空间</td></tr>
-              <tr><td><code>TEXT</code></td><td>长文本</td></tr>
-              <tr><td rowspan="2">日期时间</td><td><code>DATE</code></td><td>日期（YYYY-MM-DD）</td></tr>
-              <tr><td><code>DATETIME</code> / <code>TIMESTAMP</code></td><td>日期时间；TIMESTAMP 受时区影响且有 2038 上限</td></tr>
+              <tr>
+                <td rowspan="2">数值</td>
+                <td><code>INT</code> / <code>BIGINT</code></td>
+                <td>整数（4 字节 / 8 字节）</td>
+              </tr>
+              <tr>
+                <td><code>DECIMAL(M,D)</code></td>
+                <td>精确小数，如金额；M 总位数，D 小数位</td>
+              </tr>
+              <tr>
+                <td rowspan="3">字符串</td>
+                <td><code>CHAR(n)</code></td>
+                <td>定长字符串，固定占 n 个字符</td>
+              </tr>
+              <tr>
+                <td><code>VARCHAR(n)</code></td>
+                <td>变长字符串，最多 n 个字符，更省空间</td>
+              </tr>
+              <tr>
+                <td><code>TEXT</code></td>
+                <td>长文本</td>
+              </tr>
+              <tr>
+                <td rowspan="2">日期时间</td>
+                <td><code>DATE</code></td>
+                <td>日期（YYYY-MM-DD）</td>
+              </tr>
+              <tr>
+                <td><code>DATETIME</code> / <code>TIMESTAMP</code></td>
+                <td>日期时间；TIMESTAMP 受时区影响且有 2038 上限</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -771,11 +903,15 @@
           <li><code>UNIQUE</code>：值唯一。</li>
           <li><code>DEFAULT</code>：默认值。</li>
           <li><code>CHECK</code>：取值范围检查（如 age &gt;= 0）。</li>
-          <li><code>PRIMARY KEY</code> / <code>FOREIGN KEY</code>：主键 / 外键。</li>
+          <li>
+            <code>PRIMARY KEY</code> / <code>FOREIGN KEY</code>：主键 / 外键。
+          </li>
         </ul>
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑</div>
-          存<strong>金额</strong>绝不能用 <code>FLOAT</code>/<code>DOUBLE</code>（二进制浮点有精度误差），要用 <code>DECIMAL</code>。经典翻车：0.1 + 0.2 ≠ 0.3。
+          存<strong>金额</strong>绝不能用
+          <code>FLOAT</code>/<code>DOUBLE</code>（二进制浮点有精度误差），要用
+          <code>DECIMAL</code>。经典翻车：0.1 + 0.2 ≠ 0.3。
         </div>
       </section>
 
@@ -786,18 +922,49 @@
         <h3>SQL 四大分类</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>分类</th><th>全称</th><th>作用</th><th>核心关键字</th></tr></thead>
+            <thead>
+              <tr>
+                <th>分类</th>
+                <th>全称</th>
+                <th>作用</th>
+                <th>核心关键字</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>DDL</td><td>Data Definition Language</td><td>定义结构</td><td>CREATE / ALTER / DROP / TRUNCATE</td></tr>
-              <tr><td>DML</td><td>Data Manipulation Language</td><td>操作数据</td><td>INSERT / UPDATE / DELETE</td></tr>
-              <tr><td>DQL</td><td>Data Query Language</td><td>查询数据</td><td>SELECT</td></tr>
-              <tr><td>DCL</td><td>Data Control Language</td><td>权限控制</td><td>GRANT / REVOKE</td></tr>
+              <tr>
+                <td>DDL</td>
+                <td>Data Definition Language</td>
+                <td>定义结构</td>
+                <td>CREATE / ALTER / DROP / TRUNCATE</td>
+              </tr>
+              <tr>
+                <td>DML</td>
+                <td>Data Manipulation Language</td>
+                <td>操作数据</td>
+                <td>INSERT / UPDATE / DELETE</td>
+              </tr>
+              <tr>
+                <td>DQL</td>
+                <td>Data Query Language</td>
+                <td>查询数据</td>
+                <td>SELECT</td>
+              </tr>
+              <tr>
+                <td>DCL</td>
+                <td>Data Control Language</td>
+                <td>权限控制</td>
+                <td>GRANT / REVOKE</td>
+              </tr>
             </tbody>
           </table>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
-          <strong>D</strong> 建结构、<strong>D</strong> 改数据、<strong>D</strong> 查数据、<strong>D</strong> 管权限 —— 记「<strong>建、增删改、查、控</strong>」四件事。
+          <strong>D</strong> 建结构、<strong>D</strong> 改数据、<strong
+            >D</strong
+          >
+          查数据、<strong>D</strong> 管权限 ——
+          记「<strong>建、增删改、查、控</strong>」四件事。
         </div>
 
         <h3>创建数据库与表</h3>
@@ -847,13 +1014,39 @@ DROP TABLE IF EXISTS users;</code></pre>
         <h3>TRUNCATE vs DELETE</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>对比</th><th>TRUNCATE</th><th>DELETE</th></tr></thead>
+            <thead>
+              <tr>
+                <th>对比</th>
+                <th>TRUNCATE</th>
+                <th>DELETE</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>本质</td><td>DDL（清空表）</td><td>DML（逐行删除）</td></tr>
-              <tr><td>能否回滚</td><td>通常不能（隐式提交）</td><td>在事务内可回滚</td></tr>
-              <tr><td>自增主键</td><td>重置为 1</td><td>不重置</td></tr>
-              <tr><td>速度</td><td>快（整表删除）</td><td>慢（逐行 + 记日志）</td></tr>
-              <tr><td>能否带 WHERE</td><td>不能</td><td>能</td></tr>
+              <tr>
+                <td>本质</td>
+                <td>DDL（清空表）</td>
+                <td>DML（逐行删除）</td>
+              </tr>
+              <tr>
+                <td>能否回滚</td>
+                <td>通常不能（隐式提交）</td>
+                <td>在事务内可回滚</td>
+              </tr>
+              <tr>
+                <td>自增主键</td>
+                <td>重置为 1</td>
+                <td>不重置</td>
+              </tr>
+              <tr>
+                <td>速度</td>
+                <td>快（整表删除）</td>
+                <td>慢（逐行 + 记日志）</td>
+              </tr>
+              <tr>
+                <td>能否带 WHERE</td>
+                <td>不能</td>
+                <td>能</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -897,7 +1090,12 @@ DELETE FROM users WHERE id = 3;</code></pre>
 
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑（重中之重）</div>
-          <code>UPDATE</code> 和 <code>DELETE</code> 如果<strong>忘记写 WHERE</strong>，会修改/删除<strong>全表所有数据</strong>！生产环境务必：① 先 <code>SELECT</code> 确认要操作的行；② 开启事务，出错可 <code>ROLLBACK</code>；③ 写 WHERE 时习惯性先写。可开启 MySQL 的 <code>sql_safe_updates</code> 模式兜底。
+          <code>UPDATE</code> 和 <code>DELETE</code> 如果<strong
+            >忘记写 WHERE</strong
+          >，会修改/删除<strong>全表所有数据</strong>！生产环境务必：① 先
+          <code>SELECT</code> 确认要操作的行；② 开启事务，出错可
+          <code>ROLLBACK</code>；③ 写 WHERE 时习惯性先写。可开启 MySQL 的
+          <code>sql_safe_updates</code> 模式兜底。
         </div>
       </section>
 
@@ -935,9 +1133,17 @@ LIMIT    偏移量, 条数;</code></pre>
 
         <div class="callout tip">
           <div class="callout-title">🧠 口诀（书写顺序 &amp; 执行顺序）</div>
-          书写顺序：<strong>SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT</strong><br/>
-          执行顺序：<strong>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</strong><br/>
-          关键差异：<code>SELECT</code> 里的别名，在 <code>WHERE</code> 中不可用（WHERE 先执行），但在 <code>ORDER BY</code> 中可用。
+          书写顺序：<strong
+            >SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY →
+            LIMIT</strong
+          ><br />
+          执行顺序：<strong
+            >FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY →
+            LIMIT</strong
+          ><br />
+          关键差异：<code>SELECT</code> 里的别名，在
+          <code>WHERE</code> 中不可用（WHERE 先执行），但在
+          <code>ORDER BY</code> 中可用。
         </div>
 
         <h3>常量、表达式与函数</h3>
@@ -991,7 +1197,13 @@ SELECT * FROM users WHERE email IS NOT NULL;</code></pre>
 
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑：NULL 的三值逻辑</div>
-          <code>NULL</code> 表示「未知」，<code>email = NULL</code> 的结果既不是真也不是假，而是 <strong>NULL</strong>，永远查不到结果。判断空值必须用 <code>IS NULL</code> / <code>IS NOT NULL</code>。同理，<code>NOT IN</code> 里若有 NULL 也会导致整个子查询结果异常。
+          <code>NULL</code> 表示「未知」，<code>email = NULL</code>
+          的结果既不是真也不是假，而是
+          <strong>NULL</strong>，永远查不到结果。判断空值必须用
+          <code>IS NULL</code> / <code>IS NOT NULL</code>。同理，<code
+            >NOT IN</code
+          >
+          里若有 NULL 也会导致整个子查询结果异常。
         </div>
 
         <h3>ORDER BY 排序与 LIMIT 分页</h3>
@@ -1009,7 +1221,8 @@ SELECT * FROM users ORDER BY id LIMIT 10, 10;  -- 第 2 页（跳过 10 条，�
         </div>
         <div class="callout warn">
           <div class="callout-title">🔔 注意</div>
-          深分页（<code>LIMIT 1000000, 10</code>）会很慢，因为数据库要跳过前 100 万行。优化方法见第 15 章「深分页优化」。
+          深分页（<code>LIMIT 1000000, 10</code>）会很慢，因为数据库要跳过前 100
+          万行。优化方法见第 15 章「深分页优化」。
         </div>
       </section>
 
@@ -1020,13 +1233,39 @@ SELECT * FROM users ORDER BY id LIMIT 10, 10;  -- 第 2 页（跳过 10 条，�
         <h3>聚合函数</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>函数</th><th>作用</th><th>备注</th></tr></thead>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>作用</th>
+                <th>备注</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>COUNT(*)</code></td><td>统计行数</td><td>不忽略 NULL</td></tr>
-              <tr><td><code>COUNT(列)</code></td><td>统计该列非 NULL 的行数</td><td>忽略 NULL</td></tr>
-              <tr><td><code>SUM(列)</code></td><td>求和</td><td>忽略 NULL，仅数值</td></tr>
-              <tr><td><code>AVG(列)</code></td><td>平均值</td><td>忽略 NULL</td></tr>
-              <tr><td><code>MAX / MIN</code></td><td>最大 / 最小值</td><td>可用于日期、字符串</td></tr>
+              <tr>
+                <td><code>COUNT(*)</code></td>
+                <td>统计行数</td>
+                <td>不忽略 NULL</td>
+              </tr>
+              <tr>
+                <td><code>COUNT(列)</code></td>
+                <td>统计该列非 NULL 的行数</td>
+                <td>忽略 NULL</td>
+              </tr>
+              <tr>
+                <td><code>SUM(列)</code></td>
+                <td>求和</td>
+                <td>忽略 NULL，仅数值</td>
+              </tr>
+              <tr>
+                <td><code>AVG(列)</code></td>
+                <td>平均值</td>
+                <td>忽略 NULL</td>
+              </tr>
+              <tr>
+                <td><code>MAX / MIN</code></td>
+                <td>最大 / 最小值</td>
+                <td>可用于日期、字符串</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1047,17 +1286,36 @@ GROUP BY city;</code></pre>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
-          用了 <code>GROUP BY</code> 后，<code>SELECT</code> 里能出现的列只有两类：<strong>分组字段本身</strong>和<strong>聚合函数</strong>，否则在严格模式下会报错（逻辑上也讲不通）。
+          用了 <code>GROUP BY</code> 后，<code>SELECT</code>
+          里能出现的列只有两类：<strong>分组字段本身</strong>和<strong>聚合函数</strong>，否则在严格模式下会报错（逻辑上也讲不通）。
         </div>
 
         <h3>HAVING vs WHERE</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>对比</th><th>WHERE</th><th>HAVING</th></tr></thead>
+            <thead>
+              <tr>
+                <th>对比</th>
+                <th>WHERE</th>
+                <th>HAVING</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>作用时机</td><td>分组前过滤行</td><td>分组后过滤组</td></tr>
-              <tr><td>能否用聚合函数</td><td>不能</td><td>能（COUNT、SUM 等）</td></tr>
-              <tr><td>能否用列别名</td><td>不能</td><td>可以（MySQL 支持）</td></tr>
+              <tr>
+                <td>作用时机</td>
+                <td>分组前过滤行</td>
+                <td>分组后过滤组</td>
+              </tr>
+              <tr>
+                <td>能否用聚合函数</td>
+                <td>不能</td>
+                <td>能（COUNT、SUM 等）</td>
+              </tr>
+              <tr>
+                <td>能否用列别名</td>
+                <td>不能</td>
+                <td>可以（MySQL 支持）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1079,20 +1337,48 @@ ORDER BY cnt DESC;</code></pre>
 
         <h3>为什么需要 JOIN</h3>
         <p>
-          规范化的数据库会把数据拆到多张表（用户表、订单表、商品表），查询时需要用 <code>JOIN</code>
-          把它们「拼」起来。JOIN 的本质是<strong>按条件把两张表的行两两配对</strong>。
+          规范化的数据库会把数据拆到多张表（用户表、订单表、商品表），查询时需要用
+          <code>JOIN</code>
+          把它们「拼」起来。JOIN
+          的本质是<strong>按条件把两张表的行两两配对</strong>。
         </p>
 
         <h3>四种主要 JOIN</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>类型</th><th>结果</th><th>关键词</th></tr></thead>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>结果</th>
+                <th>关键词</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>内连接</td><td>只保留两表都匹配的行</td><td>INNER JOIN</td></tr>
-              <tr><td>左连接</td><td>保留左表全部 + 右表匹配（无则 NULL）</td><td>LEFT JOIN</td></tr>
-              <tr><td>右连接</td><td>保留右表全部 + 左表匹配（无则 NULL）</td><td>RIGHT JOIN</td></tr>
-              <tr><td>全外连接</td><td>两表全保留（MySQL 不直接支持）</td><td>FULL OUTER JOIN</td></tr>
-              <tr><td>交叉连接</td><td>笛卡尔积（每行都配对）</td><td>CROSS JOIN</td></tr>
+              <tr>
+                <td>内连接</td>
+                <td>只保留两表都匹配的行</td>
+                <td>INNER JOIN</td>
+              </tr>
+              <tr>
+                <td>左连接</td>
+                <td>保留左表全部 + 右表匹配（无则 NULL）</td>
+                <td>LEFT JOIN</td>
+              </tr>
+              <tr>
+                <td>右连接</td>
+                <td>保留右表全部 + 左表匹配（无则 NULL）</td>
+                <td>RIGHT JOIN</td>
+              </tr>
+              <tr>
+                <td>全外连接</td>
+                <td>两表全保留（MySQL 不直接支持）</td>
+                <td>FULL OUTER JOIN</td>
+              </tr>
+              <tr>
+                <td>交叉连接</td>
+                <td>笛卡尔积（每行都配对）</td>
+                <td>CROSS JOIN</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1129,7 +1415,11 @@ LEFT JOIN employees m ON e.manager_id = m.id;</code></pre>
         <h3>ON 与 WHERE 的区别</h3>
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑</div>
-          在 <code>LEFT JOIN</code> 中，<code>ON</code> 是<strong>连接条件</strong>，<code>WHERE</code> 是<strong>连接后的过滤</strong>。若把右表的过滤条件写到 <code>WHERE</code> 里，会把「无匹配」的行也过滤掉，效果就退化成 INNER JOIN 了。所以右表的过滤条件要写在 <code>ON</code> 里。
+          在 <code>LEFT JOIN</code> 中，<code>ON</code>
+          是<strong>连接条件</strong>，<code>WHERE</code>
+          是<strong>连接后的过滤</strong>。若把右表的过滤条件写到
+          <code>WHERE</code> 里，会把「无匹配」的行也过滤掉，效果就退化成 INNER
+          JOIN 了。所以右表的过滤条件要写在 <code>ON</code> 里。
         </div>
       </section>
 
@@ -1140,8 +1430,13 @@ LEFT JOIN employees m ON e.manager_id = m.id;</code></pre>
         <h3>子查询分类</h3>
         <ul>
           <li><strong>标量子查询</strong>：返回单个值，可用于比较。</li>
-          <li><strong>列子查询</strong>：返回一列多行，配合 <code>IN</code> / <code>ANY</code> / <code>ALL</code>。</li>
-          <li><strong>表子查询</strong>：返回一张表，常用于 <code>FROM</code> 后。</li>
+          <li>
+            <strong>列子查询</strong>：返回一列多行，配合 <code>IN</code> /
+            <code>ANY</code> / <code>ALL</code>。
+          </li>
+          <li>
+            <strong>表子查询</strong>：返回一张表，常用于 <code>FROM</code> 后。
+          </li>
         </ul>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1166,10 +1461,24 @@ WHERE EXISTS (SELECT 1 FROM orders o WHERE o.user_id = u.id);</code></pre>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>场景</th><th>推荐</th><th>原因</th></tr></thead>
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>推荐</th>
+                <th>原因</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>子查询结果小、外层大</td><td>IN</td><td>先执行子查询，小结果集驱动</td></tr>
-              <tr><td>外层小、子查询大</td><td>EXISTS</td><td>找到一条即返回，不必全查</td></tr>
+              <tr>
+                <td>子查询结果小、外层大</td>
+                <td>IN</td>
+                <td>先执行子查询，小结果集驱动</td>
+              </tr>
+              <tr>
+                <td>外层小、子查询大</td>
+                <td>EXISTS</td>
+                <td>找到一条即返回，不必全查</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1184,7 +1493,9 @@ SELECT name FROM vip_users;</code></pre>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
-          <code>UNION</code> 合并去重、<code>UNION ALL</code> 合并不去重；列数、顺序、类型要一致。MySQL 原生不支持 <code>INTERSECT</code>/<code>EXCEPT</code>（可用 JOIN 或子查询替代）。
+          <code>UNION</code> 合并去重、<code>UNION ALL</code>
+          合并不去重；列数、顺序、类型要一致。MySQL 原生不支持
+          <code>INTERSECT</code>/<code>EXCEPT</code>（可用 JOIN 或子查询替代）。
         </div>
       </section>
 
@@ -1195,14 +1506,44 @@ SELECT name FROM vip_users;</code></pre>
         <h3>字符串函数</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>函数</th><th>作用</th><th>示例</th></tr></thead>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>作用</th>
+                <th>示例</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>CONCAT(a,b)</code></td><td>拼接</td><td><code>CONCAT('a','b')</code> → 'ab'</td></tr>
-              <tr><td><code>LENGTH / CHAR_LENGTH</code></td><td>字节/字符长度</td><td>中文用 CHAR_LENGTH</td></tr>
-              <tr><td><code>UPPER / LOWER</code></td><td>大小写转换</td><td></td></tr>
-              <tr><td><code>SUBSTRING(s,pos,len)</code></td><td>截取子串</td><td>从 1 开始计数</td></tr>
-              <tr><td><code>TRIM / LTRIM / RTRIM</code></td><td>去空格</td><td></td></tr>
-              <tr><td><code>REPLACE(s,a,b)</code></td><td>替换</td><td></td></tr>
+              <tr>
+                <td><code>CONCAT(a,b)</code></td>
+                <td>拼接</td>
+                <td><code>CONCAT('a','b')</code> → 'ab'</td>
+              </tr>
+              <tr>
+                <td><code>LENGTH / CHAR_LENGTH</code></td>
+                <td>字节/字符长度</td>
+                <td>中文用 CHAR_LENGTH</td>
+              </tr>
+              <tr>
+                <td><code>UPPER / LOWER</code></td>
+                <td>大小写转换</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>SUBSTRING(s,pos,len)</code></td>
+                <td>截取子串</td>
+                <td>从 1 开始计数</td>
+              </tr>
+              <tr>
+                <td><code>TRIM / LTRIM / RTRIM</code></td>
+                <td>去空格</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>REPLACE(s,a,b)</code></td>
+                <td>替换</td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1210,13 +1551,33 @@ SELECT name FROM vip_users;</code></pre>
         <h3>日期函数</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>函数</th><th>作用</th></tr></thead>
+            <thead>
+              <tr>
+                <th>函数</th>
+                <th>作用</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>NOW()</code></td><td>当前日期时间</td></tr>
-              <tr><td><code>CURDATE()</code></td><td>当前日期</td></tr>
-              <tr><td><code>DATE_FORMAT(d, fmt)</code></td><td>格式化日期，如 <code>%Y-%m-%d</code></td></tr>
-              <tr><td><code>DATEDIFF(a,b)</code></td><td>两个日期相差天数</td></tr>
-              <tr><td><code>DATE_ADD(d, INTERVAL n DAY)</code></td><td>日期加减</td></tr>
+              <tr>
+                <td><code>NOW()</code></td>
+                <td>当前日期时间</td>
+              </tr>
+              <tr>
+                <td><code>CURDATE()</code></td>
+                <td>当前日期</td>
+              </tr>
+              <tr>
+                <td><code>DATE_FORMAT(d, fmt)</code></td>
+                <td>格式化日期，如 <code>%Y-%m-%d</code></td>
+              </tr>
+              <tr>
+                <td><code>DATEDIFF(a,b)</code></td>
+                <td>两个日期相差天数</td>
+              </tr>
+              <tr>
+                <td><code>DATE_ADD(d, INTERVAL n DAY)</code></td>
+                <td>日期加减</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1263,7 +1624,9 @@ SELECT name, IF(age &gt;= 18, '成年', '未成年') AS tag FROM users;</code></
 
         <h3>视图（View）</h3>
         <p>
-          视图是<strong>一张"虚拟表"</strong>，本质是一条被保存下来的 SELECT 查询。你可以像查表一样查视图，但它不存储数据，每次查询都实时执行底层 SQL。
+          视图是<strong>一张"虚拟表"</strong>，本质是一条被保存下来的 SELECT
+          查询。你可以像查表一样查视图，但它不存储数据，每次查询都实时执行底层
+          SQL。
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1278,12 +1641,15 @@ SELECT * FROM user_order_v WHERE amount &gt; 100;</code></pre>
         </div>
         <div class="callout info">
           <div class="callout-title">💡 提示</div>
-          视图的好处：① 简化复杂查询；② 隐藏底层表结构；③ 做权限隔离（只暴露部分列）。缺点：不能建索引，性能取决于底层 SQL，多层嵌套视图会拖慢性能。
+          视图的好处：① 简化复杂查询；② 隐藏底层表结构；③
+          做权限隔离（只暴露部分列）。缺点：不能建索引，性能取决于底层
+          SQL，多层嵌套视图会拖慢性能。
         </div>
 
         <h3>存储过程（Stored Procedure）</h3>
         <p>
-          存储过程是<strong>保存在数据库里的一段可复用的 SQL 程序</strong>，可以带参数、写逻辑、返回结果，相当于「数据库里的函数」。
+          存储过程是<strong>保存在数据库里的一段可复用的 SQL 程序</strong
+          >，可以带参数、写逻辑、返回结果，相当于「数据库里的函数」。
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1301,7 +1667,8 @@ CALL get_users_by_city('北京');</code></pre>
 
         <h3>触发器（Trigger）</h3>
         <p>
-          触发器是<strong>在表发生 INSERT/UPDATE/DELETE 时自动执行的程序</strong>，常用于自动记录日志、校验数据、联动更新。
+          触发器是<strong>在表发生 INSERT/UPDATE/DELETE 时自动执行的程序</strong
+          >，常用于自动记录日志、校验数据、联动更新。
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1317,17 +1684,41 @@ END;</code></pre>
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th>对象</th><th>本质</th><th>何时执行</th><th>典型用途</th></tr></thead>
+            <thead>
+              <tr>
+                <th>对象</th>
+                <th>本质</th>
+                <th>何时执行</th>
+                <th>典型用途</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>视图</td><td>保存的查询</td><td>被查询时</td><td>简化查询、权限隔离</td></tr>
-              <tr><td>存储过程</td><td>保存的程序</td><td>被 CALL 时</td><td>批量处理、业务逻辑下沉</td></tr>
-              <tr><td>触发器</td><td>自动执行的程序</td><td>表数据变动时</td><td>审计日志、数据校验</td></tr>
+              <tr>
+                <td>视图</td>
+                <td>保存的查询</td>
+                <td>被查询时</td>
+                <td>简化查询、权限隔离</td>
+              </tr>
+              <tr>
+                <td>存储过程</td>
+                <td>保存的程序</td>
+                <td>被 CALL 时</td>
+                <td>批量处理、业务逻辑下沉</td>
+              </tr>
+              <tr>
+                <td>触发器</td>
+                <td>自动执行的程序</td>
+                <td>表数据变动时</td>
+                <td>审计日志、数据校验</td>
+              </tr>
             </tbody>
           </table>
         </div>
         <div class="callout warn">
           <div class="callout-title">🔔 注意</div>
-          现代互联网公司普遍倾向「<strong>把业务逻辑放应用层</strong>」，存储过程/触发器因难以调试、难迁移、易隐藏 bug 而用得较少，但传统企业和财务系统仍广泛使用。了解即可，不必过度使用。
+          现代互联网公司普遍倾向「<strong>把业务逻辑放应用层</strong>」，存储过程/触发器因难以调试、难迁移、易隐藏
+          bug
+          而用得较少，但传统企业和财务系统仍广泛使用。了解即可，不必过度使用。
         </div>
       </section>
 
@@ -1342,17 +1733,37 @@ END;</code></pre>
 
         <h3>B+ 树索引</h3>
         <p>
-          MySQL 的 InnoDB 引擎默认用 <strong>B+ 树</strong>存储索引。B+ 树是一棵平衡多叉树：数据只存在叶子节点，叶子节点之间用链表相连。这样既能快速查找（树高很低，几次磁盘 IO 就能定位），又方便范围查询（顺着链表扫）。
+          MySQL 的 InnoDB 引擎默认用 <strong>B+ 树</strong>存储索引。B+
+          树是一棵平衡多叉树：数据只存在叶子节点，叶子节点之间用链表相连。这样既能快速查找（树高很低，几次磁盘
+          IO 就能定位），又方便范围查询（顺着链表扫）。
         </p>
 
         <h3>聚集索引 vs 非聚集索引</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>对比</th><th>聚集索引（聚簇）</th><th>非聚集索引（二级）</th></tr></thead>
+            <thead>
+              <tr>
+                <th>对比</th>
+                <th>聚集索引（聚簇）</th>
+                <th>非聚集索引（二级）</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>叶子存什么</td><td>整行数据</td><td>主键值</td></tr>
-              <tr><td>每表数量</td><td>只能 1 个（通常是主键）</td><td>可有多个</td></tr>
-              <tr><td>查找流程</td><td>直接拿到数据</td><td>拿到主键后再回表查（回表）</td></tr>
+              <tr>
+                <td>叶子存什么</td>
+                <td>整行数据</td>
+                <td>主键值</td>
+              </tr>
+              <tr>
+                <td>每表数量</td>
+                <td>只能 1 个（通常是主键）</td>
+                <td>可有多个</td>
+              </tr>
+              <tr>
+                <td>查找流程</td>
+                <td>直接拿到数据</td>
+                <td>拿到主键后再回表查（回表）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1384,16 +1795,31 @@ SELECT * FROM t WHERE c = 3;</code></pre>
 
         <h3>索引失效的常见场景</h3>
         <ul>
-          <li>对索引列做<strong>函数运算</strong>：<code>WHERE YEAR(created_at) = 2024</code>。</li>
-          <li>对索引列做<strong>隐式类型转换</strong>：<code>WHERE phone = 13800000000</code>（phone 是 VARCHAR，应加引号）。</li>
-          <li><strong>前导模糊</strong>：<code>LIKE '%张'</code>（以 % 开头用不上索引；<code>LIKE '张%'</code> 可以）。</li>
+          <li>
+            对索引列做<strong>函数运算</strong>：<code
+              >WHERE YEAR(created_at) = 2024</code
+            >。
+          </li>
+          <li>
+            对索引列做<strong>隐式类型转换</strong>：<code
+              >WHERE phone = 13800000000</code
+            >（phone 是 VARCHAR，应加引号）。
+          </li>
+          <li>
+            <strong>前导模糊</strong>：<code>LIKE '%张'</code>（以 %
+            开头用不上索引；<code>LIKE '张%'</code> 可以）。
+          </li>
           <li>违反最左前缀（联合索引跳列）。</li>
           <li><code>OR</code> 连接了非索引列。</li>
-          <li>优化器判断全表扫描更快（数据量小、区分度低时不走索引反而正常）。</li>
+          <li>
+            优化器判断全表扫描更快（数据量小、区分度低时不走索引反而正常）。
+          </li>
         </ul>
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑</div>
-          索引不是越多越好：每个索引都要占用存储，且<strong>增删改时都要维护索引</strong>，会拖慢写入。只在<strong>高频查询的 WHERE/ORDER BY/JOIN 字段</strong>上建索引，避免低区分度列（如性别）单独建索引。
+          索引不是越多越好：每个索引都要占用存储，且<strong>增删改时都要维护索引</strong>，会拖慢写入。只在<strong
+            >高频查询的 WHERE/ORDER BY/JOIN 字段</strong
+          >上建索引，避免低区分度列（如性别）单独建索引。
         </div>
       </section>
 
@@ -1403,16 +1829,41 @@ SELECT * FROM t WHERE c = 3;</code></pre>
 
         <h3>事务与 ACID</h3>
         <p>
-          事务（Transaction）是<strong>一组要么全成功、要么全失败的 SQL 操作</strong>。经典比喻：转账——从 A 扣钱、给 B 加钱，两步必须同时成功，否则钱就凭空消失。
+          事务（Transaction）是<strong
+            >一组要么全成功、要么全失败的 SQL 操作</strong
+          >。经典比喻：转账——从 A 扣钱、给 B
+          加钱，两步必须同时成功，否则钱就凭空消失。
         </p>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>特性</th><th>含义</th><th>说明</th></tr></thead>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>含义</th>
+                <th>说明</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>原子性 Atomicity</td><td>不可分割</td><td>要么全做，要么全不做</td></tr>
-              <tr><td>一致性 Consistency</td><td>状态合法</td><td>转账前后总额不变</td></tr>
-              <tr><td>隔离性 Isolation</td><td>互不干扰</td><td>并发事务之间看不到中间态</td></tr>
-              <tr><td>持久性 Durability</td><td>落盘不丢</td><td>提交后即使宕机也不丢数据</td></tr>
+              <tr>
+                <td>原子性 Atomicity</td>
+                <td>不可分割</td>
+                <td>要么全做，要么全不做</td>
+              </tr>
+              <tr>
+                <td>一致性 Consistency</td>
+                <td>状态合法</td>
+                <td>转账前后总额不变</td>
+              </tr>
+              <tr>
+                <td>隔离性 Isolation</td>
+                <td>互不干扰</td>
+                <td>并发事务之间看不到中间态</td>
+              </tr>
+              <tr>
+                <td>持久性 Durability</td>
+                <td>落盘不丢</td>
+                <td>提交后即使宕机也不丢数据</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1429,11 +1880,29 @@ COMMIT;      -- 提交（成功）
         <h3>并发带来的三大问题</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>问题</th><th>描述</th></tr></thead>
+            <thead>
+              <tr>
+                <th>问题</th>
+                <th>描述</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>脏读</td><td>读到别的事务<strong>未提交</strong>的数据（可能被回滚）</td></tr>
-              <tr><td>不可重复读</td><td>同一事务内两次读<strong>同一条</strong>数据，结果不同（别人改了）</td></tr>
-              <tr><td>幻读</td><td>同一事务内两次查询，<strong>行数</strong>不同（别人插/删了）</td></tr>
+              <tr>
+                <td>脏读</td>
+                <td>读到别的事务<strong>未提交</strong>的数据（可能被回滚）</td>
+              </tr>
+              <tr>
+                <td>不可重复读</td>
+                <td>
+                  同一事务内两次读<strong>同一条</strong>数据，结果不同（别人改了）
+                </td>
+              </tr>
+              <tr>
+                <td>幻读</td>
+                <td>
+                  同一事务内两次查询，<strong>行数</strong>不同（别人插/删了）
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1441,18 +1910,47 @@ COMMIT;      -- 提交（成功）
         <h3>四种隔离级别</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>隔离级别</th><th>脏读</th><th>不可重复读</th><th>幻读</th></tr></thead>
+            <thead>
+              <tr>
+                <th>隔离级别</th>
+                <th>脏读</th>
+                <th>不可重复读</th>
+                <th>幻读</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>读未提交 Read Uncommitted</td><td>可能</td><td>可能</td><td>可能</td></tr>
-              <tr><td>读已提交 Read Committed</td><td>否</td><td>可能</td><td>可能</td></tr>
-              <tr><td>可重复读 Repeatable Read（MySQL 默认）</td><td>否</td><td>否</td><td>基本解决</td></tr>
-              <tr><td>串行化 Serializable</td><td>否</td><td>否</td><td>否</td></tr>
+              <tr>
+                <td>读未提交 Read Uncommitted</td>
+                <td>可能</td>
+                <td>可能</td>
+                <td>可能</td>
+              </tr>
+              <tr>
+                <td>读已提交 Read Committed</td>
+                <td>否</td>
+                <td>可能</td>
+                <td>可能</td>
+              </tr>
+              <tr>
+                <td>可重复读 Repeatable Read（MySQL 默认）</td>
+                <td>否</td>
+                <td>否</td>
+                <td>基本解决</td>
+              </tr>
+              <tr>
+                <td>串行化 Serializable</td>
+                <td>否</td>
+                <td>否</td>
+                <td>否</td>
+              </tr>
             </tbody>
           </table>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
-          隔离级别越高，<strong>一致性越好，但并发性能越差</strong>。MySQL 默认「可重复读」，靠 <strong>MVCC</strong>（多版本并发控制）+ 间隙锁解决幻读。
+          隔离级别越高，<strong>一致性越好，但并发性能越差</strong>。MySQL
+          默认「可重复读」，靠 <strong>MVCC</strong>（多版本并发控制）+
+          间隙锁解决幻读。
         </div>
 
         <h3>MVCC 简介</h3>
@@ -1463,7 +1961,10 @@ COMMIT;      -- 提交（成功）
         <h3>死锁</h3>
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑</div>
-          两个事务互相等待对方释放锁就形成<strong>死锁</strong>。预防：① 事务尽量短小；② 按<strong>一致的顺序</strong>访问多张表/多行；③ 合理设计索引减少锁范围。发生死锁时 InnoDB 会自动回滚其中一个事务，应用层做好重试即可。
+          两个事务互相等待对方释放锁就形成<strong>死锁</strong>。预防：①
+          事务尽量短小；② 按<strong>一致的顺序</strong>访问多张表/多行；③
+          合理设计索引减少锁范围。发生死锁时 InnoDB
+          会自动回滚其中一个事务，应用层做好重试即可。
         </div>
       </section>
 
@@ -1473,38 +1974,76 @@ COMMIT;      -- 提交（成功）
 
         <h3>ER 模型</h3>
         <p>
-          设计数据库前，先用 <strong>ER 图（实体-关系图）</strong>梳理业务：<strong>实体</strong>（Entity，如用户、订单）画成矩形，<strong>属性</strong>画成椭圆，<strong>关系</strong>（如用户「下单」订单）画成菱形，并标注「一对一 / 一对多 / 多对多」。
+          设计数据库前，先用
+          <strong>ER 图（实体-关系图）</strong
+          >梳理业务：<strong>实体</strong>（Entity，如用户、订单）画成矩形，<strong>属性</strong>画成椭圆，<strong>关系</strong>（如用户「下单」订单）画成菱形，并标注「一对一
+          / 一对多 / 多对多」。
         </p>
 
         <h3>三大范式</h3>
         <h4>第一范式（1NF）：列不可再分</h4>
-        <p>每列都是<strong>原子值</strong>，不能存多个值。反例：一列存「手机号1,手机号2」。</p>
+        <p>
+          每列都是<strong>原子值</strong>，不能存多个值。反例：一列存「手机号1,手机号2」。
+        </p>
 
         <h4>第二范式（2NF）：消除部分依赖</h4>
-        <p>在满足 1NF 基础上，非主键列必须<strong>完全依赖整个主键</strong>（针对联合主键）。反例：成绩表主键是（学号, 课程号），但「学生姓名」只依赖学号，属于部分依赖，应拆出去。</p>
+        <p>
+          在满足 1NF
+          基础上，非主键列必须<strong>完全依赖整个主键</strong>（针对联合主键）。反例：成绩表主键是（学号,
+          课程号），但「学生姓名」只依赖学号，属于部分依赖，应拆出去。
+        </p>
 
         <h4>第三范式（3NF）：消除传递依赖</h4>
-        <p>在满足 2NF 基础上，非主键列<strong>不能依赖其他非主键列</strong>。反例：学生表里有「学号 → 班级号 → 班主任」，班主任通过班级号传递依赖学号，应拆到班级表。</p>
+        <p>
+          在满足 2NF
+          基础上，非主键列<strong>不能依赖其他非主键列</strong>。反例：学生表里有「学号
+          → 班级号 → 班主任」，班主任通过班级号传递依赖学号，应拆到班级表。
+        </p>
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th>范式</th><th>核心要求</th><th>解决什么</th></tr></thead>
+            <thead>
+              <tr>
+                <th>范式</th>
+                <th>核心要求</th>
+                <th>解决什么</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>1NF</td><td>列不可再分</td><td>字段原子性</td></tr>
-              <tr><td>2NF</td><td>消除部分依赖</td><td>联合主键下非键字段冗余</td></tr>
-              <tr><td>3NF</td><td>消除传递依赖</td><td>非键字段间的冗余</td></tr>
-              <tr><td>BCNF</td><td>消除主属性间的部分依赖</td><td>更严格的 3NF</td></tr>
+              <tr>
+                <td>1NF</td>
+                <td>列不可再分</td>
+                <td>字段原子性</td>
+              </tr>
+              <tr>
+                <td>2NF</td>
+                <td>消除部分依赖</td>
+                <td>联合主键下非键字段冗余</td>
+              </tr>
+              <tr>
+                <td>3NF</td>
+                <td>消除传递依赖</td>
+                <td>非键字段间的冗余</td>
+              </tr>
+              <tr>
+                <td>BCNF</td>
+                <td>消除主属性间的部分依赖</td>
+                <td>更严格的 3NF</td>
+              </tr>
             </tbody>
           </table>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 口诀</div>
-          「<strong>1 拆列、2 拆部分、3 拆传递</strong>」。范式的本质是<strong>减少冗余、避免更新异常</strong>。实际开发中一般做到 3NF 即可。
+          「<strong>1 拆列、2 拆部分、3 拆传递</strong
+          >」。范式的本质是<strong>减少冗余、避免更新异常</strong>。实际开发中一般做到
+          3NF 即可。
         </div>
 
         <h3>反范式（适度冗余）</h3>
         <p>
-          范式不是绝对的。为了<strong>查询性能</strong>，有时要故意「反范式」——保留冗余字段（比如订单表冗余存「商品名」「单价」），避免每次查询都 JOIN。原则是：<strong>以读为主、牺牲一点存储和写一致性换取查询性能</strong>。
+          范式不是绝对的。为了<strong>查询性能</strong>，有时要故意「反范式」——保留冗余字段（比如订单表冗余存「商品名」「单价」），避免每次查询都
+          JOIN。原则是：<strong>以读为主、牺牲一点存储和写一致性换取查询性能</strong>。
         </p>
       </section>
 
@@ -1519,12 +2058,37 @@ COMMIT;      -- 提交（成功）
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>关键字段</th><th>含义</th><th>重点关注</th></tr></thead>
+            <thead>
+              <tr>
+                <th>关键字段</th>
+                <th>含义</th>
+                <th>重点关注</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>type</code></td><td>访问类型（好→差：const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL）</td><td>出现 ALL 说明全表扫描</td></tr>
-              <tr><td><code>key</code></td><td>实际使用的索引</td><td>NULL 表示没走索引</td></tr>
-              <tr><td><code>rows</code></td><td>预估扫描行数</td><td>越大越慢</td></tr>
-              <tr><td><code>Extra</code></td><td>附加信息</td><td>Using filesort / temporary 需优化</td></tr>
+              <tr>
+                <td><code>type</code></td>
+                <td>
+                  访问类型（好→差：const &gt; eq_ref &gt; ref &gt; range &gt;
+                  index &gt; ALL）
+                </td>
+                <td>出现 ALL 说明全表扫描</td>
+              </tr>
+              <tr>
+                <td><code>key</code></td>
+                <td>实际使用的索引</td>
+                <td>NULL 表示没走索引</td>
+              </tr>
+              <tr>
+                <td><code>rows</code></td>
+                <td>预估扫描行数</td>
+                <td>越大越慢</td>
+              </tr>
+              <tr>
+                <td><code>Extra</code></td>
+                <td>附加信息</td>
+                <td>Using filesort / temporary 需优化</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1540,10 +2104,15 @@ SET GLOBAL long_query_time = 1;</code></pre>
         <h3>常用优化策略清单</h3>
         <ul>
           <li>尽量<strong>避免 SELECT *</strong>，只查需要的列。</li>
-          <li>在 WHERE / ORDER BY / JOIN 字段上建<strong>合适索引</strong>。</li>
+          <li>
+            在 WHERE / ORDER BY / JOIN 字段上建<strong>合适索引</strong>。
+          </li>
           <li><strong>小表驱动大表</strong>，联表时先过滤再连接。</li>
           <li>避免在索引列上做函数、运算、隐式转换。</li>
-          <li>用 <code>EXISTS</code> 替代部分 <code>IN</code>，用 <code>UNION ALL</code> 替代 <code>UNION</code>。</li>
+          <li>
+            用 <code>EXISTS</code> 替代部分 <code>IN</code>，用
+            <code>UNION ALL</code> 替代 <code>UNION</code>。
+          </li>
           <li>大表拆分、冷热数据分离、合理归档。</li>
         </ul>
 
@@ -1558,7 +2127,9 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
         </div>
         <div class="callout info">
           <div class="callout-title">💡 提示</div>
-          深分页优化的核心是「<strong>避免大偏移量</strong>」：用「游标 + 主键/唯一索引」代替 <code>LIMIT offset, n</code>，或先用子查询定位主键再回表。
+          深分页优化的核心是「<strong>避免大偏移量</strong>」：用「游标 +
+          主键/唯一索引」代替
+          <code>LIMIT offset, n</code>，或先用子查询定位主键再回表。
         </div>
       </section>
 
@@ -1576,29 +2147,54 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
         <h3>复制原理</h3>
         <ol class="steps">
           <li>主库把数据变更写入<strong>二进制日志 binlog</strong>。</li>
-          <li>从库的 I/O 线程把主库 binlog 拉过来，写入<strong>中继日志 relay log</strong>。</li>
+          <li>
+            从库的 I/O 线程把主库 binlog 拉过来，写入<strong
+              >中继日志 relay log</strong
+            >。
+          </li>
           <li>从库的 SQL 线程重放 relay log，完成数据同步。</li>
         </ol>
-        <p>复制是<strong>异步</strong>的（默认），因此主从之间可能存在毫秒级延迟。</p>
+        <p>
+          复制是<strong>异步</strong>的（默认），因此主从之间可能存在毫秒级延迟。
+        </p>
 
         <h3>读写分离架构</h3>
         <p>
-          应用层通过中间件（如 ShardingSphere、MyCat，或框架自带的路由）把<strong>写请求路由到主库、读请求路由到从库</strong>。读多写少的场景下能显著提升吞吐。
+          应用层通过中间件（如
+          ShardingSphere、MyCat，或框架自带的路由）把<strong>写请求路由到主库、读请求路由到从库</strong>。读多写少的场景下能显著提升吞吐。
         </p>
         <div class="callout danger">
           <div class="callout-title">⚠️ 避坑</div>
-          读写分离会带来<strong>主从延迟</strong>：刚写入的数据立刻读从库可能读不到。解决：① 核心读写都走主库；② 业务上允许短暂延迟；③ 或使用半同步复制降低延迟。
+          读写分离会带来<strong>主从延迟</strong>：刚写入的数据立刻读从库可能读不到。解决：①
+          核心读写都走主库；② 业务上允许短暂延迟；③ 或使用半同步复制降低延迟。
         </div>
 
         <h3>高可用方案</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>方案</th><th>说明</th></tr></thead>
+            <thead>
+              <tr>
+                <th>方案</th>
+                <th>说明</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>主从 + 手动切换</td><td>简单但依赖人工，切换慢</td></tr>
-              <tr><td>MHA / Orchestrator</td><td>自动监控、故障切换</td></tr>
-              <tr><td>MGR（组复制）</td><td>多主、自动选主、强一致</td></tr>
-              <tr><td>云数据库 RDS</td><td>托管高可用，自动主备切换（生产首选）</td></tr>
+              <tr>
+                <td>主从 + 手动切换</td>
+                <td>简单但依赖人工，切换慢</td>
+              </tr>
+              <tr>
+                <td>MHA / Orchestrator</td>
+                <td>自动监控、故障切换</td>
+              </tr>
+              <tr>
+                <td>MGR（组复制）</td>
+                <td>多主、自动选主、强一致</td>
+              </tr>
+              <tr>
+                <td>云数据库 RDS</td>
+                <td>托管高可用，自动主备切换（生产首选）</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1610,50 +2206,96 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
 
         <h3>什么时候需要分库分表</h3>
         <p>
-          单表数据量过大（如上亿行）、单库连接数和 IO 达到瓶颈时，就要考虑<strong>分库分表</strong>。核心思想是<strong>把大问题拆成小问题</strong>，让数据分散到多个库、多张表。
+          单表数据量过大（如上亿行）、单库连接数和 IO
+          达到瓶颈时，就要考虑<strong>分库分表</strong>。核心思想是<strong>把大问题拆成小问题</strong>，让数据分散到多个库、多张表。
         </p>
 
         <h3>垂直拆分 vs 水平拆分</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>维度</th><th>垂直拆分</th><th>水平拆分</th></tr></thead>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>垂直拆分</th>
+                <th>水平拆分</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>怎么拆</td><td>按业务/按列拆（把宽表拆成多张）</td><td>按行拆（把行分散到多表/多库）</td></tr>
-              <tr><td>典型</td><td>用户表拆成：基础信息表 + 扩展信息表</td><td>订单表按用户 id 分 16 张表</td></tr>
-              <tr><td>解决问题</td><td>单表过宽、单库过大</td><td>单表数据量过大</td></tr>
+              <tr>
+                <td>怎么拆</td>
+                <td>按业务/按列拆（把宽表拆成多张）</td>
+                <td>按行拆（把行分散到多表/多库）</td>
+              </tr>
+              <tr>
+                <td>典型</td>
+                <td>用户表拆成：基础信息表 + 扩展信息表</td>
+                <td>订单表按用户 id 分 16 张表</td>
+              </tr>
+              <tr>
+                <td>解决问题</td>
+                <td>单表过宽、单库过大</td>
+                <td>单表数据量过大</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>分片键（Sharding Key）的选择</h3>
         <ul>
-          <li><strong>尽量选择查询频繁、区分度高的字段</strong>（如用户 id、订单号）。</li>
-          <li>让<strong>大部分查询都能命中单个分片</strong>，避免跨分片查询。</li>
+          <li>
+            <strong>尽量选择查询频繁、区分度高的字段</strong>（如用户
+            id、订单号）。
+          </li>
+          <li>
+            让<strong>大部分查询都能命中单个分片</strong>，避免跨分片查询。
+          </li>
           <li>避免用会变化的字段做分片键（如状态）。</li>
           <li>常见算法：取模、范围、哈希（一致性哈希）。</li>
         </ul>
 
         <h3>分布式 ID</h3>
-        <p>分库分表后，单表自增主键会重复，需要<strong>全局唯一 ID</strong>：</p>
+        <p>
+          分库分表后，单表自增主键会重复，需要<strong>全局唯一 ID</strong>：
+        </p>
         <ul>
-          <li><strong>雪花算法（Snowflake）</strong>：64 位，时间戳 + 机器号 + 序列号，趋势递增、高性能。</li>
+          <li>
+            <strong>雪花算法（Snowflake）</strong>：64 位，时间戳 + 机器号 +
+            序列号，趋势递增、高性能。
+          </li>
           <li><strong>数据库号段</strong>：集中发号，一次取一批。</li>
-          <li><strong>UUID</strong>：简单但无序，影响索引性能（一般不用做主键）。</li>
+          <li>
+            <strong>UUID</strong>：简单但无序，影响索引性能（一般不用做主键）。
+          </li>
         </ul>
 
         <h3>常见中间件</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>中间件</th><th>类型</th><th>特点</th></tr></thead>
+            <thead>
+              <tr>
+                <th>中间件</th>
+                <th>类型</th>
+                <th>特点</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>ShardingSphere</td><td>框架/JDBC 层</td><td>Apache 顶级项目，生态好，Java 首选</td></tr>
-              <tr><td>MyCat</td><td>代理层</td><td>独立进程，对应用透明</td></tr>
+              <tr>
+                <td>ShardingSphere</td>
+                <td>框架/JDBC 层</td>
+                <td>Apache 顶级项目，生态好，Java 首选</td>
+              </tr>
+              <tr>
+                <td>MyCat</td>
+                <td>代理层</td>
+                <td>独立进程，对应用透明</td>
+              </tr>
             </tbody>
           </table>
         </div>
         <div class="callout warn">
           <div class="callout-title">🔔 注意</div>
-          分库分表是「<strong>最后手段</strong>」，代价很大（跨库 JOIN 难、事务变复杂、运维复杂）。先做好索引、缓存、读写分离、冷热分离，实在扛不住再分库分表。
+          分库分表是「<strong>最后手段</strong>」，代价很大（跨库 JOIN
+          难、事务变复杂、运维复杂）。先做好索引、缓存、读写分离、冷热分离，实在扛不住再分库分表。
         </div>
       </section>
 
@@ -1663,18 +2305,48 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
 
         <h3>CAP 理论</h3>
         <p>
-          分布式系统无法同时满足三者，只能三选二：<strong>C 一致性</strong>（读到的都是最新）、<strong>A 可用性</strong>（总能有响应）、<strong>P 分区容错</strong>（网络分区仍工作）。实际中 P 必须保证，于是只能在 C 和 A 之间取舍。
+          分布式系统无法同时满足三者，只能三选二：<strong>C 一致性</strong
+          >（读到的都是最新）、<strong>A 可用性</strong>（总能有响应）、<strong
+            >P 分区容错</strong
+          >（网络分区仍工作）。实际中 P 必须保证，于是只能在 C 和 A 之间取舍。
         </p>
 
         <h3>主流 NoSQL 及适用场景</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>数据库</th><th>类型</th><th>强项</th><th>典型场景</th></tr></thead>
+            <thead>
+              <tr>
+                <th>数据库</th>
+                <th>类型</th>
+                <th>强项</th>
+                <th>典型场景</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>Redis</td><td>键值 / 内存</td><td>极快、丰富数据结构、支持过期</td><td>缓存、计数器、分布式锁、排行榜</td></tr>
-              <tr><td>MongoDB</td><td>文档</td><td>Schema 灵活、JSON 友好</td><td>内容管理、日志、快速迭代业务</td></tr>
-              <tr><td>Elasticsearch</td><td>搜索</td><td>全文检索、倒排索引</td><td>搜索引擎、日志分析（ELK）</td></tr>
-              <tr><td>HBase</td><td>列族</td><td>海量数据、稀疏存储</td><td>大数据实时读写</td></tr>
+              <tr>
+                <td>Redis</td>
+                <td>键值 / 内存</td>
+                <td>极快、丰富数据结构、支持过期</td>
+                <td>缓存、计数器、分布式锁、排行榜</td>
+              </tr>
+              <tr>
+                <td>MongoDB</td>
+                <td>文档</td>
+                <td>Schema 灵活、JSON 友好</td>
+                <td>内容管理、日志、快速迭代业务</td>
+              </tr>
+              <tr>
+                <td>Elasticsearch</td>
+                <td>搜索</td>
+                <td>全文检索、倒排索引</td>
+                <td>搜索引擎、日志分析（ELK）</td>
+              </tr>
+              <tr>
+                <td>HBase</td>
+                <td>列族</td>
+                <td>海量数据、稀疏存储</td>
+                <td>大数据实时读写</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1682,13 +2354,33 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
         <h3>Redis 数据结构速览</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>类型</th><th>场景举例</th></tr></thead>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>场景举例</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>String</td><td>缓存、计数器、分布式锁</td></tr>
-              <tr><td>Hash</td><td>存对象（用户信息）</td></tr>
-              <tr><td>List</td><td>消息队列、最新消息列表</td></tr>
-              <tr><td>Set</td><td>去重、共同好友、标签</td></tr>
-              <tr><td>ZSet</td><td>排行榜、延迟队列</td></tr>
+              <tr>
+                <td>String</td>
+                <td>缓存、计数器、分布式锁</td>
+              </tr>
+              <tr>
+                <td>Hash</td>
+                <td>存对象（用户信息）</td>
+              </tr>
+              <tr>
+                <td>List</td>
+                <td>消息队列、最新消息列表</td>
+              </tr>
+              <tr>
+                <td>Set</td>
+                <td>去重、共同好友、标签</td>
+              </tr>
+              <tr>
+                <td>ZSet</td>
+                <td>排行榜、延迟队列</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1696,7 +2388,12 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
         <h3>选型口诀</h3>
         <div class="callout tip">
           <div class="callout-title">🧠 选型口诀</div>
-          <strong>事务关系型 → MySQL/PG</strong>；<strong>高并发缓存 → Redis</strong>；<strong>灵活文档 → MongoDB</strong>；<strong>全文搜索 → ES</strong>；<strong>海量分析 → 列存（ClickHouse）/Hadoop 系</strong>。大多数系统是「MySQL 主存 + Redis 缓存 + ES 搜索」的组合，而非二选一。
+          <strong>事务关系型 → MySQL/PG</strong>；<strong
+            >高并发缓存 → Redis</strong
+          >；<strong>灵活文档 → MongoDB</strong>；<strong>全文搜索 → ES</strong
+          >；<strong>海量分析 → 列存（ClickHouse）/Hadoop 系</strong
+          >。大多数系统是「MySQL 主存 + Redis 缓存 + ES
+          搜索」的组合，而非二选一。
         </div>
       </section>
 
@@ -1706,28 +2403,54 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
 
         <h3>学习路线</h3>
         <ol class="steps">
-          <li><strong>打基础</strong>：理解数据库概念、表结构、SQL 四大分类，把增删改查练熟。</li>
-          <li><strong>会查询</strong>：掌握 JOIN、子查询、聚合分组、常用函数，能写出任意业务查询。</li>
-          <li><strong>懂原理</strong>：理解索引（B+ 树）、事务（ACID、隔离级别）、锁与 MVCC。</li>
-          <li><strong>会设计</strong>：用 ER 图建模，掌握三大范式与反范式取舍。</li>
-          <li><strong>能优化</strong>：会用 EXPLAIN、慢查询日志，掌握常见优化手段。</li>
-          <li><strong>懂架构</strong>：了解主从复制、读写分离、分库分表、高可用。</li>
-          <li><strong>会选型</strong>：熟悉 Redis、MongoDB、ES 等 NoSQL，能根据业务选型。</li>
+          <li>
+            <strong>打基础</strong>：理解数据库概念、表结构、SQL
+            四大分类，把增删改查练熟。
+          </li>
+          <li>
+            <strong>会查询</strong>：掌握
+            JOIN、子查询、聚合分组、常用函数，能写出任意业务查询。
+          </li>
+          <li>
+            <strong>懂原理</strong>：理解索引（B+
+            树）、事务（ACID、隔离级别）、锁与 MVCC。
+          </li>
+          <li>
+            <strong>会设计</strong>：用 ER 图建模，掌握三大范式与反范式取舍。
+          </li>
+          <li>
+            <strong>能优化</strong>：会用
+            EXPLAIN、慢查询日志，掌握常见优化手段。
+          </li>
+          <li>
+            <strong>懂架构</strong>：了解主从复制、读写分离、分库分表、高可用。
+          </li>
+          <li>
+            <strong>会选型</strong>：熟悉 Redis、MongoDB、ES 等
+            NoSQL，能根据业务选型。
+          </li>
         </ol>
 
         <h3>实战项目建议</h3>
         <div class="card-grid">
           <div class="card">
             <h4>📋 电商订单系统</h4>
-            <p>用户、商品、订单、购物车多表建模，覆盖事务（下单扣库存）、索引优化、读写分离。</p>
+            <p>
+              用户、商品、订单、购物车多表建模，覆盖事务（下单扣库存）、索引优化、读写分离。
+            </p>
           </div>
           <div class="card">
             <h4>📈 博客/内容系统</h4>
-            <p>文章、分类、标签、评论，练习多对多关系、分页、全文搜索（接入 ES）。</p>
+            <p>
+              文章、分类、标签、评论，练习多对多关系、分页、全文搜索（接入
+              ES）。
+            </p>
           </div>
           <div class="card">
             <h4>🏆 排行榜系统</h4>
-            <p>用 Redis ZSet 做实时排行榜 + MySQL 持久化，理解缓存与数据库协作。</p>
+            <p>
+              用 Redis ZSet 做实时排行榜 + MySQL 持久化，理解缓存与数据库协作。
+            </p>
           </div>
           <div class="card">
             <h4>🔐 秒杀系统（进阶）</h4>
@@ -1747,7 +2470,9 @@ SELECT * FROM users WHERE id &gt; 1000000 ORDER BY id LIMIT 10;</code></pre>
 
         <div class="callout info">
           <div class="callout-title">💡 最后的话</div>
-          数据库是后端开发的「内功」，面试和工作中都绕不开。建议<strong>边学边动手</strong>：本地装个 MySQL，把每个知识点都用真实数据跑一遍，再结合一个完整项目把零散知识串起来，才能真正从「会写 SQL」走向「精通数据库」。
+          数据库是后端开发的「内功」，面试和工作中都绕不开。建议<strong>边学边动手</strong>：本地装个
+          MySQL，把每个知识点都用真实数据跑一遍，再结合一个完整项目把零散知识串起来，才能真正从「会写
+          SQL」走向「精通数据库」。
         </div>
       </section>
 

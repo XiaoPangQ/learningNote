@@ -514,7 +514,8 @@
         <span class="hero-badge">📚 速查手册 · 随查随用</span>
         <h1>Excel 命令大全</h1>
         <p>
-          一份拿来即用的 Excel 速查手册：8 大类 130+ 函数、9 组快捷键、6 大功能区操作命令与错误值排查表。
+          一份拿来即用的 Excel 速查手册：8 大类 130+ 函数、9 组快捷键、6
+          大功能区操作命令与错误值排查表。
           不追求讲解原理，只求「看到就能用、查了就会写」。
         </p>
         <div class="hero-meta">
@@ -527,7 +528,10 @@
       <!-- ===== Chapter 1 ===== -->
       <section class="section" id="cmd01">
         <h2><span class="num">01</span> 逻辑函数</h2>
-        <p>逻辑函数的核心是「<strong>判断</strong>」：条件成立返回什么、不成立返回什么。所有返回 TRUE / FALSE 的函数都能直接配合 IF 使用。</p>
+        <p>
+          逻辑函数的核心是「<strong>判断</strong>」：条件成立返回什么、不成立返回什么。所有返回
+          TRUE / FALSE 的函数都能直接配合 IF 使用。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -545,8 +549,15 @@
               </tr>
               <tr>
                 <td class="fn">IFS</td>
-                <td><code>IFS(条件1,值1,条件2,值2,…)</code> 多条件依次判断，替代嵌套 IF</td>
-                <td><code>=IFS(A1&gt;=90,"优",A1&gt;=80,"良",A1&gt;=60,"中","差")</code></td>
+                <td>
+                  <code>IFS(条件1,值1,条件2,值2,…)</code>
+                  多条件依次判断，替代嵌套 IF
+                </td>
+                <td>
+                  <code
+                    >=IFS(A1&gt;=90,"优",A1&gt;=80,"良",A1&gt;=60,"中","差")</code
+                  >
+                </td>
               </tr>
               <tr>
                 <td class="fn">IFERROR</td>
@@ -555,7 +566,9 @@
               </tr>
               <tr>
                 <td class="fn">IFNA</td>
-                <td><code>IFNA(公式, 值)</code> 只拦截 #N/A，其他错误照常显示</td>
+                <td>
+                  <code>IFNA(公式, 值)</code> 只拦截 #N/A，其他错误照常显示
+                </td>
                 <td><code>=IFNA(VLOOKUP(A1,B:C,2,0),"无此编号")</code></td>
               </tr>
               <tr>
@@ -575,7 +588,9 @@
               </tr>
               <tr>
                 <td class="fn">SWITCH</td>
-                <td><code>SWITCH(值, 匹配1, 结果1,…, 默认)</code> 精确匹配多分支</td>
+                <td>
+                  <code>SWITCH(值, 匹配1, 结果1,…, 默认)</code> 精确匹配多分支
+                </td>
                 <td><code>=SWITCH(A1,"A","优","B","良","其他")</code></td>
               </tr>
               <tr>
@@ -588,14 +603,20 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>IF 单条件，IFS 多条件，IFERROR 兜错误；AND 全真、OR 一真、NOT 反着来</strong>」
+          「<strong
+            >IF 单条件，IFS 多条件，IFERROR 兜错误；AND 全真、OR 一真、NOT
+            反着来</strong
+          >」
         </div>
       </section>
 
       <!-- ===== Chapter 2 ===== -->
       <section class="section" id="cmd02">
         <h2><span class="num">02</span> 数学与三角函数</h2>
-        <p>求和、取整、舍入、随机数——最常用的一族函数。重点记 <code>SUMIF / SUMIFS</code> 的参数顺序差异。</p>
+        <p>
+          求和、取整、舍入、随机数——最常用的一族函数。重点记
+          <code>SUMIF / SUMIFS</code> 的参数顺序差异。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -618,12 +639,18 @@
               </tr>
               <tr>
                 <td class="fn">SUMIFS</td>
-                <td><code>SUMIFS(求和区, 条件区1, 条件1, …)</code> 多条件求和，求和区在前</td>
+                <td>
+                  <code>SUMIFS(求和区, 条件区1, 条件1, …)</code>
+                  多条件求和，求和区在前
+                </td>
                 <td><code>=SUMIFS(C:C,A:A,"华东",B:B,"&gt;100")</code></td>
               </tr>
               <tr>
                 <td class="fn">SUMPRODUCT</td>
-                <td><code>SUMPRODUCT(数组1,数组2,…)</code> 乘积求和 / 万能多条件计数</td>
+                <td>
+                  <code>SUMPRODUCT(数组1,数组2,…)</code> 乘积求和 /
+                  万能多条件计数
+                </td>
                 <td><code>=SUMPRODUCT((A:A="华东")*(B:B&gt;100))</code></td>
               </tr>
               <tr>
@@ -688,7 +715,10 @@
               </tr>
               <tr>
                 <td class="fn">SUM 系列特殊</td>
-                <td><code>SUBTOTAL(9,区域)</code> 忽略被筛选隐藏的行求和（9=求和，109 忽略手工隐藏）</td>
+                <td>
+                  <code>SUBTOTAL(9,区域)</code>
+                  忽略被筛选隐藏的行求和（9=求和，109 忽略手工隐藏）
+                </td>
                 <td><code>=SUBTOTAL(9,A1:A100)</code></td>
               </tr>
             </tbody>
@@ -696,14 +726,22 @@
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          <strong>SUMIF 是「条件区, 条件, 求和区」，SUMIFS 是「求和区, 条件区1, 条件1, …」</strong>——带 S 的求和区打头。筛选后想「只算看得见的行」，用 <code>SUBTOTAL(9,…)</code> 别用 SUM。
+          <strong
+            >SUMIF 是「条件区, 条件, 求和区」，SUMIFS 是「求和区, 条件区1,
+            条件1, …」</strong
+          >——带 S 的求和区打头。筛选后想「只算看得见的行」，用
+          <code>SUBTOTAL(9,…)</code> 别用 SUM。
         </div>
       </section>
 
       <!-- ===== Chapter 3 ===== -->
       <section class="section" id="cmd03">
         <h2><span class="num">03</span> 统计函数</h2>
-        <p>数个数、算平均、找最大最小、排名——统计家族记牢「<strong>COUNT 数的是数字，COUNTA 数的是非空</strong>」这一条就不容易混。</p>
+        <p>
+          数个数、算平均、找最大最小、排名——统计家族记牢「<strong
+            >COUNT 数的是数字，COUNTA 数的是非空</strong
+          >」这一条就不容易混。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -751,12 +789,16 @@
               </tr>
               <tr>
                 <td class="fn">AVERAGEIFS</td>
-                <td><code>AVERAGEIFS(平均区, 条件区1, 条件1, …)</code> 多条件平均</td>
+                <td>
+                  <code>AVERAGEIFS(平均区, 条件区1, 条件1, …)</code> 多条件平均
+                </td>
                 <td><code>=AVERAGEIFS(C:C,A:A,"华东")</code></td>
               </tr>
               <tr>
                 <td class="fn">MAX / MIN</td>
-                <td><code>MAX(区域)</code> / <code>MIN(区域)</code> 最大 / 最小</td>
+                <td>
+                  <code>MAX(区域)</code> / <code>MIN(区域)</code> 最大 / 最小
+                </td>
                 <td><code>=MAX(A1:A10)</code></td>
               </tr>
               <tr>
@@ -786,7 +828,10 @@
               </tr>
               <tr>
                 <td class="fn">STDEV / VAR</td>
-                <td><code>STDEV(区域)</code> 标准差 / <code>VAR</code> 方差（离散度）</td>
+                <td>
+                  <code>STDEV(区域)</code> 标准差 /
+                  <code>VAR</code> 方差（离散度）
+                </td>
                 <td><code>=STDEV(A1:A10)</code></td>
               </tr>
               <tr>
@@ -799,14 +844,21 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>COUNT 数数字，COUNTA 数非空；IF 加在函数后就是条件版；RANK 区域要锁 $，LARGE 第几大</strong>」
+          「<strong
+            >COUNT 数数字，COUNTA 数非空；IF 加在函数后就是条件版；RANK 区域要锁
+            $，LARGE 第几大</strong
+          >」
         </div>
       </section>
 
       <!-- ===== Chapter 4 ===== -->
       <section class="section" id="cmd04">
         <h2><span class="num">04</span> 查找与引用</h2>
-        <p>面试和实战都逃不开的一族。VLOOKUP 用着最顺手，但 <code>INDEX + MATCH</code> 才是万能解，新版本还有 <code>XLOOKUP</code> 一统江湖。</p>
+        <p>
+          面试和实战都逃不开的一族。VLOOKUP 用着最顺手，但
+          <code>INDEX + MATCH</code> 才是万能解，新版本还有
+          <code>XLOOKUP</code> 一统江湖。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -819,7 +871,10 @@
             <tbody>
               <tr>
                 <td class="fn">VLOOKUP</td>
-                <td><code>VLOOKUP(查找值, 区域, 列号, 0)</code> 垂直查找，第 4 参必写 0</td>
+                <td>
+                  <code>VLOOKUP(查找值, 区域, 列号, 0)</code> 垂直查找，第 4
+                  参必写 0
+                </td>
                 <td><code>=VLOOKUP(A2,D:E,2,0)</code></td>
               </tr>
               <tr>
@@ -829,42 +884,65 @@
               </tr>
               <tr>
                 <td class="fn">XLOOKUP</td>
-                <td><code>XLOOKUP(查找值, 查找列, 返回列, [未找到值])</code> 无方向限制</td>
+                <td>
+                  <code>XLOOKUP(查找值, 查找列, 返回列, [未找到值])</code>
+                  无方向限制
+                </td>
                 <td><code>=XLOOKUP(A2,B:B,C:C,"无")</code></td>
               </tr>
               <tr>
                 <td class="fn">LOOKUP</td>
-                <td><code>LOOKUP(查找值, 查找列, 返回列)</code> 旧式查找（近似，慎用）</td>
+                <td>
+                  <code>LOOKUP(查找值, 查找列, 返回列)</code>
+                  旧式查找（近似，慎用）
+                </td>
                 <td><code>=LOOKUP(85,A:A,B:B)</code></td>
               </tr>
               <tr>
                 <td class="fn">INDEX</td>
-                <td><code>INDEX(区域, 行号, [列号])</code> 按位置取区域中的值</td>
+                <td>
+                  <code>INDEX(区域, 行号, [列号])</code> 按位置取区域中的值
+                </td>
                 <td><code>=INDEX(B2:E10,3,2)</code></td>
               </tr>
               <tr>
                 <td class="fn">MATCH</td>
-                <td><code>MATCH(查找值, 区域, 0)</code> 返回位置（第 3 参 0 = 精确）</td>
+                <td>
+                  <code>MATCH(查找值, 区域, 0)</code> 返回位置（第 3 参 0 =
+                  精确）
+                </td>
                 <td><code>=MATCH("手机",A:A,0)</code></td>
               </tr>
               <tr>
                 <td class="fn">INDEX+MATCH</td>
-                <td><code>INDEX(返回区, MATCH(查找值, 查找区, 0))</code> 万能双向查找</td>
+                <td>
+                  <code>INDEX(返回区, MATCH(查找值, 查找区, 0))</code>
+                  万能双向查找
+                </td>
                 <td><code>=INDEX(A:A,MATCH(B1,B:B,0))</code></td>
               </tr>
               <tr>
                 <td class="fn">CHOOSE</td>
                 <td><code>CHOOSE(序号, 值1, 值2, …)</code> 按下标取值</td>
-                <td><code>=CHOOSE(WEEKDAY(A1,2),"一","二","三","四","五","六","日")</code></td>
+                <td>
+                  <code
+                    >=CHOOSE(WEEKDAY(A1,2),"一","二","三","四","五","六","日")</code
+                  >
+                </td>
               </tr>
               <tr>
                 <td class="fn">INDIRECT</td>
-                <td><code>INDIRECT("引用文本")</code> 文本转引用（易失函数）</td>
+                <td>
+                  <code>INDIRECT("引用文本")</code> 文本转引用（易失函数）
+                </td>
                 <td><code>=SUM(INDIRECT("B"&amp;A1&amp;":B"&amp;A2))</code></td>
               </tr>
               <tr>
                 <td class="fn">OFFSET</td>
-                <td><code>OFFSET(基准, 行偏, 列偏, [高], [宽])</code> 动态区域（易失）</td>
+                <td>
+                  <code>OFFSET(基准, 行偏, 列偏, [高], [宽])</code>
+                  动态区域（易失）
+                </td>
                 <td><code>=SUM(OFFSET(A1,0,0,10,1))</code></td>
               </tr>
               <tr>
@@ -882,14 +960,20 @@
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          VLOOKUP 三坑：① 查找值必须在区域<strong>第一列</strong>；② 第 4 参漏写 0 会近似匹配出奇怪结果；③ 查找值或数据带<strong>空格</strong>会查不到——先 TRIM 再查。
+          VLOOKUP 三坑：① 查找值必须在区域<strong>第一列</strong>；② 第 4 参漏写
+          0 会近似匹配出奇怪结果；③
+          查找值或数据带<strong>空格</strong>会查不到——先 TRIM 再查。
         </div>
       </section>
 
       <!-- ===== Chapter 5 ===== -->
       <section class="section" id="cmd05">
         <h2><span class="num">05</span> 文本函数</h2>
-        <p>清洗和拼接文本全靠这一族。牢记「<strong>提取三剑客 LEFT / RIGHT / MID</strong>」「<strong>替换两兄弟 SUBSTITUTE / REPLACE</strong>」。</p>
+        <p>
+          清洗和拼接文本全靠这一族。牢记「<strong
+            >提取三剑客 LEFT / RIGHT / MID</strong
+          >」「<strong>替换两兄弟 SUBSTITUTE / REPLACE</strong>」。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -922,42 +1006,60 @@
               </tr>
               <tr>
                 <td class="fn">FIND</td>
-                <td><code>FIND(找什么, 在哪找, [起始])</code> 找位置（区分大小写）</td>
+                <td>
+                  <code>FIND(找什么, 在哪找, [起始])</code> 找位置（区分大小写）
+                </td>
                 <td><code>=FIND("@","a@b")</code> → 2</td>
               </tr>
               <tr>
                 <td class="fn">SEARCH</td>
-                <td><code>SEARCH(找什么, 在哪找)</code> 找位置（不区分大小写，支持通配符）</td>
+                <td>
+                  <code>SEARCH(找什么, 在哪找)</code>
+                  找位置（不区分大小写，支持通配符）
+                </td>
                 <td><code>=SEARCH("B","abc")</code> → 2</td>
               </tr>
               <tr>
                 <td class="fn">SUBSTITUTE</td>
-                <td><code>SUBSTITUTE(文本, 旧, 新, [第几次])</code> 替换全部/指定次</td>
+                <td>
+                  <code>SUBSTITUTE(文本, 旧, 新, [第几次])</code>
+                  替换全部/指定次
+                </td>
                 <td><code>=SUBSTITUTE(A1,"-","")</code> 去横杠</td>
               </tr>
               <tr>
                 <td class="fn">REPLACE</td>
-                <td><code>REPLACE(文本, 起始位, 位数, 新文本)</code> 按位置替换</td>
+                <td>
+                  <code>REPLACE(文本, 起始位, 位数, 新文本)</code> 按位置替换
+                </td>
                 <td><code>=REPLACE("13812345678",4,4,"****")</code> 脱敏</td>
               </tr>
               <tr>
                 <td class="fn">TRIM</td>
                 <td><code>TRIM(文本)</code> 去首尾及中间多余空格</td>
-                <td><code>=TRIM("  a  b  ")</code> → "a b"</td>
+                <td><code>=TRIM(" a b ")</code> → "a b"</td>
               </tr>
               <tr>
                 <td class="fn">CONCAT / CONCATENATE</td>
-                <td><code>CONCAT(文本1,文本2,…)</code> 拼接；<code>&amp;</code> 运算符更快</td>
+                <td>
+                  <code>CONCAT(文本1,文本2,…)</code> 拼接；<code>&amp;</code>
+                  运算符更快
+                </td>
                 <td><code>=A2&amp;"-"&amp;B2</code></td>
               </tr>
               <tr>
                 <td class="fn">TEXTJOIN</td>
-                <td><code>TEXTJOIN(分隔符, TRUE, 区域)</code> 用分隔符合并区域（忽略空）</td>
+                <td>
+                  <code>TEXTJOIN(分隔符, TRUE, 区域)</code>
+                  用分隔符合并区域（忽略空）
+                </td>
                 <td><code>=TEXTJOIN("、",TRUE,A1:A5)</code></td>
               </tr>
               <tr>
                 <td class="fn">TEXT</td>
-                <td><code>TEXT(值, "格式")</code> 按格式转文本（结果不可计算）</td>
+                <td>
+                  <code>TEXT(值, "格式")</code> 按格式转文本（结果不可计算）
+                </td>
                 <td><code>=TEXT(A1,"yyyy年mm月dd日")</code></td>
               </tr>
               <tr>
@@ -977,7 +1079,9 @@
               </tr>
               <tr>
                 <td class="fn">CHAR / CODE</td>
-                <td><code>CHAR(编号)</code> 编号转字符 / <code>CODE</code> 反向</td>
+                <td>
+                  <code>CHAR(编号)</code> 编号转字符 / <code>CODE</code> 反向
+                </td>
                 <td><code>=CHAR(10)</code> 换行符</td>
               </tr>
             </tbody>
@@ -985,14 +1089,21 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>LEFT 左、RIGHT 右、MID 中间；LEN 数长度；TRIM 去空格；拼接用 &amp;，TEXT 改格式</strong>」
+          「<strong
+            >LEFT 左、RIGHT 右、MID 中间；LEN 数长度；TRIM 去空格；拼接用
+            &amp;，TEXT 改格式</strong
+          >」
         </div>
       </section>
 
       <!-- ===== Chapter 6 ===== -->
       <section class="section" id="cmd06">
         <h2><span class="num">06</span> 日期与时间</h2>
-        <p>日期在 Excel 里本质是数字（1900-01-01 = 1），所以能直接加减！<code>今天 - 入职日期 = 工作天数</code>。注意 <code>TODAY()</code> 会每天变。</p>
+        <p>
+          日期在 Excel 里本质是数字（1900-01-01 = 1），所以能直接加减！<code
+            >今天 - 入职日期 = 工作天数</code
+          >。注意 <code>TODAY()</code> 会每天变。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -1025,7 +1136,9 @@
               </tr>
               <tr>
                 <td class="fn">DATEDIF</td>
-                <td><code>DATEDIF(起始, 结束, "y"|"m"|"d")</code> 间隔年/月/天</td>
+                <td>
+                  <code>DATEDIF(起始, 结束, "y"|"m"|"d")</code> 间隔年/月/天
+                </td>
                 <td><code>=DATEDIF(B2,TODAY(),"y")</code> 年龄</td>
               </tr>
               <tr>
@@ -1050,7 +1163,9 @@
               </tr>
               <tr>
                 <td class="fn">WORKDAY</td>
-                <td><code>WORKDAY(起始, 天数)</code> 加 N 个工作日（跳过周末）</td>
+                <td>
+                  <code>WORKDAY(起始, 天数)</code> 加 N 个工作日（跳过周末）
+                </td>
                 <td><code>=WORKDAY(TODAY(),10)</code></td>
               </tr>
               <tr>
@@ -1070,7 +1185,9 @@
               </tr>
               <tr>
                 <td class="fn">ISOWEEKNUM</td>
-                <td><code>ISOWEEKNUM(日期)</code> ISO 周数（周一为一周开始）</td>
+                <td>
+                  <code>ISOWEEKNUM(日期)</code> ISO 周数（周一为一周开始）
+                </td>
                 <td><code>=ISOWEEKNUM(A1)</code></td>
               </tr>
             </tbody>
@@ -1078,14 +1195,22 @@
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 避坑提示</div>
-          ① 日期被存成<strong>文本</strong>（左对齐）就不能加减了，用分列 → 日期转换；② <code>DATEDIF</code> 是隐藏函数，没有函数向导提示，但能用；③ 想输入<strong>固定</strong>的今天日期用 <code>Ctrl+;</code>，别用 TODAY()（会变）。
+          ① 日期被存成<strong>文本</strong>（左对齐）就不能加减了，用分列 →
+          日期转换；②
+          <code>DATEDIF</code> 是隐藏函数，没有函数向导提示，但能用；③
+          想输入<strong>固定</strong>的今天日期用 <code>Ctrl+;</code>，别用
+          TODAY()（会变）。
         </div>
       </section>
 
       <!-- ===== Chapter 7 ===== -->
       <section class="section" id="cmd07">
         <h2><span class="num">07</span> 数据库与信息函数</h2>
-        <p>数据库函数（D 开头）按「条件区域」统计——条件区要自己搭一个带表头的小表。信息函数（IS 开头）用来判断数据类型，常和 IF 配合做「格式体检」。</p>
+        <p>
+          数据库函数（D
+          开头）按「条件区域」统计——条件区要自己搭一个带表头的小表。信息函数（IS
+          开头）用来判断数据类型，常和 IF 配合做「格式体检」。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -1138,7 +1263,10 @@
               </tr>
               <tr>
                 <td class="fn">CELL</td>
-                <td><code>CELL("info_type", [单元格])</code> 单元格信息（格式/地址等）</td>
+                <td>
+                  <code>CELL("info_type", [单元格])</code>
+                  单元格信息（格式/地址等）
+                </td>
                 <td><code>=CELL("address")</code></td>
               </tr>
               <tr>
@@ -1161,14 +1289,19 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>D 开头按条件区统计，条件区要带表头；IS 开头做体检，配上 IF 自动判</strong>」
+          「<strong
+            >D 开头按条件区统计，条件区要带表头；IS 开头做体检，配上 IF
+            自动判</strong
+          >」
         </div>
       </section>
 
       <!-- ===== Chapter 8 ===== -->
       <section class="section" id="cmd08">
         <h2><span class="num">08</span> 财务函数</h2>
-        <p>算房贷、算投资回报的专用函数。记住<strong>现金流符号约定：流出为负、流入为正</strong>，参数就能摆对。</p>
+        <p>
+          算房贷、算投资回报的专用函数。记住<strong>现金流符号约定：流出为负、流入为正</strong>，参数就能摆对。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -1181,17 +1314,23 @@
             <tbody>
               <tr>
                 <td class="fn">PMT</td>
-                <td><code>PMT(利率, 期数, 现值)</code> 等额还款额（房贷月供）</td>
+                <td>
+                  <code>PMT(利率, 期数, 现值)</code> 等额还款额（房贷月供）
+                </td>
                 <td><code>=PMT(4.9%/12, 360, 1000000)</code> 月供</td>
               </tr>
               <tr>
                 <td class="fn">FV</td>
-                <td><code>FV(利率, 期数, 每期投入)</code> 终值（定投未来值）</td>
+                <td>
+                  <code>FV(利率, 期数, 每期投入)</code> 终值（定投未来值）
+                </td>
                 <td><code>=FV(5%/12, 120, -1000)</code></td>
               </tr>
               <tr>
                 <td class="fn">PV</td>
-                <td><code>PV(利率, 期数, 每期回收)</code> 现值（反推现在值多少）</td>
+                <td>
+                  <code>PV(利率, 期数, 每期回收)</code> 现值（反推现在值多少）
+                </td>
                 <td><code>=PV(5%, 10, -10000)</code></td>
               </tr>
               <tr>
@@ -1201,7 +1340,9 @@
               </tr>
               <tr>
                 <td class="fn">NPER</td>
-                <td><code>NPER(利率, 每期, 现值)</code> 反推期数（多久还完）</td>
+                <td>
+                  <code>NPER(利率, 每期, 现值)</code> 反推期数（多久还完）
+                </td>
                 <td><code>=NPER(1%, -1000, 50000)</code></td>
               </tr>
               <tr>
@@ -1211,7 +1352,9 @@
               </tr>
               <tr>
                 <td class="fn">NPV</td>
-                <td><code>NPV(折现率, 现金流)</code> 净现值（&gt;0 项目可行）</td>
+                <td>
+                  <code>NPV(折现率, 现金流)</code> 净现值（&gt;0 项目可行）
+                </td>
                 <td><code>=NPV(10%, B2:B10)</code></td>
               </tr>
               <tr>
@@ -1234,14 +1377,20 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>PMT 月供、FV 未来、PV 现值、RATE 反推利率；IRR 看项目回报，现金流流出记负</strong>」
+          「<strong
+            >PMT 月供、FV 未来、PV 现值、RATE 反推利率；IRR
+            看项目回报，现金流流出记负</strong
+          >」
         </div>
       </section>
 
       <!-- ===== Chapter 9 ===== -->
       <section class="section" id="cmd09">
         <h2><span class="num">09</span> 快捷键大全</h2>
-        <p>效率的尽头是键盘。按功能分组整理，标 ★ 的是「<strong>每天都要用</strong>」的。</p>
+        <p>
+          效率的尽头是键盘。按功能分组整理，标 ★
+          的是「<strong>每天都要用</strong>」的。
+        </p>
 
         <h3>Ctrl 系（编辑与导航）</h3>
         <div class="table-wrap">
@@ -1442,14 +1591,19 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>Ctrl+1 格式、Ctrl+Shift+L 筛选、Alt+= 求和、Alt+; 只选可见、F4 引用切换、F9 重算</strong>」——这六招先背熟，效率立涨一半。
+          「<strong
+            >Ctrl+1 格式、Ctrl+Shift+L 筛选、Alt+= 求和、Alt+; 只选可见、F4
+            引用切换、F9 重算</strong
+          >」——这六招先背熟，效率立涨一半。
         </div>
       </section>
 
       <!-- ===== Chapter 10 ===== -->
       <section class="section" id="cmd10">
         <h2><span class="num">10</span> 数据功能区命令</h2>
-        <p>「数据」选项卡是数据处理的指挥中心，下面是每个命令的用途与使用时机。</p>
+        <p>
+          「数据」选项卡是数据处理的指挥中心，下面是每个命令的用途与使用时机。
+        </p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -1463,7 +1617,9 @@
               <tr>
                 <td class="fn">分列</td>
                 <td>数据 → 分列</td>
-                <td>一列拆多列；治文本型数字、日期乱码（按分隔符 / 固定宽度）</td>
+                <td>
+                  一列拆多列；治文本型数字、日期乱码（按分隔符 / 固定宽度）
+                </td>
               </tr>
               <tr>
                 <td class="fn">删除重复项</td>
@@ -1483,7 +1639,9 @@
               <tr>
                 <td class="fn">模拟分析</td>
                 <td>数据 → 模拟分析</td>
-                <td>单变量求解（倒推值）、模拟运算表（假设矩阵）、方案管理器</td>
+                <td>
+                  单变量求解（倒推值）、模拟运算表（假设矩阵）、方案管理器
+                </td>
               </tr>
               <tr>
                 <td class="fn">预测工作表</td>
@@ -1498,7 +1656,9 @@
               <tr>
                 <td class="fn">数据验证</td>
                 <td>数据 → 数据验证</td>
-                <td>限制输入（下拉列表、数值范围、自定义公式）；圈释无效数据</td>
+                <td>
+                  限制输入（下拉列表、数值范围、自定义公式）；圈释无效数据
+                </td>
               </tr>
               <tr>
                 <td class="fn">分类汇总</td>
@@ -1530,14 +1690,20 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>分列治乱、去重防错、高级筛选带条件；验证限输入、模拟分析倒推值、PQ 洗数据</strong>」
+          「<strong
+            >分列治乱、去重防错、高级筛选带条件；验证限输入、模拟分析倒推值、PQ
+            洗数据</strong
+          >」
         </div>
       </section>
 
       <!-- ===== Chapter 11 ===== -->
       <section class="section" id="cmd11">
         <h2><span class="num">11</span> 数据透视表命令</h2>
-        <p>透视表是 Excel 的「报表发动机」。下面按「建表 → 配置 → 维护」三个阶段列命令。</p>
+        <p>
+          透视表是 Excel 的「报表发动机」。下面按「建表 → 配置 →
+          维护」三个阶段列命令。
+        </p>
 
         <h3>建表与字段配置</h3>
         <div class="table-wrap">
@@ -1686,18 +1852,25 @@
               </tr>
               <tr>
                 <td class="fn">图表另存模板</td>
-                <td>右键图表 → 另存为模板（.crtx）→ 之后 图表 → 模板 一键复用</td>
+                <td>
+                  右键图表 → 另存为模板（.crtx）→ 之后 图表 → 模板 一键复用
+                </td>
               </tr>
               <tr>
                 <td class="fn">条件格式</td>
-                <td>开始 → 条件格式 → 数据条/色阶/图标集/突出显示（比图表更轻量）</td>
+                <td>
+                  开始 → 条件格式 → 数据条/色阶/图标集/突出显示（比图表更轻量）
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>Alt+F1 秒出图，右上角 + 加元素；组合图双轴，迷你图塞格子；趋势线看走势</strong>」
+          「<strong
+            >Alt+F1 秒出图，右上角 +
+            加元素；组合图双轴，迷你图塞格子；趋势线看走势</strong
+          >」
         </div>
       </section>
 
@@ -1853,9 +2026,18 @@
 
         <h3>公式排查三板斧</h3>
         <ol class="steps">
-          <li><strong>Ctrl+` 切公式视图</strong>：一眼看到哪些格是公式、哪些是硬编码，公式异常一目了然</li>
-          <li><strong>公式求值</strong>：公式 → 公式求值 → 逐步看每步计算结果，定位出错的那一步</li>
-          <li><strong>追踪引用</strong>：公式 → 追踪引用单元格 → 箭头画出上下游，检查被引用的格子是否正常</li>
+          <li>
+            <strong>Ctrl+` 切公式视图</strong
+            >：一眼看到哪些格是公式、哪些是硬编码，公式异常一目了然
+          </li>
+          <li>
+            <strong>公式求值</strong>：公式 → 公式求值 →
+            逐步看每步计算结果，定位出错的那一步
+          </li>
+          <li>
+            <strong>追踪引用</strong>：公式 → 追踪引用单元格 →
+            箭头画出上下游，检查被引用的格子是否正常
+          </li>
         </ol>
 
         <h3>易失函数与性能警告</h3>
@@ -1900,17 +2082,23 @@
 
         <div class="callout danger">
           <div class="callout-title">🚨 循环引用红线</div>
-          公式引用了自己（A1 里写 <code>=A1+1</code>），Excel 会提示循环引用警告并陷入死循环计算。<strong>除非刻意做迭代计算，否则一律禁止</strong>——状态栏左下角会显示「循环引用: A1」，点它直达问题单元格。
+          公式引用了自己（A1 里写 <code>=A1+1</code>），Excel
+          会提示循环引用警告并陷入死循环计算。<strong>除非刻意做迭代计算，否则一律禁止</strong>——状态栏左下角会显示「循环引用:
+          A1」，点它直达问题单元格。
         </div>
 
         <div class="callout tip">
           <div class="callout-title">🧠 速记口诀</div>
-          「<strong>#DIV/0! 查分母、#N/A 查查找、#VALUE! 查类型、#REF! 查删除；Ctrl+` 看公式、求值看步骤、追踪看箭头</strong>」
+          「<strong
+            >#DIV/0! 查分母、#N/A 查查找、#VALUE! 查类型、#REF! 查删除；Ctrl+`
+            看公式、求值看步骤、追踪看箭头</strong
+          >」
         </div>
       </section>
 
       <footer class="footer">
-        Excel 命令大全 · 速查手册 | 130+ 函数 · 80+ 快捷键 · 14 大分类 | 配合《Excel 从入门到精通》学习笔记使用更佳
+        Excel 命令大全 · 速查手册 | 130+ 函数 · 80+ 快捷键 · 14 大分类 |
+        配合《Excel 从入门到精通》学习笔记使用更佳
       </footer>
     </main>
 
@@ -1956,5 +2144,3 @@
     </script>
   </body>
 </html>
-
-

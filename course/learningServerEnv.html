@@ -631,8 +631,8 @@
         <span class="hero-badge">🚀 实战指南 · 跟着做就能成</span>
         <h1>云服务器项目环境配置实战指南</h1>
         <p>
-          部署不同语言项目前的环境配置全流程：从 SSH 连接、系统初始化，到
-          Python / Node.js / Java / Go 各语言环境安装，再到 Nginx
+          部署不同语言项目前的环境配置全流程：从 SSH 连接、系统初始化，到 Python
+          / Node.js / Java / Go 各语言环境安装，再到 Nginx
           反代与进程守护。每一步都附常见问题与解决方法。
         </p>
         <div class="hero-meta">
@@ -650,14 +650,16 @@
         <h3>为什么部署总卡在"环境配置"</h3>
         <p>
           新买一台云服务器，把代码传上去直接运行——十有八九会失败。因为服务器是一个
-          <strong>裸的 Linux 系统</strong>：没有你项目的运行时（Python /
-          Node / JDK）、没有依赖包、没有编译工具，甚至 SSH
+          <strong>裸的 Linux 系统</strong>：没有你项目的运行时（Python / Node /
+          JDK）、没有依赖包、没有编译工具，甚至 SSH
           都可能连不上（安全组没放行端口）。
         </p>
         <p>
           环境配置的本质，就是按顺序回答四个问题：
-          <strong>能不能连上 → 系统是否可用 → 语言运行时是否就绪 →
-          服务能否常驻运行</strong>。
+          <strong
+            >能不能连上 → 系统是否可用 → 语言运行时是否就绪 →
+            服务能否常驻运行</strong
+          >。
         </p>
 
         <h3>整体路线图</h3>
@@ -743,7 +745,9 @@
 
         <div class="callout info">
           <div class="callout-title">📌 本指南约定</div>
-          命令以 <strong>Ubuntu 22.04 / 24.04</strong>（阿里云、腾讯云、华为云默认镜像均适用）为准，CentOS / Alma
+          命令以
+          <strong>Ubuntu 22.04 / 24.04</strong
+          >（阿里云、腾讯云、华为云默认镜像均适用）为准，CentOS / Alma
           差异会单独标注。看到 <code>sudo</code> 开头的命令都在服务器上执行。
         </div>
       </section>
@@ -754,8 +758,8 @@
 
         <h3>2.1 第一次连接</h3>
         <p>
-          买完服务器，在控制台拿到 <strong>公网 IP</strong> 和 <strong>root
-          密码</strong>（或自定义密码）。然后：
+          买完服务器，在控制台拿到 <strong>公网 IP</strong> 和
+          <strong>root 密码</strong>（或自定义密码）。然后：
         </p>
         <div class="code-wrap">
           <pre><code><span class="comment"># macOS / Linux / Windows 10+ 自带终端都可以直接用</span>
@@ -769,8 +773,8 @@
 
         <div class="callout tip">
           <div class="callout-title">💡 Windows 用户</div>
-          PowerShell 和 CMD 都自带 ssh 命令。想图形化管理可以用
-          FinalShell / XShell / MobaXterm，但建议先练熟命令行，排障时只有命令行永远靠得住。
+          PowerShell 和 CMD 都自带 ssh 命令。想图形化管理可以用 FinalShell /
+          XShell / MobaXterm，但建议先练熟命令行，排障时只有命令行永远靠得住。
         </div>
 
         <h3>2.2 配置密钥登录（强烈推荐）</h3>
@@ -792,9 +796,7 @@
         </div>
 
         <h3>2.3 创建日常使用用户（可选但推荐）</h3>
-        <p>
-          长期直接用 root 裸奔有风险，日常建议用普通用户 + sudo：
-        </p>
+        <p>长期直接用 root 裸奔有风险，日常建议用普通用户 + sudo：</p>
         <div class="code-wrap">
           <pre><code><span class="cmd">adduser</span> deploy                        <span class="comment"># 按提示设置密码，其他信息一路回车</span>
 <span class="cmd">usermod</span> <span class="flag">-aG</span> sudo deploy              <span class="comment"># 加入 sudo 组</span>
@@ -834,7 +836,8 @@
                 <td>服务器上 sshd 没在运行，或端口被改过</td>
                 <td>
                   通过控制台 VNC 登录 →
-                  <code>systemctl status ssh</code> → <code>systemctl start ssh</code>
+                  <code>systemctl status ssh</code> →
+                  <code>systemctl start ssh</code>
                 </td>
               </tr>
               <tr>
@@ -856,7 +859,8 @@
                 <td>安全组没同步放行新端口</td>
                 <td>
                   安全组先放行新端口<strong>再</strong>改 sshd 配置，改完
-                  <code>systemctl restart ssh</code>，并保持旧会话不退出直到确认新端口可用
+                  <code>systemctl restart ssh</code
+                  >，并保持旧会话不退出直到确认新端口可用
                 </td>
               </tr>
             </tbody>
@@ -865,7 +869,10 @@
 
         <div class="callout danger">
           <div class="callout-title">⚠️ 改 SSH 配置的保命习惯</div>
-          改 <code>/etc/ssh/sshd_config</code> 前，<strong>保持当前窗口不要退出</strong>，改完先用新开一个窗口验证能登录，再关闭旧窗口。否则一旦配置写错，你会把自己锁在门外，只能靠控制台 VNC 救援。
+          改
+          <code>/etc/ssh/sshd_config</code>
+          前，<strong>保持当前窗口不要退出</strong>，改完先用新开一个窗口验证能登录，再关闭旧窗口。否则一旦配置写错，你会把自己锁在门外，只能靠控制台
+          VNC 救援。
         </div>
       </section>
 
@@ -955,7 +962,10 @@
               <tr>
                 <td>端口是否在监听</td>
                 <td><code>ss -tlnp</code></td>
-                <td>看应用是否监听 <code>0.0.0.0</code> 而非 <code>127.0.0.1</code></td>
+                <td>
+                  看应用是否监听 <code>0.0.0.0</code> 而非
+                  <code>127.0.0.1</code>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -963,15 +973,15 @@
 
         <div class="callout warn">
           <div class="callout-title">⚠️ 端口不通排查口诀</div>
-          外网访问不通时按顺序查三层：<strong>安全组放了吗 → 防火墙拦了吗 → 应用监听
-          0.0.0.0 了吗</strong>。90% 的"端口不通"是第一层，9% 是第三层（应用只监听了
-          127.0.0.1）。
+          外网访问不通时按顺序查三层：<strong
+            >安全组放了吗 → 防火墙拦了吗 → 应用监听 0.0.0.0 了吗</strong
+          >。90% 的"端口不通"是第一层，9% 是第三层（应用只监听了 127.0.0.1）。
         </div>
 
         <h3>3.5 小内存服务器加 swap（2G 以下必做）</h3>
         <p>
-          1G/2G 内存的机器在安装依赖（如 npm install、pip
-          编译）时容易被内核 OOM 杀掉。加一块交换空间当缓冲：
+          1G/2G 内存的机器在安装依赖（如 npm install、pip 编译）时容易被内核 OOM
+          杀掉。加一块交换空间当缓冲：
         </p>
         <div class="code-wrap">
           <pre><code><span class="comment"># 创建 2G swap 文件</span>
@@ -1002,7 +1012,8 @@
                 <td><code>E: Could not get lock /var/lib/apt/lists</code></td>
                 <td>另一个 apt 进程在运行（如自动更新）</td>
                 <td>
-                  等一分钟；或 <code>sudo rm /var/lib/apt/lists/lock</code> 后重试
+                  等一分钟；或
+                  <code>sudo rm /var/lib/apt/lists/lock</code> 后重试
                 </td>
               </tr>
               <tr>
@@ -1014,7 +1025,8 @@
                 <td>磁盘莫名被占满</td>
                 <td>日志膨胀 / apt 缓存堆积</td>
                 <td>
-                  <code>df -h</code> 看分区 → <code>sudo du -sh /var/log/*</code> 找大头 →
+                  <code>df -h</code> 看分区 →
+                  <code>sudo du -sh /var/log/*</code> 找大头 →
                   <code>sudo apt clean</code>
                 </td>
               </tr>
@@ -1030,7 +1042,8 @@
         <h3>4.1 铁律：不要动系统自带的 Python</h3>
         <p>
           Ubuntu 的 <code>apt</code>、<code>cloud-init</code>
-          等系统工具依赖自带 Python。卸载或强制升级它会直接把系统搞崩。正确姿势：
+          等系统工具依赖自带
+          Python。卸载或强制升级它会直接把系统搞崩。正确姿势：
           <strong>系统 Python 只当底座，项目用虚拟环境隔离</strong>。
         </p>
 
@@ -1119,12 +1132,10 @@ pip install fastapi uvicorn
             <tbody>
               <tr>
                 <td><code>externally-managed-environment</code></td>
+                <td>Ubuntu 23.04+ 启用 PEP 668，禁止直接往系统 Python 装包</td>
                 <td>
-                  Ubuntu 23.04+ 启用 PEP 668，禁止直接往系统 Python 装包
-                </td>
-                <td>
-                  这是保护机制不是故障。正确做法：进 venv
-                  或 conda 环境再 pip install。<strong>不要</strong>用
+                  这是保护机制不是故障。正确做法：进 venv 或 conda 环境再 pip
+                  install。<strong>不要</strong>用
                   <code>--break-system-packages</code> 绕过
                 </td>
               </tr>
@@ -1135,7 +1146,11 @@ pip install fastapi uvicorn
                 </td>
                 <td>编译型依赖（如 psycopg2、cryptography）缺编译器或头文件</td>
                 <td>
-                  <code>sudo apt install build-essential python3-dev libssl-dev</code> 后重装
+                  <code
+                    >sudo apt install build-essential python3-dev
+                    libssl-dev</code
+                  >
+                  后重装
                 </td>
               </tr>
               <tr>
@@ -1162,8 +1177,8 @@ pip install fastapi uvicorn
                 <td>安装 MySQL 客户端包失败</td>
                 <td>缺 mysql 头文件</td>
                 <td>
-                  <code>sudo apt install default-libmysqlclient-dev</code>（或改用
-                  PyMySQL 纯 Python 实现）
+                  <code>sudo apt install default-libmysqlclient-dev</code
+                  >（或改用 PyMySQL 纯 Python 实现）
                 </td>
               </tr>
             </tbody>
@@ -1177,8 +1192,10 @@ pip install fastapi uvicorn
 
         <h3>5.1 为什么不用 apt 装 Node</h3>
         <p>
-          <code>apt install nodejs</code> 装到的版本又旧又难以升级，多项目还会遇到版本冲突。生产推荐
-          <strong>nvm（Node 版本管理器）</strong>：一个用户空间内自由切换 Node 版本，卸载干净。
+          <code>apt install nodejs</code>
+          装到的版本又旧又难以升级，多项目还会遇到版本冲突。生产推荐
+          <strong>nvm（Node 版本管理器）</strong>：一个用户空间内自由切换 Node
+          版本，卸载干净。
         </p>
 
         <h3>5.2 安装 nvm + Node</h3>
@@ -1216,8 +1233,8 @@ npm config get registry</code></pre>
 
         <h3>5.4 安装 pm2 守护进程</h3>
         <p>
-          Node 程序崩了就没了、SSH 断开也会退出。pm2
-          解决"常驻运行 + 崩溃自动重启 + 开机自启"三件事：
+          Node 程序崩了就没了、SSH 断开也会退出。pm2 解决"常驻运行 +
+          崩溃自动重启 + 开机自启"三件事：
         </p>
         <div class="code-wrap">
           <pre><code><span class="cmd">npm</span> install <span class="flag">-g</span> pm2
@@ -1269,26 +1286,32 @@ EOF
                 </td>
                 <td>内存不足（1G/2G 服务器常见）</td>
                 <td>
-                  加 swap（见 3.5）；或临时扩堆：<code>export NODE_OPTIONS=--max-old-space-size=1536</code>
+                  加 swap（见 3.5）；或临时扩堆：<code
+                    >export NODE_OPTIONS=--max-old-space-size=1536</code
+                  >
                 </td>
               </tr>
               <tr>
                 <td><code>gyp ERR! stack Error: not found: python3</code></td>
                 <td>原生模块（node-sass、sharp 等）需要编译环境</td>
                 <td>
-                  <code>sudo apt install build-essential python3</code>；node-sass
-                  已淘汰，尽量换 Dart Sass
+                  <code>sudo apt install build-essential python3</code
+                  >；node-sass 已淘汰，尽量换 Dart Sass
                 </td>
               </tr>
               <tr>
                 <td>SSH 断开程序就停了</td>
                 <td>进程挂靠在 SSH 会话上</td>
-                <td>用 pm2 启动；临时调试可用 <code>nohup node app.js &</code></td>
+                <td>
+                  用 pm2 启动；临时调试可用 <code>nohup node app.js &</code>
+                </td>
               </tr>
               <tr>
                 <td>重启服务器后 pm2 应用没了</td>
                 <td>没执行开机自启配置</td>
-                <td><code>pm2 save</code> + <code>pm2 startup</code>（见 5.4）</td>
+                <td>
+                  <code>pm2 save</code> + <code>pm2 startup</code>（见 5.4）
+                </td>
               </tr>
               <tr>
                 <td><code>npm ERR! code EACCES</code> 权限错误</td>
@@ -1303,7 +1326,10 @@ EOF
                 <td>多项目共用一个 Node</td>
                 <td>
                   每个项目目录 <code>nvm use 18</code>；pm2 启动时用
-                  <code>pm2 start app.js --interpreter ~/.nvm/versions/node/v18.20.0/bin/node</code>
+                  <code
+                    >pm2 start app.js --interpreter
+                    ~/.nvm/versions/node/v18.20.0/bin/node</code
+                  >
                 </td>
               </tr>
             </tbody>
@@ -1317,8 +1343,8 @@ EOF
 
         <h3>6.1 安装 JDK</h3>
         <p>
-          Java 环境在服务器上只需要<strong>运行时</strong>。Spring Boot
-          项目推荐 JDK 17 / 21（LTS 版本）：
+          Java 环境在服务器上只需要<strong>运行时</strong>。Spring Boot 项目推荐
+          JDK 17 / 21（LTS 版本）：
         </p>
         <div class="code-wrap">
           <pre><code><span class="comment"># 安装 OpenJDK 17（LTS）</span>
@@ -1335,7 +1361,10 @@ EOF
 
         <div class="callout info">
           <div class="callout-title">📌 部署策略建议</div>
-          Java 的最佳实践是<strong>本地/CI 用 Maven 打好 jar 包，只把 jar 传上服务器运行</strong>。服务器上只装 JRE 就够，能避免在服务器上配 Maven、下载依赖等一堆麻烦。
+          Java 的最佳实践是<strong
+            >本地/CI 用 Maven 打好 jar 包，只把 jar 传上服务器运行</strong
+          >。服务器上只装 JRE 就够，能避免在服务器上配
+          Maven、下载依赖等一堆麻烦。
         </div>
 
         <h3>6.2 需要在服务器构建时：安装 Maven + 换源</h3>
@@ -1404,19 +1433,20 @@ EOF
                 </td>
               </tr>
               <tr>
-                <td>
-                  程序里时间和北京时间差 8 小时
-                </td>
+                <td>程序里时间和北京时间差 8 小时</td>
                 <td>JVM 时区默认 UTC</td>
                 <td>
-                  启动参数加 <code>-Duser.timezone=Asia/Shanghai</code>，并确认系统时区已设置（3.2）
+                  启动参数加
+                  <code>-Duser.timezone=Asia/Shanghai</code
+                  >，并确认系统时区已设置（3.2）
                 </td>
               </tr>
               <tr>
                 <td>启动即被杀 / <code>Cannot allocate memory</code></td>
                 <td>JVM 默认按物理内存 1/4 要堆，超出限制</td>
                 <td>
-                  显式限制 <code>-Xmx</code>；1G 机器建议 <code>-Xmx512m</code> 起步
+                  显式限制 <code>-Xmx</code>；1G 机器建议
+                  <code>-Xmx512m</code> 起步
                 </td>
               </tr>
               <tr>
@@ -1451,9 +1481,7 @@ EOF
         <h2><span class="num">07</span> Go 项目环境</h2>
 
         <h3>7.1 安装 Go（官方 tar.gz 方式）</h3>
-        <p>
-          apt 源里的 Go 版本偏旧，推荐直接装官方二进制包：
-        </p>
+        <p>apt 源里的 Go 版本偏旧，推荐直接装官方二进制包：</p>
         <div class="code-wrap">
           <pre><code><span class="comment"># ① 下载（国内用 golang.google.cn 镜像，版本号按需替换）</span>
 <span class="cmd">wget</span> https://golang.google.cn/dl/go1.22.5.linux-amd64.tar.gz
@@ -1497,8 +1525,9 @@ EOF
 
         <div class="callout tip">
           <div class="callout-title">💡 Go 部署的最大优势</div>
-          Go 编译出的是<strong>静态单文件二进制</strong>，服务器上可以完全不装 Go
-          环境——本地交叉编译后 scp 上去直接跑。这也是它被称为"部署最省心的语言"的原因。
+          Go 编译出的是<strong>静态单文件二进制</strong>，服务器上可以完全不装
+          Go 环境——本地交叉编译后 scp
+          上去直接跑。这也是它被称为"部署最省心的语言"的原因。
         </div>
 
         <h3>7.4 Go 环境常见问题</h3>
@@ -1515,27 +1544,35 @@ EOF
               <tr>
                 <td><code>go: command not found</code></td>
                 <td>PATH 没生效</td>
-                <td><code>source ~/.profile</code>；重开 SSH；检查写入的路径拼写</td>
+                <td>
+                  <code>source ~/.profile</code>；重开 SSH；检查写入的路径拼写
+                </td>
               </tr>
               <tr>
                 <td>
                   <code>dial tcp: lookup proxy.golang.org: timeout</code>
                 </td>
                 <td>默认模块代理被墙</td>
-                <td><code>go env -w GOPROXY=https://goproxy.cn,direct</code></td>
+                <td>
+                  <code>go env -w GOPROXY=https://goproxy.cn,direct</code>
+                </td>
               </tr>
               <tr>
                 <td>升级 Go 后版本没变</td>
                 <td>旧版本没删除，PATH 里命中旧的</td>
                 <td>
-                  <code>sudo rm -rf /usr/local/go</code> 再解压新版；<code>which go</code> 查实际路径
+                  <code>sudo rm -rf /usr/local/go</code> 再解压新版；<code
+                    >which go</code
+                  >
+                  查实际路径
                 </td>
               </tr>
               <tr>
                 <td>CGO 相关编译报错</td>
                 <td>依赖了 C 库</td>
                 <td>
-                  装 build-essential，或干脆 <code>CGO_ENABLED=0</code> 编译纯静态
+                  装 build-essential，或干脆
+                  <code>CGO_ENABLED=0</code> 编译纯静态
                 </td>
               </tr>
             </tbody>
@@ -1709,12 +1746,17 @@ npm run build
                 <td><code>502 Bad Gateway</code></td>
                 <td>后端应用没起来 / 崩了</td>
                 <td>
-                  先 <code>curl 127.0.0.1:8000</code> 确认应用活着；看应用日志（pm2 logs / journalctl）
+                  先
+                  <code>curl 127.0.0.1:8000</code> 确认应用活着；看应用日志（pm2
+                  logs / journalctl）
                 </td>
               </tr>
               <tr>
                 <td>502 且应用确实在跑</td>
-                <td>应用监听的是 <code>127.0.0.1</code> 之外的错误地址，或用了 IPv6</td>
+                <td>
+                  应用监听的是 <code>127.0.0.1</code> 之外的错误地址，或用了
+                  IPv6
+                </td>
                 <td>
                   <code>ss -tlnp</code> 核对实际监听地址与 proxy_pass 完全一致
                 </td>
@@ -1725,8 +1767,8 @@ npm run build
                 </td>
                 <td>80 端口被占（另一个 nginx / Apache）</td>
                 <td>
-                  <code>sudo ss -tlnp | grep :80</code> 找到占用者；
-                  Apache 用 <code>sudo systemctl disable --now apache2</code>
+                  <code>sudo ss -tlnp | grep :80</code> 找到占用者； Apache 用
+                  <code>sudo systemctl disable --now apache2</code>
                 </td>
               </tr>
               <tr>
@@ -1761,8 +1803,10 @@ npm run build
         <h3>10.1 为什么不用 nohup</h3>
         <p>
           <code>nohup java -jar app.jar &</code>
-          能让进程在你断开 SSH 后存活，但服务器<strong>重启后不会自动拉起</strong>，崩溃了也没人管。systemd
-          是 Linux 自带的服务管理器，一条配置同时解决：开机自启、崩溃重启、日志收集。
+          能让进程在你断开 SSH
+          后存活，但服务器<strong>重启后不会自动拉起</strong>，崩溃了也没人管。systemd
+          是 Linux
+          自带的服务管理器，一条配置同时解决：开机自启、崩溃重启、日志收集。
         </p>
 
         <h3>10.2 通用服务模板（以 Java 为例）</h3>
@@ -1797,25 +1841,39 @@ WantedBy=multi-user.target</code></pre>
               <tr>
                 <td>Python (FastAPI)</td>
                 <td>
-                  <code>ExecStart=/opt/myapp/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000</code>
+                  <code
+                    >ExecStart=/opt/myapp/venv/bin/uvicorn main:app --host
+                    0.0.0.0 --port 8000</code
+                  >
                 </td>
               </tr>
               <tr>
                 <td>Python (Flask + Gunicorn)</td>
                 <td>
-                  <code>ExecStart=/opt/myapp/venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 app:app</code>
+                  <code
+                    >ExecStart=/opt/myapp/venv/bin/gunicorn -w 4 -b 0.0.0.0:8000
+                    app:app</code
+                  >
                 </td>
               </tr>
               <tr>
                 <td>Node</td>
                 <td>
-                  <code>ExecStart=/home/deploy/.nvm/versions/node/v20.15.0/bin/node /opt/myapp/app.js</code>
+                  <code
+                    >ExecStart=/home/deploy/.nvm/versions/node/v20.15.0/bin/node
+                    /opt/myapp/app.js</code
+                  >
                   <br />（Node 项目也可直接用 pm2，不必写 systemd）
                 </td>
               </tr>
               <tr>
                 <td>Java</td>
-                <td><code>ExecStart=/usr/bin/java -Xmx512m -jar /opt/myapp/myapp.jar</code></td>
+                <td>
+                  <code
+                    >ExecStart=/usr/bin/java -Xmx512m -jar
+                    /opt/myapp/myapp.jar</code
+                  >
+                </td>
               </tr>
               <tr>
                 <td>Go</td>
@@ -1827,8 +1885,12 @@ WantedBy=multi-user.target</code></pre>
 
         <div class="callout warn">
           <div class="callout-title">⚠️ ExecStart 必须写绝对路径</div>
-          systemd 启动服务时不加载你的 <code>.bashrc</code>/<code>.profile</code>，PATH
-          很精简。Python 虚拟环境、nvm 里的 node 都要用<strong>完整绝对路径</strong>（<code>which uvicorn</code> 查出来抄）。
+          systemd 启动服务时不加载你的
+          <code>.bashrc</code>/<code>.profile</code>，PATH 很精简。Python
+          虚拟环境、nvm 里的 node 都要用<strong>完整绝对路径</strong>（<code
+            >which uvicorn</code
+          >
+          查出来抄）。
         </div>
 
         <h3>10.4 服务管理命令</h3>
@@ -1856,9 +1918,7 @@ WantedBy=multi-user.target</code></pre>
               <tr>
                 <td>status 显示 <code>failed</code>（红）</td>
                 <td>ExecStart 路径错 / 配置文件语法错</td>
-                <td>
-                  <code>sudo journalctl -xeu myapp</code> 看具体报错行
-                </td>
+                <td><code>sudo journalctl -xeu myapp</code> 看具体报错行</td>
               </tr>
               <tr>
                 <td>手动能跑，服务起不来</td>
@@ -1889,15 +1949,30 @@ WantedBy=multi-user.target</code></pre>
 
         <h3>11.1 部署完成验证清单</h3>
         <ol class="steps">
-          <li><strong>本机自测</strong>：<code>curl 127.0.0.1:应用端口</code> 有响应</li>
-          <li><strong>进程守护</strong>：<code>systemctl status</code> 或 <code>pm2 list</code> 显示 active</li>
-          <li><strong>开机自启</strong>：<code>systemctl is-enabled myapp</code> 返回 enabled（pm2 为已执行 save + startup）</li>
-          <li><strong>Nginx 生效</strong>：<code>sudo nginx -t</code> 显示 ok 且已 reload</li>
+          <li>
+            <strong>本机自测</strong>：<code>curl 127.0.0.1:应用端口</code>
+            有响应
+          </li>
+          <li>
+            <strong>进程守护</strong>：<code>systemctl status</code> 或
+            <code>pm2 list</code> 显示 active
+          </li>
+          <li>
+            <strong>开机自启</strong>：<code>systemctl is-enabled myapp</code>
+            返回 enabled（pm2 为已执行 save + startup）
+          </li>
+          <li>
+            <strong>Nginx 生效</strong>：<code>sudo nginx -t</code> 显示 ok 且已
+            reload
+          </li>
           <li>
             <strong>外网可达</strong>：浏览器访问 <code>http://服务器IP</code>
             能打开（安全组已放行 80）
           </li>
-          <li><strong>重启演练</strong>：<code>sudo reboot</code> 后 1 分钟，网站自动恢复</li>
+          <li>
+            <strong>重启演练</strong>：<code>sudo reboot</code> 后 1
+            分钟，网站自动恢复
+          </li>
         </ol>
 
         <h3>11.2 环境配置排错总表（背下来）</h3>
@@ -1919,22 +1994,31 @@ WantedBy=multi-user.target</code></pre>
               <tr>
                 <td>安装依赖卡住 / 超时</td>
                 <td>是不是默认国外源</td>
-                <td>apt / pip / npm / Maven / Go 全部换国内源（各章已给命令）</td>
+                <td>
+                  apt / pip / npm / Maven / Go 全部换国内源（各章已给命令）
+                </td>
               </tr>
               <tr>
                 <td>编译失败（gcc / Python.h）</td>
                 <td>编译工具链</td>
-                <td><code>sudo apt install build-essential python3-dev</code></td>
+                <td>
+                  <code>sudo apt install build-essential python3-dev</code>
+                </td>
               </tr>
               <tr>
                 <td>安装依赖被 Killed</td>
                 <td>内存</td>
-                <td>加 swap；Node 加 <code>NODE_OPTIONS</code>；Java 限 <code>-Xmx</code></td>
+                <td>
+                  加 swap；Node 加 <code>NODE_OPTIONS</code>；Java 限
+                  <code>-Xmx</code>
+                </td>
               </tr>
               <tr>
                 <td>本机 curl 通、外网不通</td>
                 <td>监听地址</td>
-                <td>应用必须监听 <code>0.0.0.0</code> 而非 <code>127.0.0.1</code></td>
+                <td>
+                  应用必须监听 <code>0.0.0.0</code> 而非 <code>127.0.0.1</code>
+                </td>
               </tr>
               <tr>
                 <td>还是不通</td>
@@ -1976,14 +2060,18 @@ WantedBy=multi-user.target</code></pre>
             <code>pm2 logs</code> —— 报了什么错？
           </li>
           <li>
-            <strong>看网络</strong>：<code>ss -tlnp</code> —— 端口在监听吗？监听在哪个地址？
+            <strong>看网络</strong>：<code>ss -tlnp</code> ——
+            端口在监听吗？监听在哪个地址？
           </li>
         </ol>
 
         <div class="callout tip">
           <div class="callout-title">💡 一句话总结</div>
-          环境配置 = <strong>连上 → 初始化 → 装语言运行时（换国内源）→
-          依赖（备好编译器和内存）→ 守护进程（绝对路径）→ Nginx（0.0.0.0 + 安全组）</strong>。照这条链路走，部署基本一次过；卡住了，就按三板斧定位。
+          环境配置 =
+          <strong
+            >连上 → 初始化 → 装语言运行时（换国内源）→ 依赖（备好编译器和内存）→
+            守护进程（绝对路径）→ Nginx（0.0.0.0 + 安全组）</strong
+          >。照这条链路走，部署基本一次过；卡住了，就按三板斧定位。
         </div>
       </section>
 

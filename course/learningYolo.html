@@ -649,9 +649,7 @@
 
         <h3>先分清：目标检测 ≠ 边缘检测</h3>
         <p>
-          很多人把"边缘检测"和"目标检测"混为一谈，这是上手前<strong
-            >必须掰开的第一件事</strong
-          >——它们回答的是完全不同的两个问题：
+          很多人把"边缘检测"和"目标检测"混为一谈，这是上手前<strong>必须掰开的第一件事</strong>——它们回答的是完全不同的两个问题：
         </p>
         <div class="table-wrap">
           <table>
@@ -699,14 +697,17 @@
 
         <div class="callout info">
           <div class="callout-title">📌 本指南的定位</div>
-          YOLO 本身<strong>不做边缘检测</strong>，它是目标检测模型。本指南按「目标检测
-          YOLO」和「边缘检测 OpenCV Canny」两条线讲，最后再讲两者如何结合使用（比如
-          "YOLO 框出人 → 只对这个区域做边缘检测"）。
+          YOLO
+          本身<strong>不做边缘检测</strong>，它是目标检测模型。本指南按「目标检测
+          YOLO」和「边缘检测 OpenCV
+          Canny」两条线讲，最后再讲两者如何结合使用（比如 "YOLO 框出人 →
+          只对这个区域做边缘检测"）。
         </div>
 
         <h3>YOLO 是怎么工作的（30 秒版）</h3>
         <p>
-          YOLO = <strong>Y</strong>ou <strong>O</strong>nly <strong>L</strong>ook
+          YOLO = <strong>Y</strong>ou <strong>O</strong>nly
+          <strong>L</strong>ook
           <strong>O</strong>nce。传统算法把图片切成几千个小块分别判断，YOLO
           则是把整张图<strong>一次</strong>送进神经网络，直接输出所有目标的框、类别和置信度，所以快——快到能实时处理视频流。
         </p>
@@ -765,8 +766,9 @@
         </div>
         <div class="callout tip">
           <div class="callout-title">💡 为什么选 ultralytics 这个库</div>
-          不管是 YOLOv8 还是 YOLO11，都来自同一个团队
-          Ultralytics，安装同一个包 <code>ultralytics</code>，API 完全一致——学会一套代码，两个版本随便切换。网上 99%
+          不管是 YOLOv8 还是 YOLO11，都来自同一个团队 Ultralytics，安装同一个包
+          <code>ultralytics</code>，API
+          完全一致——学会一套代码，两个版本随便切换。网上 99%
           的最新教程也都基于它。
         </div>
 
@@ -815,8 +817,8 @@
           </table>
         </div>
         <p>
-          口诀：<strong>学习用 n，实时用 s，GPU 富余用 m，离线跑用 x</strong>。先用
-          <code>yolov8n.pt</code> 把流程跑通，再换大模型提升精度。
+          口诀：<strong>学习用 n，实时用 s，GPU 富余用 m，离线跑用 x</strong
+          >。先用 <code>yolov8n.pt</code> 把流程跑通，再换大模型提升精度。
         </p>
       </section>
 
@@ -843,8 +845,8 @@
 
         <h3>Step 2：创建独立虚拟环境</h3>
         <p>
-          YOLO 依赖 torch、opencv 等一堆大包，<strong>务必用独立环境</strong>，避免污染系统
-          Python。
+          YOLO 依赖 torch、opencv
+          等一堆大包，<strong>务必用独立环境</strong>，避免污染系统 Python。
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -871,9 +873,7 @@
 <span class="cmd">yolo version</span>
 <span class="cmd">python -c "import ultralytics; print(ultralytics.__version__)"</span></code></pre>
         </div>
-        <p>
-          看到 <code>8.3.x</code>（或更高）版本号，说明装好了。
-        </p>
+        <p>看到 <code>8.3.x</code>（或更高）版本号，说明装好了。</p>
 
         <h3>Step 4：跑第一条命令验证</h3>
         <div class="code-wrap">
@@ -886,13 +886,15 @@
 <span class="comment"># Results saved to runs\detect\predict   &lt;-- 结果图在这里</span></code></pre>
         </div>
         <p>
-          打开 <code>runs/detect/predict/</code> 目录里的图片，看到画了框的公交车和行人，<strong
-            >恭喜，你已经完成了第一次目标检测</strong>。
+          打开
+          <code>runs/detect/predict/</code>
+          目录里的图片，看到画了框的公交车和行人，<strong>恭喜，你已经完成了第一次目标检测</strong>。
         </p>
 
         <h3>Step 5（可选）：GPU 加速</h3>
         <p>
-          CPU 跑得动，但实时视频只有几帧。有 NVIDIA 显卡就装 GPU 版（前提：显卡驱动已装好）：
+          CPU 跑得动，但实时视频只有几帧。有 NVIDIA 显卡就装 GPU
+          版（前提：显卡驱动已装好）：
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -922,17 +924,25 @@
               <tr>
                 <td>pip 下载超时 / Read timed out</td>
                 <td>默认源在国外，torch 太大</td>
-                <td>换国内镜像（上面 aliyun 命令），或加 <code>-i</code> 参数</td>
+                <td>
+                  换国内镜像（上面 aliyun 命令），或加 <code>-i</code> 参数
+                </td>
               </tr>
               <tr>
                 <td><code>torch.cuda.is_available()</code> 为 False</td>
                 <td>装的还是 CPU 版 torch</td>
-                <td>先 <code>pip uninstall torch torchvision</code>，再用上面 cu121 命令重装</td>
+                <td>
+                  先 <code>pip uninstall torch torchvision</code>，再用上面
+                  cu121 命令重装
+                </td>
               </tr>
               <tr>
                 <td>False 且重装后仍 False</td>
                 <td>驱动太老，不支持的 CUDA 版本</td>
-                <td><code>nvidia-smi</code> 看 CUDA Version，装对应版本（cu118/cu121）；驱动太旧去官网升级</td>
+                <td>
+                  <code>nvidia-smi</code> 看 CUDA
+                  Version，装对应版本（cu118/cu121）；驱动太旧去官网升级
+                </td>
               </tr>
               <tr>
                 <td>Windows 报 <code>DLL load failed</code></td>
@@ -942,17 +952,26 @@
               <tr>
                 <td><code>ImportError: libGL.so.1</code>（Linux）</td>
                 <td>opencv 依赖图形库，服务器没装</td>
-                <td><code>sudo apt install libgl1-mesa-glx libglib2.0-0</code>，或换 <code>opencv-python-headless</code></td>
+                <td>
+                  <code>sudo apt install libgl1-mesa-glx libglib2.0-0</code
+                  >，或换 <code>opencv-python-headless</code>
+                </td>
               </tr>
               <tr>
                 <td>首次运行卡在下载 yolov8n.pt</td>
                 <td>GitHub 下载被墙/慢</td>
-                <td>浏览器手动下载 <code>yolov8n.pt</code> 放到脚本同目录（模型放 GitHub release 和 ultralytics 官网 assets 里）</td>
+                <td>
+                  浏览器手动下载 <code>yolov8n.pt</code> 放到脚本同目录（模型放
+                  GitHub release 和 ultralytics 官网 assets 里）
+                </td>
               </tr>
               <tr>
                 <td>conda activate 报 conda init</td>
                 <td>首次使用未初始化</td>
-                <td><code>conda init cmd.exe</code> 或 <code>conda init powershell</code> 后重开终端</td>
+                <td>
+                  <code>conda init cmd.exe</code> 或
+                  <code>conda init powershell</code> 后重开终端
+                </td>
               </tr>
             </tbody>
           </table>
@@ -964,7 +983,8 @@
         <h2><span class="num">03</span> 图像目标检测（Python 代码版）</h2>
 
         <p>
-          CLI 一行命令虽然爽，但做项目必须会写代码——拿到每个框的坐标，才能做告警、计数、区域判断。
+          CLI
+          一行命令虽然爽，但做项目必须会写代码——拿到每个框的坐标，才能做告警、计数、区域判断。
         </p>
 
         <h3>detect_image.py：完整可运行代码</h3>
@@ -1064,17 +1084,29 @@ cv2.imwrite(<span class="str">"result.jpg"</span>, annotated)
               <tr>
                 <td>中文路径读不到图 / 报错</td>
                 <td>OpenCV 不支持中文路径</td>
-                <td>用 <code>cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_COLOR)</code> 读，<code>cv2.imencode + tofile</code> 写（见第 4 章代码）</td>
+                <td>
+                  用
+                  <code
+                    >cv2.imdecode(np.fromfile(path, dtype=np.uint8),
+                    cv2.IMREAD_COLOR)</code
+                  >
+                  读，<code>cv2.imencode + tofile</code> 写（见第 4 章代码）
+                </td>
               </tr>
               <tr>
                 <td>什么都没检测到</td>
                 <td>目标太小 / 置信度阈值过高 / 图像模糊</td>
-                <td>把 <code>conf</code> 降到 0.25 试试；小目标把 <code>imgsz</code> 调大到 1280</td>
+                <td>
+                  把 <code>conf</code> 降到 0.25 试试；小目标把
+                  <code>imgsz</code> 调大到 1280
+                </td>
               </tr>
               <tr>
                 <td>同一目标框了好几个框</td>
                 <td>NMS 阈值过松</td>
-                <td>推理时加 <code>iou=0.45</code>（默认 0.7，越小去重越狠）</td>
+                <td>
+                  推理时加 <code>iou=0.45</code>（默认 0.7，越小去重越狠）
+                </td>
               </tr>
               <tr>
                 <td>检测到 80 类之外的东西</td>
@@ -1084,7 +1116,10 @@ cv2.imwrite(<span class="str">"result.jpg"</span>, annotated)
               <tr>
                 <td><code>result.plot()</code> 中文显示乱码</td>
                 <td>cv2 画框默认字体不含中文</td>
-                <td>自己用 <code>cv2.putText</code> 画英文，或用 PIL 的 <code>ImageDraw</code> 配合中文字体</td>
+                <td>
+                  自己用 <code>cv2.putText</code> 画英文，或用 PIL 的
+                  <code>ImageDraw</code> 配合中文字体
+                </td>
               </tr>
             </tbody>
           </table>
@@ -1100,7 +1135,8 @@ cv2.imwrite(<span class="str">"result.jpg"</span>, annotated)
           边缘 = 像素值发生剧烈变化的地方。Canny 算法流程：
           <strong>灰度化 → 高斯模糊去噪 → 计算梯度 → 双阈值筛选出边缘</strong>。
           你只需要记住两个可调参数：<code>threshold1</code>（低于它的梯度被丢弃）和
-          <code>threshold2</code>（高于它的算强边缘，两者之间的看是否与强边缘相连）。
+          <code>threshold2</code
+          >（高于它的算强边缘，两者之间的看是否与强边缘相连）。
         </p>
         <div class="diagram">
           <pre>
@@ -1198,7 +1234,8 @@ cv2.imencode(<span class="str">".jpg"</span>, overlay)[<span class="var">1</span
         </div>
         <div class="callout tip">
           <div class="callout-title">💡 记忆口诀</div>
-          边缘检测三板斧：<strong>先灰度、再模糊、后 Canny</strong>；阈值二比一，碎加高、断调低。
+          边缘检测三板斧：<strong>先灰度、再模糊、后 Canny</strong
+          >；阈值二比一，碎加高、断调低。
         </div>
       </section>
 
@@ -1262,7 +1299,8 @@ cv2.destroyAllWindows()</code></pre>
 
         <h3>换网络摄像头（监控 / RTSP）</h3>
         <p>
-          海康、大华等网络摄像头都会提供 RTSP 地址，把 <code>VideoCapture(0)</code>
+          海康、大华等网络摄像头都会提供 RTSP 地址，把
+          <code>VideoCapture(0)</code>
           换成地址即可（用户名/密码/IP 按实际改）：
         </p>
         <div class="code-wrap">
@@ -1287,46 +1325,72 @@ cap.set(cv2.CAP_PROP_BUFFERSIZE, <span class="var">1</span>)</code></pre>
               <tr>
                 <td>摄像头打不开 / isOpented() 为 False</td>
                 <td>索引不对 / 被占用 / 权限</td>
-                <td>索引依次试 <code>0、1、2、-1</code>；关掉微信/腾讯会议/其他占用程序；Windows 检查隐私设置里的摄像头权限；Linux 用户加 <code>sudo usermod -aG video $USER</code></td>
+                <td>
+                  索引依次试
+                  <code>0、1、2、-1</code
+                  >；关掉微信/腾讯会议/其他占用程序；Windows
+                  检查隐私设置里的摄像头权限；Linux 用户加
+                  <code>sudo usermod -aG video $USER</code>
+                </td>
               </tr>
               <tr>
                 <td>窗口黑屏但没报错</td>
                 <td>读取了空帧</td>
-                <td>打印 <code>frame.shape</code> 确认；索引换 <code>cv2.CAP_DSHOW</code> 后端：<code>VideoCapture(0, cv2.CAP_DSHOW)</code></td>
+                <td>
+                  打印 <code>frame.shape</code> 确认；索引换
+                  <code>cv2.CAP_DSHOW</code> 后端：<code
+                    >VideoCapture(0, cv2.CAP_DSHOW)</code
+                  >
+                </td>
               </tr>
               <tr>
                 <td>FPS 只有 2~3，画面卡成PPT</td>
                 <td>CPU 跑不动 / 模型太大</td>
-                <td>① 换 <code>yolov8n</code>；② <code>imgsz=320</code> 减小输入；③ 有 GPU 装第 2 章的 GPU 版 torch；④ 隔帧检测（见第 11 章）</td>
+                <td>
+                  ① 换 <code>yolov8n</code>；②
+                  <code>imgsz=320</code> 减小输入；③ 有 GPU 装第 2 章的 GPU 版
+                  torch；④ 隔帧检测（见第 11 章）
+                </td>
               </tr>
               <tr>
                 <td>RTSP 画面延迟好几秒</td>
                 <td>OpenCV 缓冲区堆积</td>
-                <td><code>CAP_PROP_BUFFERSIZE=1</code>；用子线程单独取帧；或改用摄像头子码流</td>
+                <td>
+                  <code>CAP_PROP_BUFFERSIZE=1</code
+                  >；用子线程单独取帧；或改用摄像头子码流
+                </td>
               </tr>
               <tr>
                 <td>窗口无响应 / 关不掉</td>
                 <td>waitKey 没写或参数为 0</td>
-                <td>必须有 <code>cv2.waitKey(1)</code>（参数是毫秒，写 0 会永久等待按键）</td>
+                <td>
+                  必须有 <code>cv2.waitKey(1)</code>（参数是毫秒，写 0
+                  会永久等待按键）
+                </td>
               </tr>
               <tr>
                 <td>Mac 上报权限错误</td>
                 <td>终端没拿到摄像头授权</td>
-                <td>系统设置 → 隐私与安全 → 摄像头 → 勾选你的终端 / VS Code / Python</td>
+                <td>
+                  系统设置 → 隐私与安全 → 摄像头 → 勾选你的终端 / VS Code /
+                  Python
+                </td>
               </tr>
               <tr>
                 <td>报 <code>cv2.error</code> 画面尺寸相关</td>
                 <td>frame 为 None 仍送进推理</td>
-                <td>在推理前加 <code>if not ok: continue</code> 判断（上面代码已包含）</td>
+                <td>
+                  在推理前加
+                  <code>if not ok: continue</code> 判断（上面代码已包含）
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 高频坑：摄像头被占用</div>
-          <code>cap.isOpened()</code> 为 False 的第一嫌疑永远是<strong
-            >别的程序占着摄像头</strong
-          >——微信、QQ、腾讯会议、浏览器标签页（某个网页开着摄像头）。全部关掉再试。
+          <code>cap.isOpened()</code> 为 False
+          的第一嫌疑永远是<strong>别的程序占着摄像头</strong>——微信、QQ、腾讯会议、浏览器标签页（某个网页开着摄像头）。全部关掉再试。
         </div>
       </section>
 
@@ -1334,7 +1398,10 @@ cap.set(cv2.CAP_PROP_BUFFERSIZE, <span class="var">1</span>)</code></pre>
       <section class="section" id="ch06">
         <h2><span class="num">06</span> 摄像头实时边缘检测</h2>
 
-        <p>同一套路：读帧 → 处理 → 显示。这次加一个<strong>滑动条实时调阈值</strong>，你能直观感受两个阈值的作用。</p>
+        <p>
+          同一套路：读帧 → 处理 →
+          显示。这次加一个<strong>滑动条实时调阈值</strong>，你能直观感受两个阈值的作用。
+        </p>
 
         <h3>edge_camera.py：完整可运行代码</h3>
         <div class="code-wrap">
@@ -1377,13 +1444,14 @@ cap.release()
 cv2.destroyAllWindows()</code></pre>
         </div>
         <p>
-          拖动滑动条：阈值调到很低时边缘又多又碎，调很高时画面几乎全黑——这就是 Canny
-          两个参数的全部秘密。
+          拖动滑动条：阈值调到很低时边缘又多又碎，调很高时画面几乎全黑——这就是
+          Canny 两个参数的全部秘密。
         </p>
 
         <h3>YOLO + 边缘检测结合：只对"人"做边缘检测</h3>
         <p>
-          一个非常实用的组合技：先用 YOLO 找到人，再<strong>只在人的框内</strong>做 Canny
+          一个非常实用的组合技：先用 YOLO
+          找到人，再<strong>只在人的框内</strong>做 Canny
           ——背景的边缘全部消失，只剩目标轮廓。
         </p>
         <div class="code-wrap">
@@ -1461,13 +1529,21 @@ cv2.destroyAllWindows()</code></pre>
                 <td><code>classes</code></td>
                 <td>None</td>
                 <td>只保留指定类别</td>
-                <td><code>classes=[0]</code> 只留 person；<code>[2,5,7]</code> 只留 car/bus-truck</td>
+                <td>
+                  <code>classes=[0]</code> 只留 person；<code>[2,5,7]</code>
+                  只留 car/bus-truck
+                </td>
               </tr>
               <tr>
                 <td><code>device</code></td>
                 <td>auto</td>
                 <td>用哪个设备推理</td>
-                <td><code>device='cuda:0'</code> 指定第一块 GPU，<code>'cpu'</code> 强制 CPU</td>
+                <td>
+                  <code>device='cuda:0'</code> 指定第一块 GPU，<code
+                    >'cpu'</code
+                  >
+                  强制 CPU
+                </td>
               </tr>
               <tr>
                 <td><code>half</code></td>
@@ -1540,9 +1616,16 @@ cv2.destroyAllWindows()</code></pre>
             </thead>
             <tbody>
               <tr>
-                <td><code>ModuleNotFoundError: No module named 'ultralytics'</code></td>
+                <td>
+                  <code
+                    >ModuleNotFoundError: No module named 'ultralytics'</code
+                  >
+                </td>
                 <td>没装 / 装到别的环境了</td>
-                <td><code>pip install ultralytics</code>；确认当前终端在 yolo 环境里（conda activate yolo）</td>
+                <td>
+                  <code>pip install ultralytics</code>；确认当前终端在 yolo
+                  环境里（conda activate yolo）
+                </td>
               </tr>
               <tr>
                 <td><code>FileNotFoundError: yolov8n.pt</code></td>
@@ -1557,7 +1640,9 @@ cv2.destroyAllWindows()</code></pre>
               <tr>
                 <td><code>CUDA out of memory</code></td>
                 <td>显存不够</td>
-                <td>换小模型（m→s→n）、<code>imgsz=416</code>、关闭其他占显存程序</td>
+                <td>
+                  换小模型（m→s→n）、<code>imgsz=416</code>、关闭其他占显存程序
+                </td>
               </tr>
               <tr>
                 <td><code>cv2.error: ... in function 'cv::imshow'</code></td>
@@ -1575,7 +1660,12 @@ cv2.destroyAllWindows()</code></pre>
                 <td><code>apt install libgl1-mesa-glx libglib2.0-0</code></td>
               </tr>
               <tr>
-                <td><code>[Errno 2] No such file or directory: 'runs/detect/...'</code></td>
+                <td>
+                  <code
+                    >[Errno 2] No such file or directory:
+                    'runs/detect/...'</code
+                  >
+                </td>
                 <td>结果目录被移动 / 无写权限</td>
                 <td>指定 <code>save_dir</code>，或确认当前目录可写</td>
               </tr>
@@ -1587,7 +1677,10 @@ cv2.destroyAllWindows()</code></pre>
               <tr>
                 <td>Mac Apple 芯片跑得慢</td>
                 <td>默认 CPU 推理</td>
-                <td>装 MPS 版：<code>device='mps'</code>（ultralytics 支持 Apple 加速）</td>
+                <td>
+                  装 MPS 版：<code>device='mps'</code>（ultralytics 支持 Apple
+                  加速）
+                </td>
               </tr>
             </tbody>
           </table>
@@ -1595,9 +1688,9 @@ cv2.destroyAllWindows()</code></pre>
         <div class="callout tip">
           <div class="callout-title">💡 排错三板斧</div>
           <strong
-            >① 报什么错 → 贴报错关键词到本表搜 → ② 环境对不对 →
-            python/pip/conda 是否指向同一环境 → ③ 最小复现 →
-            用官方 bus.jpg 和纯 CPU 跑一遍，排除数据和环境因素再回头查代码</strong
+            >① 报什么错 → 贴报错关键词到本表搜 → ② 环境对不对 → python/pip/conda
+            是否指向同一环境 → ③ 最小复现 → 用官方 bus.jpg 和纯 CPU
+            跑一遍，排除数据和环境因素再回头查代码</strong
           >。
         </div>
       </section>
@@ -1607,9 +1700,8 @@ cv2.destroyAllWindows()</code></pre>
         <h2><span class="num">09</span> 按项目需求改代码</h2>
 
         <p>
-          真实项目从来不是"检测出框就完事"。下面是六个最常见的需求改造，每个都给出<strong
-            >可直接粘贴的代码片段</strong
-          >（接在第 5 章 detect_camera.py 的推理循环里）。
+          真实项目从来不是"检测出框就完事"。下面是六个最常见的需求改造，每个都给出<strong>可直接粘贴的代码片段</strong>（接在第
+          5 章 detect_camera.py 的推理循环里）。
         </p>
 
         <h3>需求 1：只检测特定类别（如只统计人）</h3>
@@ -1625,7 +1717,11 @@ wanted = {<span class="str">"person"</span>, <span class="str">"car"</span>}
         <span class="var">print</span>(<span class="str">"命中目标"</span>, box.conf[<span class="var">0</span>])</code></pre>
         </div>
         <p>
-          COCO 80 类常用编号速记：<code>0 person</code>、<code>1 bicycle</code>、<code>2 car</code>、<code>3 motorcycle</code>、<code>5 bus</code>、<code>7 truck</code>、<code>16 cat</code>、<code>17 dog</code>、<code>39 bottle</code>、<code>56 chair</code>、<code>62 tv</code>。完整列表 <code>print(model.names)</code> 一行搞定。
+          COCO 80 类常用编号速记：<code>0 person</code>、<code>1 bicycle</code
+          >、<code>2 car</code>、<code>3 motorcycle</code>、<code>5 bus</code
+          >、<code>7 truck</code>、<code>16 cat</code>、<code>17 dog</code
+          >、<code>39 bottle</code>、<code>56 chair</code>、<code>62 tv</code
+          >。完整列表 <code>print(model.names)</code> 一行搞定。
         </p>
 
         <h3>需求 2：人数统计 / 超过 N 人触发告警</h3>
@@ -1643,8 +1739,10 @@ count = <span class="var">len</span>(results[<span class="var">0</span>].boxes) 
         </div>
         <div class="callout info">
           <div class="callout-title">📌 防告警轰炸小技巧</div>
-          实时画面人数会抖动（16→17→16）。加<strong>冷却时间</strong>：告警后 30 秒内不再重复告警——一个
-          <code>last_alarm = 0</code> 时间戳 + <code>if now - last_alarm &gt; 30</code> 判断即可。
+          实时画面人数会抖动（16→17→16）。加<strong>冷却时间</strong>：告警后 30
+          秒内不再重复告警——一个
+          <code>last_alarm = 0</code> 时间戳 +
+          <code>if now - last_alarm &gt; 30</code> 判断即可。
         </div>
 
         <h3>需求 3：电子围栏 / 区域入侵检测</h3>
@@ -1679,8 +1777,9 @@ cv2.polylines(frame, zone, <span class="kw">True</span>, (<span class="var">0</s
 
         <h3>需求 4：目标越线计数（进出统计）</h3>
         <p>
-          商场客流统计的核心：画一条虚拟线，目标中心<strong>从上穿到下</strong>记 +1，<strong
-            >从下穿到上</strong>记 -1。用中心点 y 坐标与上一帧的对比判断方向：
+          商场客流统计的核心：画一条虚拟线，目标中心<strong>从上穿到下</strong>记
+          +1，<strong>从下穿到上</strong>记 -1。用中心点 y
+          坐标与上一帧的对比判断方向：
         </p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1701,13 +1800,15 @@ cv2.putText(frame, <span class="str">f"Count: {counter}"</span>, (<span class="v
         </div>
         <div class="callout warn">
           <div class="callout-title">⚠️ 想做得准，用追踪器</div>
-          只看坐标会重复计数（同一个人走两步算两次）。ultralytics 自带 BoT-SORT 追踪：<code>results = model.track(frame, persist=True, verbose=False)</code>，然后 <code>box.id</code> 就是每个人的固定编号——按 id 只在第一次越线时 +1。
+          只看坐标会重复计数（同一个人走两步算两次）。ultralytics 自带 BoT-SORT
+          追踪：<code
+            >results = model.track(frame, persist=True, verbose=False)</code
+          >，然后 <code>box.id</code> 就是每个人的固定编号——按 id
+          只在第一次越线时 +1。
         </div>
 
         <h3>需求 5：检测结果推送 / 存数据库</h3>
-        <p>
-          检测到目标时调接口或写库（以最常见的"推送到 Web 接口"为例）：
-        </p>
+        <p>检测到目标时调接口或写库（以最常见的"推送到 Web 接口"为例）：</p>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
           <pre><code><span class="kw">import</span> requests, base64, time
@@ -1792,7 +1893,8 @@ results = model.predict(<span class="str">"video.mp4"</span>, conf=<span class="
         <h2><span class="num">10</span> 训练自己的数据集（进阶）</h2>
 
         <p>
-          预训练模型只认识 COCO 80 类。要检测"安全帽""钢卷""裂纹"这类自定义目标，就得自己训练。整体流程五步：
+          预训练模型只认识 COCO 80
+          类。要检测"安全帽""钢卷""裂纹"这类自定义目标，就得自己训练。整体流程五步：
         </p>
         <div class="diagram">
           <pre>
@@ -1807,9 +1909,22 @@ results = model.predict(<span class="str">"video.mp4"</span>, conf=<span class="
 
         <h3>Step 1~2：收集与标注</h3>
         <ul>
-          <li>每类目标至少 <strong>100~1500 张</strong>，场景、角度、光照越多样越好</li>
-          <li>标注工具：<strong>LabelImg</strong>（<code>pip install labelimg</code> 后运行 <code>labelimg</code>，选 YOLO 格式）或在线的 <strong>Roboflow</strong></li>
-          <li>每张图得到一个同名 <code>.txt</code>，每行一个框：<code>类别编号 x中心 y中心 宽 高</code>（都是 0~1 的比例值）</li>
+          <li>
+            每类目标至少
+            <strong>100~1500 张</strong>，场景、角度、光照越多样越好
+          </li>
+          <li>
+            标注工具：<strong>LabelImg</strong>（<code
+              >pip install labelimg</code
+            >
+            后运行 <code>labelimg</code>，选 YOLO 格式）或在线的
+            <strong>Roboflow</strong>
+          </li>
+          <li>
+            每张图得到一个同名 <code>.txt</code>，每行一个框：<code
+              >类别编号 x中心 y中心 宽 高</code
+            >（都是 0~1 的比例值）
+          </li>
         </ul>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1889,7 +2004,10 @@ results = model(<span class="str">"test.jpg"</span>, conf=<span class="var">0.4<
               <tr>
                 <td>CUDA out of memory</td>
                 <td>显存不足</td>
-                <td><code>batch</code> 减半、<code>imgsz=416</code>，或用官方 <code>yolov8n.pt</code> 小模型</td>
+                <td>
+                  <code>batch</code> 减半、<code>imgsz=416</code>，或用官方
+                  <code>yolov8n.pt</code> 小模型
+                </td>
               </tr>
               <tr>
                 <td>loss 剧烈震荡不收敛</td>
@@ -1908,9 +2026,18 @@ results = model(<span class="str">"test.jpg"</span>, conf=<span class="var">0.4<
         <h3>提速四板斧（按性价比排序）</h3>
         <ol class="steps">
           <li><strong>用小模型</strong>：m → s → n，精度换速度最直接的手段</li>
-          <li><strong>降输入尺寸</strong>：<code>imgsz=320</code>，速度约翻倍，小目标会漏</li>
-          <li><strong>GPU 半精度</strong>：<code>half=True</code>（仅 GPU），白捡近一倍速度</li>
-          <li><strong>隔帧检测</strong>：每 2~3 帧推理一次，中间帧复用上一次的框——摄像头不怎么动的场景效果拔群</li>
+          <li>
+            <strong>降输入尺寸</strong
+            >：<code>imgsz=320</code>，速度约翻倍，小目标会漏
+          </li>
+          <li>
+            <strong>GPU 半精度</strong>：<code>half=True</code>（仅
+            GPU），白捡近一倍速度
+          </li>
+          <li>
+            <strong>隔帧检测</strong>：每 2~3
+            帧推理一次，中间帧复用上一次的框——摄像头不怎么动的场景效果拔群
+          </li>
         </ol>
         <div class="code-wrap">
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1964,7 +2091,9 @@ model = <span class="var">YOLO</span>(<span class="str">"best.onnx"</span>)</cod
               </tr>
               <tr>
                 <td>Jetson / 树莓派等边缘设备</td>
-                <td>导出 TensorRT（Jetson）/ NCNN（树莓派）+ n 模型 + 隔帧检测</td>
+                <td>
+                  导出 TensorRT（Jetson）/ NCNN（树莓派）+ n 模型 + 隔帧检测
+                </td>
               </tr>
               <tr>
                 <td>服务器批量离线分析</td>
@@ -1978,16 +2107,17 @@ model = <span class="var">YOLO</span>(<span class="str">"best.onnx"</span>)</cod
         <div class="callout tip">
           <div class="callout-title">💡 十句口诀带走全部</div>
           <strong>
-          ① 目标检测 YOLO，边缘检测 Canny，一个认"是什么"一个认"轮廓线"；<br />
-          ② 学习用 n 实时用 s，模型选小不选大；<br />
-          ③ 环境独立用 conda，pip 记得换国内源；<br />
-          ④ GPU 要装 cu 版 torch，is_available 必须 True；<br />
-          ⑤ 结果三件套：xyxy 坐标、cls 类别、conf 置信度；<br />
-          ⑥ 漏检降 conf，误检升 conf，多框调 iou，小目标加 imgsz；<br />
-          ⑦ 边缘三板斧：先灰度、再模糊、后 Canny，阈值二比一；<br />
-          ⑧ 摄像头打不开，先查占用再换索引；<br />
-          ⑨ 改代码三板斧：classes 过滤、点在不在区里、track 防重复计数；<br />
-          ⑩ 自训模型看数据，标注质量大于一切调参。</strong>
+            ① 目标检测 YOLO，边缘检测 Canny，一个认"是什么"一个认"轮廓线"；<br />
+            ② 学习用 n 实时用 s，模型选小不选大；<br />
+            ③ 环境独立用 conda，pip 记得换国内源；<br />
+            ④ GPU 要装 cu 版 torch，is_available 必须 True；<br />
+            ⑤ 结果三件套：xyxy 坐标、cls 类别、conf 置信度；<br />
+            ⑥ 漏检降 conf，误检升 conf，多框调 iou，小目标加 imgsz；<br />
+            ⑦ 边缘三板斧：先灰度、再模糊、后 Canny，阈值二比一；<br />
+            ⑧ 摄像头打不开，先查占用再换索引；<br />
+            ⑨ 改代码三板斧：classes 过滤、点在不在区里、track 防重复计数；<br />
+            ⑩ 自训模型看数据，标注质量大于一切调参。</strong
+          >
         </div>
       </section>
 
