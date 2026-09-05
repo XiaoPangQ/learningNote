@@ -1,0 +1,2421 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/jpeg" href="../images/avatar.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>微信小程序开发 · 从入门到精通</title>
+    <style>
+      /* ========== CSS Variables ========== */
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #ff9e64;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #6F4E37;
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --header-h: 0px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      /* ========== Reset & Base ========== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* ========== Scrollbar ========== */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      /* ========== Sidebar ========== */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(111, 78, 55, 0.1);
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: rgba(111, 78, 55, 0.1);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: rgba(111, 78, 55, 0.06);
+        border-left-color: var(--accent);
+      }
+      .toc li a.sub {
+        padding-left: 28px;
+        font-size: 0.82rem;
+      }
+
+      /* ========== Main ========== */
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      /* ========== Hero ========== */
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(111, 78, 55, 0.1);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #6F4E37 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      /* ========== Sections ========== */
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(111, 78, 55, 0.1);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      /* ========== Code ========== */
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: rgba(111, 78, 55, 0.08);
+        color: var(--code-green);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      /* Syntax highlight */
+      .kw {
+        color: var(--code-green);
+      }
+      .fn {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .num {
+        color: #ff9e64;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+
+      /* Copy button */
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ========== Tables ========== */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: rgba(111, 78, 55, 0.03);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      /* ========== Callouts ========== */
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(111, 78, 55, 0.06);
+        border-color: var(--accent);
+      }
+      .callout.tip .callout-title {
+        color: var(--accent);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      /* ========== Cards Grid ========== */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* ========== Steps ========== */
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      /* ========== Mobile toggle ========== */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      /* ========== Footer ========== */
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      /* Focus visible for accessibility */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout {
+          break-inside: avoid;
+        }
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+    <body>
+    <!-- Mobile menu -->
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">☕</span> Java 学习笔记</h2>
+        <p>从入门到精通 · Java 核心技术手册</p>
+      </div>
+      <a class="home-link" href="../indexLearning.html">← 返回首页</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. 认识 Java：JVM/JDK/JRE 三件套</a></li>
+        <li><a href="#ch02">2. 环境搭建与第一个程序</a></li>
+        <li><a href="#ch03">3. 基础语法：变量、类型与运算符</a></li>
+        <li><a href="#ch04">4. 流程控制：分支与跳转</a></li>
+        <li><a href="#ch05">5. 数组、字符串与常用类</a></li>
+        <li><a href="#ch06">6. 方法、递归与参数传递</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. 面向对象三大特性</a></li>
+        <li><a href="#ch08">8. 抽象类、内部类与接口</a></li>
+        <li><a href="#ch09">9. 异常处理机制</a></li>
+        <li><a href="#ch10">10. 集合框架：List/Set/Map</a></li>
+        <li><a href="#ch11">11. 泛型与通配符</a></li>
+        <li><a href="#ch12">12. IO 流与 NIO.2</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch13">13. 多线程与 JUC 并发包</a></li>
+        <li><a href="#ch14">14. JVM 内存模型与 GC 调优</a></li>
+        <li><a href="#ch15">15. 反射、注解与动态代理</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch16">16. 设计模式与最佳实践</a></li>
+        <li><a href="#ch17">17. Java 17/21 新特性与 API 速查</a></li>
+        <li><a href="#ch18">18. 实战路线、避坑与项目推荐</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Hero -->
+      <header class="hero">
+        <span class="hero-badge">☕ 后端开发经典语言</span>
+        <h1>Java 从入门到精通 · 系统化学习笔记</h1>
+        <p>
+          一份覆盖 Java SE 8 ~ 21 的系统化笔记。从环境搭建、基础语法、面向对象、集合与并发，
+          到 JVM 内存模型、GC 调优、设计模式、新特性与常用 API 速查，配套 18 条速记口诀、25 张归纳表与
+          高频报错避坑，帮你从「会写 HelloWorld」进阶到「能看懂 Spring 源码、面试不慌」。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>JVM / 并发 / 集合</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <h2><span class="num">01</span> 认识 Java：JVM/JDK/JRE 三件套</h2>
+
+        <h3>Java 的「一次编写，到处执行」到底靠什么</h3>
+        <p>
+          Java 的跨平台能力来自<strong>字节码（bytecode）</strong>与<strong>虚拟机（JVM）</strong>。源码 <code>.java</code> 经 <code>javac</code> 编译成字节码
+          <code>.class</code>，再交给不同平台上的 JVM 解释执行。JVM 把字节码翻译成目标机器指令，所以同一份字节码可以跑在 Windows、Linux、macOS 任何装了
+          JDK 的机器上。
+        </p>
+        <p>整个生态分三层，记住下面这张表就不会被面试官绕晕：</p>
+        <table>
+          <thead>
+            <tr><th>组件</th><th>全称</th><th>作用</th><th>面向谁</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>JVM</strong></td><td>Java Virtual Machine</td><td>运行字节码、内存管理、GC</td><td>程序运行的「发动机」</td></tr>
+            <tr><td><strong>JRE</strong></td><td>Java Runtime Environment</td><td>JVM + 核心类库 + 运行时</td><td>只运行 Java 程序的「使用者」</td></tr>
+            <tr><td><strong>JDK</strong></td><td>Java Development Kit</td><td>JRE + 编译器 + 调试器 + javadoc</td><td>写代码的「开发者」</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-title">📖 一句话总结</div>
+          <p>JDK ⊇ JRE ⊇ JVM。<strong>开发装 JDK，运行装 JRE</strong>，JVM 是被包含在两者里的核心。</p>
+        </div>
+
+        <h3>Java 的三大版本体系</h3>
+        <p>刚入门最容易被「Java SE / EE / ME」三个缩写劝退，其实现在只有 <strong>Java SE</strong> 是真正的主力，其他两个已经合并或退出历史：</p>
+        <table>
+          <thead>
+            <tr><th>版本</th><th>全称</th><th>现状</th><th>学什么</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Java SE</strong></td><td>Standard Edition</td><td>主力，持续更新（最新 21 LTS）</td><td>语法、集合、并发、JVM</td></tr>
+            <tr><td><strong>Java EE</strong></td><td>Enterprise Edition</td><td>2017 移交 Eclipse 基金会改名 Jakarta EE</td><td>Servlet、JPA、Jakarta 系列</td></tr>
+            <tr><td><strong>Java ME</strong></td><td>Micro Edition</td><td>已基本被 Android 取代</td><td>入门阶段不用管</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>「Java SE」和「Java」在日常语境里基本等价。学 Java 就是学 Java SE。<strong>别再被 Java EE 吓到</strong>，那是过去给企业服务用的，现在主流是 Spring 全家桶。</p>
+        </div>
+
+        <h3>Java 的设计语言与典型特征</h3>
+        <ul>
+          <li><strong>面向对象</strong>：一切皆对象（除了 8 种基本类型）</li>
+          <li><strong>强类型</strong>：变量必须先声明类型，编译器会做严格检查</li>
+          <li><strong>自动内存管理</strong>：GC 帮你回收垃圾，代价是停顿（Stop-The-World）</li>
+          <li><strong>多线程原生支持</strong>：从语言层面提供 <code>synchronized</code> 与 <code>volatile</code></li>
+          <li><strong>丰富的生态</strong>：Maven Central 上有 50 万 + 第三方库</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「三件套，JDK 装；字节码，跨平台；面向对象 + 强类型；JVM GC 收内存」</strong>——面试被问「Java 是什么」，套这套话术 30 秒讲清楚。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <h2><span class="num">02</span> 环境搭建与第一个程序</h2>
+
+        <h3>JDK 下载与版本选择</h3>
+        <p>截至 2026 年，建议<strong>直接装 Java 17 LTS</strong>（2021 发布，长期支持到 2029）。Java 8 仍极流行，但 17 是当下新项目的默认起点。Java 21 LTS（2023 发布）有虚拟线程等革命特性，<strong>想跟最新就选 21</strong>。</p>
+        <ul>
+          <li><strong>Oracle JDK</strong>：商业用要付费，个人/开发免费</li>
+          <li><strong>OpenJDK（推荐）</strong>：开源免费，性能完全等价，Adoptium / Eclipse Temurin 是主流发行版</li>
+          <li><strong>GraalVM</strong>：Oracle 的高性能 JDK，支持 AOT 原生镜像，新派项目在用</li>
+        </ul>
+
+        <h3>Windows 安装 JDK 17（推荐）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code># 1) 从 https://adoptium.net/ 下载 jdk-17.x.x-windows-x64.msi
+# 2) 双击安装，记下安装路径，默认：
+C:\Program Files\Eclipse Adoptium\jdk-17.0.11.9-hotspot
+
+# 3) 配置环境变量（系统属性 → 高级 → 环境变量）
+JAVA_HOME = C:\Program Files\Eclipse Adoptium\jdk-17.0.11.9-hotspot
+PATH 末尾追加：%JAVA_HOME%\bin
+
+# 4) 验证（重新打开 cmd）
+java -version
+javac -version</code></pre></div>
+
+        <h3>macOS / Linux 一行命令装 OpenJDK</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code># macOS (Homebrew)
+brew install openjdk@17
+sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
+
+# Ubuntu / Debian
+sudo apt update &amp;&amp; sudo apt install openjdk-17-jdk
+
+# 验证
+java -version    # 看到 openjdk version "17.x.x" 就 OK</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>Windows 安装后 <strong>一定记得配 <code>JAVA_HOME</code></strong>，否则 Maven、Gradle、IDEA 都找不到 JDK。配完环境变量要<strong>重新打开终端</strong>才生效（PowerShell 还需要重启 IDE）。</p>
+        </div>
+
+        <h3>第一个 Hello World：三步跑通</h3>
+        <ol>
+          <li>新建文件 <code>Hello.java</code>（文件名必须与 <code>public class</code> 名一致）</li>
+          <li>输入下面代码</li>
+          <li>命令行 <code>javac Hello.java</code> → <code>java Hello</code></li>
+        </ol>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}</code></pre></div>
+
+        <p>运行：</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>$ javac Hello.java      # 编译生成 Hello.class（字节码）
+$ java Hello            # JVM 解释执行
+Hello, Java!</code></pre></div>
+
+        <h3>JDK 自带常用命令行工具</h3>
+        <table>
+          <thead>
+            <tr><th>命令</th><th>作用</th><th>场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>javac</code></td><td>源码 → 字节码编译器</td><td>手写 demo</td></tr>
+            <tr><td><code>java</code></td><td>启动 JVM 跑字节码</td><td>所有 Java 程序入口</td></tr>
+            <tr><td><code>jar</code></td><td>打 / 解 jar 包</td><td>发布 / 看依赖</td></tr>
+            <tr><td><code>javadoc</code></td><td>从注释生成 HTML 文档</td><td>写 API 文档</td></tr>
+            <tr><td><code>jps</code></td><td>列出 Java 进程 PID</td><td>排查「哪个是我的程序」</td></tr>
+            <tr><td><code>jstack</code></td><td>线程快照，排查死锁</td><td>线上救火</td></tr>
+            <tr><td><code>jmap</code></td><td>堆内存 dump</td><td>排查 OOM</td></tr>
+            <tr><td><code>jstat</code></td><td>JVM 统计信息（GC、类加载）</td><td>性能调优</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「装 JDK 17，配 JAVA_HOME；javac 编，java 跑；文件名与 public class 同名」</strong>——这三句记住，入门第一步稳了。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <h2><span class="num">03</span> 基础语法：变量、类型与运算符</h2>
+
+        <h3>8 种基本数据类型（必须背下来）</h3>
+        <p>Java 是强类型语言，<strong>所有变量必须先声明类型再使用</strong>。8 种基本类型是 Java 的「基石」，包装类与泛型都围绕它们展开。</p>
+        <table>
+          <thead>
+            <tr><th>类型</th><th>关键字</th><th>字节数</th><th>取值范围</th><th>默认值</th><th>场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>整型</td><td><code>byte</code></td><td>1</td><td>-128 ~ 127</td><td>0</td><td>底层字节流</td></tr>
+            <tr><td>整型</td><td><code>short</code></td><td>2</td><td>-2^15 ~ 2^15-1</td><td>0</td><td>极少用</td></tr>
+            <tr><td>整型</td><td><code>int</code></td><td>4</td><td>约 ±21 亿</td><td>0</td><td>99% 整数场景</td></tr>
+            <tr><td>整型</td><td><code>long</code></td><td>8</td><td>约 ±9.22×10^18</td><td>0L</td><td>时间戳、大数据 ID</td></tr>
+            <tr><td>浮点</td><td><code>float</code></td><td>4</td><td>约 7 位有效数字</td><td>0.0f</td><td>几乎不用</td></tr>
+            <tr><td>浮点</td><td><code>double</code></td><td>8</td><td>约 15 位有效数字</td><td>0.0d</td><td>默认浮点</td></tr>
+            <tr><td>字符</td><td><code>char</code></td><td>2</td><td>0 ~ 65535（UTF-16）</td><td>'\u0000'</td><td>单个字符</td></tr>
+            <tr><td>布尔</td><td><code>boolean</code></td><td>1 ~ ?</td><td><code>true</code> / <code>false</code></td><td><code>false</code></td><td>逻辑判断</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><code>boolean</code> 在 JVM 中实际占用 1 字节（<code>int</code> 数组实现），但<strong>不能用 0/1 强转</strong>，这是 C 语言的遗留思路，Java 里编译器会报错。</p>
+        </div>
+
+        <h3>变量的声明与作用域</h3>
+        <p>Java 变量分四类：<strong>局部变量、成员变量、静态变量、常量</strong>。它们的区别直接决定生命周期。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>public class VarScope {
+    // 成员变量（实例变量）：每个对象独立，有默认值
+    private int age = 18;
+
+    // 静态变量（类变量）：所有对象共享，类加载时初始化
+    public static String SCHOOL_NAME = "Java 大学";
+
+    // 常量：必须初始化，不可二次赋值
+    public static final double PI = 3.14159;
+
+    public void method(int param) {  // 形参也是「局部变量」
+        int local = 10;              // 局部变量：必须手动初始化
+        final int FIXED = 100;       // 局部常量
+        // local = local + param;    // OK
+    }
+}</code></pre></div>
+
+        <h3>运算符优先级（容易掉的坑）</h3>
+        <p>运算符有优先级，<strong>不确定就加括号</strong>，别靠肌肉记忆。面试常考：<code>i++</code> 与 <code>++i</code> 的区别。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>int a = 5;
+int b = a++;   // 先用再加：b = 5，a 变 6
+int c = ++a;   // 先加再用：a 变 7，c = 7
+
+// 位运算小技巧
+int n = 60;        // 0011 1100
+n &lt;&lt; 2 = 240;     // 左移 2 位 = 乘 4（注意溢出）
+n >> 2  = 15;      // 算术右移 = 除 4（保留符号）
+n >>> 2 = 15;      // 逻辑右移（高位补 0）</code></pre></div>
+
+        <table>
+          <thead>
+            <tr><th>优先级（高 → 低）</th><th>运算符</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1（最高）</td><td><code>()</code> <code>[]</code> <code>.</code></td><td>括号、数组、点号</td></tr>
+            <tr><td>2</td><td><code>!</code> <code>~</code> <code>++</code> <code>--</code></td><td>单目</td></tr>
+            <tr><td>3</td><td><code>*</code> <code>/</code> <code>%</code></td><td>乘除取模</td></tr>
+            <tr><td>4</td><td><code>+</code> <code>-</code></td><td>加减</td></tr>
+            <tr><td>5</td><td><code>&lt;&lt;</code> <code>>></code> <code>>>></code></td><td>位移</td></tr>
+            <tr><td>6</td><td><code>&lt;</code> <code>&lt;=</code> <code>></code> <code>>=</code></td><td>关系</td></tr>
+            <tr><td>7</td><td><code>==</code> <code>!=</code></td><td>相等</td></tr>
+            <tr><td>8</td><td><code>&amp;</code> <code>^</code> <code>|</code></td><td>位运算</td></tr>
+            <tr><td>9</td><td><code>&amp;&amp;</code> <code>||</code></td><td>逻辑（推荐代替 8）</td></tr>
+            <tr><td>10</td><td><code>?:</code></td><td>三元</td></tr>
+            <tr><td>11（最低）</td><td><code>=</code> <code>+=</code> <code>-=</code> …</td><td>赋值</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「8 类型，4 整数 2 浮 1 字符 1 布尔；int 是主力，long 加 L；不确定就加括号」</strong>——面试被问「int 和 Integer 区别」也用得上（见 ch10 包装类）。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <h2><span class="num">04</span> 流程控制：分支与跳转</h2>
+
+        <h3>if 条件分支</h3>
+        <p>最基础的分支结构。Java 的条件<strong>必须是 boolean</strong>，不能像 C 那样用整数当真假。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>int score = 85;
+
+if (score >= 90) {
+    System.out.println("优秀");
+} else if (score >= 75) {
+    System.out.println("良好");
+} else if (score >= 60) {
+    System.out.println("及格");
+} else {
+    System.out.println("不及格");
+}</code></pre></div>
+
+        <h3>switch 多路分支（Java 14+ 写法）</h3>
+        <p>Java 14 引入了「<strong>switch 表达式</strong>」，比传统 switch 更安全简洁，没有「忘记 break 串掉」的问题：</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// Java 8 传统写法（容易漏 break）
+String level;
+switch (score / 10) {
+    case 10:
+    case 9: level = "A"; break;
+    case 8: level = "B"; break;
+    default: level = "C";
+}
+
+// Java 14+ switch 表达式（推荐）
+String level = switch (score / 10) {
+    case 9, 10 -> "A";   // 多值合并
+    case 8     -> "B";
+    case 7     -> "C";
+    default    -> "D";
+};</code></pre></div>
+
+        <h3>循环三件套：for / while / do-while</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 普通 for：循环次数已知
+for (int i = 0; i &lt; 5; i++) {
+    System.out.println("第 " + i + " 次");
+}
+
+// 增强 for（foreach）：只读遍历
+int[] arr = {1, 2, 3, 4, 5};
+for (int x : arr) {
+    System.out.println(x);
+}
+
+// while：条件循环
+int n = 0;
+while (n &lt; 3) {
+    n++;
+}
+
+// do-while：至少执行一次
+int m = 0;
+do {
+    m++;
+} while (m &lt; 1);   // m = 1，因为先执行后判断</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><strong>永远不要在循环里修改循环变量</strong>（除非你非常清楚后果）。经典翻车：<code>for (int i = 0; i &lt; 10; i++) { i = 0; }</code>——死循环。</p>
+        </div>
+
+        <h3>break / continue / return：跳出三剑客</h3>
+        <table>
+          <thead>
+            <tr><th>关键字</th><th>作用</th><th>常见场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>break</code></td><td>跳出<strong>当前</strong>循环 / switch</td><td>找到目标提前退出</td></tr>
+            <tr><td><code>continue</code></td><td>跳过<strong>本轮</strong>剩余代码</td><td>过滤某些元素</td></tr>
+            <tr><td><code>return</code></td><td>跳出<strong>整个方法</strong>并返回值</td><td>函数出口</td></tr>
+          </tbody>
+        </table>
+
+        <h3>带标签的 break / continue（跳出多层循环）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>outer: for (int i = 0; i &lt; 3; i++) {
+    for (int j = 0; j &lt; 3; j++) {
+        if (i == 1 &amp;&amp; j == 1) {
+            break outer;   // 一口气跳出两层
+        }
+        System.out.println(i + "," + j);
+    }
+}</code></pre></div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「条件要 boolean，switch 用 → 表达式；break 出当前，continue 跳本轮；带标签能跳外层」</strong>——三剑客配 switch 表达式，流程控制毕业。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <h2><span class="num">05</span> 数组、字符串与常用类</h2>
+
+        <h3>一维数组</h3>
+        <p>Java 数组是<strong>对象</strong>（继承自 Object），有 length 属性，<strong>固定大小</strong>。需要变长就用 <code>ArrayList</code>（见 ch10）。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 三种声明方式
+int[] a1 = new int[5];              // 默认值 0
+int[] a2 = {1, 2, 3, 4, 5};          // 字面量
+int[] a3 = new int[]{1, 2, 3};       // 匿名数组
+
+// Arrays 工具类（java.util.Arrays）
+int[] nums = {3, 1, 4, 1, 5, 9, 2, 6};
+Arrays.sort(nums);                  // 排序
+System.out.println(Arrays.toString(nums)); // [1, 1, 2, 3, 4, 5, 6, 9]
+int idx = Arrays.binarySearch(nums, 5);  // 二分查找（要先排序）
+int[] copy = Arrays.copyOf(nums, nums.length);</code></pre></div>
+
+        <h3>二维数组（锯齿数组）</h3>
+        <p>Java 二维数组其实是「<strong>数组的数组</strong>」，每行长度可以不同：</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>int[][] matrix = {
+    {1, 2, 3},
+    {4, 5},
+    {6, 7, 8, 9}     // 每行长度不同 → 锯齿数组
+};
+System.out.println(matrix[2][3]);   // 9
+System.out.println(matrix.length);  // 3（行数）
+System.out.println(matrix[0].length); // 3（第 0 行列数）</code></pre></div>
+
+        <h3>String 不可变字符串（最常用的类）</h3>
+        <p>String 是<strong>不可变对象（immutable）</strong>，每次「修改」其实都是新建对象。这是为了安全（HashMap 的 key、URL、数据库连接池）和线程安全。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>String s = "Hello";           // 字面量进字符串常量池
+String t = new String("Hello"); // new 出来的在堆上
+System.out.println(s == t);     // false（== 比较地址）
+System.out.println(s.equals(t)); // true（equals 比较内容）
+
+// 拼接：编译器会自动转 StringBuilder
+String r = "a" + "b" + "c";    // 编译后等价于 new StringBuilder().append("a").append("b").append("c").toString();
+
+// 高频 API
+"  hello world  ".trim().toUpperCase().substring(2, 7); // "HELLO"
+"abc".repeat(3);             // Java 11+："abcabcabc"
+"".isEmpty();                // true
+"".isBlank();                // Java 11+：true（含 Unicode 空格）</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><strong>循环里不要用 <code>+</code> 拼字符串</strong>，会生成大量中间对象。批量拼接用 <code>StringBuilder</code>，单线程；多线程用 <code>StringBuffer</code>（带 synchronized）。</p>
+        </div>
+
+        <h3>StringBuilder / StringBuffer</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// StringBuilder：非线程安全，性能更高（推荐）
+StringBuilder sb = new StringBuilder(64);
+for (int i = 0; i &lt; 1000; i++) {
+    sb.append(i).append(",");
+}
+String result = sb.toString();
+
+// StringBuffer：线程安全，所有方法带 synchronized
+StringBuffer sbf = new StringBuffer(); // 几乎只在历史代码里见</code></pre></div>
+
+        <h3>常用包装类（基本类型 → 对象）</h3>
+        <p>集合和泛型不允许基本类型，必须用包装类。Java 5+ <strong>自动装箱 / 拆箱</strong>。</p>
+        <table>
+          <thead>
+            <tr><th>基本类型</th><th>包装类</th><th>缓存范围</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>int</code></td><td><code>Integer</code></td><td>-128 ~ 127</td></tr>
+            <tr><td><code>long</code></td><td><code>Long</code></td><td>-128 ~ 127</td></tr>
+            <tr><td><code>double</code></td><td><code>Double</code></td><td>无缓存</td></tr>
+            <tr><td><code>boolean</code></td><td><code>Boolean</code></td><td>静态 TRUE/FALSE</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-title">📖 面试常见坑</div>
+          <p><code>Integer i1 = 100; Integer i2 = 100; i1 == i2 → true</code>（命中缓存）。但 <code>Integer j1 = 200; j2 = 200; j1 == j2 → false</code>（缓存外）。所以<strong>比较包装类要用 <code>equals</code></strong>。</p>
+        </div>
+
+        <h3>BigInteger 与 BigDecimal（高精度计算）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 任意精度整数
+BigInteger a = new BigInteger("123456789012345678901234567890");
+
+// 金额：必须用 String 构造，避免 double 精度丢失
+BigDecimal price = new BigDecimal("19.99");      // 推荐
+BigDecimal wrong = new BigDecimal(19.99);         // 坑！仍是 double 转的
+price.multiply(BigDecimal("3")).toString();       // 计算总价</code></pre></div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「数组固定长，String 不可变；批量拼 StringBuilder；金额用 BigDecimal 字符串构造；包装类比较用 equals」</strong>——数组、字符串、常用类一网打尽。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <h2><span class="num">06</span> 方法、递归与参数传递</h2>
+
+        <h3>方法定义四要素</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>[修饰符] 返回值类型 方法名(参数列表) [throws 异常] {
+    方法体;
+    return 返回值;   // void 可省略
+}
+
+// 示例：求两数最大公约数（欧几里得算法）
+public static int gcd(int a, int b) {
+    return b == 0 ? a : gcd(b, a % b);   // 递归
+}</code></pre></div>
+
+        <table>
+          <thead>
+            <tr><th>修饰符</th><th>作用</th><th>组合</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>public</code></td><td>所有包可访问</td><td rowspan="4">通常组合：<code>public static final</code>（常量）</td></tr>
+            <tr><td><code>protected</code></td><td>同包 + 子类</td></tr>
+            <tr><td><code>private</code></td><td>仅本类</td></tr>
+            <tr><td><code>static</code></td><td>类级，不依赖对象</td></tr>
+            <tr><td><code>final</code></td><td>不可重写 / 继承</td><td></td></tr>
+            <tr><td><code>abstract</code></td><td>抽象方法</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <h3>方法重载（Overload）：同名不同参</h3>
+        <p>同一类中，方法名相同但<strong>参数列表不同</strong>（个数 / 类型 / 顺序），编译时静态绑定。返回类型不同<strong>不算重载</strong>。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>public class MathUtils {
+    public int add(int a, int b)         { return a + b; }
+    public double add(double a, double b) { return a + b; }  // 参数类型不同
+    public int add(int a, int b, int c)  { return a + b + c; } // 参数个数不同
+}</code></pre></div>
+
+        <h3>方法重写（Override）：父子不同实现</h3>
+        <p>子类<strong>完全相同签名</strong>的方法覆盖父类，运行时动态绑定（多态的基础）。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>class Animal {
+    public void speak() { System.out.println("动物叫"); }
+}
+class Dog extends Animal {
+    @Override                    // 编译器帮你检查签名
+    public void speak() { System.out.println("汪汪"); }
+}
+
+Animal a = new Dog();
+a.speak();                      // 输出「汪汪」——多态</code></pre></div>
+
+        <h3>Java 的「值传递」永远成立</h3>
+        <p>Java 严格说<strong>只有值传递</strong>。对基本类型传值的拷贝；对对象传「对象引用的拷贝」（即指针的拷贝）。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>public static void swap(int a, int b) {  // a, b 是原值的拷贝
+    int t = a; a = b; b = t;        // 只换了副本
+}
+// 调用后原变量不变
+
+public static void reset(User u) {   // u 是引用的副本
+    u = new User();                  // 只让副本指向新对象
+}
+// 调用方持有的引用仍然指向原对象
+
+// 想真的「清空」，必须操作对象自身
+public static void clear(User u) {
+    u.setName(null);                 // 改的是同一个对象
+}</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>面试经典题：<strong>「Java 是值传递还是引用传递？」</strong>答案：<strong>严格值传递</strong>。对象传的是「引用的值」。所以方法里改引用指向不能让外面变，但改对象内部字段可以。</p>
+        </div>
+
+        <h3>递归：自己调自己</h3>
+        <p>递归三要素：<strong>终止条件、递推关系、返回时机</strong>。经典案例：阶乘、斐波那契、二分查找、快排。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 阶乘 n! = n * (n-1)!
+public static long factorial(int n) {
+    if (n &lt;= 1) return 1;     // 终止条件
+    return n * factorial(n - 1);
+}
+
+// 斐波那契（朴素递归 O(2^n) 极慢）
+public static long fib(int n) {
+    if (n &lt; 2) return n;
+    return fib(n - 1) + fib(n - 2);
+}
+// 推荐：迭代版 O(n)
+public static long fibIter(int n) {
+    if (n &lt; 2) return n;
+    long a = 0, b = 1;
+    for (int i = 2; i &lt;= n; i++) {
+        long t = a + b; a = b; b = t;
+    }
+    return b;
+}</code></pre></div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「方法四要素：修饰返回名参数；重载看参数，重写看父子；Java 永远值传递；递归三件套：终止递推返回」</strong>——这一章面试命中率最高的就是重载、重写、值传递三连问。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <h2><span class="num">07</span> 面向对象三大特性</h2>
+
+        <h3>封装：藏起来，露接口</h3>
+        <p>把数据（字段）和操作（方法）<strong>封装在类里</strong>，对外只暴露必要的 getter / setter。好处：<strong>可维护、可校验、可变更内部实现而不影响调用方</strong>。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>public class Account {
+    private double balance;            // 字段私有
+
+    public double getBalance() {       // 只读 getter
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount &lt;= 0) throw new IllegalArgumentException("金额必须 > 0");
+        balance += amount;
+    }
+}</code></pre></div>
+
+        <h3>继承：复用代码、表达 is-a</h3>
+        <p>Java 类<strong>单继承</strong>（一个父类），接口多继承。子类继承父类的<strong>非 private 字段与方法</strong>，可重写。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>class Animal {
+    protected String name;
+    public void eat() { System.out.println(name + " 吃东西"); }
+}
+class Dog extends Animal {
+    public Dog(String name) { this.name = name; }
+    public void bark() { System.out.println("汪汪"); }
+}</code></pre></div>
+
+        <table>
+          <thead>
+            <tr><th>关键字</th><th>作用</th><th>典型场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>extends</code></td><td>声明父类</td><td><code>class Dog extends Animal</code></td></tr>
+            <tr><td><code>super</code></td><td>访问父类成员</td><td><code>super(name)</code> 调父构造</td></tr>
+            <tr><td><code>this</code></td><td>访问当前对象</td><td><code>this.name = name</code></td></tr>
+            <tr><td><code>final</code></td><td>禁止继承 / 重写</td><td><code>public final class String</code></td></tr>
+          </tbody>
+        </table>
+
+        <h3>多态：父类引用指向子类对象</h3>
+        <p>多态的三要素：<strong>继承、重写、父类引用指向子类对象</strong>。运行时根据对象的实际类型调用对应方法（<strong>动态分派</strong>）。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>Animal a = new Dog("旺财");
+a.eat();    // 编译时看 Animal，运行时调 Dog（如果 Dog 重写了）
+
+// 实际意义：写一个方法处理所有 Animal 子类
+public void feed(Animal animal) {     // 接受父类类型
+    animal.eat();                     // 自动调用对应子类实现
+}</code></pre></div>
+
+        <h3>构造方法与初始化顺序</h3>
+        <p>对象初始化顺序面试必考：<strong>父静态 → 子静态 → 父实例块/字段 → 父构造 → 子实例块/字段 → 子构造</strong>。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>class Parent {
+    static { System.out.println("父类 static"); }
+    { System.out.println("父类 实例块"); }
+    Parent() { System.out.println("父类 构造"); }
+}
+class Child extends Parent {
+    static { System.out.println("子类 static"); }
+    { System.out.println("子类 实例块"); }
+    Child() { System.out.println("子类 构造"); }
+}
+// new Child() 输出顺序：
+// 父类 static → 子类 static → 父类 实例块 → 父类 构造 → 子类 实例块 → 子类 构造</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>每个类<strong>都有构造方法</strong>。没写就编译器自动加无参构造；<strong>一旦写了带参构造，无参构造就不再自动生成</strong>——子类继承时容易踩这个坑。</p>
+        </div>
+
+        <h3>访问修饰符的可见范围</h3>
+        <table>
+          <thead>
+            <tr><th>修饰符</th><th>同类</th><th>同包</th><th>子类</th><th>其他包</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>public</code></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td><code>protected</code></td><td>✓</td><td>✓</td><td>✓</td><td>✗</td></tr>
+            <tr><td>无（默认）</td><td>✓</td><td>✓</td><td>✗</td><td>✗</td></tr>
+            <tr><td><code>private</code></td><td>✓</td><td>✗</td><td>✗</td><td>✗</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「封装藏实现、继承 is-a、多态父引子；初始化顺序：父静 → 子静 → 父实 → 父构 → 子实 → 子构」</strong>——三大特性 + 初始化顺序，OOP 核心全部拿下。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <h2><span class="num">08</span> 抽象类、内部类与接口</h2>
+
+        <h3>抽象类（abstract class）</h3>
+        <p>用 <code>abstract</code> 修饰的类，<strong>不能 new</strong>，可以包含抽象方法（只有声明没有实现）。常用于「模板方法模式」。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>abstract class Shape {
+    String color;
+
+    // 抽象方法：子类必须实现
+    abstract double area();
+
+    // 具体方法：子类继承即可
+    public String describe() {
+        return color + "的图形，面积 = " + area();
+    }
+}
+class Circle extends Shape {
+    double r;
+    public Circle(double r) { this.r = r; color = "红色"; }
+    @Override
+    double area() { return Math.PI * r * r; }
+}</code></pre></div>
+
+        <h3>接口（interface）：纯契约</h3>
+        <p>Java 8+ 接口可以有 <strong>default 方法</strong>和 <strong>static 方法</strong>。一个类可以实现多个接口，是多继承的救赎。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>interface Flyable {
+    void fly();
+    default void land() { System.out.println("降落"); }   // Java 8+ 默认实现
+    static void check() { System.out.println("飞行前检查"); }
+}
+interface Swimmable {
+    void swim();
+}
+
+class Duck implements Flyable, Swimmable {   // 多实现
+    @Override public void fly() { System.out.println("鸭子飞"); }
+    @Override public void swim() { System.out.println("鸭子游"); }
+}</code></pre></div>
+
+        <h3>抽象类 vs 接口对比</h3>
+        <table>
+          <thead>
+            <tr><th>维度</th><th>抽象类</th><th>接口</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>关键字</td><td><code>abstract class</code></td><td><code>interface</code></td></tr>
+            <tr><td>继承数量</td><td>单继承</td><td>多实现</td></tr>
+            <tr><td>字段</td><td>任意</td><td>默认 <code>public static final</code></td></tr>
+            <tr><td>方法</td><td>任意</td><td>默认 <code>public abstract</code>（Java 8+ 可有 default/static）</td></tr>
+            <tr><td>构造方法</td><td>有</td><td>无</td></tr>
+            <tr><td>使用场景</td><td>「is-a」 + 共性代码</td><td>「has-a」能力扩展</td></tr>
+          </tbody>
+        </table>
+
+        <h3>四种内部类</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>class Outer {
+    private int x = 10;
+
+    // 1. 成员内部类：依赖外部类对象
+    class Inner {
+        public void show() { System.out.println(x); }
+    }
+
+    // 2. 静态内部类：不依赖外部类对象
+    static class StaticInner {
+        public void show() { System.out.println("static"); }
+    }
+
+    // 3. 局部内部类：定义在方法里
+    public void method() {
+        class LocalInner { }
+    }
+
+    // 4. 匿名内部类：一次性使用
+    Runnable r = new Runnable() {
+        @Override public void run() { System.out.println("匿名"); }
+    };
+}</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>匿名内部类<strong>会捕获外部 final 变量</strong>（Java 8+ 等价 final 也行）。Lambda 表达式（Java 8+）能取代大部分匿名内部类场景。</p>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「抽象类是模板，接口是契约；接口多实现，类单继承；内部类四种：成员/静态/局部/匿名」</strong>——抽象类与接口是面试 OOP 高频考点。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <h2><span class="num">09</span> 异常处理机制</h2>
+
+        <h3>异常的层次结构</h3>
+        <p>Java 把所有异常用<strong>类层次</strong>组织，全部继承自 <code>Throwable</code>：</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>java.lang.Throwable
+ ├── Error           （系统级，无法恢复，不应捕获）
+ │    ├── OutOfMemoryError
+ │    └── StackOverflowError
+ └── Exception        （程序级，应该处理）
+      ├── RuntimeException（运行时异常，编译器不强制捕获）
+      │    ├── NullPointerException
+      │    ├── ArrayIndexOutOfBoundsException
+      │    ├── ClassCastException
+      │    └── ArithmeticException
+      └── 受检异常（checked，必须捕获或声明 throws）
+           ├── IOException
+           ├── SQLException
+           └── ParseException</code></pre></div>
+
+        <table>
+          <thead>
+            <tr><th>类别</th><th>是否受检</th><th>是否必须捕获</th><th>举例</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Error</td><td>否</td><td>不应该捕获</td><td>OOM、StackOverflow</td></tr>
+            <tr><td>RuntimeException</td><td>否（非受检）</td><td>建议处理，但不强制</td><td>NPE、数组越界</td></tr>
+            <tr><td>其他 Exception</td><td>是（受检）</td><td>必须 try-catch 或 throws</td><td>IO、SQL 异常</td></tr>
+          </tbody>
+        </table>
+
+        <h3>try-catch-finally：标准处理结构</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>try {
+    // 可能抛异常的代码
+    int n = Integer.parseInt("abc");
+} catch (NumberFormatException e) {        // 精准捕获
+    System.out.println("数字格式不对");
+    e.printStackTrace();                   // 打堆栈
+} catch (Exception e) {                    // 多 catch，先子类后父类
+    System.out.println("其他异常");
+} finally {
+    System.out.println("无论如何都执行");   // 适合释放资源
+}</code></pre></div>
+
+        <h3>try-with-resources（Java 7+ 推荐写法）</h3>
+        <p>凡是实现 <code>AutoCloseable</code> 的类（流、连接等）都能自动关闭，比 finally 干净：</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 老写法：finally 里手动关
+FileInputStream in = null;
+try {
+    in = new FileInputStream("a.txt");
+    // ...
+} finally {
+    if (in != null) in.close();
+}
+
+// 新写法（推荐）：自动关闭
+try (FileInputStream in = new FileInputStream("a.txt");
+     BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+    String line = br.readLine();
+}   // 离开 try 块自动调 close()，即使抛异常也关</code></pre></div>
+
+        <h3>throw 与 throws 的区别</h3>
+        <table>
+          <thead>
+            <tr><th>关键字</th><th>位置</th><th>作用</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>throw</code></td><td>方法体内</td><td><strong>手动抛出一个异常对象</strong></td></tr>
+            <tr><td><code>throws</code></td><td>方法签名后</td><td><strong>声明可能抛的异常</strong>，把责任推给调用方</td></tr>
+          </tbody>
+        </table>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 自定义业务异常
+public class BizException extends RuntimeException {
+    public BizException(String msg) { super(msg); }
+}
+
+// throws 声明
+public void read(String fileName) throws IOException {     // 告诉调用方可能 IO 异常
+    if (!new File(fileName).exists()) {
+        throw new FileNotFoundException(fileName);          // 手动抛
+    }
+}</code></pre></div>
+
+        <h3>自定义异常与最佳实践</h3>
+        <ul>
+          <li>异常类名以 <code>Exception</code> 结尾</li>
+          <li>提供「带 message」的构造方法</li>
+          <li>业务异常<strong>继承 RuntimeException</strong>，避免污染方法签名</li>
+          <li><strong>不要用异常做流程控制</strong>（性能差、语义不清）</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「Throwable 下 Error + Exception；运行时非受检，IO/SQL 受检；try-with-resources 自动关；throw 抛，throws 声明」</strong>——异常处理核心四件套。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <h2><span class="num">10</span> 集合框架：List / Set / Map</h2>
+
+        <h3>集合整体结构</h3>
+        <p>Java 集合分两大族：<code>Collection</code>（存单值）和 <code>Map</code>（存键值对）。Collection 下又分 <code>List</code>（有序可重复）、<code>Set</code>（无序不可重复）、<code>Queue</code>（队列）。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>Iterable
+ └── Collection
+      ├── List（有序可重复）
+      │    ├── ArrayList    数组实现，随机访问快，增删慢
+      │    ├── LinkedList   链表实现，增删快，随机访问慢
+      │    └── Vector       古老线程安全版本（几乎不用）
+      ├── Set（去重）
+      │    ├── HashSet       基于 HashMap，O(1) 增删查
+      │    ├── LinkedHashSet 保留插入顺序
+      │    └── TreeSet        基于红黑树，元素有序
+      └── Queue
+           ├── ArrayDeque    双端队列
+           └── PriorityQueue 优先队列（堆）
+Map（键值对，键唯一）
+ ├── HashMap       O(1) 增删查（最常用）
+ ├── LinkedHashMap 保留插入顺序
+ ├── TreeMap        Key 有序
+ └── ConcurrentHashMap  并发场景</code></pre></div>
+
+        <h3>List 三巨头对比</h3>
+        <table>
+          <thead>
+            <tr><th>维度</th><th><code>ArrayList</code></th><th><code>LinkedList</code></th><th><code>Vector</code></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>底层</td><td>动态数组</td><td>双向链表</td><td>动态数组</td></tr>
+            <tr><td>随机访问</td><td>O(1) ★</td><td>O(n)</td><td>O(1)</td></tr>
+            <tr><td>头尾增删</td><td>O(n)（需要扩容）</td><td>O(1) ★</td><td>O(n)</td></tr>
+            <tr><td>线程安全</td><td>否</td><td>否</td><td>是（synchronized）</td></tr>
+            <tr><td>默认容量</td><td>10</td><td>—</td><td>10</td></tr>
+            <tr><td>扩容</td><td>1.5 倍</td><td>—</td><td>2 倍</td></tr>
+            <tr><td>建议</td><td><strong>默认用它</strong></td><td>队列场景</td><td>历史代码</td></tr>
+          </tbody>
+        </table>
+
+        <h3>ArrayList 与 LinkedList 选择</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 99% 场景用 ArrayList
+List&lt;String&gt; list = new ArrayList&lt;&gt;(64);   // 预设容量避免多次扩容
+list.add("a");
+list.get(0);                                  // O(1) 随机访问
+list.set(0, "A");                             // 修改
+
+// 真要频繁头插 / 队列 / 栈 → LinkedList
+Deque&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+queue.offer(1);     // 入队
+queue.poll();        // 出队
+queue.peek();        // 看队首</code></pre></div>
+
+        <h3>Set 去重原理：HashSet 背后的 HashMap</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>Set&lt;String&gt; set = new HashSet&lt;&gt;();
+set.add("a");     // 实际是 HashMap.put("a", PRESENT)，PRESENT 是固定占位对象
+set.contains("a");  // O(1) 哈希定位
+
+// 必须正确实现 hashCode 与 equals，否则会去重失败
+class User {
+    String name;
+    int age;
+    @Override public boolean equals(Object o) { /* 比较 name + age */ }
+    @Override public int hashCode() { return Objects.hash(name, age); }
+}</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><strong>放进 HashSet/HashMap 的对象必须同时重写 <code>equals</code> 和 <code>hashCode</code></strong>，否则去重失效、查找错乱。可以用 <code>Objects.equals</code> 和 <code>Objects.hash</code> 避免空指针。</p>
+        </div>
+
+        <h3>Map 重点：HashMap 实现原理</h3>
+        <p>Java 8+ 的 HashMap = <strong>数组 + 链表 + 红黑树</strong>。当链表长度 &gt; 8 且数组 ≥ 64 时，链表转红黑树，查找从 O(n) 变成 O(log n)。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;(64, 0.75f);
+// initialCapacity = 64（数组大小），loadFactor = 0.75（扩容阈值）
+
+map.put("a", 1);
+map.getOrDefault("b", 0);     // key 不存在返回 0
+map.computeIfAbsent("c", k -> 0);  // key 不存在才计算
+
+// 遍历
+for (Map.Entry&lt;String, Integer&gt; e : map.entrySet()) {
+    System.out.println(e.getKey() + "=" + e.getValue());
+}</code></pre></div>
+
+        <h3>如何选择集合？一张表搞定</h3>
+        <table>
+          <thead>
+            <tr><th>需求</th><th>选</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>快速随机访问、可重复</td><td><code>ArrayList</code></td></tr>
+            <tr><td>频繁头尾增删</td><td><code>LinkedList</code> 或 <code>ArrayDeque</code></td></tr>
+            <tr><td>去重 + 顺序无关</td><td><code>HashSet</code></td></tr>
+            <tr><td>去重 + 保留插入顺序</td><td><code>LinkedHashSet</code></td></tr>
+            <tr><td>去重 + 元素有序</td><td><code>TreeSet</code></td></tr>
+            <tr><td>键值对 + 顺序无关</td><td><code>HashMap</code></td></tr>
+            <tr><td>键值对 + 保留插入顺序</td><td><code>LinkedHashMap</code></td></tr>
+            <tr><td>键值对 + key 排序</td><td><code>TreeMap</code></td></tr>
+            <tr><td>并发场景</td><td><code>ConcurrentHashMap</code> / <code>CopyOnWriteArrayList</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「List 有序可重，Set 去重，Map 键值；查询 ArrayList，去重 HashSet，键值 HashMap；Java 8 起 HashMap 链表长 8 转红黑树」</strong>——面试三连问标准答案。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <h2><span class="num">11</span> 泛型与通配符</h2>
+
+        <h3>为什么需要泛型</h3>
+        <p>泛型让类 / 接口 / 方法<strong>支持多种类型</strong>，同时在编译期做类型检查，避免运行时才 <code>ClassCastException</code>。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 不带泛型：每次取出都要强转
+List list = new ArrayList();
+list.add("hello");
+String s = (String) list.get(0);   // 必须强转，容易 ClassCastException
+
+// 带泛型：编译期就保证类型
+List&lt;String&gt; list2 = new ArrayList&lt;&gt;();
+list2.add("hello");
+String s2 = list2.get(0);          // 直接是 String，不用转</code></pre></div>
+
+        <h3>泛型类 / 接口 / 方法</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 泛型类
+public class Box&lt;T&gt; {
+    private T value;
+    public void set(T v) { this.value = v; }
+    public T get() { return value; }
+}
+Box&lt;String&gt; box = new Box&lt;&gt;();     // Java 7+ 菱形语法
+
+// 泛型方法：&lt;T&gt; 声明独立于类的泛型
+public static &lt;T&gt; T identity(T input) {
+    return input;
+}
+String r = identity("abc");        // T 推断为 String
+
+// 多类型参数
+public class Pair&lt;K, V&gt {
+    public Pair(K k, V v) { }
+}</code></pre></div>
+
+        <h3>通配符：? extends / ? super</h3>
+        <p>PECS 原则（Producer Extends, Consumer Super）是泛型面试必考题：</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 上界通配：只能读，不能写（生产者）
+public double sumOfList(List&lt;? extends Number&gt; list) {
+    double sum = 0;
+    for (Number n : list) sum += n.doubleValue();   // OK：能读 Number
+    // list.add(1.0);   // 编译错！不知道具体子类型
+    return sum;
+}
+
+// 下界通配：只能写，不能读（消费者）
+public void addNumbers(List&lt;? super Integer&gt; list) {
+    list.add(1);                  // OK：能写 Integer（必被接受）
+    // Integer i = list.get(0);   // 编译错！只知是 Integer 的父类
+}</code></pre></div>
+
+        <table>
+          <thead>
+            <tr><th>通配符</th><th>读</th><th>写</th><th>场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>&lt;? extends T&gt;</code></td><td>可读为 T</td><td>不可写</td><td>生产者（从集合「取」数据）</td></tr>
+            <tr><td><code>&lt;? super T&gt;</code></td><td>读出来是 Object</td><td>可写 T</td><td>消费者（往集合「放」数据）</td></tr>
+            <tr><td><code>&lt;?&gt;</code></td><td>读为 Object</td><td>只能写 null</td><td>完全不确定</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>泛型是<strong>编译期特性</strong>，运行期会<strong>擦除（erasure）</strong>成 <code>Object</code> 或上界。所以 <code>List&lt;String&gt;</code> 和 <code>List&lt;Integer&gt;</code> 运行时其实是同一个类，<strong>不能用 instanceof 检查泛型类型</strong>。</p>
+        </div>
+
+        <h3>类型擦除的影响</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 编译后等价于：
+// class Box { private Object value; ... }
+
+List&lt;String&gt; a = new ArrayList&lt;&gt;();
+List&lt;Integer&gt; b = new ArrayList&lt;&gt;();
+System.out.println(a.getClass() == b.getClass());   // true，同一个 ArrayList.class
+
+// 不能 new T()、不能 new T[]、不能 instanceof T
+// 解决：Class&lt;T&gt; clazz 参数传入，或用反射</code></pre></div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「泛型三类：类接口方法；通配符 PECS：extends 读 super 写；运行期类型擦除变 Object」</strong>——泛型面试题就这三板斧。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <h2><span class="num">12</span> IO 流与 NIO.2</h2>
+
+        <h3>IO 流的整体分类</h3>
+        <p>按方向分：<strong>输入流（Input）/ 输出流（Output）</strong>。按数据类型分：<strong>字节流（byte）/ 字符流（char）</strong>。下面这张表记牢：</p>
+        <table>
+          <thead>
+            <tr><th>类型</th><th>字节输入</th><th>字节输出</th><th>字符输入</th><th>字符输出</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>基类（抽象）</td><td><code>InputStream</code></td><td><code>OutputStream</code></td><td><code>Reader</code></td><td><code>Writer</code></td></tr>
+            <tr><td>文件</td><td><code>FileInputStream</code></td><td><code>FileOutputStream</code></td><td><code>FileReader</code></td><td><code>FileWriter</code></td></tr>
+            <tr><td>缓冲（性能↑）</td><td><code>BufferedInputStream</code></td><td><code>BufferedOutputStream</code></td><td><code>BufferedReader</code></td><td><code>BufferedWriter</code></td></tr>
+            <tr><td>转换</td><td colspan="2">—</td><td><code>InputStreamReader</code></td><td><code>OutputStreamWriter</code></td></tr>
+            <tr><td>对象序列化</td><td><code>ObjectInputStream</code></td><td><code>ObjectOutputStream</code></td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+
+        <h3>经典字节流读写文件</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 复制文件（推荐写法：try-with-resources + 缓冲流）
+Path src = Path.of("a.txt");
+Path dst = Path.of("b.txt");
+try (InputStream in = new BufferedInputStream(Files.newInputStream(src));
+     OutputStream out = new BufferedOutputStream(Files.newOutputStream(dst))) {
+    byte[] buf = new byte[8192];
+    int n;
+    while ((n = in.read(buf)) != -1) {
+        out.write(buf, 0, n);
+    }
+}</code></pre></div>
+
+        <h3>字符流读文本（按行）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// Java 11+ Files.readString 一行搞定
+String content = Files.readString(Path.of("config.json"));
+
+// 按行读
+try (BufferedReader br = Files.newBufferedReader(Path.of("data.csv"))) {
+    String line;
+    while ((line = br.readLine()) != null) {
+        String[] cols = line.split(",");
+    }
+}</code></pre></div>
+
+        <h3>对象序列化（Serializable）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>public class User implements Serializable {  // 打标记
+    private static final long serialVersionUID = 1L;  // 版本号
+    private String name;
+    private transient String password;        // 不参与序列化
+}
+
+// 序列化
+User u = new User("张三", "123");
+try (ObjectOutputStream oos = new ObjectOutputStream(
+        new FileOutputStream("user.bin"))) {
+    oos.writeObject(u);
+}
+
+// 反序列化
+try (ObjectInputStream ois = new ObjectInputStream(
+        new FileInputStream("user.bin"))) {
+    User u2 = (User) ois.readObject();
+    System.out.println(u2.getName());   // password 为 null
+}</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><code>Serializable</code> 反序列化有<strong>安全风险</strong>（反序列化攻击），且对类结构变更敏感。<strong>生产项目更推荐用 JSON（Jackson / Gson）</strong>，而不是 Java 原生序列化。</p>
+        </div>
+
+        <h3>NIO.2（Java 7+）：Files / Paths / Path</h3>
+        <p>新 IO API 用 <code>Path</code> 替代 <code>File</code>，支持异步（AsynchronousChannel）和文件属性操作。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>Path p = Path.of("/tmp", "a.txt");
+
+Files.exists(p);
+Files.size(p);
+Files.deleteIfExists(p);
+Files.list(Path.of("/tmp"))          // 流式遍历目录
+    .filter(Files::isRegularFile)
+    .forEach(System.out::println);
+
+// 递归遍历：Files.walk 返回 Stream&lt;Path&gt;
+try (Stream&lt;Path&gt; stream = Files.walk(Path.of("/tmp"))) {
+    long count = stream.filter(Files::isRegularFile).count();
+}</code></pre></div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「字节流图片视频，字符流文本；缓冲流包一层，性能翻倍；序列化加 Serializable、慎用；新 IO 用 Path + Files」</strong>——IO 学习一句话回顾。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <h2><span class="num">13</span> 多线程与 JUC 并发包</h2>
+
+        <h3>线程的两种创建方式</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 方式 1：继承 Thread 类
+class MyThread extends Thread {
+    @Override public void run() {
+        System.out.println("线程运行");
+    }
+}
+new MyThread().start();
+
+// 方式 2（推荐）：实现 Runnable / Callable
+Runnable task = () -> System.out.println("Lambda 写法");
+
+// Callable：可返回结果，可抛异常
+Callable&lt;Integer&gt; callTask = () -> {
+    Thread.sleep(1000);
+    return 42;
+};
+ExecutorService pool = Executors.newFixedThreadPool(4);
+Future&lt;Integer&gt; future = pool.submit(callTask);
+Integer result = future.get();            // 阻塞等结果
+pool.shutdown();</code></pre></div>
+
+        <h3>线程生命周期（6 种状态）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>NEW → RUNNABLE → BLOCKED / WAITING / TIMED_WAITING → TERMINATED
+ ↑
+ new Thread()  start()         阻塞 / 等待        run() 结束
+
+NEW         新建未启动
+RUNNABLE    正在 JVM 中执行（含就绪）
+BLOCKED     等待进入 synchronized
+WAITING     Object.wait() / join() 无限等
+TIMED_WAITING sleep() / wait(timeout)
+TERMINATED  执行完毕</code></pre></div>
+
+        <h3>synchronized 与 volatile</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 1. 修饰实例方法：锁 this
+public synchronized void increment() { count++; }
+
+// 2. 修饰静态方法：锁 Class 对象
+public static synchronized void doWork() { }
+
+// 3. 修饰代码块：锁指定对象
+synchronized (lock) {
+    // 临界区
+}
+
+// volatile：保证可见性 + 禁止指令重排，不保证原子性
+private volatile boolean flag = false;</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><code>volatile</code> <strong>不能替代 synchronized</strong>。它只保证线程间可见，不保证 i++ 这种复合操作的原子性。需要原子操作用 <code>AtomicInteger</code>。</p>
+        </div>
+
+        <h3>JUC 核心组件</h3>
+        <table>
+          <thead>
+            <tr><th>组件</th><th>作用</th><th>典型场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>AtomicInteger/Long</code></td><td>无锁原子类（CAS）</td><td>计数器、状态标记</td></tr>
+            <tr><td><code>ReentrantLock</code></td><td>可重入锁</td><td>需要 tryLock / 公平锁</td></tr>
+            <tr><td><code>CountDownLatch</code></td><td>倒计数到 0 放行</td><td>主线程等子线程结束</td></tr>
+            <tr><td><code>CyclicBarrier</code></td><td>循环屏障</td><td>多线程分阶段汇总</td></tr>
+            <tr><td><code>Semaphore</code></td><td>信号量限流</td><td>池化资源（数据库连接）</td></tr>
+            <tr><td><code>ConcurrentHashMap</code></td><td>并发 Map</td><td>并发缓存</td></tr>
+            <tr><td><code>ThreadPoolExecutor</code></td><td>线程池</td><td><strong>99% 场景用它</strong></td></tr>
+          </tbody>
+        </table>
+
+        <h3>线程池七大参数</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>new ThreadPoolExecutor(
+    2,                          // corePoolSize 核心线程数
+    8,                          // maximumPoolSize 最大线程数
+    60, TimeUnit.SECONDS,       // keepAliveTime 非核心空闲存活时间
+    new LinkedBlockingQueue&lt;&gt;(100),  // workQueue 任务队列
+    Executors.defaultThreadFactory(),
+    new ThreadPoolExecutor.CallerRunsPolicy()  // 拒绝策略
+);</code></pre></div>
+
+        <p>四种拒绝策略：</p>
+        <table>
+          <thead>
+            <tr><th>策略</th><th>行为</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>AbortPolicy</code></td><td>抛异常（默认）</td></tr>
+            <tr><td><code>CallerRunsPolicy</code></td><td>让提交者自己跑</td></tr>
+            <tr><td><code>DiscardPolicy</code></td><td>静默丢弃</td></tr>
+            <tr><td><code>DiscardOldestPolicy</code></td><td>丢最老的任务</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><strong>禁用 <code>Executors.newFixedThreadPool</code> 默认队列容量 Integer.MAX_VALUE</strong>，可能 OOM。生产环境<strong>必须显式构造 <code>ThreadPoolExecutor</code></strong>，指定队列容量。</p>
+        </div>
+
+        <h3>Java 21 虚拟线程（Virtual Threads）</h3>
+        <p>Java 21 引入了「虚拟线程」，也称协程。百万级线程轻松搞定，<strong>适合高并发 I/O 场景</strong>（Web 服务器、HTTP 客户端）。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// Java 21+
+Thread.ofVirtual().start(() -> {
+    System.out.println("虚拟线程");
+});
+
+// 虚拟线程池
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    for (int i = 0; i &lt; 100_000; i++) {
+        executor.submit(() -> {
+            Thread.sleep(Duration.ofSeconds(1));
+            return null;
+        });
+    }
+}   // 自动 join</code></pre></div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「线程两创建：Thread / Runnable；状态六种记住图；JUC 工具包按场景选；线程池七大参数 + 四拒绝策略；高 I/O 用 Java 21 虚拟线程」</strong>——并发篇重点核心。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <h2><span class="num">14</span> JVM 内存模型与 GC 调优</h2>
+
+        <h3>JVM 运行时数据区</h3>
+        <p>面试必问：<strong>堆 / 栈 / 方法区 / PC 寄存器 / 本地方法栈</strong>。重点记线程私有 vs 共享。</p>
+        <table>
+          <thead>
+            <tr><th>区域</th><th>线程私有</th><th>作用</th><th>OOM 现象</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>堆 Heap</strong></td><td>否</td><td>对象实例、数组</td><td><code>OutOfMemoryError: Java heap space</code></td></tr>
+            <tr><td><strong>虚拟机栈 Stack</strong></td><td>是</td><td>方法栈帧、局部变量</td><td><code>StackOverflowError</code></td></tr>
+            <tr><td><strong>程序计数器 PC</strong></td><td>是</td><td>当前线程字节码行号</td><td>不会 OOM</td></tr>
+            <tr><td><strong>本地方法栈</strong></td><td>是</td><td>Native 方法</td><td><code>StackOverflowError</code></td></tr>
+            <tr><td><strong>方法区 / 元空间</strong></td><td>否</td><td>类信息、常量池、静态变量</td><td><code>OutOfMemoryError: Metaspace</code></td></tr>
+          </tbody>
+        </table>
+
+        <h3>堆内存分代模型</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>                    ┌─────────────┐
+                    │    老年代    │  长期存活对象
+                    │   Old Gen   │  Full GC 触发
+                    └─────────────┘
+                          ▲
+                          │ 晋升（年龄阈值 15）
+                    ┌─────────────┐
+                    │   幸存区    │  From / To
+                    │   Survivor  │  Minor GC 反复复制
+                    └─────────────┘
+                          ▲
+                    ┌─────────────┐
+                    │   新生代    │  Eden + 2 Survivor
+                    │   Young Gen │  Minor GC 频繁
+                    └─────────────┘
+
+Java 8+ 默认：-Xms4g -Xmx4g -Xmn2g （新生代 2G）
+HotSpot 默认比例：Eden : Survivor : Survivor = 8 : 1 : 1</code></pre></div>
+
+        <h3>垃圾回收算法（4 种）</h3>
+        <table>
+          <thead>
+            <tr><th>算法</th><th>原理</th><th>优缺点</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>标记-清除</strong></td><td>先标记后清</td><td>有内存碎片</td></tr>
+            <tr><td><strong>标记-整理</strong></td><td>清除后整理</td><td>无碎片，但慢</td></tr>
+            <tr><td><strong>复制</strong></td><td>分两块，活对象复制到另一边</td><td>无碎片，但要双倍空间（用于新生代）</td></tr>
+            <tr><td><strong>分代</strong></td><td>按对象年龄分代回收</td><td>现代 JVM 默认算法</td></tr>
+          </tbody>
+        </table>
+
+        <h3>常用垃圾回收器</h3>
+        <table>
+          <thead>
+            <tr><th>回收器</th><th>算法</th><th>特点</th><th>JDK 默认</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Serial</td><td>复制 + 标记整理</td><td>单线程，STW</td><td>—</td></tr>
+            <tr><td>Parallel Scavenge</td><td>多线程复制</td><td>吞吐量优先</td><td>Java 8 默认</td></tr>
+            <tr><td><strong>G1</strong></td><td>分区 + 增量</td><td>低延迟 + 大堆</td><td>Java 9+ 默认</td></tr>
+            <tr><td><strong>ZGC</strong></td><td>染色指针 + 读屏障</td><td>亚毫秒级 STW，TB 级堆</td><td>Java 11+ 实验</td></tr>
+            <tr><td>Shenandoah</td><td>Brooks 指针</td><td>类似 ZGC，RedHat 主推</td><td>Java 12+ 实验</td></tr>
+          </tbody>
+        </table>
+
+        <h3>JVM 调优常用参数</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>java -Xms4g -Xmx4g -Xmn2g \\
+     -XX:+UseG1GC                  // 用 G1 回收器
+     -XX:MaxGCPauseMillis=200      // 目标 STW &lt; 200ms
+     -XX:MetaspaceSize=256m \\
+     -XX:+PrintGCDetails           // 打 GC 日志
+     -Xlog:gc*:file=gc.log:time    // Java 9+ 推荐写法
+     -jar app.jar
+
+// 常用排查工具
+jps            // 列出 Java 进程
+jstack &lt;pid&gt;  // 线程快照，找死锁
+jmap -heap &lt;pid&gt;  // 堆内存详情
+jstat -gc &lt;pid&gt; 1000  // 每秒打一次 GC 情况
+arthas / async-profiler  // 神器</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p>JVM 调优第一步永远是<strong>看监控 + 找瓶颈</strong>，不要上来就调参数。99% 的性能问题靠<strong>减少大对象 + 优化 SQL + 加缓存</strong>能解决，跟 GC 没关系。</p>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「堆栈方法区，五区记心间；分代回收是核心；Java 9 起 G1 默认，大堆 ZGC 显身手」</strong>——JVM 调优不被问懵的底气。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <h2><span class="num">15</span> 反射、注解与动态代理</h2>
+
+        <h3>反射：在运行时看 &amp; 改类的一切</h3>
+        <p>反射让 Java 突破「编译期静态」，运行时<strong>动态拿类的字段、方法、构造器</strong>。框架（Spring/MyBatis）的基石。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 三步：拿 Class → 拿 Constructor/Method/Field → 调用
+Class&lt;?&gt; clazz = Class.forName("com.example.User");
+Object user = clazz.getDeclaredConstructor(String.class, int.class)
+                 .newInstance("张三", 18);
+
+Method setName = clazz.getDeclaredMethod("setName", String.class);
+setName.invoke(user, "李四");           // 调用 setter
+
+Field nameField = clazz.getDeclaredField("name");
+nameField.setAccessible(true);           // 关 private 权限校验
+System.out.println(nameField.get(user)); // 拿到 "李四"</code></pre></div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><code>setAccessible(true)</code> 能绕过 private 访问，<strong>生产代码慎用</strong>。反射比直接调用<strong>慢 10~100 倍</strong>，JIT 优化难。高频调用应避免反射，或用 MethodHandle（Java 7+）替代。</p>
+        </div>
+
+        <h3>注解：元数据 + 处理</h3>
+        <p>注解本质是「给代码贴标签」，本身不改变程序行为，要配合<strong>反射或 APT</strong>才生效。</p>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 1. 定义注解
+@Retention(RetentionPolicy.RUNTIME)     // 保留到运行期
+@Target(ElementType.METHOD)             // 只能贴在方法上
+public @interface Cacheable {
+    String key();
+    int expire() default 60;
+}
+
+// 2. 使用注解
+class UserService {
+    @Cacheable(key = "user:", expire = 300)
+    public User findById(Long id) { return null; }
+}
+
+// 3. 解析注解（Spring AOP 的核心思路）
+Method m = UserService.class.getMethod("findById", Long.class);
+if (m.isAnnotationPresent(Cacheable.class)) {
+    Cacheable c = m.getAnnotation(Cacheable.class);
+    System.out.println(c.key());          // "user:"
+}</code></pre></div>
+
+        <table>
+          <thead>
+            <tr><th>保留策略</th><th>生效阶段</th><th>典型场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>SOURCE</code></td><td>源码期</td><td><code>@Override</code>（编译器用）</td></tr>
+            <tr><td><code>CLASS</code></td><td>字节码期</td><td>APT 编译期生成代码</td></tr>
+            <tr><td><code>RUNTIME</code></td><td>运行期</td><td>Spring 框架用</td></tr>
+          </tbody>
+        </table>
+
+        <h3>JDK 动态代理（基于接口）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 业务接口
+interface Service {
+    void doWork();
+}
+
+// 被代理对象
+class RealService implements Service {
+    public void doWork() { System.out.println("真实工作"); }
+}
+
+// 调用处理器：每个方法调用都会经过这里
+InvocationHandler handler = (proxy, method, args) -> {
+    System.out.println("[日志] 调用 " + method.getName());
+    Object result = method.invoke(new RealService(), args);
+    System.out.println("[日志] 结束");
+    return result;
+};
+
+Service proxy = (Service) Proxy.newProxyInstance(
+    Service.class.getClassLoader(),
+    new Class&lt;?&gt;[]{Service.class},
+    handler);
+proxy.doWork();   // 自动加日志</code></pre></div>
+
+        <h3>CGLIB / ByteBuddy 动态代理（基于类）</h3>
+        <p>JDK 代理<strong>要求有接口</strong>，没有接口就用 CGLIB（生成子类）或 ByteBuddy（字节码增强）。Spring AOP 默认两者混用。</p>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「反射拿类三步走；注解三保留期；JDK 代理要接口，CGLIB 生成子类；Spring 框架都是这两套」</strong>——理解框架的「钥匙三件套」。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <h2><span class="num">16</span> 设计模式与最佳实践</h2>
+
+        <h3>GoF 23 种设计模式速查</h3>
+        <table>
+          <thead>
+            <tr><th>分类</th><th>模式</th><th>一句话</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>创建型</strong></td><td>单例</td><td>一个类只有一个实例</td></tr>
+            <tr><td></td><td>工厂方法</td><td>子类决定创建哪个类</td></tr>
+            <tr><td></td><td>抽象工厂</td><td>创建一系列相关对象</td></tr>
+            <tr><td></td><td>建造者</td><td>链式调用构造复杂对象</td></tr>
+            <tr><td></td><td>原型</td><td>克隆自身</td></tr>
+            <tr><td><strong>结构型</strong></td><td>适配器</td><td>转换接口兼容</td></tr>
+            <tr><td></td><td>装饰器</td><td>动态加功能</td></tr>
+            <tr><td></td><td>代理</td><td>替身控制访问</td></tr>
+            <tr><td></td><td>外观</td><td>封装子系统</td></tr>
+            <tr><td></td><td>组合</td><td>树形结构（文件夹/文件）</td></tr>
+            <tr><td><strong>行为型</strong></td><td>策略</td><td>封装可互换的算法</td></tr>
+            <tr><td></td><td>模板方法</td><td>父类定骨架，子类填细节</td></tr>
+            <tr><td></td><td>观察者</td><td>事件监听（订阅/发布）</td></tr>
+            <tr><td></td><td>责任链</td><td>多个对象依次处理（过滤器）</td></tr>
+            <tr><td></td><td>状态</td><td>对象行为随状态改变</td></tr>
+          </tbody>
+        </table>
+
+        <h3>单例模式：六种写法对比</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 1. 饿汉式（类加载即创建，线程安全）
+public class Singleton1 {
+    private static final Singleton1 INSTANCE = new Singleton1();
+    private Singleton1() {}
+    public static Singleton1 getInstance() { return INSTANCE; }
+}
+
+// 2. 懒汉式 + 双重检查锁（DCL，推荐面试写）
+public class Singleton2 {
+    private static volatile Singleton2 INSTANCE;   // volatile 防指令重排
+    private Singleton2() {}
+    public static Singleton2 getInstance() {
+        if (INSTANCE == null) {                      // 第一次检查（无锁）
+            synchronized (Singleton2.class) {
+                if (INSTANCE == null) {              // 第二次检查（加锁后）
+                    INSTANCE = new Singleton2();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+}
+
+// 3. 静态内部类（最优雅）
+public class Singleton3 {
+    private Singleton3() {}
+    private static class Holder {
+        private static final Singleton3 INSTANCE = new Singleton3();
+    }
+    public static Singleton3 getInstance() { return Holder.INSTANCE; }
+}</code></pre></div>
+
+        <h3>策略模式：消除 if-else</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 业务：根据 type 选择不同算法
+interface DiscountStrategy { double apply(double price); }
+
+class FullReduction implements DiscountStrategy {
+    public double apply(double p) { return p * 0.7; }
+}
+class NoDiscount implements DiscountStrategy {
+    public double apply(double p) { return p; }
+}
+
+Map&lt;String, DiscountStrategy&gt; map = Map.of(
+    "FULL", new FullReduction(),
+    "NONE", new NoDiscount()
+);
+double finalPrice = map.get(type).apply(originalPrice);</code></pre></div>
+
+        <h3>SOLID 五大原则（高质量代码的衡量尺）</h3>
+        <table>
+          <thead>
+            <tr><th>原则</th><th>核心</th><th>反例</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>SRP</strong> 单一职责</td><td>一个类只做一件事</td><td>「上帝类」啥都管</td></tr>
+            <tr><td><strong>OCP</strong> 开闭</td><td>扩展开放，修改关闭</td><td>加需求改原代码</td></tr>
+            <tr><td><strong>LSP</strong> 里氏替换</td><td>子类可替代父类</td><td>子类重写搞特殊</td></tr>
+            <tr><td><strong>ISP</strong> 接口隔离</td><td>接口专一，不臃肿</td><td>一个大接口全空实现</td></tr>
+            <tr><td><strong>DIP</strong> 依赖倒置</td><td>依赖抽象不依赖实现</td><td>直接 new 具体类</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「单例 DCL 加 volatile；策略模式消 if-else；SOLID 五原则，高质量代码衡尺」</strong>——设计模式不在于多，<strong>在于用得对场景</strong>。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <h2><span class="num">17</span> Java 17/21 新特性与 API 速查</h2>
+
+        <h3>Java 8（革命性版本，Lambda + Stream）</h3>
+        <ul>
+          <li><strong>Lambda 表达式</strong>：函数式编程</li>
+          <li><strong>Stream API</strong>：链式集合操作</li>
+          <li><strong>Optional</strong>：优雅处理 null</li>
+          <li><strong>新日期 API（java.time）</strong>：线程安全的 LocalDate/LocalDateTime</li>
+          <li><strong>接口 default 方法</strong></li>
+          <li><strong>CompletableFuture</strong>：异步编排</li>
+        </ul>
+
+        <h3>Lambda + Stream：高频组合</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>List&lt;String&gt; names = Arrays.asList("Alice", "Bob", "Charlie");
+
+// filter + map + collect：找出长度 &gt; 3 并转大写
+List&lt;String&gt; result = names.stream()
+    .filter(s -&gt; s.length() &gt; 3)
+    .map(String::toUpperCase)              // 方法引用
+    .sorted()
+    .collect(Collectors.toList());
+
+// 常用终结操作
+long count = names.stream().count();
+Optional&lt;String> first = names.stream().findFirst();
+boolean anyMatch = names.stream().anyMatch(s -> s.startsWith("A"));
+String joined = names.stream().collect(Collectors.joining(", "));
+
+// 数值统计
+IntSummaryStatistics stat = names.stream()
+    .collect(Collectors.summarizingInt(String::length));
+// count, sum, min, average, max 全在一个对象里</code></pre></div>
+
+        <h3>Optional 优雅判空</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>Optional&lt;User&gt; opt = userRepository.findById(1L);
+
+// ❌ 反例
+String name = opt.isPresent() ? opt.get().getName() : "default";
+
+// ✅ 正确
+String name = opt.map(User::getName).orElse("default");
+
+// orElseGet 延迟计算，orElseThrow 强制处理
+String n2 = opt.map(User::getName).orElseGet(() -> "guest-" + System.currentTimeMillis());
+User u = opt.orElseThrow(() -> new BizException("用户不存在"));</code></pre></div>
+
+        <h3>Java 9 ~ 21 新特性速览</h3>
+        <table>
+          <thead>
+            <tr><th>版本</th><th>关键特性</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Java 9</td><td>模块系统（JPMS）、List.of/Set.of/Maps.of 工厂方法、Stream takeWhile/dropWhile</td></tr>
+            <tr><td>Java 10</td><td><code>var</code> 局部变量类型推断</td></tr>
+            <tr><td>Java 11 LTS</td><td>String repeat/isBlank/Strip、HttpClient 标准库、单文件 <code>java Hello.java</code></td></tr>
+            <tr><td>Java 12-13</td><td>switch 预览、文本块预览</td></tr>
+            <tr><td>Java 14</td><td>switch 表达式正式、<code>record</code> 数据类（预览）、<code>NPE</code> 提示信息改进</td></tr>
+            <tr><td>Java 15</td><td>sealed class 封闭类（预览）、文本块正式</td></tr>
+            <tr><td>Java 16</td><td>record 正式、instanceof 模式匹配</td></tr>
+            <tr><td>Java 17 LTS</td><td>sealed class 正式、switch 模式匹配预览</td></tr>
+            <tr><td>Java 18-20</td><td>简单 Web 服务器、字符串模板（预览）、结构化并发（孵化）</td></tr>
+            <tr><td>Java 21 LTS</td><td><strong>虚拟线程</strong>（正式）、switch 模式匹配正式、record patterns、序列集合</td></tr>
+          </tbody>
+        </table>
+
+        <h3>record 数据类（Java 14+）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 老写法：50 行 Lombok @Data
+@Data
+public class User {
+    private Long id;
+    private String name;
+}
+
+// Java 14+ record：一行搞定，自动生成 equals/hashCode/toString/getter
+public record User(Long id, String name) {}
+
+User u = new User(1L, "张三");
+System.out.println(u.name());   // "张三"</code></pre></div>
+
+        <h3>switch 模式匹配（Java 21 正式）</h3>
+        <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre><code>// 以前要写一堆 instanceof
+if (obj instanceof String s) { return s.length(); }
+else if (obj instanceof Integer i) { return i; }
+
+// Java 21 switch 模式匹配
+return switch (obj) {
+    case String s  -> s.length();
+    case Integer i -> i;
+    case null      -> 0;
+    default        -> -1;
+};</code></pre></div>
+
+        <h3>常用 API 速查表</h3>
+        <table>
+          <thead>
+            <tr><th>类别</th><th>API</th><th>作用</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>数组</td><td><code>Arrays.asList / toString / sort / stream</code></td><td>数组工具</td></tr>
+            <tr><td>集合</td><td><code>List.of / Set.of / Map.of</code></td><td>不可变集合（Java 9+）</td></tr>
+            <tr><td>集合</td><td><code>Collectors.toList / groupingBy / joining</code></td><td>Stream 终结操作</td></tr>
+            <tr><td>字符串</td><td><code>String.join / repeat / isBlank / strip</code></td><td>字符串增强（Java 11+）</td></tr>
+            <tr><td>时间</td><td><code>LocalDate.now() / LocalDateTime.parse(")</code></td><td>现代日期 API</td></tr>
+            <tr><td>并发</td><td><code>CompletableFuture.supplyAsync(...)</code></td><td>异步编排</td></tr>
+            <tr><td>IO</td><td><code>Files.readString / writeString</code></td><td>一行读写（Java 11+）</td></tr>
+            <tr><td>HTTP</td><td><code>HttpClient.newHttpClient()</code></td><td>标准 HTTP 客户端（Java 11+）</td></tr>
+            <tr><td>反射</td><td><code>MethodHandles.lookup()</code></td><td>更快的反射</td></tr>
+            <tr><td>加密</td><td><code>MessageDigest.getInstance("SHA-256")</code></td><td>摘要 / 加密</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「Java 8 是分水岭：Lambda + Optional + Stream；17 LTS 稳，21 LTS 强（虚拟线程）；record 替 Lombok，模式匹配替 instanceof」</strong>——新特性按版本线记住，面试加分。</p>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <h2><span class="num">18</span> 实战路线、避坑与项目推荐</h2>
+
+        <h3>Java 学习路线（4 阶段）</h3>
+        <ol>
+          <li><strong>基础（1~2 个月）</strong>：Java SE 8/11、IDE、Git、Maven 基础、单元测试</li>
+          <li><strong>进阶（2~3 个月）</strong>：MySQL、JDBC、HTTP、Linux 基本命令、Spring Boot 起步</li>
+          <li><strong>实战（3~4 个月）</strong>：SSM / Spring Boot 项目、Redis、RabbitMQ、Docker、CI/CD</li>
+          <li><strong>高级（持续）</strong>：JVM 调优、并发编程、设计模式、微服务（Spring Cloud / Dubbo）、分布式</li>
+        </ol>
+
+        <h3>推荐项目实战（按难度递进）</h3>
+        <table>
+          <thead>
+            <tr><th>项目</th><th>覆盖技能</th><th>难度</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>todo-cli 命令行</td><td>集合、IO、Maven</td><td>★</td></tr>
+            <tr><td>网络爬虫</td><td>多线程、HTTP、文件存储</td><td>★★</td></tr>
+            <tr><td>博客系统</td><td>Spring Boot、MySQL、JPA、Thymeleaf</td><td>★★★</td></tr>
+            <tr><td>电商后端</td><td>Spring Boot、Redis、MQ、分布式锁</td><td>★★★★</td></tr>
+            <tr><td>短链接服务</td><td>高并发、布隆过滤器、缓存</td><td>★★★★★</td></tr>
+            <tr><td>秒杀系统</td><td>限流、熔断、库存一致性</td><td>★★★★★★</td></tr>
+          </tbody>
+        </table>
+
+        <h3>必读源码（框架 &amp; JDK）</h3>
+        <ul>
+          <li><strong>JDK 集合源码</strong>：ArrayList、HashMap、ConcurrentHashMap</li>
+          <li><strong>JUC</strong>：AQS、ReentrantLock、ThreadPoolExecutor</li>
+          <li><strong>Spring</strong>：Bean 生命周期、AOP 原理、循环依赖</li>
+          <li><strong>MyBatis</strong>：执行器、插件机制</li>
+          <li><strong>Netty</strong>：Reactor 模型、内存池</li>
+        </ul>
+
+        <h3>高频报错与解决方案</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>NPE</code></td><td>对象为 null</td><td>Optional / Objects.requireNonNull / 判空</td></tr>
+            <tr><td><code>OOM: heap space</code></td><td>堆溢出</td><td>jmap dump + MAT 分析，增大 -Xmx</td></tr>
+            <tr><td><code>OOM: Metaspace</code></td><td>类过多 / 动态生成</td><td>调大 MetaspaceSize，检查反射</td></tr>
+            <tr><td><code>StackOverflowError</code></td><td>递归过深</td><td>改迭代、加终止条件</td></tr>
+            <tr><td><code>ClassCastException</code></td><td>强转失败</td><td>用 instanceof 检查，或泛型</td></tr>
+            <tr><td><code>ConcurrentModificationException</code></td><td>遍历时修改集合</td><td>用 Iterator.remove() / CopyOnWrite</td></tr>
+            <tr><td><code>NoSuchMethodError</code></td><td>版本不一致</td><td>mvn dependency:tree 检查冲突</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 避坑提示</div>
+          <p><strong>Maven 依赖冲突是 Java 项目最常见的坑</strong>。学会用 <code>mvn dependency:tree</code> + IDEA 的「Dependency Analyzer」定位包冲突。</p>
+        </div>
+
+        <h3>推荐书单与视频</h3>
+        <ul>
+          <li><strong>《Java 核心技术 卷 1》</strong>：入门经典</li>
+          <li><strong>《Effective Java》</strong>：最佳实践（进阶必读）</li>
+          <li><strong>《深入理解 Java 虚拟机》</strong>：周志明，JVM 圣经</li>
+          <li><strong>《Java 并发编程实战》</strong>：Brian Goetz，并发圣经</li>
+          <li><strong>视频</strong>：尚硅谷 / 黑马 B 站免费课程、IntelliJ IDEA 官方教程</li>
+        </ul>
+
+        <h3>简历加分项</h3>
+        <ul>
+          <li>个人博客 / GitHub 项目（持续维护）</li>
+          <li>开源贡献（哪怕改文档 / 提 PR）</li>
+          <li>技术博客：掘金、CSDN、思否至少活跃一个</li>
+          <li>算法刷题：LeetCode 200+ 题为面试加分</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 速记口诀</div>
+          <p><strong>「基础 2 月、进阶 3 月、实战 4 月、高级持续；读 JDK 源码 + Spring 源码；刷题 200 + 写博客；别怕 Maven 冲突，会用 jmap」</strong>——Java 学习毕业一句话总结。</p>
+        </div>
+      </section>
+
+      <footer class="footer">Java 从入门到精通 · 学习笔记 · 持续更新中</footer>
+    </main>
+
+    <script>
+      // Mobile menu toggle
+      const menuToggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+
+      // Close sidebar on link click (mobile)
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+
+      // Active TOC highlight on scroll
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect()
+          if (rect.top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+
+      // Copy code
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        const text = pre.innerText
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>

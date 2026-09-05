@@ -1,0 +1,5918 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/jpeg" href="../images/avatar.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>微信小程序开发 · 从入门到精通</title>
+    <style>
+      /* ========== CSS Variables ========== */
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #ff9e64;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #6db33f;
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --header-h: 0px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      /* ========== Reset & Base ========== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* ========== Scrollbar ========== */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      /* ========== Sidebar ========== */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(109, 179, 63, 0.1);
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: rgba(109, 179, 63, 0.1);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: rgba(109, 179, 63, 0.06);
+        border-left-color: var(--accent);
+      }
+      .toc li a.sub {
+        padding-left: 28px;
+        font-size: 0.82rem;
+      }
+
+      /* ========== Main ========== */
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      /* ========== Hero ========== */
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(109, 179, 63, 0.1);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #6db33f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      /* ========== Sections ========== */
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(109, 179, 63, 0.1);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      /* ========== Code ========== */
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: rgba(109, 179, 63, 0.08);
+        color: var(--code-green);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      /* Syntax highlight */
+      .kw {
+        color: var(--code-green);
+      }
+      .fn {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .num {
+        color: #ff9e64;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+
+      /* Copy button */
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ========== Tables ========== */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: rgba(109, 179, 63, 0.03);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      /* ========== Callouts ========== */
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(109, 179, 63, 0.06);
+        border-color: var(--accent);
+      }
+      .callout.tip .callout-title {
+        color: var(--accent);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      /* ========== Cards Grid ========== */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* ========== Steps ========== */
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      /* ========== Mobile toggle ========== */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      /* ========== Footer ========== */
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      /* Focus visible for accessibility */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout {
+          break-inside: avoid;
+        }
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Mobile menu -->
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🍃</span> Java 学习笔记</h2>
+        <p>从入门到精通 · Java 核心技术手册</p>
+      </div>
+      <a class="home-link" href="../indexLearning.html">← 返回首页</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. 认识 Java：JVM/JDK/JRE 三件套</a></li>
+        <li><a href="#ch02">2. 环境搭建与第一个程序</a></li>
+        <li><a href="#ch03">3. 基础语法：变量、类型与运算符</a></li>
+        <li><a href="#ch04">4. 流程控制：分支与跳转</a></li>
+        <li><a href="#ch05">5. 数组、字符串与常用类</a></li>
+        <li><a href="#ch06">6. 方法、递归与参数传递</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. 面向对象三大特性</a></li>
+        <li><a href="#ch08">8. 抽象类、内部类与接口</a></li>
+        <li><a href="#ch09">9. 异常处理机制</a></li>
+        <li><a href="#ch10">10. 集合框架：List/Set/Map</a></li>
+        <li><a href="#ch11">11. 泛型与通配符</a></li>
+        <li><a href="#ch12">12. IO 流与 NIO.2</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch13">13. 多线程与 JUC 并发包</a></li>
+        <li><a href="#ch14">14. JVM 内存模型与 GC 调优</a></li>
+        <li><a href="#ch15">15. 反射、注解与动态代理</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch16">16. 设计模式与最佳实践</a></li>
+        <li><a href="#ch17">17. Java 17/21 新特性与 API 速查</a></li>
+        <li><a href="#ch18">18. 实战路线、避坑与项目推荐</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Hero -->
+      <header class="hero">
+        <span class="hero-badge">☕ 后端开发经典语言</span>
+        <h1>Spring Boot 从入门到精通 · 系统化学习笔记</h1>
+        <p>
+          一份覆盖 Java SE 8 ~ 21
+          的系统化笔记。从环境搭建、基础语法、面向对象、集合与并发， 到 JVM
+          内存模型、GC 调优、设计模式、新特性与常用 API 速查，配套 18
+          条速记口诀、25 张归纳表与 高频报错避坑，帮你从「会写
+          HelloWorld」进阶到「能看懂 Spring 源码、面试不慌」。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>JVM / 并发 / 集合</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <div class="section-badge">
+          <span class="num">01</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">01</span>Spring Boot 生态与第一个应用</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring 生态全景</div>
+          <div class="callout-body">
+            <p>
+              <strong>Spring</strong> 是一个轻量级的 Java
+              企业级应用开发框架，通过 <code>IoC</code>（控制反转）和
+              <code>AOP</code
+              >（面向切面）解耦业务，让开发者专注业务逻辑而非基础设施。
+            </p>
+            <p>
+              <strong>Spring Boot</strong> 是 Spring
+              的"脚手架"——通过<strong>约定优于配置</strong>，帮你自动装配
+              Bean、内嵌 Tomcat、提供 starter 依赖，让 5 分钟跑起一个 Web 应用。
+            </p>
+            <p>
+              <strong>Spring Cloud</strong> 是基于 Spring Boot
+              的<strong>微服务全家桶</strong>（网关/配置中心/服务发现/熔断/链路追踪）。
+            </p>
+          </div>
+        </div>
+
+        <h3>Spring 家族成员速览</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>组件</th>
+              <th>作用</th>
+              <th>一句话定位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Spring Framework</strong></td>
+              <td>核心容器（IoC/AOP/MVC/事务）</td>
+              <td>企业级 Java 的"地基"</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Boot</strong></td>
+              <td>脚手架 + 自动装配 + 内嵌容器</td>
+              <td>5 分钟跑起一个应用</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Data</strong></td>
+              <td>数据访问抽象（JPA/MongoDB/Redis）</td>
+              <td>统一持久层 API</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Security</strong></td>
+              <td>认证授权与安全防护</td>
+              <td>OAuth2/JWT/CAS 全支持</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Cloud</strong></td>
+              <td>微服务架构套件</td>
+              <td>分布式系统的"瑞士军刀"</td>
+            </tr>
+            <tr>
+              <td><strong>Spring AI</strong></td>
+              <td>LLM 应用开发框架</td>
+              <td>Java 接入大模型的官方方案</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">🧠 Spring Boot 四大核心特性</div>
+          <div class="callout-body">
+            <ol>
+              <li>
+                <strong>自动装配（Auto-Configuration）</strong>：根据 classpath
+                里的 jar 自动配置 Bean
+              </li>
+              <li>
+                <strong>起步依赖（Starter）</strong
+                >：一站式引入相关依赖，避免版本冲突
+              </li>
+              <li>
+                <strong>内嵌容器</strong>：内置 Tomcat/Jetty/Undertow，无需部署
+                WAR
+              </li>
+              <li>
+                <strong>外部化配置</strong>：支持
+                yml/properties/env/命令行等多源配置
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>5 分钟创建第一个 Spring Boot 应用</h3>
+        <p>
+          <strong>方式一：Spring Initializr（推荐）</strong>。访问
+          <code>https://start.spring.io</code>，选择：
+        </p>
+        <ul>
+          <li>Project: <strong>Maven</strong>（或 Gradle）</li>
+          <li>Language: <strong>Java</strong></li>
+          <li>Spring Boot: <strong>3.3.x</strong>（最新稳定版）</li>
+          <li>Group: <code>com.example</code>，Artifact: <code>demo</code></li>
+          <li>Dependencies: <strong>Spring Web</strong></li>
+          <li>点击 <strong>Generate</strong> 下载 zip，解压导入 IDE 即可</li>
+        </ul>
+
+        <p><strong>方式二：命令行（curl 一行创建）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>curl https://start.spring.io/starter.zip \
+  -d type=maven-project \
+  -d language=java \
+  -d bootVersion=3.3.4 \
+  -d baseDir=demo \
+  -d groupId=com.example \
+  -d artifactId=demo \
+  -d dependencies=web \
+  -o demo.zip
+unzip demo.zip</code></pre>
+        </div>
+
+        <p>
+          <strong>方式三：IDE 向导</strong>。IDEA → New Project → Spring
+          Initializr → 一路下一步。
+        </p>
+
+        <h3>项目目录结构</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>demo/
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/demo/
+│   │   │   └── DemoApplication.java       # 主启动类
+│   │   └── resources/
+│   │       ├── application.yml            # 配置文件
+│   │       ├── static/                    # 静态资源（CSS/JS/图片）
+│   │       └── templates/                 # 模板文件（Thymeleaf）
+│   └── test/java/com/example/demo/
+│       └── DemoApplicationTests.java      # 测试类
+├── mvnw / mvnw.cmd                        # Maven Wrapper（无需本地装 Maven）
+├── pom.xml                                # Maven 配置
+└── HELP.md                                # 模块帮助</code></pre>
+        </div>
+
+        <h3>Hello World 三步走</h3>
+        <p>
+          <strong
+            >第 1 步：主启动类（带 <code>@SpringBootApplication</code>）</strong
+          >
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication   // 等价于 @Configuration + @EnableAutoConfiguration + @ComponentScan
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>第 2 步：写一个 Controller</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>package com.example.demo;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController   // @Controller + @ResponseBody：返回 JSON 而不是视图
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, Spring Boot!";
+    }
+}</code></pre>
+        </div>
+
+        <p>
+          <strong>第 3 步：运行</strong>。在 IDE 里运行
+          <code>DemoApplication.main()</code>，或命令行
+          <code>./mvnw spring-boot:run</code>。访问
+          <code>http://localhost:8080/hello</code> 即可看到结果。
+        </p>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 高频坑：主类必须放在根包下</div>
+          <div class="callout-body">
+            <p>
+              主类 <code>DemoApplication</code> 必须位于"根包"（如
+              <code>com.example.demo</code>），这样
+              <code>@ComponentScan</code> 默认扫描
+              <code>com.example.demo</code> 及其所有子包，否则你的
+              Controller/Service 不会被注册。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 1 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Spring 是地基，Boot 是脚手架，Cloud
+                是分布式套件；主类放根包，启动三步走（注解+Controller+运行），5
+                分钟跑通 hello world。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <div class="section-badge">
+          <span class="num">02</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">02</span>Maven/Gradle 与项目搭建</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 构建工具选型</div>
+          <div class="callout-body">
+            <p>
+              Spring Boot 同时支持 <strong>Maven</strong> 和
+              <strong>Gradle</strong>。国内用
+              <strong>Maven</strong> 居多（生态成熟、IDEA 内置），Gradle
+              在云原生/Android/Kotlin 项目更主流。
+            </p>
+          </div>
+        </div>
+
+        <h3>Maven vs Gradle 对比</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>Maven</th>
+              <th>Gradle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>配置语言</td>
+              <td>XML（pom.xml）</td>
+              <td>Groovy/Kotlin DSL（build.gradle）</td>
+            </tr>
+            <tr>
+              <td>构建速度</td>
+              <td>中等（增量构建）</td>
+              <td>快（增量 + 任务并行）</td>
+            </tr>
+            <tr>
+              <td>依赖管理</td>
+              <td>自动传递依赖（可能冲突）</td>
+              <td>可精细控制版本</td>
+            </tr>
+            <tr>
+              <td>学习曲线</td>
+              <td>低</td>
+              <td>中</td>
+            </tr>
+            <tr>
+              <td>适用场景</td>
+              <td>传统 Java EE 项目</td>
+              <td>大型/Android/Kotlin 项目</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>pom.xml 关键结构（Spring Boot 3.x）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;!-- 继承 Spring Boot 父工程：统一管理所有依赖版本 --&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;3.3.4&lt;/version&gt;
+        &lt;relativePath/&gt;
+    &lt;/parent&gt;
+
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;demo&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;demo&lt;/name&gt;
+    &lt;description&gt;Spring Boot Demo&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;17&lt;/java.version&gt;
+        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;!-- Web 起步依赖：一站式引入 Spring MVC + Tomcat + JSON --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- 测试起步依赖 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;!-- 打包插件：生成可执行 fat jar --&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</code></pre>
+        </div>
+
+        <h3>常用 Maven 命令</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>mvn clean</code></td>
+              <td>清理 target 目录</td>
+            </tr>
+            <tr>
+              <td><code>mvn compile</code></td>
+              <td>编译主代码</td>
+            </tr>
+            <tr>
+              <td><code>mvn test</code></td>
+              <td>运行测试</td>
+            </tr>
+            <tr>
+              <td><code>mvn package</code></td>
+              <td>打包成 jar（target/*.jar）</td>
+            </tr>
+            <tr>
+              <td><code>mvn spring-boot:run</code></td>
+              <td>本地启动应用</td>
+            </tr>
+            <tr>
+              <td><code>mvn dependency:tree</code></td>
+              <td>查看依赖树（排查冲突）</td>
+            </tr>
+            <tr>
+              <td><code>java -jar demo.jar</code></td>
+              <td>运行打包后的应用</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>多模块项目结构</h3>
+        <p>企业项目通常拆分成多个 Maven 模块：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>parent-project/                    # 父工程（pom 类型）
+├── pom.xml                        # 父 POM：统一版本/依赖
+├── common/                        # 公共模块（工具类、常量、异常）
+│   └── pom.xml
+├── domain/                        # 领域模型（Entity/DTO/VO）
+│   └── pom.xml
+├── repository/                    # 数据访问层（Mapper/Repository）
+│   └── pom.xml
+├── service/                       # 业务逻辑层
+│   └── pom.xml
+├── controller/                    # Web 接口层
+│   └── pom.xml
+└── app/                           # 启动模块（包含 main 方法）
+    └── pom.xml</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 推荐：Maven Wrapper</div>
+          <div class="callout-body">
+            <p>
+              项目根目录的 <code>mvnw</code> / <code>mvnw.cmd</code> 是 Maven
+              Wrapper，<strong>无需本地装 Maven</strong>，保证团队用统一版本：
+            </p>
+            <ul>
+              <li><code>./mvnw clean package</code>（Linux/macOS）</li>
+              <li><code>mvnw.cmd clean package</code>（Windows）</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 2 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >pom 继承 starter-parent，依赖用 starter 一站式；mvn clean
+                package
+                一条命令搞定编译测试打包，多模块按层拆分（common/domain/repo/service/controller/app）。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <div class="section-badge">
+          <span class="num">03</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">03</span>配置体系：yml/properties/profile</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 Spring Boot 配置来源（优先级从高到低）
+          </div>
+          <div class="callout-body">
+            <ol>
+              <li>命令行参数：<code>--server.port=8081</code></li>
+              <li>JVM 系统属性：<code>-Dserver.port=8081</code></li>
+              <li>操作系统环境变量</li>
+              <li>
+                <code>application-{profile}.yml</code>（如
+                application-prod.yml）
+              </li>
+              <li><code>application.yml</code>（默认配置）</li>
+              <li>代码里的 <code>@PropertySource</code></li>
+              <li>Spring 内置默认值</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>yml vs properties</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>application.yml</th>
+              <th>application.properties</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>格式</td>
+              <td>缩进式（类 YAML）</td>
+              <td>key=value</td>
+            </tr>
+            <tr>
+              <td>可读性</td>
+              <td>好（层级清晰）</td>
+              <td>一般</td>
+            </tr>
+            <tr>
+              <td>同名前缀</td>
+              <td>天然支持</td>
+              <td>需写完整 key</td>
+            </tr>
+            <tr>
+              <td>类型自动转换</td>
+              <td>支持（数字/布尔/List）</td>
+              <td>仅 String</td>
+            </tr>
+            <tr>
+              <td>多文档（profile）</td>
+              <td><code>---</code> 分隔</td>
+              <td>需拆多个文件</td>
+            </tr>
+            <tr>
+              <td>推荐度</td>
+              <td>★★★★★</td>
+              <td>★★★</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>application.yml 完整示例</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>server:
+  port: 8080
+  servlet:
+    context-path: /api
+    encoding:
+      charset: UTF-8
+
+spring:
+  application:
+    name: demo-service
+  profiles:
+    active: dev          # 激活 dev profile
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo?useSSL=false&amp;serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  redis:
+    host: localhost
+    port: 6379
+    password:
+
+logging:
+  level:
+    root: INFO
+    com.example.demo: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+myapp:
+  jwt:
+    secret: my-secret-key-must-be-long-enough
+    expire: 86400
+  upload:
+    path: /tmp/uploads
+    max-size: 10MB</code></pre>
+        </div>
+
+        <h3>读取配置的 4 种方式</h3>
+
+        <p><strong>方式 1：<code>@Value</code>（单个值）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestController
+public class AppController {
+    @Value("${server.port}")
+    private Integer port;
+
+    @Value("${myapp.jwt.expire:86400}")   // 默认值 86400
+    private Long jwtExpire;
+
+    @GetMapping("/port")
+    public String port() { return "port=" + port; }
+}</code></pre>
+        </div>
+
+        <p>
+          <strong
+            >方式
+            2：<code>@ConfigurationProperties</code>（推荐批量绑定）</strong
+          >
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Configuration
+@ConfigurationProperties(prefix = "myapp.jwt")   // 绑定 ymyapp.jwt.* 配置
+@Data   // Lombok 自动生成 getter/setter
+public class JwtProperties {
+    private String secret;
+    private Long expire = 86400L;
+}
+
+// 启用：@EnableConfigurationProperties(JwtProperties.class)
+// 或在主类加 @ConfigurationPropertiesScan</code></pre>
+        </div>
+
+        <p><strong>方式 3：<code>Environment</code>（代码里读）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Autowired
+private Environment env;
+
+String secret = env.getProperty("myapp.jwt.secret");</code></pre>
+        </div>
+
+        <p>
+          <strong>方式 4：<code>${...}</code> 占位符</strong>
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>app:
+  name: ${spring.application.name}-v2   # 引用其他配置
+  desc: ${app.desc:默认描述}             # 带默认值</code></pre>
+        </div>
+
+        <h3>Profile 多环境配置</h3>
+        <p>企业项目通常有 dev/test/prod 三套环境：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code># application.yml（公共）
+spring:
+  profiles:
+    active: dev   # 默认激活 dev
+
+# application-dev.yml（开发）
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo_dev
+
+# application-prod.yml（生产）
+server:
+  port: 80
+spring:
+  datasource:
+    url: jdbc:mysql://prod-mysql:3306/demo</code></pre>
+        </div>
+
+        <p><strong>激活方式</strong>：</p>
+        <ul>
+          <li>yml 里 <code>spring.profiles.active=prod</code></li>
+          <li>
+            命令行：<code
+              >java -jar demo.jar --spring.profiles.active=prod</code
+            >
+          </li>
+          <li>环境变量：<code>SPRING_PROFILES_ACTIVE=prod</code></li>
+          <li>JVM：<code>-Dspring.profiles.active=prod</code></li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ yml 五大坑</div>
+          <div class="callout-body">
+            <ol>
+              <li><strong>缩进必须用空格</strong>，不能用 Tab</li>
+              <li>
+                <strong>key:value 之间必须有空格</strong>：<code
+                  >name: 张三</code
+                >
+                ✅，<code>name:张三</code> ❌
+              </li>
+              <li>
+                字符串可不加引号，但含特殊字符（<code>:</code>
+                <code>#</code> 等）必须引号
+              </li>
+              <li>多文档用 <code>---</code> 分隔</li>
+              <li>
+                数值/布尔自动转换：<code>port: "8080"</code> 是字符串，<code
+                  >port: 8080</code
+                >
+                是数字
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 3 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >yml 缩进空格不能 Tab，key 冒号后必须空格；批量配置用
+                @ConfigurationProperties 绑定前缀，单值用 @Value；profile
+                多环境靠文件名 application-{name}.yml 区分。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <div class="section-badge">
+          <span class="num">04</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">04</span>Web 开发与 RESTful 接口</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring MVC vs Spring WebFlux</div>
+          <div class="callout-body">
+            <p>Spring Boot 同时支持两种 Web 栈：</p>
+            <ul>
+              <li>
+                <strong>Spring MVC（Servlet）</strong
+                >：同步阻塞，每个请求一个线程，生态最广，<strong
+                  >推荐默认</strong
+                >
+              </li>
+              <li>
+                <strong>Spring WebFlux（Reactive）</strong>：响应式非阻塞，基于
+                Netty，适合高并发 IO 密集型场景
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>常用 Web 注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@RestController</code></td>
+              <td>@Controller + @ResponseBody</td>
+              <td>类上</td>
+            </tr>
+            <tr>
+              <td><code>@RequestMapping("/api")</code></td>
+              <td>类/方法路径映射</td>
+              <td>通用前缀</td>
+            </tr>
+            <tr>
+              <td><code>@GetMapping("/list")</code></td>
+              <td>GET 请求</td>
+              <td>查询</td>
+            </tr>
+            <tr>
+              <td><code>@PostMapping</code></td>
+              <td>POST 请求</td>
+              <td>新增</td>
+            </tr>
+            <tr>
+              <td><code>@PutMapping("/{id}")</code></td>
+              <td>PUT 请求</td>
+              <td>全量更新</td>
+            </tr>
+            <tr>
+              <td><code>@DeleteMapping("/{id}")</code></td>
+              <td>DELETE 请求</td>
+              <td>删除</td>
+            </tr>
+            <tr>
+              <td><code>@PatchMapping</code></td>
+              <td>PATCH 请求</td>
+              <td>部分更新</td>
+            </tr>
+            <tr>
+              <td><code>@PathVariable</code></td>
+              <td>路径变量</td>
+              <td><code>/user/{id}</code></td>
+            </tr>
+            <tr>
+              <td><code>@RequestParam</code></td>
+              <td>查询参数</td>
+              <td><code>?name=xx</code></td>
+            </tr>
+            <tr>
+              <td><code>@RequestBody</code></td>
+              <td>请求体 JSON</td>
+              <td>POST/PUT 体</td>
+            </tr>
+            <tr>
+              <td><code>@RequestHeader</code></td>
+              <td>请求头</td>
+              <td><code>Authorization</code></td>
+            </tr>
+            <tr>
+              <td><code>@CookieValue</code></td>
+              <td>Cookie 值</td>
+              <td>JSESSIONID</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>RESTful 接口设计规范</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>HTTP 方法</th>
+              <th>路径</th>
+              <th>语义</th>
+              <th>幂等</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GET</td>
+              <td><code>/users</code></td>
+              <td>查询列表</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/users/1</code></td>
+              <td>查询单个</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td><code>/users</code></td>
+              <td>新增</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>PUT</td>
+              <td><code>/users/1</code></td>
+              <td>全量更新</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td>PATCH</td>
+              <td><code>/users/1</code></td>
+              <td>部分更新</td>
+              <td>❌（推荐 ✅）</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td><code>/users/1</code></td>
+              <td>删除</td>
+              <td>✅</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>完整 CRUD 示例</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public List&lt;User&gt; list() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User getById(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @PostMapping
+    public User create(@RequestBody @Valid User user) {
+        return userService.save(user);
+    }
+
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        return userService.update(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        userService.deleteById(id);
+    }
+}</code></pre>
+        </div>
+
+        <h3>统一响应格式</h3>
+        <p>企业级接口通常封装统一返回：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+public class Result&lt;T&gt; {
+    private Integer code;       // 状态码
+    private String message;     // 提示信息
+    private T data;             // 业务数据
+    private Long timestamp = System.currentTimeMillis();
+
+    public static &lt;T&gt; Result&lt;T&gt; success(T data) {
+        Result&lt;T&gt; r = new Result&lt;&gt;();
+        r.code = 200;
+        r.message = "OK";
+        r.data = data;
+        return r;
+    }
+
+    public static &lt;T&gt; Result&lt;T&gt; error(Integer code, String message) {
+        Result&lt;T&gt; r = new Result&lt;&gt;();
+        r.code = code;
+        r.message = message;
+        return r;
+    }
+}</code></pre>
+        </div>
+
+        <h3>常用状态码</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>状态码</th>
+              <th>含义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>200</td>
+              <td>成功</td>
+            </tr>
+            <tr>
+              <td>400</td>
+              <td>请求参数错误</td>
+            </tr>
+            <tr>
+              <td>401</td>
+              <td>未登录/token 过期</td>
+            </tr>
+            <tr>
+              <td>403</td>
+              <td>无权限</td>
+            </tr>
+            <tr>
+              <td>404</td>
+              <td>资源不存在</td>
+            </tr>
+            <tr>
+              <td>500</td>
+              <td>服务器内部错误</td>
+            </tr>
+            <tr>
+              <td>503</td>
+              <td>服务不可用</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 Spring MVC 工作流程（八步）</div>
+          <div class="callout-body">
+            <ol>
+              <li>DispatcherServlet 接收请求</li>
+              <li>调用 HandlerMapping 找到对应 Controller 方法</li>
+              <li>调用 HandlerAdapter 执行方法</li>
+              <li>方法参数解析（@RequestBody/@PathVariable 等）</li>
+              <li>执行业务逻辑，返回值被包装为 ModelAndView</li>
+              <li>ViewResolver 解析视图</li>
+              <li>视图渲染（对 @RestController 直接写 JSON）</li>
+              <li>响应返回客户端</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 4 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >@RestController 走 JSON，统一 Result&lt;T&gt; 包装响应；RESTful
+                用 HTTP 方法区分增删改查（GET/POST/PUT/DELETE），状态码
+                200/400/401/403/404/500 一一对应。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <div class="section-badge">
+          <span class="num">05</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">05</span>数据持久化：JDBC/JPA/MyBatis</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring Data 三剑客</div>
+          <div class="callout-body">
+            <ul>
+              <li>
+                <strong>Spring JDBC</strong>：JdbcTemplate，简化 JDBC
+                代码，仍需手写 SQL
+              </li>
+              <li>
+                <strong>Spring Data JPA</strong>：基于 Hibernate
+                ORM，<strong>面向对象</strong>操作数据库（适合复杂业务）
+              </li>
+              <li>
+                <strong>MyBatis</strong>：<strong>面向 SQL</strong>，XML/注解写
+                SQL，灵活可控（国内最主流）
+              </li>
+              <li>
+                <strong>Spring Data Redis/MongoDB/Elasticsearch</strong>：NoSQL
+                抽象
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>三种持久化方案对比</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>JdbcTemplate</th>
+              <th>Spring Data JPA</th>
+              <th>MyBatis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SQL 控制</td>
+              <td>完全</td>
+              <td>部分（复杂需 @Query）</td>
+              <td>完全</td>
+            </tr>
+            <tr>
+              <td>学习曲线</td>
+              <td>低</td>
+              <td>高（HQL/JPQL）</td>
+              <td>低</td>
+            </tr>
+            <tr>
+              <td>动态 SQL</td>
+              <td>手写拼接</td>
+              <td>Specification</td>
+              <td>XML 标签（强大）</td>
+            </tr>
+            <tr>
+              <td>国内使用率</td>
+              <td>少</td>
+              <td>中（外企）</td>
+              <td>★★★★★</td>
+            </tr>
+            <tr>
+              <td>适用场景</td>
+              <td>简单 CRUD/报表</td>
+              <td>领域模型复杂</td>
+              <td>SQL 复杂/性能敏感</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>方案一：Spring Data JPA（Hibernate）</h3>
+        <p><strong>1）添加依赖</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-j&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+
+        <p><strong>2）实体类</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Entity
+@Table(name = "t_user")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 50)
+    private String username;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column(name = "create_time")
+    private LocalDateTime createTime = LocalDateTime.now();
+}</code></pre>
+        </div>
+
+        <p><strong>3）Repository 接口（无需实现类）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
+
+    // 方法名派生查询
+    Optional&lt;User&gt; findByUsername(String username);
+
+    List&lt;User&gt; findByEmailContaining(String keyword);
+
+    boolean existsByEmail(String email);
+
+    // 自定义 JPQL
+    @Query("SELECT u FROM User u WHERE u.createTime &gt; :time")
+    List&lt;User&gt; findRecentUsers(@Param("time") LocalDateTime time);
+}</code></pre>
+        </div>
+
+        <p><strong>4）Service 调用</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class UserService {
+    @Autowired
+    private UserRepository repo;
+
+    @Transactional
+    public User save(User user) {
+        return repo.save(user);
+    }
+}</code></pre>
+        </div>
+
+        <h3>方案二：MyBatis（国内主流）</h3>
+        <p><strong>1）添加依赖</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.0.3&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+
+        <p><strong>2）application.yml 配置</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.demo.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # 打印 SQL</code></pre>
+        </div>
+
+        <p><strong>3）Mapper 接口 + XML</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Mapper
+public interface UserMapper {
+    User findById(Long id);
+    List&lt;User&gt; findAll();
+    int insert(User user);
+    int update(User user);
+    int deleteById(Long id);
+}</code></pre>
+        </div>
+
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+&lt;mapper namespace="com.example.demo.mapper.UserMapper"&gt;
+    &lt;resultMap id="userMap" type="User"&gt;
+        &lt;id property="id" column="id"/&gt;
+        &lt;result property="username" column="username"/&gt;
+        &lt;result property="createTime" column="create_time"/&gt;
+    &lt;/resultMap&gt;
+
+    &lt;select id="findById" resultMap="userMap"&gt;
+        SELECT * FROM t_user WHERE id = #{id}
+    &lt;/select&gt;
+
+    &lt;!-- 动态 SQL --&gt;
+    &lt;select id="findAll" resultMap="userMap"&gt;
+        SELECT * FROM t_user
+        &lt;where&gt;
+            &lt;if test="keyword != null and keyword != ''"&gt;
+                AND username LIKE CONCAT('%', #{keyword}, '%')
+            &lt;/if&gt;
+        &lt;/where&gt;
+        ORDER BY create_time DESC
+    &lt;/select&gt;
+
+    &lt;insert id="insert" useGeneratedKeys="true" keyProperty="id"&gt;
+        INSERT INTO t_user(username, email, create_time)
+        VALUES (#{username}, #{email}, #{createTime})
+    &lt;/insert&gt;
+&lt;/mapper&gt;</code></pre>
+        </div>
+
+        <p>
+          <strong>4）MyBatis-Plus（增强版，推荐）</strong>：内置通用
+          CRUD、分页插件、代码生成器，国内使用率第一。
+        </p>
+
+        <h3>事务管理（@Transactional）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class OrderService {
+    @Autowired
+    private OrderRepository orderRepo;
+    @Autowired
+    private StockService stockService;
+
+    @Transactional   // 整个方法在一个事务里
+    public Order createOrder(Order order) {
+        order = orderRepo.save(order);
+        stockService.deduct(order);   // 任一异常会整体回滚
+        return order;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,    // 默认：加入已有事务或新建
+                   isolation = Isolation.READ_COMMITTED,  // 读已提交
+                   rollbackFor = Exception.class,        // 所有异常都回滚（默认仅 RuntimeException）
+                   timeout = 30)                          // 30 秒超时
+    public void critical() { ... }
+}</code></pre>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>传播行为</th>
+              <th>含义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>REQUIRED</code>（默认）</td>
+              <td>有则加入，无则新建</td>
+            </tr>
+            <tr>
+              <td><code>REQUIRES_NEW</code></td>
+              <td>始终新建，暂停外层</td>
+            </tr>
+            <tr>
+              <td><code>NESTED</code></td>
+              <td>嵌套事务（保存点）</td>
+            </tr>
+            <tr>
+              <td><code>SUPPORTS</code></td>
+              <td>有则加入，无则非事务</td>
+            </tr>
+            <tr>
+              <td><code>NEVER</code></td>
+              <td>有事务则抛异常</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ @Transactional 五大坑</div>
+          <div class="callout-body">
+            <ol>
+              <li>只能用在 <strong>public 方法</strong>上</li>
+              <li>
+                同类内方法互调<strong>不生效</strong>（因为是代理对象调用）
+              </li>
+              <li>异常被 try-catch 吞掉<strong>不会回滚</strong></li>
+              <li>
+                默认仅对 <strong>RuntimeException</strong> 回滚，checked
+                异常不回滚（用 <code>rollbackFor = Exception.class</code> 解决）
+              </li>
+              <li>
+                Spring Bean 的创建顺序问题：A 依赖 B，B 调 A 的事务方法不生效
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 5 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >JPA 面向对象自动生成 SQL，MyBatis 面向 SQL
+                灵活可控；@Transactional 默认 REQUIRED 传播+读已提交隔离，public
+                方法上才能生效，同类自调用失效。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <div class="section-badge">
+          <span class="num">06</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2>
+          <span class="num">06</span>服务分层：Controller/Service/Repository
+        </h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 为什么分层？</div>
+          <div class="callout-body">
+            <p>分层是为了<strong>解耦</strong>：</p>
+            <ul>
+              <li><strong>可维护</strong>：改一处不影响全局</li>
+              <li><strong>可测试</strong>：每层独立单元测试</li>
+              <li><strong>可扩展</strong>：换实现不改接口</li>
+              <li><strong>可协作</strong>：团队各负责一层</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>三层架构与四层架构</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>层</th>
+              <th>职责</th>
+              <th>注解</th>
+              <th>依赖关系</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Controller（表现层）</strong></td>
+              <td>接收请求/参数校验/返回响应</td>
+              <td><code>@RestController</code></td>
+              <td>调 Service</td>
+            </tr>
+            <tr>
+              <td><strong>Service（业务层）</strong></td>
+              <td>核心业务逻辑/事务控制/编排</td>
+              <td><code>@Service</code></td>
+              <td>调 Repository + 其他 Service</td>
+            </tr>
+            <tr>
+              <td><strong>Repository/Mapper（持久层）</strong></td>
+              <td>数据库读写/外部接口调用</td>
+              <td><code>@Repository</code> / <code>@Mapper</code></td>
+              <td>调 DB</td>
+            </tr>
+            <tr>
+              <td><strong>Entity/PO（领域对象）</strong></td>
+              <td>与数据库表一一映射</td>
+              <td><code>@Entity</code></td>
+              <td>无依赖</td>
+            </tr>
+            <tr>
+              <td><strong>DTO（传输对象）</strong></td>
+              <td>Controller ↔ Service 间传输</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>VO（视图对象）</strong></td>
+              <td>Controller → 前端展示</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>POJO 三大对象</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>对象</th>
+              <th>全称</th>
+              <th>用途</th>
+              <th>字段对应</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PO / Entity</strong></td>
+              <td>Persistent Object</td>
+              <td>持久化，与表一一对应</td>
+              <td>DB 字段</td>
+            </tr>
+            <tr>
+              <td><strong>DTO</strong></td>
+              <td>Data Transfer Object</td>
+              <td>服务间数据传输</td>
+              <td>业务字段</td>
+            </tr>
+            <tr>
+              <td><strong>VO</strong></td>
+              <td>View Object</td>
+              <td>前端展示</td>
+              <td>展示字段</td>
+            </tr>
+            <tr>
+              <td><strong>BO</strong></td>
+              <td>Business Object</td>
+              <td>复杂业务封装</td>
+              <td>组合多个 PO</td>
+            </tr>
+            <tr>
+              <td><strong>POJO</strong></td>
+              <td>Plain Old Java Object</td>
+              <td>泛指所有普通 Java 对象</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>完整四层示例（用户下单）</h3>
+        <p><strong>1）PO（实体类）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+@TableName("t_user")   // MyBatis-Plus
+public class UserPO {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+    private String username;
+    private String email;
+}</code></pre>
+        </div>
+
+        <p><strong>2）DTO（接收参数）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+public class UserCreateDTO {
+    @NotBlank(message = "用户名不能为空")
+    @Length(min = 3, max = 20)
+    private String username;
+
+    @Email(message = "邮箱格式错误")
+    private String email;
+}</code></pre>
+        </div>
+
+        <p><strong>3）VO（返回前端）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+public class UserVO {
+    private Long id;
+    private String username;
+    private String email;
+    private String createTime;
+}</code></pre>
+        </div>
+
+        <p><strong>4）Repository（Mapper）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Mapper
+public interface UserRepository extends BaseMapper&lt;UserPO&gt; {
+    UserPO findByUsername(@Param("name") String name);
+}</code></pre>
+        </div>
+
+        <p><strong>5）Service（业务逻辑）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Transactional
+    public UserVO create(UserCreateDTO dto) {
+        // 1. 业务校验
+        if (userRepository.findByUsername(dto.getUsername()) != null) {
+            throw new BizException("用户名已存在");
+        }
+        // 2. DTO → PO
+        UserPO po = new UserPO();
+        BeanUtils.copyProperties(dto, po);
+        po.setCreateTime(LocalDateTime.now());
+        // 3. 持久化
+        userRepository.insert(po);
+        // 4. PO → VO
+        UserVO vo = new UserVO();
+        BeanUtils.copyProperties(po, vo);
+        return vo;
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>6）Controller（接口入口）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping
+    public Result&lt;UserVO&gt; create(@RequestBody @Valid UserCreateDTO dto) {
+        return Result.success(userService.create(dto));
+    }
+}</code></pre>
+        </div>
+
+        <h3>包结构推荐</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>com.example.demo/
+├── controller/      # 控制层
+│   └── UserController.java
+├── service/         # 业务层
+│   ├── UserService.java
+│   └── impl/
+│       └── UserServiceImpl.java
+├── repository/      # 持久层
+│   └── UserRepository.java
+├── entity/          # PO 实体
+│   └── UserPO.java
+├── dto/             # 接收参数
+│   └── UserCreateDTO.java
+├── vo/              # 返回视图
+│   └── UserVO.java
+├── config/          # 配置类
+├── exception/       # 异常类
+├── util/            # 工具类
+└── constant/        # 常量类</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 阿里巴巴开发手册规约</div>
+          <div class="callout-body">
+            <ol>
+              <li>
+                分层命名：<code>Controller</code> / <code>Service</code> /
+                <code>DAO</code> 或 <code>Repository</code>
+              </li>
+              <li>
+                Service/DAO 层方法命名：<code>findXxx</code> /
+                <code>saveXxx</code> / <code>removeXxx</code> /
+                <code>updateXxx</code> / <code>listXxx</code> /
+                <code>countXxx</code>
+              </li>
+              <li>禁止 Service 绕过 Controller 直接返回给前端</li>
+              <li>DO/PO/DTO/VO 不能直接返回前端，必须转 VO</li>
+              <li>Service 实现类用 <code>Impl</code> 后缀</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 6 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Controller 收请求 → Service 做业务 → Repository 持久化；PO
+                对表/DTO 传输/VO
+                展示，三类对象不能混用；分层是为了解耦，每层只依赖下一层。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <div class="section-badge">
+          <span class="num">07</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">07</span>统一响应与全局异常处理</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 为什么需要全局异常处理？</div>
+          <div class="callout-body">
+            <p>
+              没有统一处理时，每个 Controller 都要写
+              try-catch，重复且容易遗漏；有了
+              <code>@RestControllerAdvice</code> +
+              <code>@ExceptionHandler</code>，可以集中捕获并返回统一格式。
+            </p>
+          </div>
+        </div>
+
+        <h3>统一响应封装（增强版 Result）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+public class Result&lt;T&gt; implements Serializable {
+    private Integer code;
+    private String message;
+    private T data;
+    private Long timestamp = System.currentTimeMillis();
+
+    private Result(Integer code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    public static &lt;T&gt; Result&lt;T&gt; success() { return new Result&lt;&gt;(200, "OK", null); }
+    public static &lt;T&gt; Result&lt;T&gt; success(T data) { return new Result&lt;&gt;(200, "OK", data); }
+    public static &lt;T&gt; Result&lt;T&gt; success(String msg, T data) { return new Result&lt;&gt;(200, msg, data); }
+    public static &lt;T&gt; Result&lt;T&gt; error(Integer code, String msg) { return new Result&lt;&gt;(code, msg, null); }
+    public static &lt;T&gt; Result&lt;T&gt; error(ResultCode rc) { return new Result&lt;&gt;(rc.getCode(), rc.getMessage(), null); }
+}</code></pre>
+        </div>
+
+        <p><strong>枚举错误码</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Getter
+@AllArgsConstructor
+public enum ResultCode {
+    SUCCESS(200, "操作成功"),
+    BAD_REQUEST(400, "请求参数错误"),
+    UNAUTHORIZED(401, "未登录或登录已过期"),
+    FORBIDDEN(403, "无权限访问"),
+    NOT_FOUND(404, "资源不存在"),
+    INTERNAL_ERROR(500, "服务器内部错误"),
+    BIZ_ERROR(1001, "业务异常"),
+    DATA_NOT_FOUND(1002, "数据不存在");
+
+    private final Integer code;
+    private final String message;
+}</code></pre>
+        </div>
+
+        <h3>自定义业务异常</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Getter
+public class BizException extends RuntimeException {
+    private final Integer code;
+    private final String message;
+
+    public BizException(String message) { super(message); this.code = 1001; this.message = message; }
+    public BizException(Integer code, String message) { super(message); this.code = code; this.message = message; }
+    public BizException(ResultCode rc) { super(rc.getMessage()); this.code = rc.getCode(); this.message = rc.getMessage(); }
+}</code></pre>
+        </div>
+
+        <h3>全局异常处理器</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestControllerAdvice   // = @ControllerAdvice + @ResponseBody
+@Slf4j
+public class GlobalExceptionHandler {
+
+    // 1. 业务异常
+    @ExceptionHandler(BizException.class)
+    public Result&lt;?&gt; handleBiz(BizException e) {
+        log.warn("业务异常：{}", e.getMessage());
+        return Result.error(e.getCode(), e.getMessage());
+    }
+
+    // 2. 参数校验异常（@Valid 失败）
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result&lt;?&gt; handleValid(MethodArgumentNotValidException e) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String msg = fieldError != null ? fieldError.getDefaultMessage() : "参数校验失败";
+        return Result.error(400, msg);
+    }
+
+    // 3. 请求方式不支持
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Result&lt;?&gt; handleMethod(HttpRequestMethodNotSupportedException e) {
+        return Result.error(405, "不支持 " + e.getMethod() + " 请求");
+    }
+
+    // 4. 兜底：所有未捕获异常
+    @ExceptionHandler(Exception.class)
+    public Result&lt;?&gt; handleAll(Exception e) {
+        log.error("系统异常", e);
+        return Result.error(500, "服务器内部错误：" + e.getMessage());
+    }
+}</code></pre>
+        </div>
+
+        <h3>统一返回包装（可选）</h3>
+        <p>
+          如果想偷懒让所有 Controller 默认返回 Result，可以用
+          <code>ResponseBodyAdvice</code>：
+        </p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestControllerAdvice
+public class ResponseWrapper implements ResponseBodyAdvice&lt;Object&gt; {
+
+    @Override
+    public boolean supports(MethodParameter returnType, Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; converterType) {
+        // 已包装的 Result 不再二次包装
+        return !returnType.getParameterType().equals(Result.class);
+    }
+
+    @Override
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
+                                  Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; selectedConverterType,
+                                  ServerHttpRequest request, ServerHttpResponse response) {
+        if (body == null) return Result.success();
+        if (body instanceof String || body instanceof Result) return body;
+        return Result.success(body);
+    }
+}</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ String 返回值包装陷阱</div>
+          <div class="callout-body">
+            <p>
+              如果 Controller 返回
+              <code>String</code
+              >，会被当成视图名直接写出，<strong>不会</strong>经过
+              <code>ResponseBodyAdvice</code> 的 JSON 序列化路径。需要判断后直接
+              <code>return body</code>，或把 String 改为返回
+              <code>Result&lt;String&gt;</code>。
+            </p>
+          </div>
+        </div>
+
+        <h3>异常处理优先级</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>异常类型</th>
+              <th>Spring 默认处理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>自定义 <code>BizException</code></td>
+              <td>走我们的 Handler</td>
+            </tr>
+            <tr>
+              <td><code>@Valid</code> 校验失败</td>
+              <td><code>MethodArgumentNotValidException</code></td>
+            </tr>
+            <tr>
+              <td>请求体 JSON 解析错</td>
+              <td><code>HttpMessageNotReadableException</code></td>
+            </tr>
+            <tr>
+              <td>404 接口不存在</td>
+              <td>
+                <code>NoHandlerFoundException</code>（需配置
+                <code>throw-exception-if-no-handler-found</code>）
+              </td>
+            </tr>
+            <tr>
+              <td>请求超时</td>
+              <td><code>RequestTimeoutException</code></td>
+            </tr>
+            <tr>
+              <td>权限不足</td>
+              <td><code>AccessDeniedException</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 7 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Result&lt;T&gt;
+                统一三件套（code/message/data），@RestControllerAdvice +
+                @ExceptionHandler 一处捕获全局异常；业务异常自定义
+                RuntimeException 子类，校验异常单独处理，最后 Exception
+                兜底。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <div class="section-badge">
+          <span class="num">08</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">08</span>参数校验与 Swagger 接口文档</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 校验三件套</div>
+          <div class="callout-body">
+            <ul>
+              <li>
+                <strong>JSR-303 / Bean Validation</strong
+                >：标准注解（<code>@NotNull</code>、<code>@Size</code> 等）
+              </li>
+              <li>
+                <strong>Hibernate Validator</strong>：JSR-303 的实现，Spring
+                Boot 默认集成
+              </li>
+              <li>
+                <strong>校验注解</strong>：加在 DTO 字段上，配合
+                <code>@Valid</code> 触发
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>常用校验注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+              <th>支持类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@NotNull</code></td>
+              <td>不为 null</td>
+              <td>任意</td>
+            </tr>
+            <tr>
+              <td><code>@NotBlank</code></td>
+              <td>不为 null 且 trim 后长度 > 0</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>@NotEmpty</code></td>
+              <td>不为 null 且 size > 0</td>
+              <td>String/Collection/Map/Array</td>
+            </tr>
+            <tr>
+              <td><code>@Size(min, max)</code></td>
+              <td>长度范围</td>
+              <td>String/Collection</td>
+            </tr>
+            <tr>
+              <td><code>@Min/@Max</code></td>
+              <td>数值范围</td>
+              <td>数字</td>
+            </tr>
+            <tr>
+              <td><code>@DecimalMin/@DecimalMax</code></td>
+              <td>小数范围</td>
+              <td>BigDecimal</td>
+            </tr>
+            <tr>
+              <td><code>@Email</code></td>
+              <td>邮箱格式</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>@Pattern(regexp)</code></td>
+              <td>正则匹配</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>@Length(min, max)</code></td>
+              <td>字符串长度（hibernate 扩展）</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>@Range(min, max)</code></td>
+              <td>数值范围（hibernate 扩展）</td>
+              <td>数字</td>
+            </tr>
+            <tr>
+              <td><code>@Past/@Future</code></td>
+              <td>过去/未来时间</td>
+              <td>Date</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>实战：用户注册 DTO</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+public class UserRegisterDTO {
+
+    @NotBlank(message = "用户名不能为空")
+    @Length(min = 3, max = 20, message = "用户名长度 3-20")
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "用户名只能含字母数字下划线")
+    private String username;
+
+    @NotBlank(message = "密码不能为空")
+    @Length(min = 8, max = 30)
+    private String password;
+
+    @NotBlank
+    @Email(message = "邮箱格式错误")
+    private String email;
+
+    @NotNull
+    @Min(value = 18, message = "必须成年")
+    private Integer age;
+
+    @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式错误")
+    private String phone;
+}</code></pre>
+        </div>
+
+        <p><strong>Controller 触发校验</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@PostMapping("/register")
+public Result&lt;Void&gt; register(@RequestBody @Valid UserRegisterDTO dto) {
+    // 校验失败会抛 MethodArgumentNotValidException，被全局处理器捕获
+    userService.register(dto);
+    return Result.success();
+}
+
+@GetMapping("/search")
+public Result&lt;List&lt;User&gt;&gt; search(@RequestParam @NotBlank String keyword) {  // 单参数校验
+    return Result.success(userService.search(keyword));
+}</code></pre>
+        </div>
+
+        <h3>分组校验</h3>
+        <p>新增和修改时校验规则不同，可用 group：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>public interface AddGroup {}
+public interface UpdateGroup {}
+
+@NotNull(groups = UpdateGroup.class, message = "ID 不能为空")
+private Long id;
+
+@NotBlank(groups = {AddGroup.class, UpdateGroup.class})
+private String name;
+
+// Controller
+@PostMapping public Result add(@RequestBody @Validated(AddGroup.class) UserDTO dto) { ... }
+@PutMapping public Result update(@RequestBody @Validated(UpdateGroup.class) UserDTO dto) { ... }</code></pre>
+        </div>
+
+        <h3>自定义校验注解</h3>
+        <p>示例：身份证号校验</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = IdCardValidator.class)
+public @interface IdCard {
+    String message() default "身份证号格式错误";
+    Class&lt;?&gt;[] groups() default {};
+    Class&lt;? extends Payload&gt;[] payload() default {};
+}
+
+public class IdCardValidator implements ConstraintValidator&lt;IdCard, String&gt; {
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext ctx) {
+        if (value == null) return true;   // 配合 @NotNull 使用
+        return value.matches("^[1-9]\\d{5}(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]$");
+    }
+}</code></pre>
+        </div>
+
+        <h3>Swagger / OpenAPI 接口文档</h3>
+        <p><strong>添加依赖（Spring Boot 3.x 用 springdoc-openapi）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springdoc&lt;/groupId&gt;
+    &lt;artifactId&gt;springdoc-openapi-starter-webmvc-ui&lt;/artifactId&gt;
+    &lt;version&gt;2.6.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+
+        <p><strong>配置类</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Configuration
+public class SwaggerConfig {
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+            .info(new Info()
+                .title("Demo API 文档")
+                .version("1.0")
+                .description("Spring Boot Demo 接口文档")
+                .contact(new Contact().name("团队")))
+            .externalDocs(new ExternalDocumentation()
+                .description("Wiki")
+                .url("https://example.com"));
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>常用注解</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Tag(name = "用户模块")                          // Controller
+@RestController
+public class UserController {
+
+    @Operation(summary = "用户注册", description = "新用户注册接口")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "成功")})
+    @PostMapping("/register")
+    public Result register(@RequestBody @Valid UserRegisterDTO dto) { ... }
+}
+
+@Schema(description = "用户 DTO")
+public class UserRegisterDTO {
+    @Schema(description = "用户名", example = "zhangsan", requiredMode = RequiredMode.REQUIRED)
+    private String username;
+    private String password;
+}</code></pre>
+        </div>
+
+        <p>
+          访问 <code>http://localhost:8080/swagger-ui.html</code> 查看 API
+          文档（旧版）；新版访问 <code>/swagger-ui/index.html</code>。
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>工具</th>
+              <th>访问路径</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Swagger UI（旧）</td>
+              <td><code>/swagger-ui.html</code></td>
+            </tr>
+            <tr>
+              <td>Swagger UI（springdoc）</td>
+              <td><code>/swagger-ui/index.html</code></td>
+            </tr>
+            <tr>
+              <td>OpenAPI JSON</td>
+              <td><code>/v3/api-docs</code></td>
+            </tr>
+            <tr>
+              <td>Knife4j（国内增强）</td>
+              <td><code>/doc.html</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 生产环境务必关闭 Swagger</div>
+          <div class="callout-body">
+            <p>Swagger 会暴露所有接口，被攻击者看到等于送地图。生产配置：</p>
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+              <pre><code>@Profile({"dev", "test"})   // 仅在 dev/test 启用
+@Configuration
+public class SwaggerConfig { ... }</code></pre>
+            </div>
+            <p>
+              或在 application-prod.yml 中关闭：<code
+                >springdoc.swagger-ui.enabled=false</code
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 8 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >DTO 字段加校验注解（@NotBlank/@Email/@Min），Controller
+                参数前加 @Valid；Swagger 用 @Tag/@Operation/@Schema
+                描述接口，生产环境必须关闭。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <div class="section-badge">
+          <span class="num">09</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">09</span>Redis 缓存与 Session 共享</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring Cache 抽象</div>
+          <div class="callout-body">
+            <p>
+              Spring 提供统一的缓存抽象（CacheManager +
+              Cache），支持多种实现：Redis、Caffeine、EhCache、ConcurrentMap。注解
+              <code>@Cacheable</code> / <code>@CacheEvict</code> 一行搞定。
+            </p>
+          </div>
+        </div>
+
+        <h3>Spring Cache 核心注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@EnableCaching</code></td>
+              <td>开启缓存（主类/配置类上）</td>
+            </tr>
+            <tr>
+              <td><code>@Cacheable</code></td>
+              <td>查询时先走缓存，未命中再执行方法</td>
+            </tr>
+            <tr>
+              <td><code>@CachePut</code></td>
+              <td>始终执行方法，并把结果放入缓存</td>
+            </tr>
+            <tr>
+              <td><code>@CacheEvict</code></td>
+              <td>清除缓存（allEntries=true 清空）</td>
+            </tr>
+            <tr>
+              <td><code>@Caching</code></td>
+              <td>组合多个缓存注解</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>整合 Redis 五步</h3>
+        <p><strong>1）依赖</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+
+        <p><strong>2）application.yml</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>spring:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0</code></pre>
+        </div>
+
+        <p><strong>3）Redis 配置类</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Configuration
+public class RedisConfig {
+
+    @Bean
+    public RedisTemplate&lt;String, Object&gt; redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate&lt;String, Object&gt; template = new RedisTemplate&lt;&gt;();
+        template.setConnectionFactory(factory);
+
+        // key 用 String 序列化
+        StringRedisSerializer keySer = new StringRedisSerializer();
+        template.setKeySerializer(keySer);
+        template.setHashKeySerializer(keySer);
+
+        // value 用 JSON 序列化
+        Jackson2JsonRedisSerializer&lt;Object&gt; valSer = new Jackson2JsonRedisSerializer&lt;&gt;(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.activateDefaultTyping(om.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
+        valSer.setObjectMapper(om);
+
+        template.setValueSerializer(valSer);
+        template.setHashValueSerializer(valSer);
+        template.afterPropertiesSet();
+        return template;
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>4）使用 RedisTemplate</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class UserService {
+    @Autowired
+    private RedisTemplate&lt;String, Object&gt; redisTemplate;
+
+    public User getById(Long id) {
+        String key = "user:" + id;
+        // 1. 先查缓存
+        User user = (User) redisTemplate.opsForValue().get(key);
+        if (user != null) return user;
+        // 2. 查 DB
+        user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            redisTemplate.opsForValue().set(key, user, Duration.ofMinutes(30));
+        }
+        return user;
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>5）注解式缓存（推荐）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class UserService {
+
+    @Cacheable(value = "user", key = "#id", unless = "#result == null")
+    public User getById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @CachePut(value = "user", key = "#user.id")
+    public User update(User user) {
+        userRepository.updateById(user);
+        return user;
+    }
+
+    @CacheEvict(value = "user", key = "#id")
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+}</code></pre>
+        </div>
+
+        <h3>RedisTemplate 五大操作</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 1. String
+redisTemplate.opsForValue().set("k", "v", Duration.ofMinutes(10));
+String v = (String) redisTemplate.opsForValue().get("k");
+
+// 2. Hash（适合存对象）
+redisTemplate.opsForHash().put("user:1", "name", "zhangsan");
+Map&lt;Object, Object&gt; map = redisTemplate.opsForHash().entries("user:1");
+
+// 3. List（队列/栈）
+redisTemplate.opsForList().leftPush("queue", "msg");
+String msg = (String) redisTemplate.opsForList().rightPop("queue");
+
+// 4. Set（标签/共同好友）
+redisTemplate.opsForSet().add("tags", "java", "redis");
+Set&lt;Object&gt; tags = redisTemplate.opsForSet().members("tags");
+
+// 5. ZSet（排行榜）
+redisTemplate.opsForZSet().add("rank", "user1", 99.5);
+Set&lt;Object&gt; top10 = redisTemplate.opsForZSet().reverseRange("rank", 0, 9);</code></pre>
+        </div>
+
+        <h3>缓存三大问题</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>问题</th>
+              <th>场景</th>
+              <th>解决方案</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>缓存穿透</strong></td>
+              <td>查不存在的数据，每次都打到 DB</td>
+              <td>布隆过滤器、缓存空对象</td>
+            </tr>
+            <tr>
+              <td><strong>缓存击穿</strong></td>
+              <td>热点 key 过期瞬间大量请求打 DB</td>
+              <td>分布式锁（SETNX）、逻辑过期</td>
+            </tr>
+            <tr>
+              <td><strong>缓存雪崩</strong></td>
+              <td>大量 key 同时过期 / Redis 宕机</td>
+              <td>过期时间加随机值、多级缓存、Redis 集群</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Session 共享（分布式登录）</h3>
+        <p>微服务下多个 Tomcat 实例需要共享 Session，常用方案：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.session&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-session-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+# application.yml
+spring:
+  session:
+    store-type: redis
+    timeout: 1800
+    redis:
+      namespace: spring:session</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 企业级缓存策略</div>
+          <div class="callout-body">
+            <ol>
+              <li>
+                <strong>读多写少</strong>：用 <code>@Cacheable</code>，TTL 30
+                分钟 + 主动失效
+              </li>
+              <li>
+                <strong>强一致性</strong>：先写 DB，再删缓存（Cache-Aside 模式）
+              </li>
+              <li>
+                <strong>防穿透</strong>：缓存空值（<code
+                  >unless = "#result == null"</code
+                >）+ 布隆过滤器
+              </li>
+              <li>
+                <strong>防雪崩</strong>：过期时间加
+                <code>Random(0, 300)</code> 秒
+              </li>
+              <li>
+                <strong>Redis 替代方案</strong>：高并发可考虑 Caffeine（本地）+
+                Redis（分布式）二级缓存
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 9 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >@Cacheable 查询走缓存，@CachePut 更新同步缓存，@CacheEvict
+                删除清缓存；缓存三大问题（穿透/击穿/雪崩）靠空值+分布式锁+过期随机化。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <div class="section-badge">
+          <span class="num">10</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">10</span>安全与权限（Spring Security + JWT）</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring Security 三大核心</div>
+          <div class="callout-body">
+            <ul>
+              <li><strong>认证（Authentication）</strong>：你是谁？登录验证</li>
+              <li>
+                <strong>授权（Authorization）</strong>：你能做什么？权限控制
+              </li>
+              <li>
+                <strong>防护（Protection）</strong>：防 CSRF / XSS / Session
+                Fixation 等攻击
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>过滤器链流程</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>HTTP 请求
+   ↓
+SecurityContextPersistenceFilter    (恢复 SecurityContext)
+   ↓
+UsernamePasswordAuthenticationFilter (表单登录)
+   ↓
+JwtAuthenticationFilter             (自定义 JWT 校验)
+   ↓
+AuthorizationFilter                 (权限判断)
+   ↓
+Controller
+   ↓
+SecurityContextHolderFilter         (清理上下文)
+   ↓
+响应返回</code></pre>
+        </div>
+
+        <h3>Spring Security 6.x 实战配置</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity   // 开启 @PreAuthorize
+public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthenticationFilter jwtFilter;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -&gt; csrf.disable())                       // 关闭 CSRF（前后端分离）
+            .sessionManagement(s -&gt; s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))   // 无状态
+            .authorizeHttpRequests(auth -&gt; auth
+                .requestMatchers("/api/auth/**").permitAll()    // 登录注册放行
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated()                   // 其他需登录
+            )
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();   // BCrypt 强度 10
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+        return cfg.getAuthenticationManager();
+    }
+}</code></pre>
+        </div>
+
+        <h3>JWT 工具类</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Component
+public class JwtUtil {
+    @Value("${myapp.jwt.secret}")
+    private String secret;
+    @Value("${myapp.jwt.expire}")
+    private Long expire;
+
+    private static final String HEADER = "Authorization";
+    private static final String PREFIX = "Bearer ";
+
+    public String generate(Long userId, String username) {
+        return Jwts.builder()
+            .setSubject(String.valueOf(userId))
+            .claim("username", username)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + expire * 1000))
+            .signWith(SignatureAlgorithm.HS256, secret)
+            .compact();
+    }
+
+    public Claims parse(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
+}</code></pre>
+        </div>
+
+        <h3>JWT 过滤器</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+            throws ServletException, IOException {
+        String header = req.getHeader("Authorization");
+        if (header != null &amp;&amp; header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            try {
+                Claims claims = jwtUtil.parse(token);
+                Long userId = Long.valueOf(claims.getSubject());
+                String username = (String) claims.get("username");
+
+                UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (Exception e) {
+                resp.setStatus(401);
+                resp.getWriter().write("token 无效");
+                return;
+            }
+        }
+        chain.doFilter(req, resp);
+    }
+}</code></pre>
+        </div>
+
+        <h3>登录接口</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class AuthService {
+
+    @Autowired private UserRepository userRepo;
+    @Autowired private PasswordEncoder encoder;
+    @Autowired private JwtUtil jwtUtil;
+
+    public String login(String username, String password) {
+        User user = userRepo.findByUsername(username)
+            .orElseThrow(() -&gt; new BizException("用户不存在"));
+        if (!encoder.matches(password, user.getPassword())) {
+            throw new BizException("密码错误");
+        }
+        return jwtUtil.generate(user.getId(), username);
+    }
+}</code></pre>
+        </div>
+
+        <h3>方法级权限控制</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestController
+@RequestMapping("/api/admin")
+public class AdminController {
+
+    @PreAuthorize("hasRole('ADMIN')")           // 仅 ADMIN 角色
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Long id) { ... }
+
+    @PreAuthorize("hasAuthority('user:delete')") // 需 user:delete 权限
+    @DeleteMapping("/users/{id}")
+    public void deleteUser2(@PathVariable Long id) { ... }
+
+    @PreAuthorize("#id == authentication.principal.id")  // 仅本人
+    @GetMapping("/users/{id}")
+    public User getMyInfo(@PathVariable Long id) { ... }
+}</code></pre>
+        </div>
+
+        <h3>RBAC 权限模型</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>表</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>t_user</code></td>
+              <td>用户</td>
+            </tr>
+            <tr>
+              <td><code>t_role</code></td>
+              <td>角色（ADMIN/USER/GUEST）</td>
+            </tr>
+            <tr>
+              <td><code>t_permission</code></td>
+              <td>权限（user:add / user:delete）</td>
+            </tr>
+            <tr>
+              <td><code>t_user_role</code></td>
+              <td>用户-角色关联</td>
+            </tr>
+            <tr>
+              <td><code>t_role_permission</code></td>
+              <td>角色-权限关联</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ JWT 五大坑</div>
+          <div class="callout-body">
+            <ol>
+              <li><strong>密钥不能硬编码</strong>，放配置中心或 Vault</li>
+              <li>
+                <strong>不要存敏感数据</strong>在 payload（base64 可解码）
+              </li>
+              <li>
+                <strong>必须设置过期时间</strong>，access token 15 分钟，refresh
+                token 7 天
+              </li>
+              <li>
+                <strong>登出/封号需要黑名单机制</strong>（JWT 本身无法失效）
+              </li>
+              <li><strong>HTTPS 必须</strong>，否则 token 在网络裸传</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 10 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Spring Security 6 用 Lambda 配置 DSL，前后端分离关 CSRF 配
+                STATELESS；JWT 三段（header.payload.signature）放 Authorization
+                Bearer，BCrypt 加密 + 短过期 + 黑名单。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <div class="section-badge">
+          <span class="num">11</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">11</span>消息队列（RabbitMQ/Kafka）与异步</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 为什么需要消息队列？</div>
+          <div class="callout-body">
+            <ul>
+              <li>
+                <strong>异步解耦</strong>：下单后发短信通知，无需等待短信结果
+              </li>
+              <li>
+                <strong>削峰填谷</strong>：秒杀活动瞬间 10
+                万请求，先入队列慢慢消费
+              </li>
+              <li><strong>广播通知</strong>：一个事件多个系统订阅</li>
+              <li><strong>最终一致性</strong>：跨服务数据同步</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Spring 异步三剑客</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>方案</th>
+              <th>场景</th>
+              <th>特点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@Async</code></td>
+              <td>简单异步任务</td>
+              <td>默认线程池，<strong>同 Bean 自调失效</strong></td>
+            </tr>
+            <tr>
+              <td><code>ThreadPoolTaskExecutor</code></td>
+              <td>可控线程池</td>
+              <td>可配置核心线程/队列/拒绝策略</td>
+            </tr>
+            <tr>
+              <td>消息队列（MQ）</td>
+              <td>跨服务可靠消息</td>
+              <td>持久化、ACK、重试、广播</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>@Async 异步方法</h3>
+        <p><strong>1）启用（主类或配置类）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@EnableAsync
+@SpringBootApplication
+public class DemoApplication { ... }
+
+# application.yml
+spring:
+  task:
+    execution:
+      pool:
+        core-size: 8
+        max-size: 16
+        queue-capacity: 200
+      thread-name-prefix: async-</code></pre>
+        </div>
+
+        <p><strong>2）使用</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class NotificationService {
+
+    @Async
+    public void sendSms(String phone, String content) {
+        // 模拟耗时
+        Thread.sleep(2000);
+        log.info("短信发送成功：{} - {}", phone, content);
+    }
+}
+
+// Controller
+@PostMapping("/order")
+public Result&lt;Void&gt; createOrder() {
+    orderService.create();
+    notificationService.sendSms("13800138000", "下单成功");   // 立即返回，不等待
+    return Result.success();
+}</code></pre>
+        </div>
+
+        <h3>RabbitMQ 整合</h3>
+        <p><strong>1）依赖与配置</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /</code></pre>
+        </div>
+
+        <p><strong>2）声明队列/交换机/绑定</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Configuration
+public class RabbitConfig {
+
+    public static final String ORDER_EXCHANGE = "order.exchange";
+    public static final String ORDER_QUEUE = "order.queue";
+    public static final String ORDER_ROUTING_KEY = "order.created";
+
+    @Bean
+    public DirectExchange orderExchange() { return new DirectExchange(ORDER_EXCHANGE); }
+
+    @Bean
+    public Queue orderQueue() { return new Queue(ORDER_QUEUE, true); }   // durable
+
+    @Bean
+    public Binding orderBinding(Queue orderQueue, DirectExchange orderExchange) {
+        return BindingBuilder.bind(orderQueue).to(orderExchange).with(ORDER_ROUTING_KEY);
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>3）生产者</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class OrderProducer {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    public void sendOrderCreated(Order order) {
+        rabbitTemplate.convertAndSend(
+            RabbitConfig.ORDER_EXCHANGE,
+            RabbitConfig.ORDER_ROUTING_KEY,
+            order
+        );
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>4）消费者</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Component
+public class OrderConsumer {
+
+    @RabbitListener(queues = RabbitConfig.ORDER_QUEUE)
+    public void handle(Order order) {
+        log.info("收到订单消息：{}", order);
+        // 处理业务：扣库存、发短信等
+    }
+}</code></pre>
+        </div>
+
+        <h3>Kafka 整合（高吞吐）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.kafka&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-kafka&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: demo-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+@Service
+public class KafkaProducer {
+    @Autowired private KafkaTemplate&lt;String, Object&gt; kafkaTemplate;
+    public void send(String topic, Object msg) {
+        kafkaTemplate.send(topic, msg);
+    }
+}
+
+@KafkaListener(topics = "order-topic", groupId = "demo-group")
+public void consume(String msg) { log.info("收到：{}", msg); }</code></pre>
+        </div>
+
+        <h3>RabbitMQ vs Kafka 选型</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>RabbitMQ</th>
+              <th>Kafka</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>吞吐量</td>
+              <td>万级 TPS</td>
+              <td>百万级 TPS</td>
+            </tr>
+            <tr>
+              <td>延迟</td>
+              <td>微秒级</td>
+              <td>毫秒级</td>
+            </tr>
+            <tr>
+              <td>消息可靠性</td>
+              <td>高（ACK）</td>
+              <td>高（副本）</td>
+            </tr>
+            <tr>
+              <td>消息顺序</td>
+              <td>单队列有序</td>
+              <td>单分区有序</td>
+            </tr>
+            <tr>
+              <td>消息回溯</td>
+              <td>不支持</td>
+              <td>支持（按 offset）</td>
+            </tr>
+            <tr>
+              <td>典型场景</td>
+              <td>业务解耦/任务队列</td>
+              <td>日志采集/事件溯源/实时计算</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ @Async 三大坑</div>
+          <div class="callout-body">
+            <ol>
+              <li><strong>必须 public 方法</strong></li>
+              <li>
+                <strong>同 Bean 自调失效</strong>（A →
+                this.b()），需注入自己（<code>@Resource</code>）或拆分 Bean
+              </li>
+              <li>
+                <strong>异常不会抛给调用方</strong>，需自定义
+                <code>AsyncUncaughtExceptionHandler</code>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 11 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >@Async 解耦简单异步，RabbitMQ 适合业务解耦（万级 TPS），Kafka
+                适合日志/实时计算（百万级 TPS）；消费者用
+                @RabbitListener/@KafkaListener
+                监听，异常靠重试和死信队列兜底。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <div class="section-badge">
+          <span class="num">12</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">12</span>日志、单元测试与部署</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 企业项目三大件</div>
+          <div class="callout-body">
+            <ul>
+              <li><strong>日志</strong>：问题排查的唯一手段</li>
+              <li><strong>单元测试</strong>：保证代码质量的核心</li>
+              <li><strong>部署</strong>：Docker / K8s 让上线不再痛苦</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>日志框架（SLF4J + Logback）</h3>
+        <p>Spring Boot 默认 Logback + SLF4J 门面。</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Slf4j   // Lombok 提供 log 变量
+@RestController
+public class UserController {
+    @GetMapping("/users/{id}")
+    public User getById(@PathVariable Long id) {
+        log.debug("查询用户 id={}", id);
+        log.info("用户查询成功");
+        log.warn("用户不存在 id={}", id);
+        log.error("数据库异常", new RuntimeException("连接超时"));
+        return userService.findById(id);
+    }
+}</code></pre>
+        </div>
+
+        <h3>日志级别</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>级别</th>
+              <th>何时用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ERROR</code></td>
+              <td>错误事件，影响功能</td>
+            </tr>
+            <tr>
+              <td><code>WARN</code></td>
+              <td>警告，潜在问题</td>
+            </tr>
+            <tr>
+              <td><code>INFO</code></td>
+              <td>关键业务流程</td>
+            </tr>
+            <tr>
+              <td><code>DEBUG</code></td>
+              <td>调试信息（开发用）</td>
+            </tr>
+            <tr>
+              <td><code>TRACE</code></td>
+              <td>最细粒度</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>logback-spring.xml（推荐配置）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+    &lt;property name="LOG_PATH" value="/var/log/demo"/&gt;
+
+    &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+        &lt;file&gt;${LOG_PATH}/app.log&lt;/file&gt;
+        &lt;rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"&gt;
+            &lt;fileNamePattern&gt;${LOG_PATH}/app.%d{yyyy-MM-dd}.%i.log.gz&lt;/fileNamePattern&gt;
+            &lt;maxFileSize&gt;100MB&lt;/maxFileSize&gt;
+            &lt;maxHistory&gt;30&lt;/maxHistory&gt;
+        &lt;/rollingPolicy&gt;
+    &lt;/appender&gt;
+
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="CONSOLE"/&gt;
+        &lt;appender-ref ref="FILE"/&gt;
+    &lt;/root&gt;
+
+    &lt;!-- 包级别调 --&gt;
+    &lt;logger name="com.example.demo" level="DEBUG"/&gt;
+    &lt;logger name="org.springframework" level="INFO"/&gt;
+&lt;/configuration&gt;</code></pre>
+        </div>
+
+        <h3>单元测试（JUnit 5 + Mockito）</h3>
+        <p><strong>Service 层测试</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@SpringBootTest
+@Transactional   // 测试完自动回滚，不污染 DB
+class UserServiceTest {
+
+    @Autowired private UserService userService;
+    @Autowired private UserRepository userRepository;
+
+    @Test
+    void testCreate() {
+        User user = new User();
+        user.setUsername("test_user_" + System.currentTimeMillis());
+        user.setEmail("test@example.com");
+
+        User saved = userService.save(user);
+        assertNotNull(saved.getId());
+        assertEquals(user.getUsername(), saved.getUsername());
+    }
+
+    @Test
+    void testDuplicateUsername() {
+        // 断言异常
+        assertThrows(BizException.class, () -&gt; {
+            userService.save(existingUser);
+        });
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>Controller 测试（MockMvc）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@SpringBootTest
+@AutoConfigureMockMvc
+class UserControllerTest {
+
+    @Autowired private MockMvc mvc;
+    @MockBean private UserService userService;   // 模拟 Service
+
+    @Test
+    void testGetUser() throws Exception {
+        User mockUser = new User(1L, "zhangsan", "zs@example.com");
+        when(userService.findById(1L)).thenReturn(mockUser);
+
+        mvc.perform(get("/api/users/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value(200))
+            .andExpect(jsonPath("$.data.username").value("zhangsan"));
+    }
+}</code></pre>
+        </div>
+
+        <h3>测试金字塔</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>层级</th>
+              <th>比例</th>
+              <th>速度</th>
+              <th>工具</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>单元测试</strong></td>
+              <td>70%</td>
+              <td>毫秒级</td>
+              <td>JUnit + Mockito</td>
+            </tr>
+            <tr>
+              <td><strong>集成测试</strong></td>
+              <td>20%</td>
+              <td>秒级</td>
+              <td>@SpringBootTest + H2/Testcontainers</td>
+            </tr>
+            <tr>
+              <td><strong>端到端测试</strong></td>
+              <td>10%</td>
+              <td>分钟级</td>
+              <td>Selenium / Cypress</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>部署：Docker 一键打包</h3>
+        <p><strong>1）多阶段 Dockerfile</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code># 第一阶段：构建
+FROM maven:3.9-eclipse-temurin-17 AS builder
+WORKDIR /build
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn package -DskipTests
+
+# 第二阶段：运行
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=builder /build/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]</code></pre>
+        </div>
+
+        <p><strong>2）docker-compose.yml（含 MySQL/Redis）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/demo?useSSL=false
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: demo
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  mysql-data:</code></pre>
+        </div>
+
+        <p><strong>3）K8s 部署</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: demo
+        image: demo:1.0.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service
+spec:
+  selector:
+    app: demo
+  ports:
+  - port: 80
+    targetPort: 8080</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 生产环境 JVM 参数模板</div>
+          <div class="callout-body">
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+              <pre><code>java -Xms2g -Xmx2g -XX:MetaspaceSize=256m \
+     -XX:+UseG1GC -XX:MaxGCPauseMillis=200 \
+     -XX:+HeapDumpOnOutOfMemoryError \
+     -XX:HeapDumpPath=/var/log/demo/heap.hprof \
+     -Xlog:gc*:file=/var/log/demo/gc.log:time \
+     -jar app.jar</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 12 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >日志靠 SLF4J 门面 + Logback 实现，@Slf4j 一键注入 log
+                变量；测试金字塔 70% 单元 + 20% 集成 + 10% E2E；Dockerfile
+                多阶段构建+JVM 参数调优+K8s 滚动更新。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <div class="section-badge">
+          <span class="num">13</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">13</span>响应式编程（WebFlux/Reactor）</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 同步 vs 异步 vs 响应式</div>
+          <div class="callout-body">
+            <ul>
+              <li>
+                <strong>同步阻塞</strong>：调用方等被调方执行完才继续（Spring
+                MVC）
+              </li>
+              <li>
+                <strong>异步非阻塞</strong
+                >：调用方发起调用后继续做其他事（CompletableFuture）
+              </li>
+              <li>
+                <strong>响应式</strong>：基于事件流 +
+                背压机制，数据可用时推送（Reactor / RxJava）
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Reactor 核心类型</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>类型</th>
+              <th>数据量</th>
+              <th>类似 Java 9+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mono</strong></td>
+              <td>0 或 1 个元素</td>
+              <td>
+                <code>Optional</code> / <code>CompletableFuture&lt;T&gt;</code>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Flux</strong></td>
+              <td>0 到 N 个元素</td>
+              <td><code>Stream&lt;T&gt;</code> / <code>List&lt;T&gt;</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Mono 与 Flux 创建</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// Mono 创建
+Mono.just("hello")                          // 单值
+Mono.empty()                                // 空
+Mono.error(new RuntimeException("err"))     // 错误
+Mono.fromCallable(() -&gt; service.getUser())  // 异步封装阻塞调用
+Mono.fromFuture(future)                     // 从 CompletableFuture
+
+// Flux 创建
+Flux.just(1, 2, 3, 4)                       // 多个值
+Flux.fromIterable(list)                     // 集合
+Flux.fromStream(stream)                     // Stream
+Flux.range(1, 10)                           // 区间
+Flux.interval(Duration.ofSeconds(1))        // 定时（每秒一个）
+Flux.create(sink -&gt; { ... })                // 手动推送</code></pre>
+        </div>
+
+        <h3>响应式操作符</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>类别</th>
+              <th>操作符</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>转换</strong></td>
+              <td>
+                <code>map</code> / <code>flatMap</code> / <code>concatMap</code>
+              </td>
+              <td>元素转换</td>
+            </tr>
+            <tr>
+              <td><strong>过滤</strong></td>
+              <td>
+                <code>filter</code> / <code>distinct</code> / <code>take</code>
+              </td>
+              <td>元素筛选</td>
+            </tr>
+            <tr>
+              <td><strong>组合</strong></td>
+              <td>
+                <code>merge</code> / <code>zip</code> / <code>concat</code>
+              </td>
+              <td>多流合并</td>
+            </tr>
+            <tr>
+              <td><strong>错误</strong></td>
+              <td>
+                <code>onErrorResume</code> / <code>onErrorReturn</code> /
+                <code>retry</code>
+              </td>
+              <td>异常处理</td>
+            </tr>
+            <tr>
+              <td><strong>副作用</strong></td>
+              <td>
+                <code>doOnNext</code> / <code>doOnError</code> /
+                <code>doOnComplete</code>
+              </td>
+              <td>回调</td>
+            </tr>
+            <tr>
+              <td><strong>背压</strong></td>
+              <td>
+                <code>limitRate</code> / <code>onBackpressureBuffer</code>
+              </td>
+              <td>流量控制</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// 示例：查用户 → 查订单 → 转 VO
+public Mono&lt;UserVO&gt; getUserVO(Long id) {
+    return userRepository.findById(id)       // Mono&lt;UserPO&gt;
+        .flatMap(user -&gt; orderRepository.findByUserId(id)
+            .collectList()                   // Flux&lt;Order&gt; → Mono&lt;List&lt;Order&gt;&gt;
+            .map(orders -&gt; toVO(user, orders)))
+        .onErrorResume(e -&gt; Mono.error(new BizException("查询失败")));
+}</code></pre>
+        </div>
+
+        <h3>WebFlux Controller</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestController
+@RequestMapping("/api/users")
+public class UserReactiveController {
+
+    @Autowired
+    private UserReactiveRepository repo;
+
+    @GetMapping
+    public Flux&lt;User&gt; list() { return repo.findAll(); }
+
+    @GetMapping("/{id}")
+    public Mono&lt;User&gt; getById(@PathVariable Long id) {
+        return repo.findById(id);
+    }
+
+    @PostMapping
+    public Mono&lt;User&gt; create(@RequestBody Mono&lt;User&gt; userMono) {
+        return userMono.flatMap(repo::save);
+    }
+}
+
+# 依赖：spring-boot-starter-webflux（替换 starter-web）
+# 自动使用 Netty 服务器（不再用 Tomcat）</code></pre>
+        </div>
+
+        <h3>MVC vs WebFlux 对比</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>Spring MVC</th>
+              <th>Spring WebFlux</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>并发模型</td>
+              <td>每请求一线程</td>
+              <td>事件循环（少量线程）</td>
+            </tr>
+            <tr>
+              <td>适用场景</td>
+              <td>关系型 DB / CPU 密集</td>
+              <td>NoSQL / IO 密集</td>
+            </tr>
+            <tr>
+              <td>阻塞代码</td>
+              <td>天然支持</td>
+              <td>会卡死事件循环！需包装</td>
+            </tr>
+            <tr>
+              <td>学习曲线</td>
+              <td>低</td>
+              <td>高（响应式思维）</td>
+            </tr>
+            <tr>
+              <td>生态成熟度</td>
+              <td>★★★★★</td>
+              <td>★★★</td>
+            </tr>
+            <tr>
+              <td>推荐场景</td>
+              <td>99% 项目</td>
+              <td>高并发 IO 密集型</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ WebFlux 五大坑</div>
+          <div class="callout-body">
+            <ol>
+              <li>
+                <strong>不能调用阻塞 IO</strong
+                >（JDBC、RestTemplate），否则事件循环被卡死
+              </li>
+              <li>
+                JDBC 用 <code>JdbcTemplate</code> 会阻塞，需用
+                <strong>R2DBC</strong>
+              </li>
+              <li><strong>学习曲线陡峭</strong>，调试困难，新手慎入</li>
+              <li>并非"响应式就一定快"，CPU 密集场景反而更慢</li>
+              <li>
+                不能直接返回 <code>Flux&lt;Void&gt;</code> 收尾（不会真正发完）
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 何时该用 WebFlux？</div>
+          <div class="callout-body">
+            <ul>
+              <li>网关聚合多个后端 API（高并发 IO 密集）</li>
+              <li>推送服务（股票报价、聊天消息）</li>
+              <li>微服务内部通信（Spring Cloud Gateway 默认 WebFlux）</li>
+              <li>
+                <strong>不推荐</strong>：传统业务 CRUD、CPU 密集、SQL 复杂查询
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 13 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Mono 表 0/1 个元素，Flux 表 0/N 个；操作符
+                map/flatMap/filter/onErrorResume 串联；WebFlux 事件循环 +
+                Netty，禁阻塞 IO，99% 业务用 MVC 更稳妥。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <div class="section-badge">
+          <span class="num">14</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">14</span>Actuator 监控与性能调优</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring Boot Actuator</div>
+          <div class="callout-body">
+            <p>
+              Actuator 提供生产级监控端点（健康检查、指标、JVM、HTTP
+              追踪等），是企业级监控的事实标准。
+            </p>
+          </div>
+        </div>
+
+        <h3>启用 Actuator</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"           # 暴露所有端点（生产建议按需）
+  endpoint:
+    health:
+      show-details: always     # 健康检查显示详情
+  metrics:
+    tags:
+      application: demo        # 所有指标打 application=demo 标签
+  prometheus:
+    metrics:
+      export:
+        enabled: true          # 启用 Prometheus 指标</code></pre>
+        </div>
+
+        <h3>常用端点</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>端点</th>
+              <th>作用</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/actuator/health</code></td>
+              <td>健康检查（UP/DOWN）</td>
+              <td>k8s livenessProbe</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/info</code></td>
+              <td>应用信息</td>
+              <td>版本号、git commit</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/metrics</code></td>
+              <td>指标列表</td>
+              <td>JVM、HTTP、DB 连接</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/prometheus</code></td>
+              <td>Prometheus 格式指标</td>
+              <td>Grafana 监控</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/env</code></td>
+              <td>环境变量与配置</td>
+              <td>排查配置问题</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/loggers</code></td>
+              <td>动态调整日志级别</td>
+              <td>生产排查利器</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/threaddump</code></td>
+              <td>线程转储</td>
+              <td>死锁分析</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/heapdump</code></td>
+              <td>堆转储</td>
+              <td>内存泄漏分析</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/mappings</code></td>
+              <td>所有 URL 映射</td>
+              <td>排查路由</td>
+            </tr>
+            <tr>
+              <td><code>/actuator/scheduledtasks</code></td>
+              <td>定时任务列表</td>
+              <td>查看 cron</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>自定义健康检查</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Component
+public class MyHealthIndicator implements HealthIndicator {
+    @Override
+    public Health health() {
+        if (checkService()) {
+            return Health.up().withDetail("version", "1.0").build();
+        }
+        return Health.down().withDetail("error", "服务不可用").build();
+    }
+}</code></pre>
+        </div>
+
+        <h3>Micrometer 自定义指标</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Service
+public class OrderService {
+    private final Counter orderCounter;
+    private final Timer orderTimer;
+
+    public OrderService(MeterRegistry registry) {
+        this.orderCounter = Counter.builder("order.created.total")
+            .description("订单创建总数")
+            .register(registry);
+        this.orderTimer = Timer.builder("order.create.time")
+            .publishPercentiles(0.5, 0.95, 0.99)   // P50/P95/P99
+            .register(registry);
+    }
+
+    public Order create(Order order) {
+        return orderTimer.record(() -&gt; {
+            orderCounter.increment();
+            return doCreate(order);
+        });
+    }
+}</code></pre>
+        </div>
+
+        <h3>性能调优清单</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>类别</th>
+              <th>优化项</th>
+              <th>建议</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>JVM</strong></td>
+              <td>堆内存</td>
+              <td>设置 <code>-Xms == -Xmx</code> 避免动态扩容</td>
+            </tr>
+            <tr>
+              <td><strong>JVM</strong></td>
+              <td>GC 回收器</td>
+              <td>
+                低延迟用 <code>ZGC/Shenandoah</code>，吞吐用 <code>G1</code>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Tomcat</strong></td>
+              <td>线程池</td>
+              <td><code>server.tomcat.threads.max=200</code></td>
+            </tr>
+            <tr>
+              <td><strong>DB</strong></td>
+              <td>连接池</td>
+              <td>HikariCP：<code>maximum-pool-size=20</code></td>
+            </tr>
+            <tr>
+              <td><strong>DB</strong></td>
+              <td>慢 SQL</td>
+              <td>开启 <code>show-sql</code> + 慢日志阈值</td>
+            </tr>
+            <tr>
+              <td><strong>缓存</strong></td>
+              <td>命中率</td>
+              <td>监控 <code>cache.gets / cache.puts</code></td>
+            </tr>
+            <tr>
+              <td><strong>HTTP</strong></td>
+              <td>压缩</td>
+              <td><code>server.compression.enabled=true</code></td>
+            </tr>
+            <tr>
+              <td><strong>HTTP</strong></td>
+              <td>长连接</td>
+              <td>Tomcat 默认 keep-alive</td>
+            </tr>
+            <tr>
+              <td><strong>异步</strong></td>
+              <td>异步 Servlet</td>
+              <td><code>@Async</code> + 线程池</td>
+            </tr>
+            <tr>
+              <td><strong>启动</strong></td>
+              <td>懒加载</td>
+              <td><code>spring.main.lazy-initialization=true</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Prometheus + Grafana 监控</h3>
+        <p>企业级监控三件套：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code># prometheus.yml 抓取配置
+scrape_configs:
+  - job_name: 'spring-boot-app'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['app:8080']
+
+# Grafana Dashboard 推荐模板 ID
+# - 4701: Spring Boot 2.1 Statistics
+# - 12856: Spring Boot Statistics
+# - 14568: Spring Boot Micrometer (JDK11/17)</code></pre>
+        </div>
+
+        <h3>生产环境必须监控的 5 个指标</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th>告警阈值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>JVM 堆内存使用率</td>
+              <td>&gt; 80% 告警</td>
+            </tr>
+            <tr>
+              <td>GC 暂停时间</td>
+              <td>P99 &gt; 200ms 告警</td>
+            </tr>
+            <tr>
+              <td>HTTP 5xx 比例</td>
+              <td>&gt; 1% 告警</td>
+            </tr>
+            <tr>
+              <td>Tomcat 活跃线程数</td>
+              <td>&gt; 80% max 告警</td>
+            </tr>
+            <tr>
+              <td>DB 连接池活跃数</td>
+              <td>&gt; 80% max 告警</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 14 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Actuator 暴露 health/metrics/prometheus 端点，自定义指标用
+                Micrometer；调优靠 JVM 内存匹配 + G1 GC + HikariCP 连接池 +
+                Tomcat 线程数 + 慢 SQL 监控。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <div class="section-badge">
+          <span class="num">15</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">15</span>自定义 Starter 与自动装配原理</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 Spring Boot 自动装配魔法</div>
+          <div class="callout-body">
+            <p>
+              为什么加了 <code>spring-boot-starter-web</code> 就自动配置好
+              Tomcat + Spring MVC？为什么加了
+              <code>spring-boot-starter-data-jpa</code> 就自动配置好 Hibernate +
+              DataSource？<strong>自动装配（Auto-Configuration）</strong>是
+              Spring Boot 的核心魔法。
+            </p>
+          </div>
+        </div>
+
+        <h3>Spring Boot 启动流程（九步）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>1. new SpringApplication(primarySources)
+2. 推断应用类型（Servlet/Reactive）
+3. 加载所有 META-INF/spring.factories（或 spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports）
+4. 实例化 ApplicationContext
+5. refresh() 触发 Bean 创建
+6. 执行 AutoConfigurationImportSelector 加载自动配置类
+7. 按 @Conditional 注解筛选生效配置
+8. 创建并注册 Bean
+9. 启动 Web 服务器（Tomcat/Netty）</code></pre>
+        </div>
+
+        <h3>核心注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@SpringBootApplication</code></td>
+              <td>
+                三合一：<code>@Configuration</code> +
+                <code>@EnableAutoConfiguration</code> +
+                <code>@ComponentScan</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>@EnableAutoConfiguration</code></td>
+              <td>
+                开启自动装配（通过 <code>@Import</code> 引入
+                <code>AutoConfigurationImportSelector</code>）
+              </td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnClass</code></td>
+              <td>classpath 里有指定类才生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnMissingBean</code></td>
+              <td>容器里没有指定 Bean 才生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnProperty</code></td>
+              <td>配置项匹配才生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnWebApplication</code></td>
+              <td>Web 应用才生效</td>
+            </tr>
+            <tr>
+              <td>
+                <code>@AutoConfigureBefore</code> /
+                <code>@AutoConfigureAfter</code>
+              </td>
+              <td>指定配置顺序</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>查看自动配置报告</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code># application.yml
+debug: true
+
+# 启动时打印：
+# ============================
+# CONDITIONS EVALUATION REPORT
+# ============================
+# Positive matches:（生效的）
+# -----------------
+#   DataSourceAutoConfiguration matched
+# Negative matches:（不生效的）
+# -----------------
+#   ElasticsearchAutoConfiguration did not match
+#     - @ConditionalOnClass did not find required class 'org.elasticsearch.client.RestClient'</code></pre>
+        </div>
+
+        <h3>手写一个自定义 Starter（极简）</h3>
+        <p>
+          <strong>场景</strong>：封装一个
+          <code>hello-spring-boot-starter</code>，提供
+          <code>HelloService</code> 自动注入。
+        </p>
+
+        <p><strong>1）创建 hello-spring-boot-starter 项目</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>hello-spring-boot-starter/
+├── pom.xml
+└── src/main/
+    ├── java/
+    │   └── com/example/starter/
+    │       ├── HelloService.java
+    │       ├── HelloProperties.java
+    │       └── HelloAutoConfiguration.java
+    └── resources/
+        └── META-INF/
+            └── spring/
+                └── org.springframework.boot.autoconfigure.AutoConfiguration.imports</code></pre>
+        </div>
+
+        <p><strong>2）HelloProperties（配置绑定）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@Data
+@ConfigurationProperties(prefix = "myapp.hello")
+public class HelloProperties {
+    private String prefix = "Hello";
+    private String suffix = "!";
+}</code></pre>
+        </div>
+
+        <p><strong>3）HelloService（业务 Bean）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>public class HelloService {
+    private final HelloProperties properties;
+
+    public HelloService(HelloProperties properties) {
+        this.properties = properties;
+    }
+
+    public String sayHello(String name) {
+        return properties.getPrefix() + ", " + name + properties.getSuffix();
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>4）HelloAutoConfiguration（自动配置类）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@AutoConfiguration
+@ConditionalOnClass(HelloService.class)
+@EnableConfigurationProperties(HelloProperties.class)
+public class HelloAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean   // 用户没自定义才用默认
+    public HelloService helloService(HelloProperties props) {
+        return new HelloService(props);
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>5）注册自动配置（Spring Boot 3 新写法）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code># 文件：META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+com.example.starter.HelloAutoConfiguration</code></pre>
+        </div>
+
+        <p><strong>6）打包安装</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>mvn clean install
+
+# 在业务项目引入
+&lt;dependency&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;hello-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+
+        <p><strong>7）业务项目直接注入使用</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@RestController
+public class DemoController {
+    @Autowired
+    private HelloService helloService;
+
+    @GetMapping("/hello")
+    public String hello() {
+        return helloService.sayHello("Spring Boot");
+    }
+}
+
+# application.yml
+myapp:
+  hello:
+    prefix: "Hi"
+    suffix: "~~~"</code></pre>
+        </div>
+
+        <h3>Spring Boot 3 自动配置新方式</h3>
+        <p>
+          Spring Boot 3.x 不再使用 <code>spring.factories</code>，改用
+          <code
+            >META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code
+          >
+          文件，每行一个自动配置类全限定名。
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Spring Boot 版本</th>
+              <th>注册方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2.7 及之前</td>
+              <td>
+                <code>META-INF/spring.factories</code> 中
+                <code
+                  >org.springframework.boot.autoconfigure.EnableAutoConfiguration=xxx</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>3.0+</td>
+              <td>
+                <code
+                  >META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code
+                >
+                一行一个全类名
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ Starter 命名规范</div>
+          <div class="callout-body">
+            <ul>
+              <li>
+                官方 starter：<code>spring-boot-starter-{name}</code>（如
+                web、data-jpa）
+              </li>
+              <li>
+                第三方 starter：<code>{name}-spring-boot-starter</code>（如
+                mybatis-spring-boot-starter）
+              </li>
+              <li>避免使用 <code>spring-boot</code> 前缀，那是官方保留的</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 15 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >自动装配 = @Conditional 条件判断 + @AutoConfiguration 注册 +
+                AutoConfiguration.imports 文件加载；自定义 Starter
+                三件套（Properties/AutoConfiguration/imports），命名严格遵守
+                spring-boot-starter-{name}。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <div class="section-badge">
+          <span class="num">16</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">16</span>微服务架构（Spring Cloud 入门）</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 单体 vs 微服务</div>
+          <div class="callout-body">
+            <table>
+              <tr>
+                <th>维度</th>
+                <th>单体应用</th>
+                <th>微服务</th>
+              </tr>
+              <tr>
+                <td>部署</td>
+                <td>一个 WAR/JAR</td>
+                <td>多个独立服务</td>
+              </tr>
+              <tr>
+                <td>扩展</td>
+                <td>整体扩</td>
+                <td>按服务扩</td>
+              </tr>
+              <tr>
+                <td>技术栈</td>
+                <td>统一</td>
+                <td>可异构</td>
+              </tr>
+              <tr>
+                <td>故障</td>
+                <td>一炸全炸</td>
+                <td>隔离</td>
+              </tr>
+              <tr>
+                <td>复杂度</td>
+                <td>低（初）</td>
+                <td>高（运维、分布式事务）</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <h3>Spring Cloud 全家桶组件</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>组件</th>
+              <th>作用</th>
+              <th>替代方案</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Spring Cloud Gateway</strong></td>
+              <td>API 网关（路由/限流/鉴权）</td>
+              <td>Nginx / Kong / Zuul</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Cloud Config / Nacos</strong></td>
+              <td>配置中心</td>
+              <td>Apollo / Nacos</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Cloud Discovery / Nacos</strong></td>
+              <td>服务注册与发现</td>
+              <td>Consul / Eureka</td>
+            </tr>
+            <tr>
+              <td><strong>OpenFeign</strong></td>
+              <td>声明式 HTTP 调用</td>
+              <td>Dubbo / gRPC</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Cloud LoadBalancer</strong></td>
+              <td>客户端负载均衡</td>
+              <td>Ribbon</td>
+            </tr>
+            <tr>
+              <td><strong>Resilience4j / Sentinel</strong></td>
+              <td>熔断限流降级</td>
+              <td>Hystrix（已停维）</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Cloud Sleuth / Micrometer Tracing</strong></td>
+              <td>分布式链路追踪</td>
+              <td>Zipkin / SkyWalking</td>
+            </tr>
+            <tr>
+              <td><strong>Spring Cloud Stream</strong></td>
+              <td>消息驱动微服务</td>
+              <td>直接用 RabbitMQ/Kafka</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Spring Cloud Alibaba（Nacos + Sentinel）</h3>
+        <p>国内最主流方案：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;/artifactId&gt;
+            &lt;version&gt;2023.0.1.0&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+
+&lt;dependencies&gt;
+    &lt;!-- 服务注册发现 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;!-- 配置中心 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+# application.yml
+spring:
+  application:
+    name: order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml</code></pre>
+        </div>
+
+        <h3>OpenFeign 声明式调用</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>@EnableFeignClients   // 启动类
+@SpringBootApplication
+public class OrderApplication { ... }
+
+// 声明远程调用接口
+@FeignClient(name = "user-service")   // 服务名
+public interface UserFeignClient {
+    @GetMapping("/api/users/{id}")
+    Result&lt;UserVO&gt; getById(@PathVariable("id") Long id);
+
+    @PostMapping("/api/users")
+    Result&lt;UserVO&gt; create(@RequestBody UserDTO dto);
+}
+
+// 在 OrderService 注入使用
+@Service
+public class OrderService {
+    @Autowired
+    private UserFeignClient userClient;
+
+    public Order create(OrderDTO dto) {
+        UserVO user = userClient.getById(dto.getUserId()).getData();
+        // ... 业务逻辑
+    }
+}</code></pre>
+        </div>
+
+        <h3>Sentinel 熔断限流</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-cloud-starter-alibaba-sentinel&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+# application.yml
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8080   # Sentinel 控制台
+      eager: true
+
+// 在 Controller 方法上加 @SentinelResource
+@SentinelResource(value = "getUser", blockHandler = "handleBlock", fallback = "handleFallback")
+public User getById(Long id) {
+    return userService.findById(id);
+}
+
+// 限流处理
+public User handleBlock(Long id, BlockException e) {
+    throw new BizException(429, "请求过于频繁，请稍后再试");
+}
+
+// 降级处理（业务异常）
+public User handleFallback(Long id, Throwable e) {
+    return new User(-1L, "默认用户", "");
+}</code></pre>
+        </div>
+
+        <h3>Gateway 网关路由</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>spring:
+  cloud:
+    gateway:
+      routes:
+      - id: user-service
+        uri: lb://user-service       # lb = loadBalancer
+        predicates:
+        - Path=/api/users/**         # 路径匹配
+        filters:
+        - StripPrefix=1              # 去掉 /api 前缀
+        - AddRequestHeader=Gateway, true
+      - id: order-service
+        uri: lb://order-service
+        predicates:
+        - Path=/api/orders/**
+
+# 限流配置（基于 Sentinel）
+      - id: limit-route
+        uri: lb://user-service
+        filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10     # 每秒 10 个令牌
+            redis-rate-limiter.burstCapacity: 20    # 桶容量 20</code></pre>
+        </div>
+
+        <h3>分布式事务方案对比</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>方案</th>
+              <th>原理</th>
+              <th>适用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Seata AT</strong></td>
+              <td>自动补偿（默认）</td>
+              <td>大多数业务</td>
+            </tr>
+            <tr>
+              <td><strong>Seata TCC</strong></td>
+              <td>Try/Confirm/Cancel 三段</td>
+              <td>金融级强一致</td>
+            </tr>
+            <tr>
+              <td><strong>本地消息表</strong></td>
+              <td>最终一致性</td>
+              <td>异步场景</td>
+            </tr>
+            <tr>
+              <td><strong>RocketMQ 事务消息</strong></td>
+              <td>消息事务一致性</td>
+              <td>MQ 方案</td>
+            </tr>
+            <tr>
+              <td><strong>Saga</strong></td>
+              <td>长事务拆分</td>
+              <td>复杂长流程</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 微服务三大陷阱</div>
+          <div class="callout-body">
+            <ol>
+              <li>
+                <strong>分布式事务</strong>：跨服务数据一致性问题（用 Seata）
+              </li>
+              <li>
+                <strong>服务雪崩</strong>：一个服务挂掉拖垮全链路（用熔断 +
+                限流）
+              </li>
+              <li>
+                <strong>调用链路过长</strong>：性能下降、排查困难（用链路追踪）
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 何时该用微服务？</div>
+          <div class="callout-body">
+            <ul>
+              <li>
+                <strong>用</strong>：团队 &gt; 10
+                人、业务复杂、并发高、独立扩展需求
+              </li>
+              <li>
+                <strong>不用</strong>：初创项目、单一业务、团队小 ——
+                <strong>单体先行，微服务是演进不是设计</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 16 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Spring Cloud Alibaba = Nacos（注册+配置）+ OpenFeign（调用）+
+                Sentinel（熔断限流）+
+                Gateway（路由）；单体先行微服务演进，不是越早拆越好。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <div class="section-badge">
+          <span class="num">17</span><span class="sec-tag">精通篇</span>
+        </div>
+        <h2><span class="num">17</span>Spring Boot 注解大全（速查手册）</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 注解学习法</div>
+          <div class="callout-body">
+            <p>
+              Spring Boot 注解分四层：<strong>组件类注解</strong> →
+              <strong>依赖注入</strong> → <strong>Web/MVC</strong> →
+              <strong>配置/条件</strong>。本表是速查手册，建议收藏。
+            </p>
+          </div>
+        </div>
+
+        <h3>1. 组件类注解（标记 Bean）</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+              <th>示例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@Component</code></td>
+              <td>通用组件</td>
+              <td><code>@Component public class MyBean {}</code></td>
+            </tr>
+            <tr>
+              <td><code>@Service</code></td>
+              <td>业务层</td>
+              <td><code>@Service public class UserService {}</code></td>
+            </tr>
+            <tr>
+              <td><code>@Repository</code></td>
+              <td>持久层（自动转换异常）</td>
+              <td><code>@Repository public class UserDao {}</code></td>
+            </tr>
+            <tr>
+              <td><code>@Controller</code></td>
+              <td>控制器（返回视图）</td>
+              <td><code>@Controller public class PageController {}</code></td>
+            </tr>
+            <tr>
+              <td><code>@RestController</code></td>
+              <td>REST 控制器（返回 JSON）</td>
+              <td>
+                <code>@RestController public class ApiController {}</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>@Configuration</code></td>
+              <td>配置类（声明 Bean）</td>
+              <td><code>@Configuration public class AppConfig {}</code></td>
+            </tr>
+            <tr>
+              <td><code>@Bean</code></td>
+              <td>方法上声明 Bean</td>
+              <td><code>@Bean public DataSource ds() {}</code></td>
+            </tr>
+            <tr>
+              <td><code>@Mapper</code></td>
+              <td>MyBatis Mapper</td>
+              <td><code>@Mapper public interface UserMapper {}</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. 依赖注入注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>注入方式</th>
+              <th>特点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@Autowired</code>（Spring）</td>
+              <td>按类型</td>
+              <td>可省略（构造器注入 Spring 4.3+ 自动）</td>
+            </tr>
+            <tr>
+              <td><code>@Resource</code>（JSR-250）</td>
+              <td>按名称</td>
+              <td><code>@Resource(name = "xxx")</code></td>
+            </tr>
+            <tr>
+              <td><code>@Inject</code>（JSR-330）</td>
+              <td>按类型</td>
+              <td>需额外引入 javax.inject 依赖</td>
+            </tr>
+            <tr>
+              <td><code>@Qualifier</code></td>
+              <td>按名称限定</td>
+              <td><code>@Autowired @Qualifier("xxx")</code></td>
+            </tr>
+            <tr>
+              <td><code>@Primary</code></td>
+              <td>优先选择</td>
+              <td>多个同类型时优先</td>
+            </tr>
+            <tr>
+              <td><code>@Value</code></td>
+              <td>注入配置值</td>
+              <td><code>@Value("${app.name}")</code></td>
+            </tr>
+            <tr>
+              <td><code>@Lazy</code></td>
+              <td>懒加载</td>
+              <td>首次使用时才创建</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Web/MVC 注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@RequestMapping</code></td>
+              <td>通用请求映射</td>
+            </tr>
+            <tr>
+              <td><code>@GetMapping</code> / <code>@PostMapping</code></td>
+              <td>GET / POST 映射</td>
+            </tr>
+            <tr>
+              <td><code>@PutMapping</code> / <code>@DeleteMapping</code></td>
+              <td>PUT / DELETE 映射</td>
+            </tr>
+            <tr>
+              <td><code>@PatchMapping</code></td>
+              <td>PATCH 映射</td>
+            </tr>
+            <tr>
+              <td><code>@PathVariable</code></td>
+              <td>路径变量 <code>/users/{id}</code></td>
+            </tr>
+            <tr>
+              <td><code>@RequestParam</code></td>
+              <td>查询参数 <code>?name=xx</code></td>
+            </tr>
+            <tr>
+              <td><code>@RequestBody</code></td>
+              <td>请求体 JSON</td>
+            </tr>
+            <tr>
+              <td><code>@RequestHeader</code></td>
+              <td>请求头</td>
+            </tr>
+            <tr>
+              <td><code>@CookieValue</code></td>
+              <td>Cookie 值</td>
+            </tr>
+            <tr>
+              <td><code>@MatrixVariable</code></td>
+              <td>矩阵变量 <code>;name=xx</code></td>
+            </tr>
+            <tr>
+              <td><code>@Valid</code></td>
+              <td>触发参数校验</td>
+            </tr>
+            <tr>
+              <td><code>@Validated</code></td>
+              <td>校验 + 分组</td>
+            </tr>
+            <tr>
+              <td><code>@ResponseBody</code></td>
+              <td>返回值写响应体</td>
+            </tr>
+            <tr>
+              <td><code>@CrossOrigin</code></td>
+              <td>允许跨域</td>
+            </tr>
+            <tr>
+              <td><code>@RestControllerAdvice</code></td>
+              <td>全局异常处理 + 默认返回 JSON</td>
+            </tr>
+            <tr>
+              <td><code>@ControllerAdvice</code></td>
+              <td>全局增强（视图 + JSON）</td>
+            </tr>
+            <tr>
+              <td><code>@ExceptionHandler</code></td>
+              <td>异常处理方法</td>
+            </tr>
+            <tr>
+              <td><code>@InitBinder</code></td>
+              <td>数据绑定预处理</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4. 配置/条件注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@SpringBootApplication</code></td>
+              <td>主类（三合一）</td>
+            </tr>
+            <tr>
+              <td><code>@EnableAutoConfiguration</code></td>
+              <td>开启自动装配</td>
+            </tr>
+            <tr>
+              <td><code>@ComponentScan</code></td>
+              <td>组件扫描</td>
+            </tr>
+            <tr>
+              <td><code>@ConfigurationProperties</code></td>
+              <td>绑定配置属性</td>
+            </tr>
+            <tr>
+              <td><code>@EnableConfigurationProperties</code></td>
+              <td>启用属性配置类</td>
+            </tr>
+            <tr>
+              <td><code>@PropertySource</code></td>
+              <td>加载 properties 文件</td>
+            </tr>
+            <tr>
+              <td><code>@Profile</code></td>
+              <td>指定环境生效</td>
+            </tr>
+            <tr>
+              <td><code>@Import</code></td>
+              <td>导入配置类</td>
+            </tr>
+            <tr>
+              <td><code>@ImportResource</code></td>
+              <td>导入 XML 配置</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnClass</code></td>
+              <td>类存在时生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnMissingBean</code></td>
+              <td>Bean 缺失时生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnBean</code></td>
+              <td>Bean 存在时生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnProperty</code></td>
+              <td>配置项匹配时生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnWebApplication</code></td>
+              <td>Web 应用生效</td>
+            </tr>
+            <tr>
+              <td><code>@ConditionalOnJava</code></td>
+              <td>JDK 版本匹配生效</td>
+            </tr>
+            <tr>
+              <td>
+                <code>@AutoConfigureBefore</code> /
+                <code>@AutoConfigureAfter</code>
+              </td>
+              <td>配置顺序</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>5. 事务与缓存</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@Transactional</code></td>
+              <td>声明事务（propagation/isolation/rollbackFor）</td>
+            </tr>
+            <tr>
+              <td><code>@EnableTransactionManagement</code></td>
+              <td>开启事务管理</td>
+            </tr>
+            <tr>
+              <td><code>@Cacheable</code></td>
+              <td>查询走缓存</td>
+            </tr>
+            <tr>
+              <td><code>@CachePut</code></td>
+              <td>更新缓存</td>
+            </tr>
+            <tr>
+              <td><code>@CacheEvict</code></td>
+              <td>清空缓存</td>
+            </tr>
+            <tr>
+              <td><code>@Caching</code></td>
+              <td>组合多个缓存注解</td>
+            </tr>
+            <tr>
+              <td><code>@EnableCaching</code></td>
+              <td>开启缓存</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>6. 异步与调度</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@Async</code></td>
+              <td>异步执行方法</td>
+            </tr>
+            <tr>
+              <td><code>@EnableAsync</code></td>
+              <td>开启异步</td>
+            </tr>
+            <tr>
+              <td><code>@Scheduled</code></td>
+              <td>定时任务（cron/fixedRate/fixedDelay）</td>
+            </tr>
+            <tr>
+              <td><code>@EnableScheduling</code></td>
+              <td>开启调度</td>
+            </tr>
+            <tr>
+              <td><code>@Scheduled(fixedRate = 5000)</code></td>
+              <td>每 5 秒执行</td>
+            </tr>
+            <tr>
+              <td><code>@Scheduled(cron = "0 0 2 * * ?")</code></td>
+              <td>每天凌晨 2 点</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>7. 安全与权限</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@EnableWebSecurity</code></td>
+              <td>开启 Spring Security</td>
+            </tr>
+            <tr>
+              <td><code>@EnableMethodSecurity</code></td>
+              <td>开启方法级权限</td>
+            </tr>
+            <tr>
+              <td><code>@PreAuthorize</code></td>
+              <td>方法前权限校验</td>
+            </tr>
+            <tr>
+              <td><code>@PostAuthorize</code></td>
+              <td>方法后权限校验</td>
+            </tr>
+            <tr>
+              <td><code>@Secured</code></td>
+              <td>角色检查（需 ROLE_ 前缀）</td>
+            </tr>
+            <tr>
+              <td><code>@RolesAllowed</code></td>
+              <td>JSR-250 角色检查</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>8. 测试注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@SpringBootTest</code></td>
+              <td>加载完整 Spring 上下文</td>
+            </tr>
+            <tr>
+              <td><code>@WebMvcTest</code></td>
+              <td>只加载 Web 层</td>
+            </tr>
+            <tr>
+              <td><code>@DataJpaTest</code></td>
+              <td>只加载 JPA 层</td>
+            </tr>
+            <tr>
+              <td><code>@AutoConfigureMockMvc</code></td>
+              <td>自动配置 MockMvc</td>
+            </tr>
+            <tr>
+              <td><code>@MockBean</code></td>
+              <td>注入 Mock Bean</td>
+            </tr>
+            <tr>
+              <td><code>@TestConfiguration</code></td>
+              <td>测试专用配置</td>
+            </tr>
+            <tr>
+              <td><code>@ActiveProfiles</code></td>
+              <td>激活指定 profile</td>
+            </tr>
+            <tr>
+              <td><code>@Transactional</code>（测试）</td>
+              <td>测试完自动回滚</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>9. Spring Boot 测试常用断言</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>// JUnit 5 断言
+assertEquals(expected, actual);
+assertNotNull(obj);
+assertTrue(condition);
+assertThrows(Exception.class, () -&gt; { ... });
+
+// AssertJ（Spring Boot 默认引入）
+assertThat(user.getName()).isEqualTo("zhangsan");
+assertThat(list).hasSize(3).contains("a");
+
+// MockMvc 断言
+mvc.perform(get("/api/users/1"))
+   .andExpect(status().isOk())
+   .andExpect(jsonPath("$.code").value(200))
+   .andExpect(jsonPath("$.data.username").value("zhangsan"))
+   .andDo(print());</code></pre>
+        </div>
+
+        <h3>10. Swagger 注解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>注解</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@Tag</code></td>
+              <td>Controller 标签</td>
+            </tr>
+            <tr>
+              <td><code>@Operation</code></td>
+              <td>方法描述</td>
+            </tr>
+            <tr>
+              <td><code>@Parameter</code></td>
+              <td>参数描述</td>
+            </tr>
+            <tr>
+              <td><code>@Schema</code></td>
+              <td>DTO 字段描述</td>
+            </tr>
+            <tr>
+              <td><code>@ApiResponse</code></td>
+              <td>响应描述</td>
+            </tr>
+            <tr>
+              <td><code>@SecurityScheme</code></td>
+              <td>认证方案</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 17 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Spring Boot 注解分 8
+                类：组件/@Component、注入/@Autowired、Web/@GetMapping、配置/@Conditional、事务/@Transactional、缓存/@Cacheable、异步/@Async、安全/@PreAuthorize，按需查阅。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <div class="section-badge">
+          <span class="num">18</span><span class="sec-tag">精通篇</span>
+        </div>
+        <h2><span class="num">18</span>实战架构、避坑与学习路线</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 第 18 章定位</div>
+          <div class="callout-body">
+            <p>
+              前 17
+              章是"招式"，本章是"心法"——企业级项目的最佳实践、常见坑、学习路径和书单，帮你从"会写"到"写好"。
+            </p>
+          </div>
+        </div>
+
+        <h3>企业级项目架构图</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>┌─────────────────────────────────────────────┐
+│           客户端（Web/App/小程序）              │
+└──────────────┬───────────────────────────────┘
+               │
+       ┌───────▼───────┐
+       │   API 网关    │  Spring Cloud Gateway
+       │ 鉴权/限流/路由 │
+       └───────┬───────┘
+               │
+   ┌───────────┼───────────┐
+   │           │           │
+┌──▼──┐    ┌───▼───┐   ┌───▼───┐
+│用户 │    │ 订单   │   │ 商品  │   微服务集群
+│服务 │    │ 服务   │   │ 服务  │  (Spring Boot)
+└──┬──┘    └───┬───┘   └───┬───┘
+   │           │           │
+   └───────────┼───────────┘
+               │
+       ┌───────▼────────┐
+       │  注册中心 Nacos │
+       │  配置中心 Nacos │
+       └───────┬────────┘
+               │
+   ┌───────────┼───────────┐
+   │           │           │
+┌──▼──┐    ┌───▼───┐   ┌───▼───┐
+│MySQL│    │ Redis │   │  MQ   │   基础设施
+└─────┘    └───────┘   └───────┘</code></pre>
+        </div>
+
+        <h3>30 大高频坑（按模块）</h3>
+
+        <p><strong>1）启动/配置（10 大坑）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>1. 主类不在根包 → Controller 未被扫描
+2. yml 用 Tab 缩进 → 启动失败
+3. key 冒号后漏空格 → 配置读不到
+4. 端口被占用 → 改 server.port
+5. 中文配置乱码 → 设 charset=UTF-8
+6. 同一配置多处定义 → 优先级混乱
+7. @Value 无默认值 → 配置缺失启动失败
+8. profile 文件名拼错 → 不生效
+9. 配置项大小写敏感 → user.name 和 username 不同
+10. jar 包冲突 → 用 mvn dependency:tree 排查</code></pre>
+        </div>
+
+        <p><strong>2）数据/事务（10 大坑）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>1. @Transactional 加 private 方法 → 不生效
+2. 同类自调用（A.this.b()）→ 事务失效
+3. 异常被 catch 吞了 → 事务不回滚
+4. checked 异常不回滚 → 加 rollbackFor = Exception.class
+5. MyBatis 找不到 Mapper → @MapperScan 或 @Mapper
+6. SQL 没传参 → 用 #{} 不是 ${}
+7. 大事务 → 拆分方法
+8. 循环里单条插入 → 批量插入
+9. N+1 查询 → 用 join 或 @EntityGraph
+10. 不关连接 → 配置连接池超时</code></pre>
+        </div>
+
+        <p><strong>3）Web/安全（10 大坑）</strong></p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>1. CSRF 未关（前后端分离）→ .csrf().disable()
+2. JWT 密钥硬编码 → 用配置中心
+3. token 不过期 → 必须设 expire
+4. 跨域报错 → 加 CorsFilter 或 @CrossOrigin
+5. 文件上传大小限制 → spring.servlet.multipart.max-file-size
+6. 静态资源被拦截 → 配置 static-path-pattern
+7. JSON 序列化时间戳 → 用 LocalDateTime + jackson
+8. 接口未鉴权 → 漏写 .authenticated()
+9. Swagger 生产暴露 → @Profile 控制
+10. 异常信息暴露给前端 → 用统一 Result 包装</code></pre>
+        </div>
+
+        <h3>性能优化清单（10 大招）</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>招数</th>
+              <th>收益</th>
+              <th>难度</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Redis 缓存热点数据</td>
+              <td>★★★★★</td>
+              <td>低</td>
+            </tr>
+            <tr>
+              <td>DB 索引优化</td>
+              <td>★★★★★</td>
+              <td>中</td>
+            </tr>
+            <tr>
+              <td>慢 SQL 改写</td>
+              <td>★★★★★</td>
+              <td>中</td>
+            </tr>
+            <tr>
+              <td>连接池调参</td>
+              <td>★★★</td>
+              <td>低</td>
+            </tr>
+            <tr>
+              <td>JVM 内存调优</td>
+              <td>★★★</td>
+              <td>高</td>
+            </tr>
+            <tr>
+              <td>异步处理（@Async）</td>
+              <td>★★★</td>
+              <td>低</td>
+            </tr>
+            <tr>
+              <td>本地缓存（Caffeine）</td>
+              <td>★★★★</td>
+              <td>中</td>
+            </tr>
+            <tr>
+              <td>CDN 静态加速</td>
+              <td>★★★★★</td>
+              <td>低</td>
+            </tr>
+            <tr>
+              <td>分库分表</td>
+              <td>★★★★★</td>
+              <td>高</td>
+            </tr>
+            <tr>
+              <td>读写分离</td>
+              <td>★★★★</td>
+              <td>中</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>学习路线（四阶段）</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>阶段</th>
+              <th>时长</th>
+              <th>目标</th>
+              <th>掌握技能</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>入门（1-2 月）</strong></td>
+              <td>8 周</td>
+              <td>能跑通 CRUD</td>
+              <td>Spring 核心 + Boot 搭建 + RESTful + JPA/MyBatis</td>
+            </tr>
+            <tr>
+              <td><strong>进阶（2-3 月）</strong></td>
+              <td>10 周</td>
+              <td>能独立交付模块</td>
+              <td>Redis 缓存 + 异常处理 + Swagger + 安全 + MQ</td>
+            </tr>
+            <tr>
+              <td><strong>高级（3-4 月）</strong></td>
+              <td>14 周</td>
+              <td>能做技术选型</td>
+              <td>WebFlux + 监控调优 + 自动装配 + 微服务</td>
+            </tr>
+            <tr>
+              <td><strong>精通（持续）</strong></td>
+              <td>—</td>
+              <td>能架构设计</td>
+              <td>源码阅读 + 性能调优 + 团队规范 + 业务建模</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>推荐书单（10 本）</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>书名</th>
+              <th>作者</th>
+              <th>阶段</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>《Spring Boot 实战》</strong></td>
+              <td>Craig Walls</td>
+              <td>入门</td>
+            </tr>
+            <tr>
+              <td><strong>《Spring 实战（第 5 版）》</strong></td>
+              <td>Craig Walls</td>
+              <td>入门</td>
+            </tr>
+            <tr>
+              <td><strong>《Java 编程思想》</strong></td>
+              <td>Bruce Eckel</td>
+              <td>基础</td>
+            </tr>
+            <tr>
+              <td><strong>《Effective Java（第 3 版）》</strong></td>
+              <td>Joshua Bloch</td>
+              <td>进阶</td>
+            </tr>
+            <tr>
+              <td><strong>《深入理解 Java 虚拟机》</strong></td>
+              <td>周志明</td>
+              <td>高级</td>
+            </tr>
+            <tr>
+              <td><strong>《Spring 源码深度解析》</strong></td>
+              <td>郝佳</td>
+              <td>高级</td>
+            </tr>
+            <tr>
+              <td><strong>《凤凰架构》</strong></td>
+              <td>周志明</td>
+              <td>精通</td>
+            </tr>
+            <tr>
+              <td><strong>《数据密集型应用系统设计》</strong></td>
+              <td>Martin Kleppmann</td>
+              <td>精通</td>
+            </tr>
+            <tr>
+              <td><strong>《微服务架构设计模式》</strong></td>
+              <td>Chris Richardson</td>
+              <td>精通</td>
+            </tr>
+            <tr>
+              <td><strong>《阿里巴巴 Java 开发手册》</strong></td>
+              <td>孤尽等</td>
+              <td>规范</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>必读源码（按优先级）</h3>
+        <ol>
+          <li>
+            <strong>Spring Boot 启动流程</strong>：<code
+              >SpringApplication.run()</code
+            >
+          </li>
+          <li>
+            <strong>自动装配原理</strong>：<code
+              >AutoConfigurationImportSelector</code
+            >
+          </li>
+          <li>
+            <strong>Spring MVC 流程</strong>：<code>DispatcherServlet</code>
+          </li>
+          <li>
+            <strong>Bean 生命周期</strong>：<code
+              >AbstractAutowireCapableBeanFactory</code
+            >
+          </li>
+          <li><strong>AOP 实现</strong>：<code>JdkDynamicAopProxy</code></li>
+          <li>
+            <strong>事务传播</strong>：<code>TransactionInterceptor</code>
+          </li>
+        </ol>
+
+        <h3>面试高频 30 问</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre><code>1. Spring Boot 启动流程？
+2. 自动装配原理？
+3. @SpringBootApplication 包含哪些注解？
+4. @Autowired 和 @Resource 区别？
+5. Bean 生命周期？
+6. Bean 是单例还是多例？如何改？
+7. 循环依赖怎么解决？三级缓存？
+8. Spring 事务传播行为？
+9. Spring MVC 工作流程？
+10. Spring AOP 实现原理？JDK vs CGLIB？
+11. @Transactional 自调用失效原因？
+12. Spring 用了哪些设计模式？
+13. Spring Boot 怎么读取配置？优先级？
+14. yml 和 properties 区别？
+15. profile 多环境怎么用？
+16. Spring Cache 原理？Redis 整合？
+17. 缓存穿透/击穿/雪崩区别？
+18. Spring Security 过滤器链？
+19. JWT 三段是什么？
+20. Spring Boot Starter 原理？
+21. 自定义 Starter 步骤？
+22. @Async 原理？自调用失效？
+23. RabbitMQ vs Kafka？
+24. Spring WebFlux vs MVC？
+25. Actuator 端点？生产暴露哪些？
+26. Nacos 注册中心原理？
+27. OpenFeign 调用流程？
+28. Sentinel 熔断策略？
+29. Gateway 路由配置？
+30. 分布式事务 Seata 原理？</code></pre>
+        </div>
+
+        <h3>5 大实战项目推荐</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>项目</th>
+              <th>技术栈</th>
+              <th>难度</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>todolist</strong></td>
+              <td>Spring Boot + Vue + MySQL</td>
+              <td>入门</td>
+            </tr>
+            <tr>
+              <td><strong>博客系统</strong></td>
+              <td>Spring Boot + MyBatis + Redis + OSS</td>
+              <td>★★</td>
+            </tr>
+            <tr>
+              <td><strong>电商后台</strong></td>
+              <td>Spring Boot + Vue + RBAC + 七牛云</td>
+              <td>★★★</td>
+            </tr>
+            <tr>
+              <td><strong>短链接服务</strong></td>
+              <td>Spring Boot + Redis + 发号器</td>
+              <td>★★★</td>
+            </tr>
+            <tr>
+              <td><strong>秒杀系统</strong></td>
+              <td>Spring Boot + Redis + MQ + Sentinel</td>
+              <td>★★★★</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 学 Spring Boot 的三大误区</div>
+          <div class="callout-body">
+            <ol>
+              <li>
+                <strong>只学 Spring Boot 不学 Spring</strong
+                >：地基不牢，楼会倒。先学 Spring 核心（IoC/AOP/MVC）
+              </li>
+              <li>
+                <strong>只会用不会看源码</strong>：面试一问就懵。Debug 进 Spring
+                源码看看
+              </li>
+              <li>
+                <strong>追新不求深</strong>：Spring Boot 2.x
+                主流项目足够，搞懂比追 3.x 新特性重要
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 给初学者的最后一句话</div>
+          <div class="callout-body">
+            <p>
+              Spring Boot 的本质是<strong>封装</strong>：把繁琐的 Spring
+              配置封装成"开箱即用"。但封装不是黑盒——遇到问题要敢看源码，敢打破封装。
+            </p>
+            <p>
+              <strong>用 → 懂 → 改 → 造</strong>，四阶段循环，才能真正掌握。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-title">📌 第 18 章速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >Spring Boot 学习四阶段：会用（CRUD）→ 懂原理（源码）→
+                能改造（自定义 Starter）→ 会架构（微服务）；30 避坑 + 30 面试题
+                + 10 本书 + 5 项目，理论与实战并重。</strong
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>🍃 Spring Boot 从入门到精通 · 学习笔记</span>
+        <span>共 18 章 · 4 阶段 · 助你精通企业级 Spring Boot 开发</span>
+      </div>
+    </footer>
+
+    <script>
+      // 移动端目录抽屉
+      const menuToggle = document.getElementById('menuToggle')
+      const sidebar = document.querySelector('.sidebar')
+      const overlay = document.querySelector('.overlay')
+      if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('open')
+          if (overlay) overlay.classList.toggle('open')
+        })
+      }
+      if (overlay) {
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      }
+
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', () => {
+          sidebar.classList.remove('open')
+          if (overlay) overlay.classList.remove('open')
+        })
+      })
+
+      // 代码一键复制
+      function copyCode(btn) {
+        const code = btn.parentElement.querySelector('code')
+        const text = code ? code.innerText : ''
+        navigator.clipboard.writeText(text).then(() => {
+          const old = btn.innerText
+          btn.innerText = '✓ 已复制'
+          setTimeout(() => (btn.innerText = old), 1500)
+        })
+      }
+
+      // 滚动监听，高亮当前章节
+      const sections = document.querySelectorAll('section.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              tocLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === '#' + id,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-20% 0px -70% 0px', threshold: 0 },
+      )
+      sections.forEach((s) => observer.observe(s))
+    </script>
+  </body>
+</html>

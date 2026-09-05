@@ -1,0 +1,4588 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/jpeg" href="../images/avatar.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>微信小程序开发 · 从入门到精通</title>
+    <style>
+      /* ========== CSS Variables ========== */
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #ff9e64;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #6db33f;
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --header-h: 0px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      /* ========== Reset & Base ========== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* ========== Scrollbar ========== */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      /* ========== Sidebar ========== */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(49, 120, 198, 0.1);
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: rgba(49, 120, 198, 0.1);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: rgba(49, 120, 198, 0.06);
+        border-left-color: var(--accent);
+      }
+      .toc li a.sub {
+        padding-left: 28px;
+        font-size: 0.82rem;
+      }
+
+      /* ========== Main ========== */
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      /* ========== Hero ========== */
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(49, 120, 198, 0.1);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #6db33f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      /* ========== Sections ========== */
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(49, 120, 198, 0.1);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      /* ========== Code ========== */
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: rgba(49, 120, 198, 0.08);
+        color: var(--code-green);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      /* Syntax highlight */
+      .kw {
+        color: var(--code-green);
+      }
+      .fn {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .num {
+        color: #ff9e64;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+
+      /* Copy button */
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ========== Tables ========== */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: rgba(49, 120, 198, 0.03);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      /* ========== Callouts ========== */
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(49, 120, 198, 0.06);
+        border-color: var(--accent);
+      }
+      .callout.tip .callout-title {
+        color: var(--accent);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      /* ========== Cards Grid ========== */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        margin: 16px 0 24px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--accent);
+      }
+      .card h4 {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 0.95rem;
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* ========== Steps ========== */
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      /* ========== Mobile toggle ========== */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      /* ========== Footer ========== */
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      /* Focus visible for accessibility */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout {
+          break-inside: avoid;
+        }
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Mobile menu -->
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">𝕋</span> TypeScript 学习笔记</h2>
+        <p>从入门到精通 · TS 5.x 核心手册</p>
+      </div>
+      <a class="home-link" href="../indexLearning.html">← 返回首页</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">入门篇</li>
+        <li><a href="#ch01">1. TS 是什么：为什么 JS 需要类型</a></li>
+        <li><a href="#ch02">2. 环境搭建与 tsconfig 配置</a></li>
+        <li><a href="#ch03">3. 基础类型与类型注解</a></li>
+        <li><a href="#ch04">4. 接口与类型别名</a></li>
+        <li><a href="#ch05">5. 函数类型与高级签名</a></li>
+        <li><a href="#ch06">6. 泛型入门与类型参数</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch07">7. 类与面向对象加强</a></li>
+        <li><a href="#ch08">8. 模块与命名空间</a></li>
+        <li><a href="#ch09">9. 类型守卫与类型推导</a></li>
+        <li><a href="#ch10">10. 高级类型与工具类型</a></li>
+        <li><a href="#ch11">11. 装饰器与元数据</a></li>
+        <li><a href="#ch12">12. Async/await 与 Promise 类型化</a></li>
+        <li class="toc-section-title">高级篇</li>
+        <li><a href="#ch13">13. 类型体操与条件类型</a></li>
+        <li><a href="#ch14">14. 模板字面量类型与映射</a></li>
+        <li><a href="#ch15">15. TS 与 React/Vue 实战</a></li>
+        <li class="toc-section-title">精通篇</li>
+        <li><a href="#ch16">16. 工程化：ESLint/Vite/打包/单测</a></li>
+        <li><a href="#ch17">17. TS 注解大全与设计模式</a></li>
+        <li><a href="#ch18">18. 实战路线、书单与求职指南</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Hero -->
+      <header class="hero">
+        <span class="hero-badge">𝕋 前端工程化趋势 · 类型即文档</span>
+        <h1>TypeScript 从入门到精通 · 系统化学习笔记</h1>
+        <p>
+          一份覆盖 TypeScript 5.x
+          的系统化笔记。从基础类型、接口与函数，到类泛型与模块化；
+          再到类型守卫、装饰器、Async/Promise 与 React/Vue
+          实战；最后到类型体操与工程化配置。 配套 18 条速记口诀、近 50
+          张归纳表与 50+ 个可直接复制运行的代码示例， 帮你从 JavaScript
+          老兵进化到 TypeScript 熟手。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>18 个章节</span>
+          <span><span class="dot"></span>TS 5.x / 类型体操 / 工程化</span>
+          <span><span class="dot"></span>入门 → 精通</span>
+        </div>
+      </header>
+
+      <!-- ===== Chapter 1 ===== -->
+      <section class="section" id="ch01">
+        <div class="section-badge">
+          <span class="num">01</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2>
+          <span class="num">01</span>TypeScript 是什么：为什么 JavaScript
+          需要类型
+        </h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 一句话理解 TypeScript</div>
+          <div class="callout-body">
+            <p>
+              <strong>TypeScript</strong> 是 JavaScript 的超集（superset）。它给
+              JS 加上了<strong>静态类型系统</strong>，并在编译时通过
+              <code>tsc</code> 编译成纯净 JS。
+            </p>
+            <p>
+              三大核心收益：<strong>① IDE 智能提示</strong> —
+              写错就报错；<strong>② 重构安全</strong> —
+              改一处全局找引用；<strong>③ 自带文档</strong> — 类型即注释。
+            </p>
+            <p>
+              当前最新主线版本是
+              <strong>TypeScript 5.x</strong>（重大变化：装饰器进入 stage
+              3、全新的类型系统性能优化 10x、<code>const</code> 类型参数、<code
+                >using</code
+              >
+              资源释放）。
+            </p>
+          </div>
+        </div>
+
+        <h3>1.1 TypeScript vs JavaScript 关键差异</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>JavaScript</th>
+                <th>TypeScript</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>类型系统</td>
+                <td>动态类型</td>
+                <td>静态类型（编译时检查）</td>
+              </tr>
+              <tr>
+                <td>运行方式</td>
+                <td>浏览器/Node 直接执行</td>
+                <td>先 tsc 编译成 JS 再运行</td>
+              </tr>
+              <tr>
+                <td>错误发现</td>
+                <td>运行时报错</td>
+                <td>编译时智能提示报错</td>
+              </tr>
+              <tr>
+                <td>重构</td>
+                <td>改一处担心炸全局</td>
+                <td>IDE 联动改名字精确到引用</td>
+              </tr>
+              <tr>
+                <td>文件后缀</td>
+                <td><code>.js</code></td>
+                <td><code>.ts</code>（逻辑）/ <code>.d.ts</code>（声明）</td>
+              </tr>
+              <tr>
+                <td>生态支持</td>
+                <td>所有 JS 库</td>
+                <td>主流库都自带类型；老库加 @types 包</td>
+              </tr>
+              <tr>
+                <td>学习曲线</td>
+                <td>入门平缓</td>
+                <td>类型心智模型需要时间</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>1.2 第一个 .ts 文件：三步跑起来</h3>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span><strong>安装 tsc</strong>：<code
+              >npm i -D typescript</code
+            >
+          </div>
+          <div class="step">
+            <span class="step-num">2</span><strong>写代码</strong>：<code
+              >hello.ts</code
+            >
+          </div>
+          <div class="step">
+            <span class="step-num">3</span><strong>编译运行</strong>：<code
+              >npx tsc hello.ts &amp;&amp; node hello.js</code
+            >
+          </div>
+        </div>
+
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// hello.ts —— TS 的最小可运行示例
+function greet(name: string, age: number = 18): string {
+  return `Hello, ${name} (${age}岁)!`;
+}
+
+// TS 编译期就会拦住以下错误：
+// greet(123);         // ❌ 类型“number”不能赋给“string”
+// greet('Tom', '20'); // ❌ 字符串不能赋给数字参数
+console.log(greet('TypeScript'));
+console.log(greet('小明', 25));
+</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 为什么类型是"免维护的文档"</div>
+          <div class="callout-body">
+            <p>
+              看接口
+              <code
+                >type Api = { url: string; method: 'GET' | 'POST'; retries?:
+                number }</code
+              >
+              —— 你立即知道字段名、合法取值、可选性。<strong
+                >类型即文档，且永远不会过期。</strong
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ TS 不会让代码更短，但会让代码更稳</div>
+          <div class="callout-body">
+            <p>
+              刚开始写 TS
+              时会觉得啰嗦——每个变量都要标类型。但<strong>越大的项目，类型收益越明显</strong>。10
+              行代码看不出区别，1 万行就回不去了。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>TS 是 JS 加类型</strong
+              >，类型即文档、类型即约束、类型即测试（编译通过即类型正确）。<br />
+              <strong>大项目必收益</strong
+              >，小项目可渐进；<strong>先理解再说</strong>，别急着写。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 2 ===== -->
+      <section class="section" id="ch02">
+        <div class="section-badge">
+          <span class="num">02</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">02</span>环境搭建与 tsconfig 配置</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 两种主流搭建方式</div>
+          <div class="callout-body">
+            <p>
+              <strong>① 裸 tsc</strong>：直接
+              <code>tsc file.ts</code>，适合学习和小工具；<br />
+              <strong>② Vite + ts-loader/swc</strong>：现代工程标配，配 ESLint +
+              Prettier 一键起。
+            </p>
+          </div>
+        </div>
+
+        <h3>2.1 最快跑通：tsc + Node</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-bash"># 全局或项目安装
+npm i -D typescript @types/node
+
+# 初始化配置
+npx tsc --init
+
+# 编译并运行
+npx tsc index.ts &amp;&amp; node index.js
+
+# 开发模式：watch 自动重编译
+npx tsc --watch
+</code></pre>
+        </div>
+
+        <h3>2.2 tsconfig.json 核心字段速查</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>字段</th>
+                <th>作用</th>
+                <th>推荐值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>target</code></td>
+                <td>编译到哪个 ES 版本</td>
+                <td><code>ES2020</code>（现代浏览器）</td>
+              </tr>
+              <tr>
+                <td><code>module</code></td>
+                <td>模块方案</td>
+                <td><code>ESNext</code>（Vite/Node ESM）</td>
+              </tr>
+              <tr>
+                <td><code>strict</code></td>
+                <td>全家桶严格模式（推荐开）</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>noImplicitAny</code></td>
+                <td>禁止隐式 any</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>strictNullChecks</code></td>
+                <td>区分 null/undefined</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>esModuleInterop</code></td>
+                <td>允许 import 默认值</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>skipLibCheck</code></td>
+                <td>跳过 .d.ts 检查（提速）</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>forceConsistentCasingInFileNames</code></td>
+                <td>大小写敏感</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>resolveJsonModule</code></td>
+                <td>支持 import json</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>isolatedModules</code></td>
+                <td>单文件可独立编译（Vite 需要）</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>baseUrl / paths</code></td>
+                <td>路径别名</td>
+                <td><code>"@/*": ["src/*"]</code></td>
+              </tr>
+              <tr>
+                <td><code>jsx</code></td>
+                <td>React JSX 处理</td>
+                <td><code>"react-jsx"</code>（React 17+）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 一份开箱即用的 tsconfig</div>
+          <div class="callout-body">
+            <p>
+              99% 的项目直接用 <code>create-vite</code> 起步，把
+              <code>strict: true</code> 打开即可。<strong
+                >千万别从 0 写 tsconfig</strong
+              >，先抄一份业界主流的再按需改。
+            </p>
+          </div>
+        </div>
+
+        <h3>2.3 Vite 启动一个 TS + React 项目</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-bash">npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm i
+npm run dev      # http://localhost:5173
+</code></pre>
+        </div>
+
+        <h3>2.4 编译器版本 &amp; 升级</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-bash"># 查看版本
+npx tsc --version
+
+# 升级到最新版
+npm i -D typescript@latest
+
+# VSCode 设置里指定每工作区 TS 版本，避免插件用全局旧版
+# "typescript.tsdk": "./node_modules/typescript/lib"
+</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 五个常见坑</div>
+          <div class="callout-body">
+            <p>
+              ① <code>@types/xxx</code> 没装 → 类型 any；②
+              <code>tsconfig.json</code> 在子目录 → 配置不生效；③ Vite 不需要装
+              ts-loader（内部用 esbuild）；④
+              <code>skipLibCheck</code> 一定要开，否则大型项目卡顿；⑤ 老项目上
+              TS 不要全开 strict，逐文件 <code>// @ts-check</code> 渐进启用。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>tsc 起手</strong>：<code>--init</code> 生成配置 →
+              <code>--watch</code> 增量编译 → <code>strict</code> 一键开。<br />
+              <strong>工程化</strong>：用 Vite
+              别裸配；<strong>类型包</strong>：装
+              <code>@types/xxx</code>；<strong>老项目</strong>：渐进开 strict。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 3 ===== -->
+      <section class="section" id="ch03">
+        <div class="section-badge">
+          <span class="num">03</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">03</span>基础类型与类型注解</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 TS 的类型世界观</div>
+          <div class="callout-body">
+            <p>
+              所有变量、形参、返回值都要标类型。JS 的类型是「运行时才知道」，TS
+              是「写代码时就锁定」。
+            </p>
+            <p>
+              类型声明语法：<code>const x: type = value</code
+              >；<strong>类型推断</strong>能省则省，不要处处加
+              <code>: type</code>。
+            </p>
+          </div>
+        </div>
+
+        <h3>3.1 11 种基础类型速查</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>说明</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>string</code></td>
+                <td>字符串</td>
+                <td><code>let s: string = 'hi'</code></td>
+              </tr>
+              <tr>
+                <td><code>number</code></td>
+                <td>整数/小数/NaN/Infinity</td>
+                <td><code>let n: number = 3.14</code></td>
+              </tr>
+              <tr>
+                <td><code>boolean</code></td>
+                <td>布尔</td>
+                <td><code>let ok: boolean = true</code></td>
+              </tr>
+              <tr>
+                <td><code>null</code> / <code>undefined</code></td>
+                <td>空值</td>
+                <td><code>let u: undefined = undefined</code></td>
+              </tr>
+              <tr>
+                <td><code>void</code></td>
+                <td>无返回值</td>
+                <td><code>function f(): void {}</code></td>
+              </tr>
+              <tr>
+                <td><code>never</code></td>
+                <td>永不返回（抛错/死循环）</td>
+                <td>
+                  <code>function err(): never { throw new Error() }</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>any</code></td>
+                <td>任意类型（放弃检查）</td>
+                <td><code>let v: any = 123</code></td>
+              </tr>
+              <tr>
+                <td><code>unknown</code></td>
+                <td>安全的 any（用前需 narrowing）</td>
+                <td><code>let u: unknown = JSON.parse(...) </code></td>
+              </tr>
+              <tr>
+                <td><code>object</code></td>
+                <td>非原始类型</td>
+                <td><code>let o: object = {}</code></td>
+              </tr>
+              <tr>
+                <td><code>Array&lt;T&gt;</code> / <code>T[]</code></td>
+                <td>数组</td>
+                <td><code>let a: number[] = [1,2]</code></td>
+              </tr>
+              <tr>
+                <td><code>Tuple</code></td>
+                <td>固定长度+类型</td>
+                <td><code>let t: [string, number] = ['a', 1]</code></td>
+              </tr>
+              <tr>
+                <td><code>enum</code></td>
+                <td>枚举</td>
+                <td><code>enum Color {Red, Green}</code></td>
+              </tr>
+              <tr>
+                <td><code>bigint</code> / <code>symbol</code></td>
+                <td>大整数 / 唯一值</td>
+                <td><code>let b: bigint = 100n</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.2 any vs unknown：宁用 unknown</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">let v: any = 4;
+v.toUpperCase(); // ❗编译不报错，但运行炸！
+
+let u: unknown = 4;
+u.toUpperCase();
+//      ~~~~~~~~ 编译直接报错：u 是 unknown 类型
+if (typeof u === 'string') {
+  u.toUpperCase(); // ✅ narrowing 后才允许
+}
+</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ any 像毒品，用一次爽一直用一直烂</div>
+          <div class="callout-body">
+            <p>
+              实在要用请用 <code>unknown</code> 替代，配合
+              <code>typeof</code>/<code>instanceof</code>/<code
+                >type guard</code
+              >
+              收紧。<strong>严格项目的红线：</strong>禁止 <code>any</code>、禁止
+              <code>@ts-ignore</code>。
+            </p>
+          </div>
+        </div>
+
+        <h3>3.3 联合类型 + 字面量 + 类型别名</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 联合类型：可以是多种类型之一
+type Status = 'pending' | 'success' | 'error';
+let s: Status = 'pending';
+// s = 'fail'  // ❌ 'fail' 不在字面量里
+
+// 字面量类型（数字、布尔、字符串）
+type Dice = 1 | 2 | 3 | 4 | 5 | 6;
+type Bool = true | false;
+
+// 类型别名（type alias）
+type UserId = string &amp; { readonly __brand: 'UserId' }; // 品牌类型防 ID 串号
+
+// 数组：两种写法等价
+const arr1: Array&lt;number&gt; = [1, 2, 3];
+const arr2: number[] = [1, 2, 3];
+
+// 元组：固定结构
+const tuple: [string, number, boolean] = ['Tom', 18, true];
+tuple[0].toUpperCase();  // ✅ string 方法
+tuple[1].toFixed(2);    // ✅ number 方法
+
+// 对象类型
+interface User { name: string; age?: number }  // age 可选
+type  User2 = { name: string; age?: number };
+</code></pre>
+        </div>
+
+        <h3>3.4 类型断言（as / 尖括号）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. as 关键字（推荐）
+const a = document.getElementById('app') as HTMLElement;
+const b = (JSON.parse(s) as User).name;  // 编译期相信你
+
+// 2. 尖括号（不与 JSX 混用）
+const c = &lt;User&gt;JSON.parse(s);
+
+// 3. const 断言（字面量变只读精确类型）
+const center = { x: 10, y: 0 } as const;
+// type 是 { readonly x: 10; readonly y: 0 }
+
+// 4. ! 非空断言（小心用！）
+function f(el?: HTMLElement) {
+  el!.click(); // 告诉 TS el 一定不为 undefined
+}
+</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 三个"看起来像但不一样"易错点</div>
+          <div class="callout-body">
+            <p>
+              ① <code>any</code>、<code>unknown</code>、<code>never</code>
+              的关系：<code>unknown</code> 是安全的 top type；<code>never</code>
+              是 bottom type，没有值可赋；<br />
+              ② <code>interface</code> 和 <code>type</code> 99% 相同，但前者可以
+              <code>extends</code>、后者可以联合；<br />
+              ③ <code>readonly</code> 修饰符只防改但不防深改，深度只读用
+              <code>as const</code> 或工具类型
+              <code>Readonly&lt;T&gt;</code
+              >/<code>DeepReadonly&lt;T&gt;</code>。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>标类型</strong>：能省则省（TS
+              会推断），无法推断再显式标。<br />
+              <strong>any 让位 unknown</strong
+              >，<strong>联合让位字面量</strong>，<strong>函数返回值必标</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 4 ===== -->
+      <section class="section" id="ch04">
+        <div class="section-badge">
+          <span class="num">04</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">04</span>接口与类型别名</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 interface vs type：什么时候选哪个</div>
+          <div class="callout-body">
+            <p>
+              原则：<strong
+                >对象/类优先用
+                <code>interface</code>（可扩展），联合/工具/映射优先用
+                <code>type</code></strong
+              >。两者 99% 重叠，不小心混用也不算错。
+            </p>
+          </div>
+        </div>
+
+        <h3>4.1 interface 三种角色</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>角色</th>
+                <th>示例</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>对象形状</td>
+                <td>
+                  <code>interface User { name: string; age: number }</code>
+                </td>
+                <td>声明对象的字段集合</td>
+              </tr>
+              <tr>
+                <td>类实现</td>
+                <td><code>class Admin implements User { ... }</code></td>
+                <td>强制类遵循结构</td>
+              </tr>
+              <tr>
+                <td>API 契约</td>
+                <td><code>interface Api { list(): ListRes }</code></td>
+                <td>对外暴露的签名</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.2 可选 / 只读 / 索引签名</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">interface User {
+  id: string;
+  name: string;
+  age?: number;               // 可选（undefined | T）
+  readonly createdAt: number; // 只读
+  email?: string;
+}
+
+// 索引签名：动态键
+interface StringDict {
+  [k: string]: string;
+}
+
+// 嵌套对象 + 数组
+interface ApiList&lt;T&gt; {
+  code: number;
+  data: T[];
+  msg: string;
+}
+
+const u: User = { id: '1', name: 'Tom', createdAt: Date.now() };
+// u.id = '2';  // ❌ readonly 不能赋值
+// u.age = 18;  // ✅ 可选字段可以单独赋值
+</code></pre>
+        </div>
+
+        <h3>4.3 接口合并 &amp; 继承（VS 类型别名不支持）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 同名接口自动合并
+interface Box { width: number }
+interface Box { height: number }
+interface Box { scale?: number }
+const b: Box = { width: 100, height: 200, scale: 2 };
+
+// 继承多个
+interface ButtonProps extends BaseProps, HTMLElementAttrs {
+  size: 'small' | 'medium' | 'large';
+}
+
+// type 别名能更强大（union / 条件类型等）
+type Maybe&lt;T&gt; = T | null | undefined;
+type EventHandler = (e: MouseEvent) =&gt; void | Promise&lt;void&gt;;
+</code></pre>
+        </div>
+
+        <h3>4.4 鸭子类型（结构化类型）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// TS 看"形状"不看名字
+interface Named { name: string }
+function greet(n: Named) { return `Hi, ${n.name}!` }
+
+class Person {
+  constructor(public name: string, public age: number) {}
+}
+
+greet(new Person('Tom', 18));  // ✅ 形状对就行，不在乎是 class 还是对象
+greet({ name: 'Jerry' });      // ✅ 字面量直接传
+</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 可选字段 vs 默认值</div>
+          <div class="callout-body">
+            <p>
+              <code>age?: number</code> 等价于
+              <code>age?: number | undefined</code>，但有
+              <code>exactOptionalPropertyTypes: true</code> 时只能为
+              undefined（不能显式 <code>undefined</code>）。<br />
+              <strong>解构默认值</strong>：<code
+                >const { age = 18 } = user;</code
+              >
+              提供默认值；<br />
+              <strong>运行时检查</strong>：<code>'age' in user</code> 用 in
+              操作符判断字段是否存在（避坑 undefined 字段赋过的情况）。
+            </p>
+          </div>
+        </div>
+
+        <h3>4.5 type &amp; interface 选型表</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>推荐</th>
+                <th>理由</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>声明对象/组件 props</td>
+                <td><code>interface</code></td>
+                <td>可继承、错误信息更友好</td>
+              </tr>
+              <tr>
+                <td>联合类型 / 工具类型</td>
+                <td><code>type</code></td>
+                <td>interface 不能做 union/条件</td>
+              </tr>
+              <tr>
+                <td>需要同名合并</td>
+                <td><code>interface</code></td>
+                <td>type 会重复声明报错</td>
+              </tr>
+              <tr>
+                <td>需要实现类</td>
+                <td><code>interface</code></td>
+                <td><code>class implements Interface</code></td>
+              </tr>
+              <tr>
+                <td>函数签名 / 元组</td>
+                <td><code>type</code></td>
+                <td>更简洁</td>
+              </tr>
+              <tr>
+                <td>声明映射 / 条件类型</td>
+                <td><code>type</code></td>
+                <td>interface 不支持</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>对象的字 interface</strong>，<strong>工具联合 type</strong
+              >；<strong>同名合并不乱</strong>，<strong>鸭子类型帮大忙</strong>。<br />
+              <strong>小项目选哪个都行</strong
+              >；大项目统一约定，团队达成一致即可。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 5 ===== -->
+      <section class="section" id="ch05">
+        <div class="section-badge">
+          <span class="num">05</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">05</span>函数类型与高级签名</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 函数是 JS 一等公民，TS 函数也是类型系统的一等公民
+          </div>
+          <div class="callout-body">
+            <p>
+              函数类型四要素：<strong>① 参数</strong
+              >（位置/必选/可选/默认/剩余）；<strong>② 返回值</strong
+              >（显式/推断/void/never）；<strong>③ this</strong
+              >（Function.call/箭头）；<strong>④ 重载</strong>。
+            </p>
+          </div>
+        </div>
+
+        <h3>5.1 函数五种写法</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>写法</th>
+                <th>语法</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>函数声明</td>
+                <td><code>function f(x: number): number { return x }</code></td>
+                <td>有 hoisting，可重载</td>
+              </tr>
+              <tr>
+                <td>函数表达式</td>
+                <td>
+                  <code>const f = function(x: number): number { ... }</code>
+                </td>
+                <td>无 hoisting</td>
+              </tr>
+              <tr>
+                <td>箭头函数</td>
+                <td><code>const f = (x: number): number =&gt; x * 2</code></td>
+                <td>无 this/use arguments</td>
+              </tr>
+              <tr>
+                <td>方法缩写</td>
+                <td><code>const o = { f(x: number) {} }</code></td>
+                <td>对象里的方法</td>
+              </tr>
+              <tr>
+                <td>Function 类型</td>
+                <td><code>const f: (x: number) =&gt; number = ...</code></td>
+                <td>显式标注函数类型变量</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5.2 形参全家族</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 必选 + 可选 + 默认值 + 剩余
+function fn(a: string, b?: number, c = 10, ...rest: any[]): void {
+  console.log(a, b, c, rest);
+}
+fn('hi');         // ✅ b 省略即 undefined
+fn('hi', 1, 2, 3, 4);
+
+// 2. 解构 + 默认值（必填可缺失就变成 undefined）
+function config(opts: { host: string; port?: number; auth?: { u: string; p: string } }) { ... }
+
+// 3. this 显式类型
+interface This { name: string }
+function show(this: This) { return this.name }
+const bound: (this: This) =&gt; string = show.bind({ name: 'Tom' });
+
+// 4. 函数类型
+type Callback = (data: string, code: number) =&gt; Promise&lt;boolean&gt;;
+</code></pre>
+        </div>
+
+        <h3>5.3 函数重载：先声明后实现</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 重载签名（只是声明）
+function pad(input: string, length: number): string;
+function pad(input: number): string;
+function pad(input: any, length?: number): string {
+  if (typeof input === 'string') return input.padEnd(length ?? 0, '*');
+  if (typeof input === 'number') return String(input);
+  throw new Error('invalid');
+}
+pad('hi', 5);  // string
+pad(42);       // number
+</code></pre>
+        </div>
+
+        <h3>5.4 void vs never：返回值终结类</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>语义</th>
+                <th>典型场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>void</code></td>
+                <td>没有显式 return</td>
+                <td>事件回调 <code>(e) =&gt; { e.preventDefault() }</code></td>
+              </tr>
+              <tr>
+                <td><code>undefined</code></td>
+                <td>显式返回 undefined</td>
+                <td>与 void 不同，调用方按 undefined 处理</td>
+              </tr>
+              <tr>
+                <td><code>never</code></td>
+                <td>不可能有返回值</td>
+                <td>抛错的函数 / 死循环 / exhaustive check</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// never 用在判穷尽分支
+function assertNever(x: never): never {
+  throw new Error('unhandled case: ' + JSON.stringify(x));
+}
+type Color = 'red' | 'green' | 'blue';
+function describe(c: Color) {
+  switch (c) {
+    case 'red':   return 'warm';
+    case 'green': return 'fresh';
+    default: return assertNever(c); // 加新色时这里爆错提示
+  }
+}
+</code></pre>
+        </div>
+
+        <h3>5.5 常见陷阱</h3>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 五大坑</div>
+          <div class="callout-body">
+            <p>
+              ①
+              默认值只能是最后一个？错——剩余参数前任意可选参数都能有默认值；<br />
+              ②
+              <code>function add(a,b) { return a+b }</code>
+              看似宽松但<b>参数默认不限数量</b>，需要
+              <code>noUnusedParameters</code> 拦；<br />
+              ③ <code>void</code> 返回值函数赋给变量后，<strong
+                >变量类型仍是 void</strong
+              >，不能解构；<br />
+              ④
+              重载顺序：<strong>最具体的签名排在前面</strong>，最后一行才放实现签名；<br />
+              ⑤ 箭头函数没有自己的 <code>arguments</code>，需要剩余参数
+              <code>...args</code> 替代。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>函数签名四件套</strong>：参数 + 返回 + this + 重载。<br />
+              <strong>不返走 void</strong>，<strong>必抛写 never</strong
+              >，<strong>重载前具体后通用</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 6 ===== -->
+      <section class="section" id="ch06">
+        <div class="section-badge">
+          <span class="num">06</span><span class="sec-tag">入门篇</span>
+        </div>
+        <h2><span class="num">06</span>泛型入门与类型参数</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 泛型 = 类型版的函数参数</div>
+          <div class="callout-body">
+            <p>
+              把"类型"当参数传给"类型函数"，在调用时再用具体类型替换。写一次代码，适配任意类型又不丢类型安全。
+            </p>
+            <p>
+              三大场景：<strong>函数</strong>/<strong>接口</strong>/<strong>类</strong>。
+            </p>
+          </div>
+        </div>
+
+        <h3>6.1 三类泛型</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>形式</th>
+                <th>语法</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>泛型函数</td>
+                <td><code>function id&lt;T&gt;(x: T): T { return x }</code></td>
+                <td>类型参数写在调用签名里</td>
+              </tr>
+              <tr>
+                <td>泛型接口</td>
+                <td><code>interface Box&lt;T&gt; { value: T }</code></td>
+                <td>声明契约的可变类型</td>
+              </tr>
+              <tr>
+                <td>泛型类</td>
+                <td>
+                  <code
+                    >class Container&lt;T&gt; { constructor(public v: T) {}
+                    }</code
+                  >
+                </td>
+                <td>实例类型由调用决定</td>
+              </tr>
+              <tr>
+                <td>泛型约束</td>
+                <td><code>function id&lt;T extends object&gt;(x: T)</code></td>
+                <td>约束类型参数必须满足</td>
+              </tr>
+              <tr>
+                <td>泛型默认值</td>
+                <td><code>class Container&lt;T = unknown&gt;</code></td>
+                <td>默认就 fallback</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>6.2 五个常见泛型写法</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 泛型函数：自动推断
+function first&lt;T&gt;(arr: T[]): T | undefined {
+  return arr[0];
+}
+first([1, 2, 3]);          // T 推断为 number
+first(['a', 'b']);         // T 推断为 string
+
+// 2. 显式传参 + 默认值
+function fromArray&lt;T = string&gt;(arr: T[]): T[] { return arr; }
+fromArray(['x']);          // T 默认 string
+
+// 3. 泛型约束 extends
+function getKeys&lt;T extends object&gt;(obj: T): Array&lt;keyof T&gt; {
+  return Object.keys(obj) as Array&lt;keyof T&gt;;
+}
+
+// 4. keyof + 索引访问
+function pluck&lt;T, K extends keyof T&gt;(obj: T, keys: K[]): T[K][] {
+  return keys.map((k) =&gt; obj[k]);
+}
+pluck({ a: 1, b: 'x' }, ['a', 'b']); // (string|number)[]
+
+// 5. 泛型接口
+interface ApiResponse&lt;T&gt; {
+  code: number;
+  msg: string;
+  data: T;
+}
+type User = ApiResponse&lt;{ name: string; age: number }&gt;;
+</code></pre>
+        </div>
+
+        <h3>6.3 上下文推断（推荐）：少写显式参数</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 不需要显式 id&lt;number&gt;(42)，从参数自动推断
+function id&lt;T&gt;(x: T): T { return x }
+id(42);        // T 推断为 number
+id('hi');      // T 推断为 string
+
+// 缺点：上下文推断失败时要显式
+function combine&lt;T&gt;(a: T, b: T): T[] { return [a, b] }
+// combine('x', 1);    // ❌ T 不能同时是 string 和 number
+combine&lt;string | number&gt;('x', 1); // ✅ 显式联合
+</code></pre>
+        </div>
+
+        <h3>6.4 实战案例：泛型请求函数</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">async function request&lt;T&gt;(url: string, opts?: RequestInit): Promise&lt;T&gt; {
+  const res = await fetch(url, opts);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json() as Promise&lt;T&gt;;
+}
+
+// 接口定义
+interface User { id: string; name: string; age: number }
+
+// 调用处指定返回类型，IDE 全程补全
+const user = await request&lt;User&gt;('/api/users/1');
+console.log(user.name.toUpperCase());  // ✅ 类型确定
+</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 不要为了用泛型而用泛型</div>
+          <div class="callout-body">
+            <p>
+              若仅一处调用且类型已知，写死类型更可读。<strong>只有重复模式（多类型共用代码）才用泛型</strong>。
+            </p>
+          </div>
+        </div>
+
+        <h3>6.5 疑难解答</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>症状</th>
+                <th>方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>T 在联合类型下不扩展</td>
+                <td><code>&lt;T extends Base&gt;</code> 给约束</td>
+              </tr>
+              <tr>
+                <td>类 new 一个泛型</td>
+                <td><code>{new(): T}</code> 约束构造类型</td>
+              </tr>
+              <tr>
+                <td>嵌套泛型看着头大</td>
+                <td>写成有名字的 type alias，别直接嵌</td>
+              </tr>
+              <tr>
+                <td>通用工具太多看着乱</td>
+                <td>用 <code>Pick/Omit/Partial</code> 而非重写</td>
+              </tr>
+              <tr>
+                <td>条件分支 T 不存在</td>
+                <td>用 <code>T extends U ? X : Y</code> 条件类型</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>泛型是类型参数</strong>：能传
+              string/number/boolean，也能传"约束后的 T"；<br />
+              <strong>上下文优先推断</strong
+              >，<strong>约束+默认值护安全</strong>，<strong>不为了泛型而泛型</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 7 ===== -->
+      <section class="section" id="ch07">
+        <div class="section-badge">
+          <span class="num">07</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">07</span>类与面向对象加强</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 TS 的 class 比 ES6 多了类型和修饰符
+          </div>
+          <div class="callout-body">
+            <p>
+              TS class
+              多了：<strong>访问修饰符</strong>（public/private/protected）、<strong>readonly</strong>、<strong>参数属性</strong>、<strong>抽象类</strong>、<strong>implements</strong>、<strong>getter/setter</strong>。
+            </p>
+          </div>
+        </div>
+
+        <h3>7.1 类成员四件套</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>成员</th>
+                <th>修饰符</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>字段</td>
+                <td>
+                  <code>public</code
+                  >/<code>private</code>/<code>protected</code>/<code
+                    >readonly</code
+                  >
+                </td>
+                <td>类内/子类/外部可见性</td>
+              </tr>
+              <tr>
+                <td>方法</td>
+                <td>同字段</td>
+                <td>类上挂的函数</td>
+              </tr>
+              <tr>
+                <td>构造器</td>
+                <td>—</td>
+                <td>无访问修饰符默认 public</td>
+              </tr>
+              <tr>
+                <td>getter/setter</td>
+                <td>—</td>
+                <td>拦截属性访问，可加校验</td>
+              </tr>
+              <tr>
+                <td>静态</td>
+                <td><code>static</code></td>
+                <td>挂在类上而非实例</td>
+              </tr>
+              <tr>
+                <td>参数属性</td>
+                <td>构造器加修饰符</td>
+                <td><code>constructor(private name: string)</code></td>
+              </tr>
+              <tr>
+                <td>抽象</td>
+                <td><code>abstract</code></td>
+                <td>只能继承不能 new</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>7.2 完整示例</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 接口契约
+interface Flyable { fly(): void }
+interface WakeAble { wake(): void }
+
+// 抽象类
+abstract class Animal {
+  constructor(public name: string, protected age: number) {}
+  abstract eat(food: string): void;
+  speak() { console.log(`${this.name} 发出叫声`) }
+}
+
+// 实现一个具体动物
+class Cat extends Animal implements Flyable, WakeAble {
+  private static ids = 0;
+  static getCount() { return Cat.ids; }
+  readonly birthday = new Date();
+
+  constructor(name: string, age: number, private breed: string) {
+    super(name, age);
+    Cat.ids++;
+  }
+
+  eat(food: string): void {
+    console.log(`${this.name} 在吃 ${food}`);
+  }
+
+  // 多接口方法
+  fly(): void { console.log(`${this.name} 跳得很高假装在飞`) }
+  wake(): void { console.log(`${this.name} 伸个懒腰`) }
+
+  // getter/setter 可拦截
+  get info(): string { return `${this.name}/${this.breed}/${this.age}岁` }
+  set info(v: string) { /* 不允许修改 */ throw new Error('readonly') }
+}
+
+const miao = new Cat('喵', 2, '橘猫');
+miao.eat('小鱼干');
+miao.fly();
+console.log(miao.info);  // getter
+// miao.age = 5;  // ❌ protected 外部不可访问
+// miao.birthday = new Date(); // ❌ readonly
+console.log(Cat.getCount());
+</code></pre>
+        </div>
+
+        <h3>7.3 类继承 vs implements 区别</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>操作</th>
+                <th>作用</th>
+                <th>差别</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>extends</code></td>
+                <td>继承父类</td>
+                <td>复用实现，共享代码</td>
+              </tr>
+              <tr>
+                <td><code>implements</code></td>
+                <td>实现接口</td>
+                <td>只校验形状，不复用代码</td>
+              </tr>
+              <tr>
+                <td><code>override</code></td>
+                <td>覆写父类方法</td>
+                <td>TS 5.0 必须加关键字</td>
+              </tr>
+              <tr>
+                <td><code>super.method()</code></td>
+                <td>调用父类</td>
+                <td>覆写后调原方法</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>7.4 this 类型：链式调用</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">class Builder {
+  private data: Record&lt;string, unknown&gt; = {};
+
+  set&lt;K extends string, V&gt;(key: K, value: V): this {     // 关键：返回 this 而不是 Builder
+    this.data[key] = value;
+    return this;
+  }
+  get&lt;K extends keyof typeof this.data&gt;(key: K) {
+    return this.data[key];
+  }
+  build&lt;T = Record&lt;string, unknown&gt;&gt;(): T {
+    return this.data as T;
+  }
+}
+
+const r = new Builder()
+  .set('name', 'Tom')
+  .set('age', 18)
+  .build&lt;{ name: string; age: number }&gt;();
+console.log(r.name.toUpperCase());
+</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 三条铁律</div>
+          <div class="callout-body">
+            <p>
+              ① <code>private</code> 仅限类内 + 子类可见，外部用
+              <code>#field</code> 才是真私有；<br />
+              ② <code>readonly</code> 只防顶层写入，深度字段仍可改；<br />
+              ③ <code>noImplicitOverride</code> 打开后必须写
+              <code>override</code>。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 何时用 class，何时用 plain object</div>
+          <div class="callout-body">
+            <p>
+              <strong>需要状态/多方法/继承</strong> → class；<strong
+                >只是数据</strong
+              >
+              → interface + plain object。<br />
+              现代 TS 推荐用 <strong>数据对象 + 纯函数</strong>，class
+              仅在框架需要时（如 React 旧 class 组件、Vue3 Composition API 也少
+              class）才用。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>public 全开放</strong>，<strong>private 子类</strong
+              >，<strong>protected 内外禁</strong>，<strong
+                >readonly 写不进去</strong
+              >；<br />
+              <strong>extends 复用方法</strong>，<strong
+                >implements 校验形状</strong
+              >，<strong>abstract 只许继承不许 new</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 8 ===== -->
+      <section class="section" id="ch08">
+        <div class="section-badge">
+          <span class="num">08</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">08</span>模块与命名空间</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 TS 同时支持 ES Module 和历史 namespace
+          </div>
+          <div class="callout-body">
+            <p>
+              <strong
+                >现代工程首选 <code>import / export</code>（ES Module）</strong
+              >；<strong>namespace</strong>
+              已不再是主流，仅在写类型声明文件或极旧代码时偶尔见。
+            </p>
+          </div>
+        </div>
+
+        <h3>8.1 import / export 六种写法</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 默认导出：一个模块只能有一个 default
+// utils.ts
+export default function toFixed(n: number, p = 2) { return n.toFixed(p) }
+
+// 2. 命名导出：可多个
+// utils.ts
+export function add(a: number, b: number) { return a + b }
+export const PI = 3.14
+
+// 3. 重命名导入导出
+import { add as sum } from './utils'
+export { PI as π }
+
+// 4. 一行导入所有
+import * as utils from './utils'
+
+// 5. 类型导入（运行时不引入）+ 内联 type
+import type { User } from './types'
+import { type Config, fetchData } from './api'
+
+// 6. side-effect 导入
+import './polyfill'  // 仅用于副作用
+</code></pre>
+        </div>
+
+        <h3>8.2 路径别名 tsconfig 配置</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-json">{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  }
+}
+</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">
+            💡 别名以 <code>@</code> 起步已是事实标准
+          </div>
+          <div class="callout-body">
+            <p>
+              配合 Vite：<code>vite.config.ts</code>
+              也要写一份别名才能让构建工具认；或在
+              <code>vite-tsconfig-paths</code> 自动同步。
+            </p>
+          </div>
+        </div>
+
+        <h3>8.3 动态 import：按需加载</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 路由级懒加载
+const Admin = () =&gt; import('./views/Admin.vue')
+
+// 用户点击才加载
+async function onClick() {
+  const { default: heavyLib } = await import('./heavy-lib')
+  heavyLib.run()
+}
+</code></pre>
+        </div>
+
+        <h3>8.4 命名空间 namespace（一般不写）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 老风格，仅 .d.ts 与旧项目仍在用
+namespace Validation {
+  export interface StringValidator { isAcceptable(s: string): boolean }
+  export class ZipCodeValidator implements StringValidator {
+    isAcceptable(s: string) { return /^\\d{6}$/.test(s) }
+  }
+}
+const validator = new Validation.ZipCodeValidator()
+
+// 嵌套 namespace
+namespace Geometry {
+  export namespace Circle {
+    export function area(r: number) { return Math.PI * r * r }
+  }
+}
+Geometry.Circle.area(10)
+</code></pre>
+        </div>
+
+        <h3>8.5 模块解析策略</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>策略</th>
+                <th>适用</th>
+                <th>查路径</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>node</code>（默认）</td>
+                <td>Node 风格库</td>
+                <td><code>node_modules</code> + <code>package.json</code></td>
+              </tr>
+              <tr>
+                <td><code>classic</code></td>
+                <td>极老项目</td>
+                <td>绝对路径/相对路径</td>
+              </tr>
+              <tr>
+                <td><code>bundler</code></td>
+                <td>Vite / Webpack</td>
+                <td>走 bundler 解析</td>
+              </tr>
+              <tr>
+                <td><code>node16/nodenext</code></td>
+                <td>Node ESM 严格</td>
+                <td>和 Node 同步</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>8.6 重新导出与 barrel 文件</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// src/components/index.ts —— barrel
+export { Button } from './Button'
+export { Modal } from './Modal'
+export { Input } from './Input'
+export type { ButtonProps } from './Button'
+
+// 外面一行就拿到所有
+import { Button, Modal, type ButtonProps } from '@/components'
+</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ barrel 的副作用</div>
+          <div class="callout-body">
+            <p>
+              barrel 集中导出在大型项目会导致<strong
+                >循环引用/打包体积膨胀/Tree-shaking 失效</strong
+              >。Nuxt/RxJS 都改用<strong>显式导入</strong>。可以用 ESLint
+              规则禁掉 barrel。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>ES Module 一统天下</strong>，<strong
+                >namespace 只剩历史</strong
+              >，<strong>动态 import 做懒加载</strong>。<br />
+              <strong>类型导入显式 import type</strong
+              >，<strong>路径别名提效率</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 9 ===== -->
+      <section class="section" id="ch09">
+        <div class="section-badge">
+          <span class="num">09</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">09</span>类型守卫与类型推导</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 类型守卫：从宽类型收窄到窄类型的过程
+          </div>
+          <div class="callout-body">
+            <p>
+              类型守卫（type
+              guard）是一种<strong>把联合类型收窄到具体类型</strong>的函数或表达式。<strong
+                >它是 TS 类型体操的第一课</strong
+              >。
+            </p>
+          </div>
+        </div>
+
+        <h3>9.1 常用类型守卫速查</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>守卫</th>
+                <th>用法</th>
+                <th>收窄结果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>typeof</code></td>
+                <td><code>typeof x === 'string'</code></td>
+                <td>原始类型</td>
+              </tr>
+              <tr>
+                <td><code>in</code></td>
+                <td><code>'kind' in animal</code></td>
+                <td>对象有某字段</td>
+              </tr>
+              <tr>
+                <td><code>instanceof</code></td>
+                <td><code>x instanceof Date</code></td>
+                <td>类实例</td>
+              </tr>
+              <tr>
+                <td><code>is</code> 自定义守卫</td>
+                <td><code>function isFish(x: any): x is Fish {}</code></td>
+                <td>收窄成指定类型</td>
+              </tr>
+              <tr>
+                <td>字面量判断</td>
+                <td><code>x.kind === 'circle'</code></td>
+                <td>对象判别联合</td>
+              </tr>
+              <tr>
+                <td>非空断言</td>
+                <td><code>if (x) { x.foo }</code></td>
+                <td>剔除 null/undefined/false</td>
+              </tr>
+              <tr>
+                <td>穷尽分支</td>
+                <td><code>assertNever</code></td>
+                <td>用 never 兜底</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>9.2 四种原始守卫</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">function padLeft(value: string, padding: number | string): string {
+  if (typeof padding === 'number') {
+    return ' '.repeat(padding) + value;  // padding 收窄为 number
+  }
+  return padding + value;                  // padding 收窄为 string
+}
+</code></pre>
+        </div>
+
+        <h3>9.3 自定义 is 守卫</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">interface Fish   { swim(): void; kind: 'fish' }
+interface Bird   { fly(): void;  kind: 'bird' }
+type Animal = Fish | Bird
+
+// 自定义守卫
+function isFish(pet: Animal): pet is Fish {
+  return (pet as Fish).swim !== undefined
+}
+
+function move(pet: Animal) {
+  if (isFish(pet)) {
+    pet.swim();   // pet 收窄为 Fish
+  } else {
+    pet.fly();    // pet 收窄为 Bird
+  }
+}
+</code></pre>
+        </div>
+
+        <h3>9.4 判别联合（tagged union）</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 共享字段"kind"做判别
+type State =
+  | { kind: 'loading' }
+  | { kind: 'success'; data: User }
+  | { kind: 'error';   err: Error }
+
+function reducer(s: State, action: { type: 'set'; payload: User }): State {
+  switch (s.kind) {
+    case 'loading': return { kind: 'loading' };
+    case 'success': return { kind: 'success', data: action.payload };
+    case 'error':   return { kind: 'error',   err: s.err };
+    // default + assertNever: 加新类型时不漏
+  }
+}
+</code></pre>
+        </div>
+
+        <h3>9.5 null/undefined 处理</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 可选链 + 空合并（ES2020）
+const name = user?.profile?.name ?? 'Anonymous';
+
+// 2. 严格 null 检查下，赋值要足够小心
+function upper(s?: string) {
+  return s?.toUpperCase() ?? '';   // s 可能是 undefined
+}
+
+// 3. 断言函数（TS 3.7+）
+function assert(cond: unknown, msg = 'failed'): asserts cond {
+  if (!cond) throw new Error(msg);
+}
+function process(u?: User) {
+  assert(u);       // 断言后 u 被收窄为 User
+  console.log(u!.name);
+}
+</code></pre>
+        </div>
+
+        <h3>9.6 类型推导与显式标注</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>建议</th>
+                <th>理由</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>局部变量</td>
+                <td>不标（推断）</td>
+                <td>让代码简洁</td>
+              </tr>
+              <tr>
+                <td>函数返回值</td>
+                <td>显式标</td>
+                <td>接口约束、阅读清晰</td>
+              </tr>
+              <tr>
+                <td>公共 API</td>
+                <td>必标</td>
+                <td>防止漏改</td>
+              </tr>
+              <tr>
+                <td>第三方回调入参</td>
+                <td>不标</td>
+                <td>上下文会推断</td>
+              </tr>
+              <tr>
+                <td>as 用于收窄</td>
+                <td>谨慎使用</td>
+                <td>破坏类型推导</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 三大常见错误</div>
+          <div class="callout-body">
+            <p>
+              ① <code>typeof null === 'object'</code>！记得单独判
+              <code>x !== null</code>；<br />
+              ② <code>typeof</code> 不能识别 object 类型（都返 'object'），要在
+              <code>in</code> / 自定义 is 守卫；<br />
+              ③
+              <code>as any</code>
+              让守卫形同虚设，<strong>不要把守卫和断言混用</strong>。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>typeof 原始，in 对象，instanceof 类，is 自定义</strong
+              >；<br />
+              <strong>判别联合配 switch，穷尽分支永不漏</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 10 ===== -->
+      <section class="section" id="ch10">
+        <div class="section-badge">
+          <span class="num">10</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">10</span>高级类型与工具类型</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 工具类型 = 类型系统里的轮子</div>
+          <div class="callout-body">
+            <p>
+              工具类型（utility types）是 TS 自带或自己手写的<strong
+                >对类型做 transform 的类型函数</strong
+              >。掌握它们等于拿到类型系统的瑞士军刀。
+            </p>
+          </div>
+        </div>
+
+        <h3>10.1 16 个必知工具类型速查</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>名称</th>
+                <th>效果</th>
+                <th>手工实现</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Partial&lt;T&gt;</code></td>
+                <td>所有字段可选</td>
+                <td><code>{ [K in keyof T]?: T[K] }</code></td>
+              </tr>
+              <tr>
+                <td><code>Required&lt;T&gt;</code></td>
+                <td>所有字段必填</td>
+                <td><code>{ [K in keyof T]-?: T[K] }</code></td>
+              </tr>
+              <tr>
+                <td><code>Readonly&lt;T&gt;</code></td>
+                <td>所有字段只读</td>
+                <td><code>{ readonly [K in keyof T]: T[K] }</code></td>
+              </tr>
+              <tr>
+                <td><code>Pick&lt;T, K&gt;</code></td>
+                <td>挑选字段</td>
+                <td><code>{ [P in K]: T[P] }</code></td>
+              </tr>
+              <tr>
+                <td><code>Omit&lt;T, K&gt;</code></td>
+                <td>排除字段</td>
+                <td><code>Pick&lt;T, Exclude&lt;keyof T, K&gt;&gt;</code></td>
+              </tr>
+              <tr>
+                <td><code>Record&lt;K, V&gt;</code></td>
+                <td>同构对象</td>
+                <td><code>{ [P in K]: V }</code></td>
+              </tr>
+              <tr>
+                <td><code>Exclude&lt;U, K&gt;</code></td>
+                <td>从联合类型剔除</td>
+                <td><code>T extends U ? never : T</code></td>
+              </tr>
+              <tr>
+                <td><code>Extract&lt;U, T&gt;</code></td>
+                <td>从联合类型提取</td>
+                <td><code>T extends U ? T : never</code></td>
+              </tr>
+              <tr>
+                <td><code>NonNullable&lt;T&gt;</code></td>
+                <td>剔 null/undefined</td>
+                <td><code>T extends null \| undefined ? never : T</code></td>
+              </tr>
+              <tr>
+                <td><code>ReturnType&lt;F&gt;</code></td>
+                <td>函数返回值</td>
+                <td>
+                  <code>F extends (...a:any)=&gt;infer R ? R : never</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>Parameters&lt;F&gt;</code></td>
+                <td>函数参数元组</td>
+                <td>
+                  <code>F extends (...a: infer P)=&gt;any ? P : never</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>InstanceType&lt;F&gt;</code></td>
+                <td>构造类实例</td>
+                <td>
+                  <code>F extends new(...a: any)=&gt;infer I ? I : any</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>Awaited&lt;T&gt;</code></td>
+                <td>递归解 Promise</td>
+                <td><code>T extends Promise&lt;infer U&gt; ? U : T</code></td>
+              </tr>
+              <tr>
+                <td><code>Mutable&lt;T&gt;</code></td>
+                <td>去掉 readonly</td>
+                <td>手写</td>
+              </tr>
+              <tr>
+                <td><code>DeepReadonly&lt;T&gt;</code></td>
+                <td>深度只读</td>
+                <td>递归手写</td>
+              </tr>
+              <tr>
+                <td><code>UnionToIntersection&lt;U&gt;</code></td>
+                <td>联合→交叉</td>
+                <td>特殊 infer 技巧</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>10.2 上手示例</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">interface User {
+  id: string;
+  name: string;
+  age: number;
+  email: string;
+}
+
+// Pick
+type Basic = Pick&lt;User, 'id' | 'name'&gt;            // { id, name }
+
+// Omit
+type NoEmail = Omit&lt;User, 'email'&gt;                // { id, name, age }
+
+// Partial + Readonly
+type Draft = Readonly&lt;Partial&lt;User&gt;&gt;              // 全可选 + 只读
+
+// Record
+type UserMap = Record&lt;string, User&gt;;               // { [x: string]: User }
+
+// Exclude / Extract
+type S = Exclude&lt;'a'|'b'|'c', 'a'&gt;;                  // 'b'|'c'
+type E = Extract&lt;1|string|boolean, string&gt;;          // string
+
+// ReturnType / Parameters / Awaited
+async function getUser() { return { id: 1 } }
+type R = ReturnType&lt;typeof getUser&gt;;                 // Promise&lt;{id:number}&gt;
+type A = Awaited&lt;R&gt;;                                  // {id: number}
+</code></pre>
+        </div>
+
+        <h3>10.3 自定义工具类型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 深度只读
+type DeepReadonly&lt;T&gt; = {
+  readonly [K in keyof T]: T[K] extends object ? DeepReadonly&lt;T[K]&gt; : T[K];
+};
+
+// 2. 联合转交叉
+type UnionToIntersection&lt;U&gt; =
+  (U extends any ? (x: U) =&gt; void : never) extends (x: infer I) =&gt; void
+    ? I
+    : never;
+
+// 3. 函数最后一个参数
+type LastArg&lt;F extends (...a: any[]) =&gt; any&gt; =
+  Parameters&lt;F&gt; extends [...any[], infer L] ? L : never;
+
+// 4. 字段驼峰转下划线（模板字面量）
+type SnakeCase&lt;T extends string&gt; = T extends `${infer A}${infer B}`
+  ? B extends Uncapitalize&lt;B&gt;
+    ? `${A}_${B}`
+    : `${A}${SnakeCase&lt;B&gt;}`
+  : T;
+</code></pre>
+        </div>
+
+        <h3>10.4 三大映射类型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 一行映射：全部变为 getter 版
+type Getters&lt;T&gt; = {
+  [K in keyof T as `get${Capitalize&lt;string &amp; K&gt;}`]: () =&gt; T[K];
+};
+
+interface Person { name: string; age: number }
+type PersonGetters = Getters&lt;Person&gt;;
+// =&gt; { getName: () =&gt; string; getAge: () =&gt; number }
+</code></pre>
+        </div>
+
+        <h3>10.5 实战场景</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>工具类型方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GET 参数对象</td>
+                <td><code>Partial&lt;Pick&lt;Query, K&gt;&gt;</code></td>
+              </tr>
+              <tr>
+                <td>POST body</td>
+                <td><code>Omit&lt;User, 'id'&gt;</code></td>
+              </tr>
+              <tr>
+                <td>更新可空字段</td>
+                <td><code>DeepPartial&lt;T&gt;</code></td>
+              </tr>
+              <tr>
+                <td>枚举字段字符串化</td>
+                <td><code>Record&lt;Enum, string&gt;</code></td>
+              </tr>
+              <tr>
+                <td>API 响应包</td>
+                <td>
+                  <code
+                    >ApiResponse&lt;Awaited&lt;ReturnType&lt;typeof
+                    F&gt;&gt;&gt;</code
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 循环引用陷阱</div>
+          <div class="callout-body">
+            <p>
+              递归工具类型（如
+              <code>DeepReadonly</code
+              >）遇到自引用类型会编译失败。可加深度限制或尾递归（TS 4.5+
+              默认支持尾递归优化）。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>Partial/Required 选必填</strong>，<strong
+                >Pick/Omit 选字段</strong
+              >，<strong>Exclude/Extract 选联合分支</strong>；<br />
+              <strong>ReturnType/Parameters 抓函数</strong>，<strong
+                >Awaited/Record 用来包</strong
+              >。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 11 ===== -->
+      <section class="section" id="ch11">
+        <div class="section-badge">
+          <span class="num">11</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">11</span>装饰器与元数据</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 装饰器是 TC39 stage 3，正在收尾</div>
+          <div class="callout-body">
+            <p>
+              装饰器（Decorator）是一种<strong>在类/方法/属性/参数上加注解的语法</strong>，可在不修改原代码的前提下<strong>注入行为或元数据</strong>。
+            </p>
+            <p>
+              注意：TS 5
+              默认仍采用<strong>实验性装饰器</strong>（legacy/旧方案），使用需
+              <code>experimentalDecorators: true</code>。<strong
+                >新方案（标准 stage-3）</strong
+              >只需 <code>target: ES2022+</code> 默认支持。
+            </p>
+          </div>
+        </div>
+
+        <h3>11.1 5 种装饰器位置</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>位置</th>
+                <th>签名</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>类装饰器</td>
+                <td><code>@dec(target)</code></td>
+                <td>改类/替换构造器</td>
+              </tr>
+              <tr>
+                <td>方法装饰器</td>
+                <td><code>@dec(target, name, descriptor)</code></td>
+                <td>AOP 增强（鉴权/日志）</td>
+              </tr>
+              <tr>
+                <td>访问器装饰器</td>
+                <td>同方法</td>
+                <td>拦截 getter/setter</td>
+              </tr>
+              <tr>
+                <td>属性装饰器</td>
+                <td><code>@dec(target, name)</code></td>
+                <td>打 tag 元信息</td>
+              </tr>
+              <tr>
+                <td>参数装饰器</td>
+                <td><code>@dec(target, name, index)</code></td>
+                <td>DI 容器用</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>11.2 三个最常见的装饰器</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 方法日志装饰器
+function Log(target: any, name: string, desc: PropertyDescriptor) {
+  const original = desc.value;
+  desc.value = function (...args: any[]) {
+    console.log(`[${name}] called with`, args);
+    const r = original.apply(this, args);
+    console.log(`[${name}] returns`, r);
+    return r;
+  };
+}
+
+class Calc {
+  @Log
+  add(a: number, b: number) { return a + b; }
+}
+new Calc().add(1, 2); // 输出调用与返回日志
+
+// 2. 防抖装饰器（带工厂）
+function Debounce(ms: number) {
+  return function (_: any, __: string, desc: PropertyDescriptor) {
+    let timer: any;
+    desc.value = function (...args: any[]) {
+      clearTimeout(timer);
+      timer = setTimeout(() =&gt; desc.value!.apply(this, args), ms);
+    };
+  };
+}
+
+class UI {
+  @Debounce(300)
+  onSearch(q: string) { console.log('search', q); }
+}
+
+// 3. 类装饰器：加版本号
+function Version(v: string) {
+  return &lt;T extends { new (...args: any[]): {} }&gt;(target: T) =&gt; {
+    return class extends target {
+      version = v;
+    };
+  };
+}
+@Version('1.0')
+class Service {}
+console.log(new Service());
+</code></pre>
+        </div>
+
+        <h3>11.3 reflect-metadata 与依赖注入</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">import 'reflect-metadata';
+
+function Inject(target: any, _name: string | symbol, index?: number) {
+  const tokens = Reflect.getMetadata('design:paramtypes', target) ?? [];
+  // 真实代码会按 index 把容器里的依赖注入
+  console.log('Inject', index, tokens);
+}
+
+class Logger {
+  log(m: string) { console.log(m) }
+}
+
+class Service {
+  constructor(@Inject private logger: Logger) {}
+  run() { this.logger.log('hi') }
+}
+</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 装饰器的坑</div>
+          <div class="callout-body">
+            <p>
+              ①
+              装饰器<strong>执行顺序</strong>：同一方法多个装饰器，从下往上包装、自上而下调用；<br />
+              ② 装饰器<strong>只能用在类内部</strong>，不能装饰普通函数（函数会
+              hoist）；<br />
+              ③ 老装饰器与新装饰器签名不同，迁移请确认 TS 版本；<br />
+              ④
+              <code>descriptor.value</code>
+              在装饰器里改写后，<strong>原方法不再单独存在</strong>。
+            </p>
+          </div>
+        </div>
+
+        <h3>11.4 实战案例：AOP 路由权限</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// NestJS 风格的 Get/Controller 装饰器
+function Get(path: string) {
+  return (target: any, name: string) =&gt; {
+    const routes = Reflect.getMetadata('routes', target.constructor) ?? [];
+    routes.push({ method: 'GET', path, handler: name });
+    Reflect.defineMetadata('routes', routes, target.constructor);
+  };
+}
+
+function AdminOnly(_: any, __: string, desc: PropertyDescriptor) {
+  const original = desc.value;
+  desc.value = function (...args: any[]) {
+    if (!currentUser.isAdmin) throw new Error('Forbidden');
+    return original.apply(this, args);
+  };
+}
+
+class UserController {
+  @Get('/me') @AdminOnly me() { return currentUser }
+}
+</code></pre>
+        </div>
+
+        <h3>11.5 何时用装饰器</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>用</th>
+                <th>别用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>框架需要（NestJS/Angular/TypeORM）</td>
+                <td>普通业务函数额外装饰</td>
+              </tr>
+              <tr>
+                <td>AOP（日志、缓存、防抖、鉴权）</td>
+                <td>只是想给字段标类型</td>
+              </tr>
+              <tr>
+                <td>依赖注入、ORM 字段映射</td>
+                <td>团队还不熟装饰器</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>装饰器是语法糖</strong>：不改原代码就包装行为。常见位置 5
+              种；<strong>顺序下包上启</strong>，<strong>框架集成常用</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 12 ===== -->
+      <section class="section" id="ch12">
+        <div class="section-badge">
+          <span class="num">12</span><span class="sec-tag">进阶篇</span>
+        </div>
+        <h2><span class="num">12</span>Async/await 与 Promise 类型化</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 异步代码 + 类型推导 = 类型系统的最后一道关
+          </div>
+          <div class="callout-body">
+            <p>
+              TS 把 <code>Promise&lt;T&gt;</code> 映射到
+              <code>await</code>
+              的返回类型，<strong>让你在异步代码中也享受自动补全</strong>。
+            </p>
+          </div>
+        </div>
+
+        <h3>12.1 异步基础类型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 返回 Promise&lt;T&gt;
+async function loadUser(): Promise&lt;User&gt; { ... }
+
+// 2. 返回 Promise&lt;void&gt;
+async function save(u: User): Promise&lt;void&gt; { ... }
+
+// 3. 返回顶层 await（Node ESM / ES2022）
+const json = await fetch('/api').then(r =&gt; r.json());
+
+// 4. Awaited 解包
+async function fetchList(): Promise&lt;User[]&gt; { ... }
+type Items = Awaited&lt;ReturnType&lt;typeof fetchList&gt;&gt;; // User[]
+</code></pre>
+        </div>
+
+        <h3>12.2 并发控制：all/race/allSettled/any</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">const [a, b, c] = await Promise.all([api.a(), api.b(), api.c()]);
+
+// allSettled: 全部完成（成功+失败）拿到结构
+const r = await Promise.allSettled([api1(), api2()]);
+r.forEach((x) =&gt; {
+  if (x.status === 'fulfilled') console.log(x.value);
+  else                          console.warn(x.reason);
+});
+
+// race: 第一个完成胜出
+const fastest = await Promise.race([fetchA(), fetchB()]);
+
+// any: 第一个成功即成功，全失败才失败
+const oneOk = await Promise.any([fetchA(), fetchB()]);
+</code></pre>
+        </div>
+
+        <h3>12.3 回调签名：老 API 的类型化</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// Node callback：cb(err, data)
+type Callback&lt;T&gt; = (err: Error | null, data?: T) =&gt; void;
+function readFile(path: string, cb: Callback&lt;string&gt;) {
+  fs.readFile(path, 'utf-8', (err, data) =&gt; cb(err, data));
+}
+
+// promisify: 用泛型 + Omit 自动包装
+function promisify&lt;Args extends any[], R&gt;(
+  fn: (...a: [...Args, cb: (e: Error | null, r?: R) =&gt; void]) =&gt; void,
+): (...a: Args) =&gt; Promise&lt;R&gt; {
+  return (...a: Args) =&gt; new Promise((res, rej) =&gt; {
+    fn(...a, (err, r) =&gt; err ? rej(err) : res(r as R));
+  });
+}
+</code></pre>
+        </div>
+
+        <h3>12.4 错误类型：unknown 与 Result 模式</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// try/catch 默认捕获 unknown，需 narrowing
+async function load() {
+  try {
+    return await fetch('/api').then(r =&gt; r.json());
+  } catch (e: unknown) {
+    if (e instanceof TypeError) console.log('网络错误');
+    else throw e;  // 重抛其它
+  }
+}
+
+// Result/Ok-Err 模式
+type Result&lt;T, E = Error&gt; =
+  | { ok: true;  value: T }
+  | { ok: false; err: E };
+
+async function tryFetch(): Promise&lt;Result&lt;User&gt;&gt; {
+  try { return { ok: true, value: await api.get() } }
+  catch (err) { return { ok: false, err: err as Error } }
+}
+</code></pre>
+        </div>
+
+        <h3>12.5 取消与超时</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// AbortController：标准取消
+const ctrl = new AbortController();
+const id = setTimeout(() =&gt; ctrl.abort(), 5000);
+try {
+  const r = await fetch('/api', { signal: ctrl.signal });
+  ...
+} catch (e: any) {
+  if (e.name === 'AbortError') console.log('请求被取消');
+} finally {
+  clearTimeout(id);
+}
+
+// 超时包装（防 API 永不返回）
+function timeout&lt;T&gt;(p: Promise&lt;T&gt;, ms: number): Promise&lt;T&gt; {
+  return new Promise((res, rej) =&gt; {
+    const t = setTimeout(() =&gt; rej(new Error('timeout')), ms);
+    p.then((v) =&gt; { clearTimeout(t); res(v) })
+     .catch((e) =&gt; { clearTimeout(t); rej(e) });
+  });
+}
+</code></pre>
+        </div>
+
+        <h3>12.6 实战模式表</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>场景</th>
+                <th>推荐方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>并行多个独立请求</td>
+                <td><code>Promise.all</code> + 元组解构</td>
+              </tr>
+              <tr>
+                <td>并行但允许部分失败</td>
+                <td><code>Promise.allSettled</code></td>
+              </tr>
+              <tr>
+                <td>抢答用最快的</td>
+                <td><code>Promise.race</code> / <code>any</code></td>
+              </tr>
+              <tr>
+                <td>需要取消</td>
+                <td><code>AbortController</code> + signal</td>
+              </tr>
+              <tr>
+                <td>错误优先返回</td>
+                <td><code>Result&lt;T, E&gt;</code> 模式</td>
+              </tr>
+              <tr>
+                <td>节流尾请求</td>
+                <td>debounce + AbortSignal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 五大坑</div>
+          <div class="callout-body">
+            <p>
+              ① <code>await</code> 后的代码就是同步，但<strong
+                >它把 promise 链扁平化了</strong
+              >，性能可优化空间变小；<br />
+              ② 滥用
+              <code>await</code>
+              把独立请求<strong>串行化</strong>，体验变差；<br />
+              ③ 不接 try/catch 时<strong>未捕获 async 错误被吞掉</strong
+              >；<br />
+              ④ 异步函数里抛错能进
+              .catch，但<strong>同步逻辑抛错</strong>也要保护；<br />
+              ⑤ <code>forEach</code> 不等待 async 函数！要用
+              <code>for ... of</code> 或 <code>Promise.all(map)</code>。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>并 all，败 any，成 allSettled，快 race</strong>。<br />
+              <strong>try/catch unknown narrowing 必做</strong>；<strong
+                >AbortController 取消</strong
+              >。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 13 ===== -->
+      <section class="section" id="ch13">
+        <div class="section-badge">
+          <span class="num">13</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">13</span>类型体操与条件类型</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 类型体操就是用类型写"逻辑"</div>
+          <div class="callout-body">
+            <p>
+              用
+              <code>extends</code>、<code>infer</code>、<code>T[K]</code>、<code
+                >keyof</code
+              >
+              等组合出<strong>接收类型、产出类型</strong>的过程。<br />
+              <strong>三分技术，七分命名</strong>，好的 type 别名比什么都重要。
+            </p>
+          </div>
+        </div>
+
+        <h3>13.1 四件基础语法</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 条件类型：如果 T extends U 则 X else Y
+type IsString&lt;T&gt; = T extends string ? true : false;
+type A = IsString&lt;'hi'&gt;;    // true
+type B = IsString&lt;42&gt;;      // false
+
+// 2. infer 推断：把"未知部分"挖出来
+type GetReturnType&lt;F&gt; = F extends (...args: any[]) =&gt; infer R ? R : never;
+type FirstArg&lt;F&gt; = F extends (x: infer A, ...args: any[]) =&gt; any ? A : never;
+
+// 3. 映射类型：批量改键值
+type Getters&lt;T&gt; = {
+  [K in keyof T as `get${Capitalize&lt;string &amp; K&gt;}`]: () =&gt; T[K];
+};
+
+// 4. 索引访问：从类型里取片段
+type ValueOf&lt;T&gt; = T[keyof T];
+type IdOf&lt;T&gt; = T extends { id: infer U } ? U : never;
+</code></pre>
+        </div>
+
+        <h3>13.2 八道经典类型题及答</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 实现 Exclude
+type MyExclude&lt;T, U&gt; = T extends U ? never : T;
+
+// 2. 实现 Pick
+type MyPick&lt;T, K extends keyof T&gt; = { [P in K]: T[P] };
+
+// 3. 函数第 N 个参数
+type NthArg&lt;F, N extends number&gt; =
+  Parameters&lt;F&gt; extends [...infer _ , infer L] // 占位法
+    ? N extends 0 ? L : never
+    : never;
+
+// 4. 元组转联合
+type TupleToUnion&lt;T extends any[]&gt; = T[number];
+
+// 5. 元组转对象
+type TupleToObject&lt;T extends readonly [string, any][]&gt; =
+  { [K in T[number] as K[0]]: K[1] };
+
+// 6. 类型转全大写下划线
+type CamelToSnake&lt;S extends string&gt; =
+  S extends `${infer A}${infer B}`
+    ? B extends Lowercase&lt;B&gt;
+      ? `${A}${CamelToSnake&lt;B&gt;}`
+      : B extends Capitalize&lt;infer X&gt;
+        ? `${A}_${Lowercase&lt;X&gt;}`
+        : `${A}${CamelToSnake&lt;B&gt;}`
+    : S;
+
+// 7. 联合转交叉
+type UnionToIntersection&lt;U&gt; =
+  (U extends any ? (x: U) =&gt; void : never) extends
+  (x: infer I) =&gt; void ? I : never;
+
+// 8. Filter tuple by type
+type Filter&lt;T extends any[], U&gt; =
+  T extends [infer F, ...infer R]
+    ? F extends U ? [F, ...Filter&lt;R, U&gt;] : Filter&lt;R, U&gt;
+    : [];
+type R = Filter&lt;[1, 'a', true, 2], number&gt; // [1, 2]
+</code></pre>
+        </div>
+
+        <h3>13.3 递归三式</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 1. 递归解 Promise
+type DeepAwait&lt;T&gt; =
+  T extends Promise&lt;infer U&gt; ? DeepAwait&lt;U&gt; : T;
+
+// 2. 深度只读
+type DeepReadonly&lt;T&gt; =
+  T extends object
+    ? { readonly [K in keyof T]: DeepReadonly&lt;T[K]&gt; }
+    : T;
+
+// 3. 字符串逆序（用 infer + 递归）
+type Reverse&lt;S extends string&gt; =
+  S extends `${infer A}${infer B}`
+    ? `${Reverse&lt;B&gt;}${A}`
+    : '';
+</code></pre>
+        </div>
+
+        <h3>13.4 不可分发 vs 可分发条件类型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 默认是"分发"的：联合的每个分支都套一次条件
+type ToArray&lt;T&gt; = T extends any ? T[] : never;
+type X = ToArray&lt;string | number&gt;;  // string[] | number[]
+
+// 包一层 tuple 就变成"不可分发"
+type ToArraySingle&lt;T&gt; = [T] extends [any] ? T[] : never;
+type Y = ToArraySingle&lt;string | number&gt;; // (string|number)[]
+</code></pre>
+        </div>
+
+        <h3>13.5 体操解题四步法</h3>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span
+            ><strong>看输入输出</strong>：手写若干输入看期望输出
+          </div>
+          <div class="step">
+            <span class="step-num">2</span
+            ><strong>画类型分解图</strong>：把结构拆成 <code>A</code> +
+            <code>infer B</code>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span><strong>加约束防飞</strong>：<code
+              >extends keyof X</code
+            >
+            防范上游
+          </div>
+          <div class="step">
+            <span class="step-num">4</span><strong>递归终止</strong>：留好 base
+            case
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 越深越容易掉进坑</div>
+          <div class="callout-body">
+            <p>
+              递归 50 层就报"Type instantiation is excessively deep"。<strong
+                >能避免深嵌套就避免，必要时引入中间类型变量。</strong
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 用 Playground 调类型</div>
+          <div class="callout-body">
+            <p>
+              官方 TS
+              Playground（tsplay.dev）可以<strong>鼠标悬停查看类型推导</strong>。遇到体操题第一时间打开
+              Playground 来验证，别靠脑子推。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>extends 三元</strong>，<strong>infer 挖参</strong
+              >，<strong>map 改键</strong>，<strong>递归终止</strong>；<br />
+              <strong>分发是个坑</strong>，<strong>tuple 包一层防</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 14 ===== -->
+      <section class="section" id="ch14">
+        <div class="section-badge">
+          <span class="num">14</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">14</span>模板字面量类型与映射</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 模板字面量 = 在类型层面玩字符串拼接
+          </div>
+          <div class="callout-body">
+            <p>
+              TS 4.1+ 引入的特性：<strong
+                >用 <code>`${...}`</code> 模式匹配字符串类型</strong
+              >，结合 <code>infer</code> 做解析/拆分/转换。
+            </p>
+          </div>
+        </div>
+
+        <h3>14.1 字符串工具类型</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>工具</th>
+                <th>作用</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Uppercase&lt;T&gt;</code></td>
+                <td>全大写</td>
+                <td><code>&lt;'abC'&gt; =&gt; 'ABC'</code></td>
+              </tr>
+              <tr>
+                <td><code>Lowercase&lt;T&gt;</code></td>
+                <td>全小写</td>
+                <td><code>&lt;'ABc'&gt; =&gt; 'abc'</code></td>
+              </tr>
+              <tr>
+                <td><code>Capitalize&lt;T&gt;</code></td>
+                <td>首字母大写</td>
+                <td><code>&lt;'hello'&gt; =&gt; 'Hello'</code></td>
+              </tr>
+              <tr>
+                <td><code>Uncapitalize&lt;T&gt;</code></td>
+                <td>首字母小写</td>
+                <td><code>&lt;'Hello'&gt; =&gt; 'hello'</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>14.2 模板 + infer 拆分</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 把事件名拆分 namespace + action
+type Event = 'user.created' | 'user.deleted';
+type ParseEvent&lt;E extends string&gt; =
+  E extends `${infer N}.${infer A}` ? { ns: N; action: A } : never;
+type X = ParseEvent&lt;'user.created'&gt;;   // { ns: 'user'; action: 'created' }
+
+// 反向构造：union from object keys
+type Pre&lt;T extends object&gt; = keyof T;
+
+// 动态 on 字面量
+type Getterize&lt;T&gt; = { [K in keyof T as `get${Capitalize&lt;string &amp; K&gt;}`]: () =&gt; T[K] };
+</code></pre>
+        </div>
+
+        <h3>14.3 字符串加 / 删某段</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 前缀加 on
+type On&lt;S extends string&gt; = S extends `on${infer R}` ? S : `on${Capitalize&lt;S&gt;}`;
+type T1 = On&lt;'click'&gt;;   // 'onClick'
+
+// 去掉指定前缀
+type StripPrefix&lt;S extends string, P extends string&gt; =
+  S extends `${P}${infer R}` ? R : S;
+type T2 = StripPrefix&lt;'onClick', 'on'&gt;;  // 'Click'
+
+// Camel -> Snake
+type ToSnake&lt;S extends string&gt; =
+  S extends `${infer A}${infer B}`
+    ? B extends Uncapitalize&lt;B&gt;
+      ? `${A}${ToSnake&lt;B&gt;}`
+      : `${A}_${Lowercase&lt;B&gt;}` extends infer R extends string ? R : never
+    : S;
+</code></pre>
+        </div>
+
+        <h3>14.4 路径/路由类型</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 从路径里抽出 :id 占位
+type Params&lt;Path extends string&gt; =
+  Path extends `${string}:${infer N}/${infer R}`
+    ? { [_ in N]: string } &amp; Params&lt;`/${R}`&gt;
+    : Path extends `${string}:${infer N}`
+      ? { [_ in N]: string }
+      : {};
+
+type P = Params&lt;'user/:id/post/:postId'&gt;;     // { id: string; postId: string }
+</code></pre>
+        </div>
+
+        <h3>14.5 实战案例：构建 onChange 命名</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// props 字段 → 通用事件名
+type ToOnChange&lt;T extends object&gt; = {
+  [K in keyof T as `on${Capitalize&lt;string &amp; K&gt;}Change`]: (v: T[K]) =&gt; void;
+};
+
+interface Model { name: string; age: number; }
+type Events = ToOnChange&lt;Model&gt;;
+// { onNameChange: (v: string) =&gt; void; onAgeChange: (v: number) =&gt; void }
+</code></pre>
+        </div>
+
+        <h3>14.6 性能与限制</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>坑</th>
+                <th>原因</th>
+                <th>对策</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>大 string union 卡顿</td>
+                <td>生成类型的笛卡尔积</td>
+                <td>小化 union 分支</td>
+              </tr>
+              <tr>
+                <td>"Type instantiation is excessively deep"</td>
+                <td>递归太深</td>
+                <td>拆小 helper 类型</td>
+              </tr>
+              <tr>
+                <td>中文字符解不出来</td>
+                <td>infer 只对 ASCII 字符串/可识别 Unicode</td>
+                <td>字符串用只字母+下划线</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>模板字面量就是字符串模板</strong
+              >：把字面量当字符串玩，能拆能拼能 infer；<br />
+              <strong>路径解析 / props 改名 / onChange 生成都用得上</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 15 ===== -->
+      <section class="section" id="ch15">
+        <div class="section-badge">
+          <span class="num">15</span><span class="sec-tag">高级篇</span>
+        </div>
+        <h2><span class="num">15</span>TS 与 React/Vue 实战</h2>
+
+        <div class="callout info">
+          <div class="callout-title">
+            📖 框架里的 TS：组件、props、ref、slot、emit 都要精准打类型
+          </div>
+          <div class="callout-body">
+            <p>
+              TS 在框架层最大的价值是<strong>组件 props 自动联想与约束</strong
+              >，以及 <strong>ref/event</strong> 类型推断。
+            </p>
+          </div>
+        </div>
+
+        <h3>15.1 React 组件四种写法</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">import { FC, PropsWithChildren, useState, useRef } from 'react';
+
+// 1. 函数组件 + 接口 props
+interface ButtonProps {
+  size?: 'sm' | 'md' | 'lg';
+  onClick?: (e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}
+function Button({ size = 'md', ...rest }: ButtonProps) { /* ... */ }
+
+// 2. 带 children
+function Layout({ children }: PropsWithChildren&lt;{ gap?: number }&gt;) { return &lt;div&gt;{children}&lt;/div&gt;; }
+
+// 3. FC 类型（少用，丢了 props 默认值 &amp; 表达力）
+const Card: FC&lt;CardProps&gt; = (props) =&gt; &lt;section&gt;{props.children}&lt;/section&gt;;
+
+// 4. 泛型组件 + 分发 props
+type AsProps = { as?: 'a' | 'button'; children?: React.ReactNode }
+function Forward&lt;C extends React.ElementType&gt;({ as, children, ...rest }:
+  { as: C; children?: React.ReactNode } &amp;
+  Omit&lt;React.ComponentPropsWithoutRef&lt;C&gt;, 'as' | 'children'&gt;) {
+  const Comp = as;
+  return &lt;Comp {...rest}&gt;{children}&lt;/Comp&gt;;
+}
+&lt;Forward as="button" onClick={() =&gt; {}}&gt;hi&lt;/Forward&gt;;  // onClick 类型按 as 切
+</code></pre>
+        </div>
+
+        <h3>15.2 Hook 类型化</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">function useLocalStorage&lt;T&gt;(key: string, init: T): [T, (v: T) =&gt; void] {
+  const [v, set] = useState(() =&gt; JSON.parse(localStorage.getItem(key) ?? JSON.stringify(init)));
+  useEffect(() =&gt; localStorage.setItem(key, JSON.stringify(v)), [key, v]);
+  return [v, (next) =&gt; set((prev) =&gt; { const n = typeof next === 'function' ? (next as any)(prev) : next; return n; })];
+}
+
+// useRef 泛型指定类型
+const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+inputRef.current?.focus();   // 重载才有 current
+
+// useState 函数更新
+const [count, setCount] = useState(0);
+setCount((c) =&gt; c + 1);    // ✅ 推断支持
+</code></pre>
+        </div>
+
+        <h3>15.3 React 事件类型速查</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>事件</th>
+                <th>类型</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>click</td>
+                <td><code>React.MouseEvent&lt;HTMLButtonElement&gt;</code></td>
+              </tr>
+              <tr>
+                <td>change (input)</td>
+                <td><code>React.ChangeEvent&lt;HTMLInputElement&gt;</code></td>
+              </tr>
+              <tr>
+                <td>keydown</td>
+                <td><code>React.KeyboardEvent&lt;HTMLDivElement&gt;</code></td>
+              </tr>
+              <tr>
+                <td>submit</td>
+                <td><code>React.FormEvent&lt;HTMLFormElement&gt;</code></td>
+              </tr>
+              <tr>
+                <td>focus</td>
+                <td><code>React.FocusEvent&lt;HTMLInputElement&gt;</code></td>
+              </tr>
+              <tr>
+                <td>resize / scroll (window)</td>
+                <td>普通 <code>Event</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>15.4 Vue3 组件类型化</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">&lt;script setup lang="ts"&gt;
+import { ref, defineProps, defineEmits } from 'vue';
+
+// props
+interface Props { msg: string; size?: 'sm' | 'md' }
+const props = defineProps&lt;Props&gt;();
+
+// emit
+interface Emits { (e: 'submit', payload: { ok: boolean }): void; (e: 'cancel'): void }
+const emit = defineEmits&lt;Emits&gt;();
+
+// 模板 ref 类型
+const el = ref&lt;HTMLInputElement | null&gt;(null);
+function focusInput() { el.value?.focus() }
+&lt;/script&gt;
+</code></pre>
+        </div>
+
+        <h3>15.5 跨框架通用：抽取 store</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// Redux Toolkit 例子
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface UserState { name: string; age: number }
+const initial: UserState = { name: 'Tom', age: 18 };
+
+const slice = createSlice({
+  name: 'user',
+  initialState: initial,
+  reducers: {
+    setName(state, action: PayloadAction&lt;string&gt;) { state.name = action.payload; },
+    incAge(state) { state.age++ }
+  }
+});
+
+// Pinia 例子
+import { defineStore } from 'pinia';
+export const useCounter = defineStore('counter', {
+  state: () =&gt; ({ count: 0 as number }),
+  getters: { twice: (s) =&gt; s.count * 2 },
+  actions: {
+    inc(n: number) { this.count += n }
+  }
+});
+</code></pre>
+        </div>
+
+        <h3>15.6 实战案例：表单校验</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// 类型驱动的简易校验
+type Validator&lt;T&gt; = (v: T) =&gt; string | null;
+
+const required: Validator&lt;string&gt; = (v) =&gt; v ? null : '必填';
+const minLen = (n: number): Validator&lt;string&gt; =&gt;
+  (v) =&gt; v.length &gt;= n ? null : `至少${n}个字符`;
+const isEmail: Validator&lt;string&gt; = (v) =&gt;
+/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test(v) ? null : '邮箱格式错';
+
+// 在 React input 直接调用
+function EmailInput() {
+  const [v, setV] = useState('');
+  const err = [required, isEmail].map((fn) =&gt; fn(v)).find((x) =&gt; x !== null);
+  return &lt;&gt;{err}&lt;/&gt;;
+}
+</code></pre>
+        </div>
+
+        <h3>15.7 TypeScript 与框架组合技</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>框架</th>
+                <th>TS 亮点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>React</td>
+                <td>props/ref/event 类型推导</td>
+              </tr>
+              <tr>
+                <td>Vue 3</td>
+                <td>
+                  <code>defineProps</code> + <code>defineEmits</code> 自动签名
+                </td>
+              </tr>
+              <tr>
+                <td>SolidJS</td>
+                <td>JSX as 'intrinsic' 直通</td>
+              </tr>
+              <tr>
+                <td>Svelte 5</td>
+                <td>runes 全推断</td>
+              </tr>
+              <tr>
+                <td>Angular</td>
+                <td>全默认</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 三件易错事</div>
+          <div class="callout-body">
+            <p>
+              ① <code>React.memo</code> 包裹后默认 props 类型丢失，要用
+              <code>typeof Component</code>；<br />
+              ② <code>useState</code> 默认把 <code>null</code> 推断成
+              <code>never</code>：记得显式
+              <code>useState&lt;T | null&gt;(null)</code>；<br />
+              ③ Vue props 接口不导出也没问题，但<strong
+                >用 <code>defineProps&lt;Props&gt;</code> 不带 ref 解构</strong
+              >会变成非响应式。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>组件写接口</strong>，<strong>事件用 React.XXEvent</strong
+              >；<strong>Vue 配 defineProps/Emits</strong>；<br />
+              <strong>ref 显式标类型</strong>，<strong
+                >表单用 Validator&lt;T&gt; 串起来</strong
+              >。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 16 ===== -->
+      <section class="section" id="ch16">
+        <div class="section-badge">
+          <span class="num">16</span><span class="sec-tag">精通篇</span>
+        </div>
+        <h2><span class="num">16</span>工程化：ESLint/Vite/打包/单测</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 学完类型就该懂工程化</div>
+          <div class="callout-body">
+            <p>
+              TS
+              不是孤岛，团队协作还需要：<strong>ESLint</strong>（代码规范）、<strong>Vite/打包</strong>（构建）、<strong>Jest/Vitest</strong>（单元测试）、<strong>Prettier</strong>（格式）。
+            </p>
+          </div>
+        </div>
+
+        <h3>16.1 一键组合技</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-bash">npm create vite@latest my-app -- --template react-ts
+cd my-app
+npx mrm@2 lint-staged  # 自动加 lint-staged + husky
+npx eslint --init
+npx vitest
+</code></pre>
+        </div>
+
+        <h3>16.2 ESLint 关键规则（TS）</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>规则</th>
+                <th>作用</th>
+                <th>推荐档</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>@typescript-eslint/no-explicit-any</code></td>
+                <td>禁用 any</td>
+                <td>error</td>
+              </tr>
+              <tr>
+                <td><code>@typescript-eslint/no-unused-vars</code></td>
+                <td>未用变量</td>
+                <td>error</td>
+              </tr>
+              <tr>
+                <td><code>@typescript-eslint/consistent-type-imports</code></td>
+                <td>强制 import type</td>
+                <td>error</td>
+              </tr>
+              <tr>
+                <td><code>@typescript-eslint/no-non-null-assertion</code></td>
+                <td>禁用 !</td>
+                <td>warn</td>
+              </tr>
+              <tr>
+                <td><code>@typescript-eslint/no-floating-promises</code></td>
+                <td>必须 await/catch</td>
+                <td>error</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>@typescript-eslint/strict-boolean-expressions</code>
+                </td>
+                <td>禁止 truthy 判 bool</td>
+                <td>warn</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>@typescript-eslint/explicit-function-return-type</code>
+                </td>
+                <td>强制显式返回值</td>
+                <td>可选</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>16.3 tsconfig 进阶开关</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-json">{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,    // arr[0] 默认 undefined
+    "exactOptionalPropertyTypes": true,  // 可选 = 真 undefined
+    "noImplicitOverride": true,          // 覆写需 override
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "useUnknownInCatchVariables": true
+  }
+}
+</code></pre>
+        </div>
+
+        <h3>16.4 路径别名 vite.config 同步</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// vite.config.ts
+import { defineConfig } from 'vite';
+import path from 'node:path';
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components')
+    }
+  }
+});
+</code></pre>
+        </div>
+
+        <h3>16.5 单元测试：Vitest 写 TS</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// math.ts
+export function add(a: number, b: number) { return a + b }
+
+// math.test.ts
+import { describe, it, expect } from 'vitest';
+import { add } from './math';
+
+describe('add', () =&gt; {
+  it('adds', () =&gt; { expect(add(2, 3)).toBe(5) });
+  it('reject string', () =&gt; {
+    // @ts-expect-error testing runtime
+    expect(add('1', '2')).toThrow();
+  });
+});
+</code></pre>
+        </div>
+
+        <h3>16.6 发布到 npm 的 .d.ts</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>配置</th>
+                <th>含义</th>
+                <th>推荐</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>declaration</code></td>
+                <td>生成 .d.ts</td>
+                <td><code>true</code>（库）</td>
+              </tr>
+              <tr>
+                <td><code>declarationMap</code></td>
+                <td>类型 source map</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>outDir</code></td>
+                <td>输出目录</td>
+                <td><code>dist</code></td>
+              </tr>
+              <tr>
+                <td><code>composite</code></td>
+                <td>工程参考（monorepo）</td>
+                <td><code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>emitDeclarationOnly</code></td>
+                <td>仅声明</td>
+                <td>用 esbuild 编译项目时</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-title">💡 API Extractor 把 d.ts 收敛成一份</div>
+          <div class="callout-body">
+            <p>
+              大型库（VSCode/MobX）把 .d.ts 集中打包为单一入口文件，让 IDE
+              跳转快、装包小。
+            </p>
+          </div>
+        </div>
+
+        <h3>16.7 monorepo + 共享类型包</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-bash">packages/types  # 类型包
+packages/web    # 前端
+packages/api    # 后端
+</code></pre>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 三大坑</div>
+          <div class="callout-body">
+            <p>
+              ① <code>noUncheckedIndexedAccess</code> 开后
+              <code>arr[0]</code> 是
+              <code>T | undefined</code>，全栈代码工作量大，先小项目开启；<br />
+              ② Vite alias 与 tsconfig paths 必须<strong>同步</strong>，或装
+              <code>vite-tsconfig-paths</code> 自动同步；<br />
+              ③ 强制 <code>noPropertyAccessFromIndexSignature</code> 会让所有<a
+                href="https://example.com"
+                ><em>签名键</em></a
+              >访问出错（旧库不可控）谨慎。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>ESLint 把类型红线</strong>，<strong>Vite 把构建快</strong
+              >，<strong>Vitest 把类型测</strong>，<strong
+                >.d.ts 把接口分享</strong
+              >。<br />
+              <strong>严格档渐进开启</strong>，<strong>monorepo 共享包</strong
+              >。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 17 ===== -->
+      <section class="section" id="ch17">
+        <div class="section-badge">
+          <span class="num">17</span><span class="sec-tag">精通篇</span>
+        </div>
+        <h2><span class="num">17</span>TS 注解大全与设计模式</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 一张表全收 + 五种设计模式落 TS</div>
+          <div class="callout-body">
+            <p>
+              本章是<strong>速查手册</strong>：先把所有 TS
+              关键字/注解列一列，再展示如何把<strong>设计模式</strong>用 TS
+              类型优雅表达。
+            </p>
+          </div>
+        </div>
+
+        <h3>17.1 全关键字速查</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>分类</th>
+                <th>关键字</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>类型声明</td>
+                <td>
+                  <code>type, interface, class, extends, implements</code>
+                </td>
+              </tr>
+              <tr>
+                <td>修饰符</td>
+                <td>
+                  <code
+                    >public, private, protected, readonly, static, abstract,
+                    override</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>泛型</td>
+                <td>
+                  <code>T extends, T[K], keyof, infer, as const, out, in</code>
+                </td>
+              </tr>
+              <tr>
+                <td>联合/交叉</td>
+                <td><code>|, &amp;, !, is, satisfies</code></td>
+              </tr>
+              <tr>
+                <td>断言</td>
+                <td><code>as, !, @ts-expect-error, @ts-ignore</code></td>
+              </tr>
+              <tr>
+                <td>导入</td>
+                <td>
+                  <code
+                    >import, export, import type, export type, namespace</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>异步</td>
+                <td>
+                  <code
+                    >async, await, Promise&lt;T&gt;, ReturnType, Awaited</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>装饰器（实验）</td>
+                <td><code>@dec, @dec(param)</code></td>
+              </tr>
+              <tr>
+                <td>符号</td>
+                <td>
+                  <code
+                    >unique symbol, this, typeof, void, never, unknown,
+                    any</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>字符串模板</td>
+                <td>
+                  <code
+                    >${infer A}${infer B}, Uppercase, Lowercase, Capitalize,
+                    Uncapitalize</code
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>17.2 satisfies：精确而保留推断</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">// TS 4.9+ 的新关键字
+type Config = Record&lt;string, number | string&gt;;  // 太宽
+
+const cfg = {
+  host: '127.0.0.1',
+  port: 8080,
+  debug: true  // ❌ 多余字段
+} satisfies Record&lt;string, number | string&gt;;  // 报错
+
+// 同时 cfg.host 仍然推为 string（不必 unwrap）
+</code></pre>
+        </div>
+
+        <h3>17.3 const type parameter</h3>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">function each&lt;const T extends readonly string[]&gt;(xs: T) {
+  return xs[0];
+}
+each(['a', 'b']);    // T 推断为 readonly ['a', 'b']
+</code></pre>
+        </div>
+
+        <h3>17.4 五种设计模式：TS 类型化</h3>
+
+        <h4>① 单例</h4>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">class Logger {
+  private static instance?: Logger;
+  private constructor() {}
+  static getInstance(): Logger { return this.instance ?? (this.instance = new Logger()) }
+  log(msg: string) { console.log(msg) }
+}
+</code></pre>
+        </div>
+
+        <h4>② 工厂 + 判别联合</h4>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">interface Shape { area(): number }
+type ShapeFactory&lt;T extends string&gt; = {
+  [K in T]: () =&gt; Shape &amp; { kind: K };
+};
+function create&lt;T extends string&gt;(f: ShapeFactory&lt;T&gt;, k: T) {
+  return f[k]();
+}
+</code></pre>
+        </div>
+
+        <h4>③ 抽象工厂：泛型 + 约束</h4>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">interface Db {
+  query(sql: string): Promise&lt;any[]&gt;;
+  close(): Promise&lt;void&gt;;
+}
+type DbFactory&lt;T extends Db&gt; = () =&gt; Promise&lt;T&gt;;
+
+async function withDb&lt;T extends Db&gt;(f: DbFactory&lt;T&gt;, work: (d: T) =&gt; any) {
+  const d = await f(); await work(d); await d.close();
+}
+</code></pre>
+        </div>
+
+        <h4>④ 策略模式：用 Map 存策略</h4>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">type SortStrategy = (a: number, b: number) =&gt; number;
+const strategies = new Map&lt;string, SortStrategy&gt;();
+strategies.set('asc',  (a, b) =&gt; a - b);
+strategies.set('desc', (a, b) =&gt; b - a);
+
+function sort(name: string, arr: number[]) {
+  const s = strategies.get(name); if (!s) throw new Error('no strategy');
+  return arr.sort(s);
+}
+</code></pre>
+        </div>
+
+        <h4>⑤ 装饰器在 AOP</h4>
+        <div class="code-wrap">
+          <button class="copy-btn">一键复制</button>
+          <pre><code class="language-ts">function Role(role: 'admin' | 'user') {
+  return (_t: any, _n: string, desc: PropertyDescriptor) =&gt; {
+    const origin = desc.value;
+    desc.value = function (...args: any[]) {
+      const u = (window as any).user;
+      if (u.role !== role) throw new Error('Forbidden');
+      return origin.apply(this, args);
+    };
+  };
+}
+class AdminService {
+  @Role('admin') deleteUser(id: string) { /* ... */ }
+}
+</code></pre>
+        </div>
+
+        <h3>17.5 高级类型技巧 8 招</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>目的</th>
+                <th>招式</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>判别联合分支穷尽</td>
+                <td><code>assertNever(x as never)</code></td>
+              </tr>
+              <tr>
+                <td>闭包函数 last</td>
+                <td>
+                  <code>F extends (..._: any, l: infer L) =&gt; any</code>
+                </td>
+              </tr>
+              <tr>
+                <td>tuple to union</td>
+                <td><code>T[number]</code></td>
+              </tr>
+              <tr>
+                <td>字符串路径 keyof</td>
+                <td><code>RecursiveKeyOf&lt;T&gt;</code></td>
+              </tr>
+              <tr>
+                <td>对象 to entry tuple</td>
+                <td><code>{ [K in keyof T]: [K, T[K]] }[keyof T]</code></td>
+              </tr>
+              <tr>
+                <td>提取函数参数中某位置</td>
+                <td><code>Parameters&lt;F&gt;[N]</code></td>
+              </tr>
+              <tr>
+                <td>switch case 类型</td>
+                <td>判别联合 + assertNever</td>
+              </tr>
+              <tr>
+                <td>类型递归锁定</td>
+                <td>分两阶段：基线 + 增量</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 五雷区</div>
+          <div class="callout-body">
+            <p>
+              ① <code>as</code> 推测容易撒谎；<br />
+              ② 重度依赖 <code>as const</code> 变字面量；<br />
+              ③ 把判别联合字段遗忘；<br />
+              ④ <code>@ts-ignore</code> 替代错误处理；<br />
+              ⑤ 不用工具类型，硬敲一遍类型。
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>satisfies 验形不丢推断</strong>，<strong
+                >const 类型参数锁字面量</strong
+              >；<br />
+              <strong>模式靠 TS 类型信号</strong
+              >，<strong>工具类型优先</strong>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Chapter 18 ===== -->
+      <section class="section" id="ch18">
+        <div class="section-badge">
+          <span class="num">18</span><span class="sec-tag">精通篇</span>
+        </div>
+        <h2><span class="num">18</span>实战路线、书单与求职指南</h2>
+
+        <div class="callout info">
+          <div class="callout-title">📖 学完 TS 之后怎么走</div>
+          <div class="callout-body">
+            <p>学完 18 章，你应该能：</p>
+            <ul>
+              <li>阅读任何 TS 源码，识破"类型诡计"；</li>
+              <li>为大型项目设计<strong>类型友好的 API 层</strong>；</li>
+              <li>
+                在面试中口述<strong>条件类型、infer、模板字面量</strong>的工作原理。
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>18.1 四阶段学习路线</h3>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span
+            ><strong>基础（1 周）</strong>：基础类型 + 接口 + 泛型 + 类 +
+            模块；同步做一个小 demo（Todo）。
+          </div>
+          <div class="step">
+            <span class="step-num">2</span
+            ><strong>进阶（2 周）</strong>：类型守卫 + 高级类型 + 工具类型 +
+            装饰器；用 Vite + React 重做 Todo + 表单。
+          </div>
+          <div class="step">
+            <span class="step-num">3</span
+            ><strong>高级（3 周）</strong>：类型体操 + 模板字面量 + 框架集成 +
+            异步类型化；尝试迁移老 JS 项目到 TS。
+          </div>
+          <div class="step">
+            <span class="step-num">4</span><strong>精通（持续）</strong>：读懂
+            tsc 源码 / 写开源库 / 写类型工具 / 参与框架 issues。
+          </div>
+        </div>
+
+        <h3>18.2 推荐书单</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>书名</th>
+                <th>作者</th>
+                <th>阶段</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>《Programming TypeScript》</td>
+                <td>Boris Cherny</td>
+                <td>入门 → 进阶</td>
+              </tr>
+              <tr>
+                <td>《Effective TypeScript》</td>
+                <td>Dan Vanderkam</td>
+                <td>进阶 → 高级</td>
+              </tr>
+              <tr>
+                <td>《TypeScript 入门与实战》</td>
+                <td>赵辉</td>
+                <td>中文入门</td>
+              </tr>
+              <tr>
+                <td>《Advanced TypeScript Projects》</td>
+                <td>Peter Strøm</td>
+                <td>高级</td>
+              </tr>
+              <tr>
+                <td>tsc 源码导读 (handbook)</td>
+                <td>TS Team</td>
+                <td>精通</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>18.3 推荐文档 / 站点</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>资源</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>www.typescriptlang.org</td>
+                <td>官方手册</td>
+              </tr>
+              <tr>
+                <td>github.com/microsoft/TypeScript</td>
+                <td>源码 + issues</td>
+              </tr>
+              <tr>
+                <td>tsplay.dev</td>
+                <td>Playground + 测试类型</td>
+              </tr>
+              <tr>
+                <td>Type Challenges (GitHub)</td>
+                <td>题海训练</td>
+              </tr>
+              <tr>
+                <td>utility-types (Library)</td>
+                <td>额外工具类型</td>
+              </tr>
+              <tr>
+                <td>react.dev/learn/typescript</td>
+                <td>React + TS 入门</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>18.4 五个建议项目</h3>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span
+            ><strong>TS 版的 Todo</strong>：练基础类型 + generic + enum
+          </div>
+          <div class="step">
+            <span class="step-num">2</span
+            ><strong>请求封装 hook</strong>：练泛型函数 + Awaited
+          </div>
+          <div class="step">
+            <span class="step-num">3</span
+            ><strong>判别联合状态机</strong>：练类型守卫 + switch + never
+          </div>
+          <div class="step">
+            <span class="step-num">4</span
+            ><strong>Vue/React UI 组件库</strong>：练泛型组件 + 模板字面量 +
+            类型导出
+          </div>
+          <div class="step">
+            <span class="step-num">5</span><strong>类型工具库</strong>：实现 5
+            个工具类型（如 DeepPartial、SnakeCase）
+          </div>
+        </div>
+
+        <h3>18.5 高频面试 30 问</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>问题</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>TS 是什么？和 JS 关系？</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>any / unknown / never 区别？</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>interface vs type 选哪个？</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>泛型的作用？常见使用？</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Partial / Pick / Omit 实现？</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>keyof / typeof 用法？</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>infer 关键字做什么？</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>条件类型 + 分发？</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>模板字面量类型有什么用？</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>类型守卫的实现有几种？</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>声明合并是什么？type 没有为什么？</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>tsconfig 核心字段？</td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td>strict: true 包含哪些？</td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td>namespaces / modules 的现状？</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>如何把 JS 迁移到 TS？</td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td>声明文件 .d.ts 如何写？</td>
+              </tr>
+              <tr>
+                <td>17</td>
+                <td>React 中 useRef 怎么写？</td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>Vue 3 defineProps 如何类型化？</td>
+              </tr>
+              <tr>
+                <td>19</td>
+                <td>如何安全声明全局类型（declare global）？</td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>类型不匹配怎么 debug？</td>
+              </tr>
+              <tr>
+                <td>21</td>
+                <td>联合类型如何便利取值且类型安全？</td>
+              </tr>
+              <tr>
+                <td>22</td>
+                <td>协变 / 逆变？</td>
+              </tr>
+              <tr>
+                <td>23</td>
+                <td>装饰器的执行顺序？</td>
+              </tr>
+              <tr>
+                <td>24</td>
+                <td>为什么 <code>{}</code> 能匹配 <code>object</code>？</td>
+              </tr>
+              <tr>
+                <td>25</td>
+                <td>const assertions 与 as const？</td>
+              </tr>
+              <tr>
+                <td>26</td>
+                <td>类型谓词 is 与 assert？</td>
+              </tr>
+              <tr>
+                <td>27</td>
+                <td>symbol 怎么作为唯一类型？</td>
+              </tr>
+              <tr>
+                <td>28</td>
+                <td>为什么 <code>Object.keys</code> 返回 string[]？</td>
+              </tr>
+              <tr>
+                <td>29</td>
+                <td>编译时的 tree-shaking？</td>
+              </tr>
+              <tr>
+                <td>30</td>
+                <td>如何设计类库对外类型？</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>18.6 自检 30 题（会一半算优秀）</h3>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ 六大常见错误</div>
+          <div class="callout-body">
+            <p>
+              ① 全 <code>any</code> 写完 — 没起到 TS 作用；<br />
+              ② 全部 <code>interface</code>，连联合都没法表达；<br />
+              ③ 滥用 <code>as</code>，类型雪花飘；<br />
+              ④ 装 <code>@types/xxx</code> 后忘了用；<br />
+              ⑤ 完全不开 <code>strict</code>，还在用隐式 any；<br />
+              ⑥ 把 <code>enum</code> 当字符串用 vs 用 string 字面量。
+            </p>
+          </div>
+        </div>
+
+        <h3>18.7 4 个加分项</h3>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span
+            ><strong>阅读 TS handbook 的 Frequently Asked Questions</strong>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span
+            ><strong>刷一遍 Type Challenges 中 Easy 30 题</strong>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span
+            ><strong>手写一个工具库</strong>（Partial / Awaited / DeepReadonly）
+          </div>
+          <div class="step">
+            <span class="step-num">4</span><strong>贡献开源 ts 类型</strong>（PR
+            一个 .d.ts）
+          </div>
+        </div>
+
+        <h3>18.8 写在最后：写"为人写"的代码</h3>
+        <div class="callout tip">
+          <div class="callout-title">💡 类型即文档，代码即承诺</div>
+          <div class="callout-body">
+            <p>
+              类型不必追求"炫技"，而是追求"让下一个看代码的人少踩坑"。<br />
+              <strong>写出好的类型，比写出聪明的算法更显功力。</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="callout summary">
+          <div class="callout-title">🧠 全书速记口诀</div>
+          <div class="callout-body">
+            <p>
+              <strong>基础类型 → 接口类型 → 高级类型 → 体操类型 → 工程化</strong
+              >，这五层就是 TS 学习金字塔。<br />
+              <strong>写类型时多问一句"下一个看的人能不能秒懂"</strong
+              >，这才是真正的精通。
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>持续学习，永不止步。</p>
+    </footer>
+
+    <script>
+      // 复制代码按钮
+      const blocks = document.querySelectorAll('.code-wrap')
+      blocks.forEach((block) => {
+        const btn = block.querySelector('.copy-btn')
+        const code = block.querySelector('code, pre')
+        if (!btn || !code) return
+        btn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(code.innerText)
+            btn.classList.add('copied')
+            btn.textContent = '已复制'
+            setTimeout(() => {
+              btn.classList.remove('copied')
+              btn.textContent = '一键复制'
+            }, 1500)
+          } catch (e) {
+            btn.textContent = '复制失败'
+          }
+        })
+      })
+
+      // 移动端抽屉目录
+      const toggle = document.querySelector('.menu-toggle')
+      const sidebar = document.querySelector('.sidebar')
+      const overlay = document.querySelector('.overlay')
+      if (toggle && sidebar) {
+        toggle.addEventListener('click', () => {
+          sidebar.classList.toggle('open')
+          toggle.classList.toggle('open')
+          if (overlay) overlay.classList.toggle('open')
+        })
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('open')
+          toggle.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      }
+
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', () => {
+          sidebar.classList.remove('open')
+          toggle.classList.remove('open')
+          if (overlay) overlay.classList.remove('open')
+        })
+      })
+
+      // 滚动监听，高亮当前章节
+      const sections = document.querySelectorAll('section.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              tocLinks.forEach((link) => {
+                link.classList.toggle(
+                  'active',
+                  link.getAttribute('href') === '#' + id,
+                )
+              })
+            }
+          })
+        },
+        { rootMargin: '-20% 0px -70% 0px', threshold: 0 },
+      )
+      sections.forEach((s) => observer.observe(s))
+    </script>
+  </body>
+</html>

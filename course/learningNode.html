@@ -1,0 +1,2072 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/jpeg" href="../images/avatar.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redis 实战指南 · Zinx的技术手记</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0e1a2d;
+        --panel-hover: #132238;
+        --code-green: #62f6a8;
+        --link-blue: #7ab7ff;
+        --text: #e6edf7;
+        --text-secondary: #8ea0b8;
+        --border: #1d2b44;
+        --accent: #42b883;
+        --accent-soft: rgba(66, 184, 131, 0.1);
+        --warn: #ffd166;
+        --danger: #ff6b6b;
+        --info: #7ab7ff;
+        --sidebar-w: 280px;
+        --radius: 8px;
+        --font-mono:
+          'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, 'Courier New',
+          monospace;
+        --font-sans:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2a3f5f;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        z-index: 100;
+        padding: 24px 0;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 0 24px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-logo h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sidebar-logo .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        border-radius: 6px;
+        font-size: 1.1rem;
+      }
+      .sidebar-logo p {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .home-link {
+        display: block;
+        margin: 0 12px 8px;
+        padding: 8px 12px;
+        background: var(--accent-soft);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.15s;
+      }
+      .home-link:hover {
+        background: var(--panel-hover);
+        border-color: var(--accent);
+      }
+      .toc {
+        list-style: none;
+        padding: 0 12px;
+      }
+      .toc-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-secondary);
+        padding: 16px 12px 6px;
+      }
+      .toc li a {
+        display: block;
+        padding: 6px 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+        border-left: 2px solid transparent;
+      }
+      .toc li a:hover {
+        color: var(--text);
+        background: var(--panel-hover);
+      }
+      .toc li a.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left-color: var(--accent);
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        padding: 40px 48px 80px;
+        max-width: 960px;
+      }
+
+      .hero {
+        margin-bottom: 48px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e6edf7 0%, #42b883 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 640px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .hero-meta span {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-meta .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      .section {
+        margin-bottom: 56px;
+        scroll-margin-top: 24px;
+      }
+      .section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section h2 .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+      .section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text);
+      }
+      .section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--link-blue);
+      }
+      .section p {
+        margin-bottom: 12px;
+      }
+      .section ul,
+      .section ol {
+        margin: 8px 0 16px 24px;
+      }
+      .section li {
+        margin-bottom: 6px;
+      }
+      .section strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .section a {
+        color: var(--link-blue);
+        text-decoration: none;
+      }
+      .section a:hover {
+        text-decoration: underline;
+      }
+
+      pre {
+        background: #060e1a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        overflow-x: auto;
+        margin: 12px 0 20px;
+        position: relative;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      pre code {
+        color: #c8d6e5;
+      }
+      :not(pre) > code {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .cmd {
+        color: var(--code-green);
+      }
+      .flag {
+        color: var(--link-blue);
+      }
+      .str {
+        color: #ffd166;
+      }
+      .comment {
+        color: #5a6f8a;
+        font-style: italic;
+      }
+      .var {
+        color: #ff9e64;
+      }
+      .kw {
+        color: #c792ea;
+        font-weight: 600;
+      }
+      .prompt {
+        color: var(--text-secondary);
+        user-select: none;
+      }
+
+      .code-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--panel-hover);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s;
+        opacity: 0;
+      }
+      .code-wrap:hover .copy-btn {
+        opacity: 1;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        background: var(--panel);
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      tr:hover td {
+        background: var(--accent-soft);
+      }
+      td code {
+        font-size: 0.82rem;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin: 16px 0;
+        border-left: 4px solid;
+        font-size: 0.92rem;
+      }
+      .callout-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .callout.tip {
+        background: rgba(98, 246, 168, 0.06);
+        border-color: var(--code-green);
+      }
+      .callout.tip .callout-title {
+        color: var(--code-green);
+      }
+      .callout.warn {
+        background: rgba(255, 209, 102, 0.06);
+        border-color: var(--warn);
+      }
+      .callout.warn .callout-title {
+        color: var(--warn);
+      }
+      .callout.danger {
+        background: rgba(255, 107, 107, 0.06);
+        border-color: var(--danger);
+      }
+      .callout.danger .callout-title {
+        color: var(--danger);
+      }
+      .callout.info {
+        background: rgba(122, 183, 255, 0.06);
+        border-color: var(--info);
+      }
+      .callout.info .callout-title {
+        color: var(--info);
+      }
+
+      .steps {
+        list-style: none;
+        margin: 16px 0 24px;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps li {
+        counter-increment: step;
+        padding: 10px 0 10px 44px;
+        position: relative;
+        border-left: 2px solid var(--border);
+        margin-left: 16px;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--panel);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: var(--font-mono);
+      }
+      .steps li:last-child {
+        border-left-color: transparent;
+      }
+
+      .diagram {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 16px 0 24px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram pre {
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 200;
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+      }
+
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .overlay.open {
+          display: block;
+        }
+        .main {
+          margin-left: 0;
+          padding: 72px 20px 60px;
+        }
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+      @media print {
+        .sidebar,
+        .menu-toggle,
+        .copy-btn {
+          display: none !important;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        body {
+          background: #fff;
+          color: #1a1a1a;
+        }
+        pre {
+          background: #f5f5f5;
+          border-color: #ddd;
+        }
+        pre code {
+          color: #1a1a1a;
+        }
+        .callout,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+    <div class="overlay" id="overlay"></div>
+
+
+      <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2><span class="logo-icon">🚀</span> Node.js 后端实战</h2>
+        <p>零基础到上手项目</p>
+      </div>
+      <a class="home-link" href="../indexCourse.html">← 返回教程目录</a>
+      <ul class="toc" id="toc">
+        <li class="toc-section-title">认识篇</li>
+        <li><a href="#ch01">1. Node.js 是什么 & 为什么选它</a></li>
+        <li><a href="#ch02">2. 与其他后端技术对比</a></li>
+        <li><a href="#ch03">3. 学习路径 & 技术栈选型</a></li>
+        <li class="toc-section-title">基础篇</li>
+        <li><a href="#ch04">4. 环境搭建（nvm + pnpm）</a></li>
+        <li><a href="#ch05">5. 模块系统 CommonJS vs ESM</a></li>
+        <li><a href="#ch06">6. 异步编程三板斧</a></li>
+        <li><a href="#ch07">7. 事件循环 & Buffer/Stream</a></li>
+        <li class="toc-section-title">实战篇</li>
+        <li><a href="#ch08">8. Express 5 实战：RESTful API</a></li>
+        <li><a href="#ch09">9. 数据库集成 & ORM</a></li>
+        <li><a href="#ch10">10. 认证安全：JWT + 哈希 + 防护</a></li>
+        <li class="toc-section-title">进阶篇</li>
+        <li><a href="#ch11">11. 工程化：日志 / 测试 / 部署 / 性能</a></li>
+        <li><a href="#ch12">12. 报错速查 & 验证清单</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header class="hero">
+        <span class="hero-badge">🚀 后端实战 · 零基础到上手项目</span>
+        <h1>Node.js 后端开发实战指南</h1>
+        <p>
+          一份 Node.js 后端从 0 到 1 的完整实战手册：核心概念、环境搭建、异步编程、
+          Express 5 实战 RESTful API、数据库集成、JWT 认证、安全防护，再到日志测试部署与性能调优。
+          一步一步跟着做，就能用 Node.js 写出一个能上线的后端服务。
+        </p>
+        <div class="hero-meta">
+          <span><span class="dot"></span>12 个章节</span>
+          <span><span class="dot"></span>40+ 常见问题</span>
+          <span><span class="dot"></span>Express 5 + TypeScript</span>
+          <span><span class="dot"></span>覆盖 MySQL / Redis / JWT</span>
+        </div>
+      </header>
+<section class="section" id="ch01">
+        <h2>1. Node.js 是什么 & 为什么选它</h2>
+        <p>
+          Node.js 不是编程语言，而是<strong>让 JavaScript 运行在服务端的运行时环境</strong>。它基于 Chrome V8 引擎，让前端工程师也能写后端，
+          同时又天然适合做<strong>高并发 I/O 密集型</strong>服务（API、网关、爬虫、实时通信等）。
+        </p>
+        <div class="callout tip">
+          <div class="callout-title">🟢 一句话理解 Node.js</div>
+          <p>把 Node.js 想象成 <strong>「浏览器之外的 JS 运行环境」</strong>：你在前端能用的 JS 语法、异步 API 基本都能用，只是宿主从浏览器换成了操作系统。</p>
+        </div>
+        <h3>1.1 Node.js 的四大核心特性</h3>
+        <div class="feature-grid">
+          <div class="feature">
+            <span class="feature-icon">⚡</span>
+            <div>
+              <strong>非阻塞异步 I/O</strong>
+              <p>单线程 + 事件循环，处理并发请求不靠堆线程，内存占用极低。</p>
+            </div>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">📦</span>
+            <div>
+              <strong>npm 生态最丰富</strong>
+              <p>全球最大包管理仓库，300 万+ 现成轮子，几乎任何功能都有人写过。</p>
+            </div>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🔁</span>
+            <div>
+              <strong>前后端语言统一</strong>
+              <p>前端 JS 直接写后端，团队复用技能栈，沟通成本最低。</p>
+            </div>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🚀</span>
+            <div>
+              <strong>启动极快</strong>
+              <p>V8 引擎 + JIT 编译，毫秒级启动，适合 Serverless 与微服务冷启动场景。</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>1.2 Node.js 最适合的场景</h3>
+        <table>
+          <thead>
+            <tr><th>场景</th><th>为什么适合</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>RESTful API / BFF 层</td><td>非阻塞 I/O 处理高并发请求，资源占用低</td></tr>
+            <tr><td>实时应用（WebSocket）</td><td>事件驱动天然适配长连接</td></tr>
+            <tr><td>爬虫 / 批量网络请求</td><td>异步并发能力强，写代理最顺手</td></tr>
+            <tr><td>CLI 工具 / 脚本</td><td>语法简单、跨平台、生态成熟</td></tr>
+            <tr><td>网关 / 反向代理</td><td>可作为 Nginx 之外的轻量网关层</td></tr>
+            <tr><td>Serverless 函数</td><td>冷启动 < 100ms，比 JVM 系语言快 10 倍</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ Node.js 不适合的场景</div>
+          <p>Node.js 是<strong>单线程</strong>，CPU 密集型任务会被卡死。需要跑大量计算（图像处理、AI 推理、视频转码、密码哈希大量计算）时，应交给其他语言/线程（Worker Threads / 子进程）。</p>
+        </div>
+      </section>
+
+      <section class="section" id="ch02">
+        <h2>2. 与其他后端技术对比</h2>
+        <p>Node.js 不是「最好」的语言，而是<strong>「最适合某种场景」</strong>的工具。下面这张表把主流后端技术摆在一起对比，帮你快速定位该不该选。</p>
+        <table>
+          <thead>
+            <tr><th>维度</th><th>Node.js</th><th>Java</th><th>Python</th><th>Go</th><th>PHP</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>类型</td><td>JS 运行时</td><td>JVM 语言</td><td>解释型</td><td>编译型</td><td>解释型</td></tr>
+            <tr><td>并发模型</td><td>单线程事件循环</td><td>线程池</td><td>多线程 / 异步</td><td>goroutine</td><td>进程 / FPM</td></tr>
+            <tr><td>性能（I/O）</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+            <tr><td>性能（CPU）</td><td>⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐</td></tr>
+            <tr><td>学习曲线</td><td>前端友好</td><td>较陡</td><td>最平缓</td><td>中等</td><td>平缓</td></tr>
+            <tr><td>包管理</td><td>npm（最大）</td><td>Maven / Gradle</td><td>pip</td><td>go mod</td><td>Composer</td></tr>
+            <tr><td>部署复杂度</td><td>低</td><td>高（JVM）</td><td>中</td><td>低（单文件）</td><td>低</td></tr>
+            <tr><td>主要生态</td><td>Web 全栈、爬虫</td><td>企业级、金融</td><td>AI、数据科学</td><td>云原生、基础设施</td><td>Web 传统</td></tr>
+            <tr><td>典型应用</td><td>API 网关、实时通信</td><td>大型业务系统</td><td>ML 脚本、Web</td><td>Docker、K8s</td><td>CMS、博客</td></tr>
+          </tbody>
+        </table>
+        <div class="callout tip">
+          <div class="callout-title">🟢 选型口诀</div>
+          <p><strong>短平快 + I/O 多 → Node.js；CPU 重 + 稳定 → Java；ML/科学计算 → Python；云原生 + 极致性能 → Go；老项目维护 → PHP</strong>。没有银弹，看场景选。</p>
+        </div>
+      </section>
+
+      <section class="section" id="ch03">
+        <h2>3. 学习路径 & 技术栈选型</h2>
+        <p>Node.js 生态比 Java 散得多，<strong>不预先选型容易走弯路</strong>。本章给出一份 2026 年主流的「事实标准」技术栈。</p>
+        <h3>3.1 推荐学习路径</h3>
+        <ol class="steps">
+          <li><strong>基础必学</strong>：JS 语法 → Node.js 内置模块（fs / path / http）→ npm 包管理。</li>
+          <li><strong>Web 框架</strong>：Express 入门 → Koa 进阶 → NestJS 工程化（大型项目）。</li>
+          <li><strong>数据持久化</strong>：MySQL（关系型主流）→ Redis（缓存）→ MongoDB（文档型）。</li>
+          <li><strong>工程化</strong>：TypeScript → ESLint/Prettier → 测试（Vitest）→ Docker 部署。</li>
+          <li><strong>进阶</strong>：性能优化、集群、监控、消息队列（RabbitMQ/Kafka）、微服务。</li>
+        </ol>
+        <h3>3.2 框架选型速查表</h3>
+        <table>
+          <thead>
+            <tr><th>框架</th><th>定位</th><th>适合</th><th>学习曲线</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Express 5</strong></td><td>极简灵活</td><td>中小型 API、个人项目</td><td>⭐ 最平缓</td></tr>
+            <tr><td><strong>Koa 2</strong></td><td>极简 + 洋葱模型</td><td>需要精细控制中间件顺序</td><td>⭐⭐</td></tr>
+            <tr><td><strong>Fastify</strong></td><td>性能优先</td><td>高并发、对性能敏感</td><td>⭐⭐</td></tr>
+            <tr><td><strong>NestJS</strong></td><td>Angular 风格企业级</td><td>大型团队、长期维护项目</td><td>⭐⭐⭐⭐</td></tr>
+            <tr><td><strong>Hono</strong></td><td>超轻量 + 跨运行时</td><td>Edge / Serverless</td><td>⭐⭐</td></tr>
+            <tr><td><strong>Egg.js</strong></td><td>阿里出品，企业级约定</td><td>中后台系统</td><td>⭐⭐⭐</td></tr>
+          </tbody>
+        </table>
+        <h3>3.3 本指南采用的技术栈</h3>
+        <div class="callout tip">
+          <div class="callout-title">🟢 本指南默认栈</div>
+          <ul>
+            <li>运行时：<strong>Node.js 20 LTS</strong>（2026 年推荐主线）</li>
+            <li>包管理：<strong>pnpm</strong>（速度快、磁盘省、依赖严格）</li>
+            <li>框架：<strong>Express 5</strong>（最易学，覆盖 80% 场景）</li>
+            <li>数据库：<strong>MySQL 8 + Prisma 5</strong>（TS 友好，迁移方便）</li>
+            <li>缓存：<strong>Redis 7</strong>（详见《Redis 实战指南》）</li>
+            <li>认证：<strong>JWT + bcrypt</strong>（无状态标准方案）</li>
+            <li>部署：<strong>PM2 + Docker + Nginx</strong></li>
+          </ul>
+        </div>
+      </section><section class="section" id="ch04">
+        <h2>4. 环境搭建（nvm + pnpm）</h2>
+        <p>装 Node.js 不要去官网下安装包，<strong>用 nvm 管理多版本</strong>。后续切换 LTS / 测试版本、项目锁版本都靠它。</p>
+        <h3>4.1 安装 nvm（Node Version Manager）</h3>
+        <p>macOS / Linux 用官方安装脚本：</p>
+        <pre><code># 一行命令装好 nvm（来自 nvm-sh/nvm 官方仓库）
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+
+# 重新打开终端，验证
+nvm --version  # 应输出 0.40.1 或更新版本</code></pre>
+        <p>Windows 用 nvm-windows：</p>
+        <ol class="steps">
+          <li>去 <strong>github.com/coreybutler/nvm-windows/releases</strong> 下载 <code>nvm-setup.exe</code>。</li>
+          <li>双击安装（默认路径即可），<strong>安装前先卸载已存在的 Node.js</strong>。</li>
+          <li>装完新开一个 PowerShell，运行 <code>nvm version</code> 验证。</li>
+        </ol>
+        <h3>4.2 安装 Node.js LTS</h3>
+        <pre><code># 查看当前 LTS 版本（2026 年主线：Node 20 LTS / 22 LTS）
+nvm ls-remote --lts
+
+# 安装最新 LTS（推荐 Node 20，更稳）
+nvm install 20
+nvm install 22   # 想用更新的特性也可以
+
+# 设置默认版本
+nvm alias default 20
+
+# 验证
+node -v   # v20.x.x
+npm -v    # 10.x.x</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 为什么用 LTS</div>
+          <p>LTS（Long Term Support）是官方长期维护版本，生产环境<strong>永远选 LTS</strong>。Current 版本尝鲜用，<strong>别上生产</strong>，半年就停止支持。</p>
+        </div>
+        <h3>4.3 项目级 Node 版本锁定</h3>
+        <p>在项目根目录创建 <code>.nvmrc</code> 文件，写入版本号：</p>
+        <pre><code># .nvmrc
+20</code></pre>
+        <p>团队成员进入项目后，一行命令就能切换到对应版本：</p>
+        <pre><code>nvm use    # 自动读取 .nvmrc 并切换
+nvm install # 如果本机没装，自动装上</code></pre>
+        <h3>4.4 装包管理器：pnpm</h3>
+        <p>npm / yarn / pnpm 三大主流包管理器的核心对比：</p>
+        <table>
+          <thead>
+            <tr><th>特性</th><th>npm</th><th>yarn</th><th>pnpm</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>速度</td><td>中</td><td>快</td><td><strong>最快</strong></td></tr>
+            <tr><td>磁盘占用</td><td>大（每个项目独立）</td><td>大</td><td><strong>全局共享 store</strong></td></tr>
+            <tr><td>幽灵依赖</td><td>允许（不严格）</td><td>允许</td><td><strong>严格隔离</strong></td></tr>
+            <tr><td>Monorepo</td><td>workspaces</td><td>workspaces</td><td><strong>原生支持最好</strong></td></tr>
+            <tr><td>锁文件</td><td>package-lock.json</td><td>yarn.lock</td><td>pnpm-lock.yaml</td></tr>
+            <tr><th>本指南推荐</th><td>—</td><td>—</td><td><strong>✅ 默认使用</strong></td></tr>
+          </tbody>
+        </table>
+        <pre><code># 装 pnpm
+npm install -g pnpm
+
+# 验证
+pnpm -v   # 应输出 9.x 或更新
+
+# 换源（中国大陆提速）
+pnpm config set registry https://registry.npmmirror.com</code></pre>
+        <h3>4.5 第一个 Node 程序</h3>
+        <pre><code># 创建项目目录
+mkdir hello-node &amp;&amp; cd hello-node
+
+# 初始化 package.json（-y 跳过提问）
+pnpm init -y
+
+# 装一个常用包
+pnpm add dayjs
+
+# 创建入口文件
+cat &gt; index.js &lt;&lt; 'EOF'
+const dayjs = require('dayjs')
+
+console.log('当前时间：', dayjs().format('YYYY-MM-DD HH:mm:ss'))
+console.log('Node 版本：', process.version)
+console.log('运行环境：', process.platform, process.arch)
+EOF
+
+# 运行
+node index.js</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 三个核心命令</div>
+          <p>记住这三个命令能跑遍 80% 场景：<code>pnpm init</code>（初始化项目）、<code>pnpm add 包名</code>（装运行时依赖）、<code>pnpm add -D 包名</code>（装开发依赖）。</p>
+        </div>
+      </section>
+
+      <section class="section" id="ch05">
+        <h2>5. 模块系统 CommonJS vs ESM</h2>
+        <p>Node.js 有<strong>两套</strong>模块系统，新老项目混用很常见。<strong>2026 年新项目应默认使用 ESM</strong>。</p>
+        <h3>5.1 两套模块系统对比</h3>
+        <table>
+          <thead>
+            <tr><th>特性</th><th>CommonJS（CJS）</th><th>ES Modules（ESM）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>语法</td><td><code>require()</code> / <code>module.exports</code></td><td><code>import</code> / <code>export</code></td></tr>
+            <tr><td>加载方式</td><td>同步（运行时）</td><td>异步（编译时）</td></tr>
+            <tr><td>文件后缀</td><td><code>.js</code> 默认</td><td><code>.mjs</code> 或 <code>"type": "module"</code></td></tr>
+            <tr><td>浏览器兼容</td><td>需打包</td><td>原生支持</td></tr>
+            <tr><td>Tree Shaking</td><td>弱</td><td>强</td></tr>
+            <tr><td>典型场景</td><td>老项目、Node 内置模块</td><td>新项目、TypeScript</td></tr>
+          </tbody>
+        </table>
+        <h3>5.2 CommonJS 用法（老项目主流）</h3>
+        <pre><code>// utils.js —— 导出
+function add(a, b) {
+  return a + b
+}
+module.exports = { add }
+
+// main.js —— 导入
+const { add } = require('./utils.js')
+console.log(add(1, 2))  // 3</code></pre>
+        <h3>5.3 ESM 用法（2026 新项目推荐）</h3>
+        <p>在 <code>package.json</code> 加 <code>"type": "module"</code>：</p>
+        <pre><code>{
+  "name": "my-app",
+  "version": "1.0.0",
+  "type": "module"
+}</code></pre>
+        <pre><code>// utils.js —— 导出
+export function add(a, b) {
+  return a + b
+}
+
+// main.js —— 导入
+import { add } from './utils.js'
+console.log(add(1, 2))  // 3
+
+// 默认导出
+// utils.js
+export default function greet(name) {
+  return `Hello, ${name}`
+}
+
+// main.js
+import greet from './utils.js'</code></pre>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ CommonJS 与 ESM 混用的三大坑</div>
+          <ol>
+            <li><strong>不能 <code>require()</code> ESM</strong>：CommonJS 文件里 <code>require()</code> 一个 ESM 模块会失败，必须用 <code>import()</code> 动态导入。</li>
+            <li><strong><code>__dirname</code> 在 ESM 不存在</strong>：要用 <code>import.meta.url</code> 配合 <code>fileURLToPath</code> 模拟。</li>
+            <li><strong>JSON 导入不同</strong>：CJS <code>require('./data.json')</code>，ESM 必须 <code>import data from './data.json' with { type: 'json' }</code>（Node 20+）。</li>
+          </ol>
+        </div>
+        <h3>5.4 ESM 中获取 __dirname 兼容写法</h3>
+        <pre><code>import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+console.log(__dirname)</code></pre>
+        <h3>5.5 命名导入 vs 默认导入的选择</h3>
+        <div class="callout tip">
+          <div class="callout-title">🟢 命名导入优于默认导入</div>
+          <p>命名导入（<code>import { add }</code>）在重构时<strong>编辑器能自动同步改名</strong>，默认导入（<code>import utils from</code>）很容易出错。第三方库除外（默认导出是它们的约定）。</p>
+        </div>
+      </section>
+
+      <section class="section" id="ch06">
+        <h2>6. 异步编程三板斧</h2>
+        <p>Node.js 的灵魂是<strong>异步</strong>。JavaScript 异步写法经历了三代：<strong>回调 → Promise → async/await</strong>。<strong>新代码统一用 async/await</strong>。</p>
+        <h3>6.1 三种写法对比</h3>
+        <pre><code>// 假设有一个异步读取文件的函数 readFile()
+// 老式：回调地狱（不要这么写）
+fs.readFile('a.txt', (err, dataA) =&gt; {
+  if (err) throw err
+  fs.readFile('b.txt', (err, dataB) =&gt; {
+    if (err) throw err
+    console.log(dataA + dataB)
+  })
+})
+
+// Promise 写法
+function readFileAsync(path) {
+  return new Promise((resolve, reject) =&gt; {
+    fs.readFile(path, (err, data) =&gt; {
+      err ? reject(err) : resolve(data)
+    })
+  })
+}
+
+readFileAsync('a.txt')
+  .then(dataA =&gt; readFileAsync('b.txt').then(dataB =&gt; dataA + dataB))
+  .then(result =&gt; console.log(result))
+  .catch(err =&gt; console.error(err))
+
+// ✅ async/await 写法（推荐）
+async function main() {
+  try {
+    const dataA = await readFileAsync('a.txt')
+    const dataB = await readFileAsync('b.txt')
+    console.log(dataA + dataB)
+  } catch (err) {
+    console.error(err)
+  }
+}
+main()</code></pre>
+        <h3>6.2 并发控制：Promise.all / Promise.allSettled</h3>
+        <pre><code>// 多个请求并发，谁先失败谁短路 → 用 Promise.all
+const [users, posts, comments] = await Promise.all([
+  fetch('/api/users').then(r =&gt; r.json()),
+  fetch('/api/posts').then(r =&gt; r.json()),
+  fetch('/api/comments').then(r =&gt; r.json())
+])
+
+// 多个请求并发，但&lt;strong&gt;所有请求都完成（不管成功失败）&lt;/strong&gt; → 用 Promise.allSettled
+const results = await Promise.allSettled([
+  fetch('/api/a'),
+  fetch('/api/b'),
+  fetch('/api/c')
+])
+results.forEach(r =&gt; {
+  if (r.status === 'fulfilled') console.log('成功：', r.value)
+  else console.log('失败：', r.reason)
+})</code></pre>
+        <table>
+          <thead>
+            <tr><th>场景</th><th>推荐 API</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>全部成功才算成功</td><td><code>Promise.all</code></td></tr>
+            <tr><td>任意一个成功即可</td><td><code>Promise.any</code></td></tr>
+            <tr><td>全部完成（不管结果）</td><td><code>Promise.allSettled</code></td></tr>
+            <tr><td>只要第一个完成</td><td><code>Promise.race</code></td></tr>
+          </tbody>
+        </table>
+        <h3>6.3 错误处理最佳实践</h3>
+        <div class="callout danger">
+          <div class="callout-title">🔴 Promise 异常吞掉的坑</div>
+          <p><strong>没被 await / 没被 catch 的 Promise 异常会变成 UnhandledPromiseRejection</strong>，Node 18+ 默认会让进程崩溃。规则：</p>
+          <ul>
+            <li><strong>永远 catch</strong>：每个 <code>await</code> 都要在 try/catch 里</li>
+            <li><strong>顶层兜底</strong>：在进程入口加 <code>process.on('unhandledRejection')</code> 兜底</li>
+          </ul>
+        </div>
+        <pre><code>// 入口兜底（main.js 顶部）
+process.on('unhandledRejection', (reason, promise) =&gt; {
+  console.error('未处理的 Promise 拒绝：', reason)
+  // 记录日志、告警、退出等
+})
+
+process.on('uncaughtException', (err) =&gt; {
+  console.error('未捕获的异常：', err)
+  process.exit(1)  // 严重错误，直接退出让 PM2 重启
+})</code></pre>
+        <h3>6.4 顶层 await</h3>
+        <p>Node 14+ 支持<strong>顶层 await</strong>（在 ESM 模块顶层直接 await），不再需要包 async IIFE：</p>
+        <pre><code>// ESM 模块顶层直接 await（Node 14+）
+const config = await fetch('/api/config.json').then(r =&gt; r.json())
+const db = await connectDB(config.dbUrl)
+
+console.log('配置加载完成，可以启动服务')</code></pre>
+      </section>
+
+      <section class="section" id="ch07">
+        <h2>7. 事件循环 & Buffer/Stream</h2>
+        <p>理解事件循环是 Node.js 进阶的<strong>分水岭</strong>。面试常考、线上 bug 排查必备。</p>
+        <h3>7.1 事件循环六个阶段</h3>
+        <p>Node.js 事件循环按顺序循环执行这六个阶段，每个阶段都有自己的任务队列：</p>
+        <pre><code>   ┌───────────────────────────┐
+┌─&gt;│       timers              │ ← setTimeout / setInterval 回调
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │  pending callbacks        │ ← 系统回调（如 TCP 错误）
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │   idle, prepare           │ ← Node 内部使用
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │       poll                │ ← I/O 回调（最重要的阶段）
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │       check               │ ← setImmediate 回调
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+└──┤    close callbacks        │ ← socket.on('close') 等
+   └───────────────────────────┘</code></pre>
+        <h3>7.2 微任务 vs 宏任务</h3>
+        <div class="callout tip">
+          <div class="callout-title">🟢 关键认知</div>
+          <p>每执行完一个<strong>宏任务</strong>，就<strong>清空所有微任务队列</strong>再进入下一个阶段。<strong>微任务永远优先于宏任务</strong>。</p>
+        </div>
+        <table>
+          <thead>
+            <tr><th>类型</th><th>例子</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>微任务（microtask）</strong></td><td><code>Promise.then</code> / <code>queueMicrotask</code> / <code>process.nextTick</code></td></tr>
+            <tr><td><strong>宏任务（macrotask）</strong></td><td><code>setTimeout</code> / <code>setImmediate</code> / <code>I/O</code> / <code>setInterval</code></td></tr>
+          </tbody>
+        </table>
+        <h3>7.3 经典面试题：以下代码的输出顺序是？</h3>
+        <pre><code>console.log('1')
+
+setTimeout(() =&gt; console.log('2'), 0)
+
+Promise.resolve().then(() =&gt; console.log('3'))
+
+process.nextTick(() =&gt; console.log('4'))
+
+setImmediate(() =&gt; console.log('5'))
+
+console.log('6')
+
+// 答案：1, 6, 4, 3, 2, 5
+// 解析：
+// 同步：1 → 6
+// nextTick 队列：4（nextTick 优先级最高，在微任务之前）
+// 微任务队列：3
+// timers 阶段：2
+// check 阶段：5</code></pre>
+        <h3>7.4 Buffer：处理二进制数据</h3>
+        <p>Buffer 是 Node.js 处理二进制数据的「瑞士军刀」，文件 I/O、网络传输、图片处理都靠它**。</p>
+        <pre><code>// 创建 Buffer
+const buf1 = Buffer.from('你好')        // 字符串转 Buffer
+const buf2 = Buffer.alloc(10)         // 创建 10 字节的零填充 Buffer
+const buf3 = Buffer.from([0x68, 0x69]) // 字节数组转 Buffer
+
+// Buffer 转字符串
+console.log(buf1.toString('utf8'))    // '你好'
+console.log(buf1.toString('hex'))      // 'e4bda0e5a5bd'
+
+// 常用操作
+const a = Buffer.from('Hello')
+const b = Buffer.from(' World')
+const c = Buffer.concat([a, b])        // 拼接 Buffer
+console.log(c.toString())              // 'Hello World'
+
+// 文件读取默认返回 Buffer
+import { readFile } from 'node:fs/promises'
+const data = await readFile('image.png')
+console.log(data.length)               // 图片字节数</code></pre>
+        <h3>7.5 Stream：处理大文件的唯一方式</h3>
+        <p>读 1GB 文件用 <code>readFile</code> 会爆；用 Stream 流式读取就不会。<strong>所有大文件场景必须用 Stream</strong>。</p>
+        <pre><code>import { createReadStream, createWriteStream } from 'node:fs'
+
+// 流式复制大文件
+const reader = createReadStream('big-input.zip')
+const writer = createWriteStream('big-output.zip')
+
+// 管道：自动处理背压（backpressure）
+reader.pipe(writer)
+
+// 进阶：HTTP 响应也用 Stream，下载大文件不卡内存
+import { createServer } from 'node:http'
+import { stat } from 'node:fs/promises'
+
+createServer(async (req, res) =&gt; {
+  const filePath = './big-video.mp4'
+  const stats = await stat(filePath)
+  res.setHeader('Content-Length', stats.size)
+  createReadStream(filePath).pipe(res)   // 流式响应
+}).listen(3000)</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 Stream 四种类型速记</div>
+          <ul>
+            <li><strong>Readable</strong>：可读流（读文件、HTTP 请求）</li>
+            <li><strong>Writable</strong>：可写流（写文件、HTTP 响应）</li>
+            <li><strong>Duplex</strong>：双工流（TCP socket）</li>
+            <li><strong>Transform</strong>：转换流（压缩、加密，<code>zlib.createGzip()</code>）</li>
+          </ul>
+        </div>
+      </section><section class="section" id="ch08">
+        <h2>8. Express 5 实战：RESTful API</h2>
+        <p>Express 是 Node.js 生态<strong>使用最广</strong>的 Web 框架，2025 年发布了 <strong>Express 5 正式版</strong>，本指南按 5.x 写。</p>
+        <h3>8.1 初始化项目</h3>
+        <pre><code>mkdir my-api &amp;&amp; cd my-api
+pnpm init
+
+# 装 Express 5（注意是 express@5）
+pnpm add express@5
+
+# 装常用中间件
+pnpm add cors helmet morgan dotenv
+
+# 装 TypeScript 开发依赖（本指南后半部分默认用 TS）
+pnpm add -D typescript @types/node @types/express @types/cors @types/morgan
+pnpm add -D tsx nodemon</code></pre>
+        <h3>8.2 目录结构（推荐分层）</h3>
+        <pre><code>my-api/
+├── src/
+│   ├── app.ts              # Express 实例 & 中间件挂载
+│   ├── server.ts           # 启动入口
+│   ├── config/             # 配置（环境变量、密钥）
+│   │   └── index.ts
+│   ├── routes/             # 路由定义
+│   │   └── user.routes.ts
+│   ├── controllers/        # 控制器（业务逻辑入口）
+│   │   └── user.controller.ts
+│   ├── services/           # 服务层（核心业务逻辑）
+│   │   └── user.service.ts
+│   ├── middlewares/        # 自定义中间件
+│   │   ├── auth.ts
+│   │   └── error.ts
+│   ├── models/             # 数据模型（Prisma 实体）
+│   ├── utils/              # 工具函数
+│   └── types/              # TS 类型定义
+├── prisma/                 # 数据库 schema
+│   └── schema.prisma
+├── .env                    # 环境变量（不进版本控制）
+├── .env.example            # 环境变量示例（进版本控制）
+├── tsconfig.json
+└── package.json</code></pre>
+        <h3>8.3 最小可运行的 Express 5 服务</h3>
+        <pre><code>// src/app.ts
+import express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import morgan from 'morgan'
+import { userRouter } from './routes/user.routes.js'
+import { errorHandler } from './middlewares/error.js'
+
+const app = express()
+
+// 全局中间件
+app.use(helmet())              // 安全 HTTP 头
+app.use(cors())                // 跨域
+app.use(express.json())        // 解析 JSON body（Express 5 内置）
+app.use(morgan('dev'))         // 请求日志
+
+// 路由
+app.get('/health', (req, res) =&gt; {
+  res.json({ status: 'ok', uptime: process.uptime() })
+})
+app.use('/api/users', userRouter)
+
+// 404 处理（必须放在所有路由之后）
+app.use((req, res) =&gt; {
+  res.status(404).json({ error: 'Not Found' })
+})
+
+// 统一错误处理（必须放最后，4 个参数）
+app.use(errorHandler)
+
+export default app</code></pre>
+        <pre><code>// src/server.ts
+import app from './app.js'
+import { config } from './config/index.js'
+
+const PORT = config.port || 3000
+
+app.listen(PORT, () =&gt; {
+  console.log(`🚀 Server running at http://localhost:${PORT}`)
+})</code></pre>
+        <pre><code>// src/routes/user.routes.ts
+import { Router } from 'express'
+import { userController } from '../controllers/user.controller.js'
+
+export const userRouter = Router()
+
+userRouter.get('/', userController.list)
+userRouter.get('/:id', userController.getOne)
+userRouter.post('/', userController.create)
+userRouter.put('/:id', userController.update)
+userRouter.delete('/:id', userController.remove)</code></pre>
+        <pre><code>// src/controllers/user.controller.ts
+import type { Request, Response, NextFunction } from 'express'
+import { userService } from '../services/user.service.js'
+
+export const userController = {
+  async list(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await userService.list()
+      res.json({ data: users })
+    } catch (err) {
+      next(err)   // 传给 errorHandler
+    }
+  },
+
+  async getOne(req, res, next) {
+    try {
+      const user = await userService.findById(Number(req.params.id))
+      if (!user) return res.status(404).json({ error: 'User not found' })
+      res.json({ data: user })
+    } catch (err) {
+      next(err)
+    }
+  },
+
+  async create(req, res, next) {
+    try {
+      const user = await userService.create(req.body)
+      res.status(201).json({ data: user })
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  // update / remove 同样模式，省略
+}</code></pre>
+        <h3>8.4 统一错误处理</h3>
+        <pre><code>// src/middlewares/error.ts
+import type { ErrorRequestHandler } from 'express'
+
+export const errorHandler: ErrorRequestHandler = (err, req, res, next) =&gt; {
+  console.error('[ERROR]', err)
+
+  // 自定义业务错误
+  if (err.code === 'NOT_FOUND') {
+    return res.status(404).json({ error: err.message })
+  }
+  if (err.code === 'VALIDATION_ERROR') {
+    return res.status(400).json({ error: err.message })
+  }
+
+  // 默认 500
+  res.status(500).json({ error: 'Internal Server Error' })
+}
+
+// 自定义错误类
+export class AppError extends Error {
+  constructor(public code: string, message: string, public status = 400) {
+    super(message)
+  }
+}</code></pre>
+        <h3>8.5 tsconfig.json 关键配置</h3>
+        <pre><code>{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["src/**/*"]
+}</code></pre>
+        <h3>8.6 package.json scripts</h3>
+        <pre><code>{
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch src -e ts --exec \"tsx src/server.ts\"",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  }
+}</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 开发期热重载</div>
+          <p><code>tsx</code> 是 ESM 原生的 TS 运行时，<code>nodemon</code> 监听文件变化自动重启。<strong>tsx 比 ts-node 快 5 倍</strong>，本指南推荐这套组合。</p>
+        </div>
+      </section>
+
+      <section class="section" id="ch09">
+        <h2>9. 数据库集成 & ORM</h2>
+        <p>Node.js 后端离不开数据库。<strong>关系型首选 MySQL 8 + Prisma</strong>（TypeScript 时代的 ORM 王者）。</p>
+        <h3>9.1 Prisma 快速上手</h3>
+        <pre><code># 装 Prisma
+pnpm add prisma @prisma/client
+
+# 初始化（交互式选数据库）
+pnpm prisma init --datasource-provider mysql
+
+# 编辑 prisma/schema.prisma 定义模型
+cat &gt; prisma/schema.prisma &lt;&lt; 'EOF'
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @db.Text
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
+}
+EOF
+
+# 把 MySQL 连接串写入 .env
+echo 'DATABASE_URL="mysql://root:密码@localhost:3306/myapp"' &gt;&gt; .env
+
+# 同步 schema 到数据库（开发期）
+pnpm prisma db push
+
+# 生成类型化的 Client
+pnpm prisma generate</code></pre>
+        <h3>9.2 在 Service 层使用 Prisma Client</h3>
+        <pre><code>// src/utils/prisma.ts —— 单例 Prisma Client
+import { PrismaClient } from '@prisma/client'
+
+// 避免开发期热重载导致连接爆炸
+const globalForPrisma = global as unknown as { prisma?: PrismaClient }
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma
+}</code></pre>
+        <pre><code>// src/services/user.service.ts
+import { prisma } from '../utils/prisma.js'
+import { AppError } from '../middlewares/error.js'
+
+export const userService = {
+  async list() {
+    return prisma.user.findMany({
+      select: { id: true, email: true, name: true, role: true }
+    })
+  },
+
+  async findById(id: number) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: { id: true, email: true, name: true, role: true }
+    })
+  },
+
+  async create(data: { email: string; name: string; password: string }) {
+    const existing = await prisma.user.findUnique({ where: { email: data.email } })
+    if (existing) throw new AppError('EMAIL_EXISTS', '邮箱已被注册', 409)
+    return prisma.user.create({ data })
+  },
+
+  // 关联查询：找出用户的所有文章
+  async getPosts(userId: number) {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      include: { posts: { orderBy: { createdAt: 'desc' } } }
+    })
+  }
+}</code></pre>
+        <h3>9.3 Redis 缓存集成</h3>
+        <pre><code># 装 Redis 客户端
+pnpm add ioredis</code></pre>
+        <pre><code>// src/utils/redis.ts
+import Redis from 'ioredis'
+
+export const redis = new Redis({
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: Number(process.env.REDIS_PORT) || 6379,
+  password: process.env.REDIS_PASSWORD
+})
+
+redis.on('error', (err) =&gt; console.error('Redis error:', err))
+
+// 缓存装饰器模式（读穿透）
+export async function cacheAside&lt;T&gt;(
+  cacheKey: string,
+  ttl: number,         // 秒
+  loader: () =&gt; Promise&lt;T&gt;
+): Promise&lt;T&gt; {
+  const cached = await redis.get(cacheKey)
+  if (cached) return JSON.parse(cached)
+  const fresh = await loader()
+  await redis.set(cacheKey, JSON.stringify(fresh), 'EX', ttl)
+  return fresh
+}
+
+// 用法
+async function getUser(id: number) {
+  return cacheAside(
+    `user:${id}`,        // key
+    300,                 // 5 分钟过期
+    () =&gt; prisma.user.findUnique({ where: { id } })
+  )
+}</code></pre>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ Prisma 三大坑</div>
+          <ul>
+            <li><strong><code>db push</code> 不要用在生产</strong>：生产用 <code>prisma migrate deploy</code></li>
+            <li><strong>连接池爆炸</strong>：开发期热重载记得用 <code>globalThis</code> 单例</li>
+            <li><strong>N+1 查询</strong>：关联数据用 <code>include</code> 一次查完</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="ch10">
+        <h2>10. 认证安全：JWT + 哈希 + 防护</h2>
+        <p>后端项目上线前必须解决四个问题：<strong>身份认证、密码加密、跨域防护、输入校验</strong>。本章给出最小安全配置。</p>
+        <h3>10.1 JWT 认证（access + refresh 双 token）</h3>
+        <pre><code># 装依赖
+pnpm add jsonwebtoken bcryptjs zod
+pnpm add -D @types/jsonwebtoken @types/bcryptjs</code></pre>
+        <pre><code>// src/utils/jwt.ts
+import jwt from 'jsonwebtoken'
+
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!
+
+export interface JwtPayload {
+  userId: number
+  role: string
+}
+
+// access token 短期（2 小时）
+export function signAccess(payload: JwtPayload) {
+  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '2h' })
+}
+
+// refresh token 长期（7 天）
+export function signRefresh(payload: JwtPayload) {
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '7d' })
+}
+
+export function verifyAccess(token: string): JwtPayload {
+  return jwt.verify(token, ACCESS_SECRET) as JwtPayload
+}</code></pre>
+        <h3>10.2 bcrypt 密码哈希</h3>
+        <pre><code>// src/utils/hash.ts
+import bcrypt from 'bcryptjs'
+
+export async function hashPassword(plain: string): Promise&lt;string&gt; {
+  return bcrypt.hash(plain, 12)   // cost = 12 推荐
+}
+
+export async function verifyPassword(plain: string, hashed: string): Promise&lt;boolean&gt; {
+  return bcrypt.compare(plain, hashed)
+}</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 密码安全红线</div>
+          <ul>
+            <li>❌ <strong>永远不要明文存密码</strong>，必须 bcrypt 哈希</li>
+            <li>❌ <strong>不要用 MD5 / SHA1</strong>，这两个算法已被破解</li>
+            <li>✅ <strong>cost ≥ 10</strong>，本指南用 12（100ms 左右）</li>
+            <li>✅ <strong>数据库只存 hash，不存明文</strong></li>
+          </ul>
+        </div>
+        <h3>10.3 登录接口完整实现</h3>
+        <pre><code>// src/controllers/auth.controller.ts
+import { userService } from '../services/user.service.js'
+import { verifyPassword } from '../utils/hash.ts'
+import { signAccess, signRefresh } from '../utils/jwt.ts'
+import { AppError } from '../middlewares/error.js'
+
+export const authController = {
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body
+      const user = await userService.findByEmail(email)
+      if (!user) throw new AppError('INVALID_CRED', '邮箱或密码错误', 401)
+
+      const ok = await verifyPassword(password, user.password)
+      if (!ok) throw new AppError('INVALID_CRED', '邮箱或密码错误', 401)
+
+      const payload = { userId: user.id, role: user.role }
+      res.json({
+        accessToken: signAccess(payload),
+        refreshToken: signRefresh(payload),
+        user: { id: user.id, email: user.email, name: user.name }
+      })
+    } catch (err) {
+      next(err)
+    }
+  },
+
+  async refresh(req, res, next) {
+    try {
+      const { refreshToken } = req.body
+      const payload = verifyAccess(refreshToken)   // 实际用 verifyRefresh
+      res.json({ accessToken: signAccess(payload) })
+    } catch (err) {
+      next(new AppError('INVALID_TOKEN', '无效 token', 401))
+    }
+  }
+}</code></pre>
+        <h3>10.4 鉴权中间件</h3>
+        <pre><code>// src/middlewares/auth.ts
+import type { Request, Response, NextFunction } from 'express'
+import { verifyAccess } from '../utils/jwt.js'
+import { AppError } from './error.js'
+
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const auth = req.headers.authorization
+  if (!auth?.startsWith('Bearer ')) {
+    throw new AppError('NO_TOKEN', '未提供 token', 401)
+  }
+  try {
+    const payload = verifyAccess(auth.slice(7))
+    req.user = payload   // 挂到 req 上供后续使用
+    next()
+  } catch {
+    throw new AppError('INVALID_TOKEN', 'token 无效或过期', 401)
+  }
+}
+
+// 角色权限
+export function requireRole(...roles: string[]) {
+  return (req: Request, res: Response, next: NextFunction) =&gt; {
+    if (!roles.includes(req.user.role)) {
+      throw new AppError('FORBIDDEN', '权限不足', 403)
+    }
+    next()
+  }
+}</code></pre>
+        <h3>10.5 输入校验 Zod</h3>
+        <pre><code>// src/middlewares/validate.ts
+import type { Request, Response, NextFunction } from 'express'
+import { ZodSchema } from 'zod'
+import { AppError } from './error.js'
+
+export function validate(schema: ZodSchema) {
+  return (req: Request, res: Response, next: NextFunction) =&gt; {
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+      const msg = result.error.issues.map(i =&gt; `${i.path.join('.')}: ${i.message}`).join('; ')
+      throw new AppError('VALIDATION_ERROR', msg, 400)
+    }
+    req.body = result.data   // 替换为已校验的数据
+    next()
+  }
+}
+
+// 用法
+// src/routes/auth.routes.ts
+import { z } from 'zod'
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(64)
+})
+
+router.post('/login', validate(loginSchema), authController.login)</code></pre>
+        <h3>10.6 安全防护一览</h3>
+        <table>
+          <thead>
+            <tr><th>威胁</th><th>防护方案</th><th>包</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>XSS</td><td>Helmet + 输出转义</td><td><code>helmet</code></td></tr>
+            <tr><td>CSRF</td><td>SameSite Cookie + CSRF Token</td><td><code>csurf</code>（已停维护）</td></tr>
+            <tr><td>SQL 注入</td><td>Prisma 参数化查询（默认安全）</td><td>Prisma 内置</td></tr>
+            <tr><td>暴力破解</td><td>限流</td><td><code>express-rate-limit</code></td></tr>
+            <tr><td>跨域</td><td>CORS 配置</td><td><code>cors</code></td></tr>
+            <tr><td>密码泄露</td><td>bcrypt 哈希 + HTTPS</td><td><code>bcryptjs</code></td></tr>
+            <tr><td>JWT 泄露</td><td>短期 access + 长期 refresh</td><td><code>jsonwebtoken</code></td></tr>
+          </tbody>
+        </table>
+        <h3>10.7 限流中间件</h3>
+        <pre><code>import rateLimit from 'express-rate-limit'
+
+// 全局限流：每 IP 每 15 分钟最多 100 个请求
+export const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: '请求过于频繁，请稍后再试' }
+})
+
+// 登录接口单独更严：每 IP 每分钟最多 5 次
+export const loginLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  message: { error: '登录尝试次数过多，请 1 分钟后再试' }
+})
+
+// 挂载
+app.use(globalLimiter)
+app.use('/api/auth/login', loginLimiter, authController.login)</code></pre>
+      </section><section class="section" id="ch11">
+        <h2>11. 工程化：日志 / 测试 / 部署 / 性能</h2>
+        <p>代码能跑 ≠ 能上线。一个生产级 Node.js 项目需要做好<strong>日志、测试、部署、性能</strong>四件事。</p>
+
+        <h3>11.1 结构化日志（pino）</h3>
+        <p>生产环境<strong>不要用 console.log</strong>，用 pino 这种结构化日志库，输出 JSON 方便采集分析。</p>
+        <pre><code># 装 pino
+pnpm add pino
+pnpm add -D pino-pretty   # 本地开发格式化</code></pre>
+        <pre><code>// src/utils/logger.ts
+import pino from 'pino'
+
+export const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  // 开发期用 pino-pretty，生产输出 JSON
+  transport: process.env.NODE_ENV === 'production'
+    ? undefined
+    : { target: 'pino-pretty', options: { colorize: true } }
+})
+
+// 用法
+logger.info({ userId: 1, action: 'login' }, '用户登录')
+logger.error({ err, userId: 1 }, '登录失败')</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 日志分级</div>
+          <p>四级：<code>fatal</code>（崩溃） / <code>error</code>（错误） / <code>warn</code>（警告） / <code>info</code>（业务日志） / <code>debug</code>（调试）。<strong>不要记敏感信息</strong>（密码、token、身份证号）。</p>
+        </div>
+
+        <h3>11.2 配置管理（dotenv + 校验）</h3>
+        <pre><code>// src/config/index.ts
+import 'dotenv/config'
+import { z } from 'zod'
+
+// 用 zod 校验环境变量，启动时就报错
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  PORT: z.coerce.number().default(3000),
+  DATABASE_URL: z.string().url(),
+  JWT_ACCESS_SECRET: z.string().min(16),
+  JWT_REFRESH_SECRET: z.string().min(16),
+  REDIS_HOST: z.string().default('127.0.0.1'),
+  REDIS_PORT: z.coerce.number().default(6379)
+})
+
+const env = envSchema.parse(process.env)
+
+export const config = {
+  env: env.NODE_ENV,
+  port: env.PORT,
+  isProd: env.NODE_ENV === 'production',
+  db: { url: env.DATABASE_URL },
+  jwt: { access: env.JWT_ACCESS_SECRET, refresh: env.JWT_REFRESH_SECRET },
+  redis: { host: env.REDIS_HOST, port: env.REDIS_PORT }
+}</code></pre>
+
+        <h3>11.3 单元测试（Vitest）</h3>
+        <pre><code># 装 Vitest + supertest（HTTP 测试）
+pnpm add -D vitest supertest @vitest/coverage-v8</code></pre>
+        <pre><code>// tests/user.test.ts
+import { describe, it, expect, beforeEach } from 'vitest'
+import request from 'supertest'
+import app from '../src/app.js'
+
+describe('User API', () =&gt; {
+  it('GET /health should return ok', async () =&gt; {
+    const res = await request(app).to('/health')
+    expect(res.status).toBe(200)
+    expect(res.body.status).toBe('ok')
+  })
+
+  it('POST /api/users should create user', async () =&gt; {
+    const res = await request(app)
+      .post('/api/users')
+      .send({ email: 'test@x.com', name: '测试', password: '12345678' })
+
+    expect(res.status).toBe(201)
+    expect(res.body.data.email).toBe('test@x.com')
+  })
+})</code></pre>
+        <pre><code># package.json 加 scripts
+"test": "vitest run",
+"test:watch": "vitest",
+"test:coverage": "vitest run --coverage"</code></pre>
+
+        <h3>11.4 PM2 守护进程（生产部署）</h3>
+        <p>PM2 是 Node.js 最流行的进程管理器，<strong>支持集群、零停机重启、日志管理、开机自启</strong>。</p>
+        <pre><code># 全局装 PM2
+npm install -g pm2
+
+# ecosystem 配置文件（推荐）
+cat &gt; ecosystem.config.js &lt;&lt; 'EOF'
+export default {
+  apps: [{
+    name: 'my-api',
+    script: 'dist/server.js',
+    instances: 'max',          // 集群模式，跑满所有 CPU
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    },
+    max_memory_restart: '500M', // 内存超 500M 自动重启
+    error_file: 'logs/error.log',
+    out_file: 'logs/out.log',
+    log_date_format: 'YYYY-MM-DD HH:mm:ss Z'
+  }]
+}
+EOF
+
+# 常用命令
+pm2 start ecosystem.config.js          # 启动
+pm2 save                                # 保存进程列表
+pm2 startup                             # 设置开机自启
+pm2 reload my-api                       # 零停机热重载
+pm2 logs my-api --lines 200            # 实时日志
+pm2 monit                                # 监控面板</code></pre>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ PM2 集群模式陷阱</div>
+          <ul>
+            <li>集群模式是<strong>多进程</strong>，内存里的状态（如内存计数器）不共享，<strong>状态必须放 Redis</strong></li>
+            <li>不要在 PM2 集群里跑 <code>ts-node-dev</code>，必须先编译成 JS 再跑</li>
+            <li><code>instances: 'max'</code> 是最常用值，但要看服务器 CPU 核数</li>
+          </ul>
+        </div>
+
+        <h3>11.5 Docker 部署（参考 Docker 系列指南）</h3>
+        <p>详细 Docker 部署见《Docker 实操》与《Docker 部署 Next.js 全栈实战》两篇。这里给最精简的多阶段 Dockerfile：</p>
+        <pre><code># 多阶段构建
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable &amp;&amp; pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm build &amp;&amp; pnpm prune --prod
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+EXPOSE 3000
+CMD ["node", "dist/server.js"]</code></pre>
+
+        <h3>11.6 Nginx 反向代理 + HTTPS</h3>
+        <pre><code># /etc/nginx/sites-available/my-api
+server {
+  listen 80;
+  server_name api.example.com;
+  return 301 https://$server_name$request_uri;   # 强制 HTTPS
+}
+
+server {
+  listen 443 ssl http2;
+  server_name api.example.com;
+
+  ssl_certificate     /etc/letsencrypt/live/api.example.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/api.example.com/privkey.pem;
+
+  # 限流
+  limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
+  location / {
+    limit_req zone=api burst=20 nodelay;
+    proxy_pass http://127.0.0.1:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    # WebSocket 支持（如需要）
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}</code></pre>
+
+        <h3>11.7 性能优化：Cluster 集群</h3>
+        <p>Node.js 是单进程的，<strong>现代服务器都是多核 CPU</strong>，必须用 cluster 跑满所有核。</p>
+        <pre><code>// cluster.ts —— 手动 cluster
+import cluster from 'node:cluster'
+import os from 'node:os'
+
+if (cluster.isPrimary) {
+  // 主进程：fork 工作进程
+  const cpus = os.cpus().length
+  console.log(`主进程 ${process.pid} 启动，fork ${cpus} 个工作进程`)
+  for (let i = 0; i &lt; cpus; i++) cluster.fork()
+  cluster.on('exit', (worker, code, signal) =&gt; {
+    console.log(`工作进程 ${worker.process.pid} 退出，重启中...`)
+    cluster.fork()   // 自动重启
+  })
+} else {
+  // 工作进程：启动 Express
+  import('./app.js')
+}</code></pre>
+        <div class="callout tip">
+          <div class="callout-title">🟢 不用 cluster 的两种方案</div>
+          <ol>
+            <li><strong>PM2 集群</strong>：运维友好，自动负载均衡（推荐）</li>
+            <li><strong>Node 内置 <code>cluster</code> 模块</strong>：纯代码方案，灵活</li>
+            <li><strong>Docker 多实例 + Nginx upstream</strong>：容器化部署推荐</li>
+          </ol>
+        </div>
+
+        <h3>11.8 性能优化：缓存策略</h3>
+        <p>详见《Redis 实战指南》专门章节。本节给一个<strong>读多写少接口</strong>的缓存模式：</p>
+        <pre><code>// 列表接口：缓存 5 分钟
+async function listUsers() {
+  return cacheAside(
+    'users:list',
+    300,
+    () =&gt; prisma.user.findMany()
+  )
+}
+
+// 写操作：删除缓存
+async function updateUser(id: number, data: any) {
+  const user = await prisma.user.update({ where: { id }, data })
+  await redis.del(`user:${id}`)
+  await redis.del('users:list')   // 列表缓存也要失效
+  return user
+}</code></pre>
+        <div class="callout danger">
+          <div class="callout-title">🔴 缓存三大问题</div>
+          <p>详见 Redis 指南，本节只列出口诀：</p>
+          <ul>
+            <li><strong>穿透</strong>：缓存空值、布隆过滤器</li>
+            <li><strong>击穿</strong>：互斥锁重建缓存</li>
+            <li><strong>雪崩</strong>：过期时间加随机值、多级缓存</li>
+          </ul>
+        </div>
+
+        <h3>11.9 监控与健康检查</h3>
+        <pre><code>// 健康检查端点
+app.get('/health', async (req, res) =&gt; {
+  const checks = {
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    db: 'unknown',
+    redis: 'unknown'
+  }
+
+  try {
+    await prisma.$queryRaw`SELECT 1`
+    checks.db = 'ok'
+  } catch { checks.db = 'down' }
+
+  try {
+    await redis.ping()
+    checks.redis = 'ok'
+  } catch { checks.redis = 'down' }
+
+  const isHealthy = checks.db === 'ok' &amp;&amp; checks.redis === 'ok'
+  res.status(isHealthy ? 200 : 503).json(checks)
+})</code></pre>
+      </section>
+
+      <section class="section" id="ch12">
+        <h2>12. 报错速查 & 验证清单</h2>
+        <p>卡住时救命用。把报错对号入座找解决办法。</p>
+
+        <h3>12.1 安装与环境报错</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决办法</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>node: command not found</code></td><td>Node 没装 / PATH 没配</td><td>用 nvm 装，或检查环境变量</td></tr>
+            <tr><td><code>npm ERR! ETARGET</code></td><td>package.json 版本号写错</td><td>用 <code>npm view 包名 versions</code> 查可用版本</td></tr>
+            <tr><td>pnpm 装包慢</td><td>没换源</td><td><code>pnpm config set registry https://registry.npmmirror.com</code></td></tr>
+            <tr><td><code>EBADENGINE</code></td><td>Node 版本太低</td><td><code>nvm install 20</code> 升级</td></tr>
+            <tr><td><code>ELIFECYCLE</code></td><td>npm scripts 报错</td><td>看完整 stack trace，通常是 TypeScript 编译错误</td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.2 模块与 ESM 报错</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决办法</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Cannot use import statement outside a module</code></td><td>没开 ESM</td><td>package.json 加 <code>"type": "module"</code>，或改后缀为 <code>.mjs</code></td></tr>
+            <tr><td><code>require() of ES Module ... not supported</code></td><td>CJS 文件 require 了 ESM</td><td>改用 <code>import()</code> 动态加载</td></tr>
+            <tr><td><code>__dirname is not defined</code></td><td>ESM 没有 <code>__dirname</code></td><td>用 <code>fileURLToPath(import.meta.url)</code> 模拟</td></tr>
+            <tr><td><code>Cannot find module</code></td><td>路径错误或没装包</td><td>检查 <code>import</code> 路径，<code>pnpm add</code> 装上</td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.3 Express 与 HTTP 报错</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决办法</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>EADDRINUSE</code></td><td>端口被占用</td><td><code>lsof -i :3000</code> 查占用进程，杀掉或换端口</td></tr>
+            <tr><td><code>req.body is undefined</code></td><td>没装 <code>express.json()</code></td><td>确认 app.use(express.json())</td></tr>
+            <tr><td><code>CORS error</code></td><td>跨域被拦</td><td>配置 <code>cors()</code>，或在前端用 proxy</td></tr>
+            <tr><td><code>Cannot set headers</code></td><td>已经 res.send 之后又 res.send</td><td>检查代码中是否有多个响应</td></tr>
+            <tr><td><code>UnhandledPromiseRejection</code></td><td>async 函数没 catch</td><td>所有 await 都 try/catch，或加全局监听</td></tr>
+            <tr><td><code>PayloadTooLargeError</code></td><td>请求体超过 100kb</td><td><code>express.json({ limit: '10mb' })</code></td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.4 数据库与 Prisma 报错</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决办法</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Can't reach database server</code></td><td>DATABASE_URL 错或库没起</td><td>检查连接串、确认 MySQL 启动、关防火墙</td></tr>
+            <tr><td><code>PrismaClientInitializationError</code></td><td>Prisma Client 没生成</td><td><code>pnpm prisma generate</code></td></tr>
+            <tr><td><code>Unique constraint failed</code></td><td>唯一索引冲突</td><td>业务层先查询再判断，捕获 P2002 错误码</td></tr>
+            <tr><td><code>Foreign key constraint</code></td><td>外键关联数据不存在</td><td>确认关联记录已存在再写入</td></tr>
+            <tr><td><code>Too many connections</code></td><td>连接池耗尽</td><td>单例 Prisma Client，开发期热重载用 globalThis</td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.5 JWT 与认证报错</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决办法</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>JsonWebTokenError: invalid signature</code></td><td>密钥不一致</td><td>access / refresh 用不同密钥，前后端一致</td></tr>
+            <tr><td><code>TokenExpiredError</code></td><td>token 过期</td><td>前端拦截 401 后用 refresh token 续签</td></tr>
+            <tr><td><code>ENOENT: no such file</code></td><td>读 .env 文件路径不对</td><td>确认 .env 在项目根目录，启动用正确 cwd</td></tr>
+            <tr><td>密码登录一直失败</td><td>bcrypt cost 太大 / 数据库存的不是 hash</td><td>cost 调到 10-12，确认数据库存的是 hash 而非明文</td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.6 部署与运维报错</h3>
+        <table>
+          <thead>
+            <tr><th>报错</th><th>原因</th><th>解决办法</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>PM2 启动后立刻退出</td><td>缺环境变量或数据库连不上</td><td><code>pm2 logs</code> 看错误；用 <code>pm2 start</code> 时配 env</td></tr>
+            <tr><td>容器跑起来后立刻 exit</td><td>CMD 写错或环境变量缺失</td><td>Dockerfile CMD 用绝对路径，<code>docker logs</code> 看输出</td></tr>
+            <tr><td>Nginx 502 Bad Gateway</td><td>Node 进程没起或端口不通</td><td>确认 Node 在监听、curl 测端口、看 nginx error.log</td></tr>
+            <tr><td>内存爆炸 OOM</td><td>代码内存泄漏 / 没限流</td><td>用 clinic.js 排查，加内存限制重启</td></tr>
+            <tr><td>定时任务不执行</td><td>PM2 多进程重复执行</td><td>用 Redis 分布式锁，或单进程 + 通知其他实例</td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.7 完整验证清单（项目上线前必做）</h3>
+        <ol class="steps">
+          <li>✅ <strong>本地可启动</strong>：<code>pnpm dev</code> 能跑起来，访问 <code>/health</code> 返回 200</li>
+          <li>✅ <strong>核心接口通过测试</strong>：<code>pnpm test</code> 覆盖率 > 70%</li>
+          <li>✅ <strong>ESLint 无错误</strong>：<code>pnpm lint</code></li>
+          <li>✅ <strong>TypeScript 编译通过</strong>：<code>pnpm build</code> 无报错</li>
+          <li>✅ <strong>环境变量校验通过</strong>：缺关键配置启动失败</li>
+          <li>✅ <strong>数据库迁移成功</strong>：<code>prisma migrate deploy</code></li>
+          <li>✅ <strong>Docker 镜像能跑</strong>：本地 <code>docker run</code> 验证</li>
+          <li>✅ <strong>PM2 能起集群</strong>：<code>pm2 start ecosystem.config.js</code></li>
+          <li>✅ <strong>Nginx 反代通</strong>：curl 测试 80/443 端口</li>
+          <li>✅ <strong>HTTPS 证书有效</strong>：<code>certbot renew --dry-run</code></li>
+          <li>✅ <strong>健康检查可访问</strong>：<code>/health</code> 200，<code>/health/ready</code> 503 当依赖挂掉</li>
+          <li>✅ <strong>日志有输出</strong>：<code>pm2 logs</code> 或 docker logs 能看到结构化 JSON</li>
+        </ol>
+
+        <h3>12.8 Node.js 后端学习口诀</h3>
+        <div class="callout tip">
+          <div class="callout-title">📌 十六句口诀</div>
+          <ol>
+            <li><strong>nvm 装 LTS</strong>：永远装 LTS，别用 Current 版本上生产</li>
+            <li><strong>pnpm 装包</strong>：磁盘省、速度快、依赖严格</li>
+            <li><strong>新项目用 ESM</strong>：package.json 加 type:module，命名导入</li>
+            <li><strong>异步用 await</strong>：所有 Promise 都 try/catch</li>
+            <li><strong>事件循环懂顺序</strong>：同步 → nextTick → 微任务 → 宏任务</li>
+            <li><strong>大文件用 Stream</strong>：readFile 爆内存，pipe 流式处理</li>
+            <li><strong>分层架构</strong>：route → controller → service → model，职责清晰</li>
+            <li><strong>Prisma 用 type</strong>：generate 后所有查询都有类型提示</li>
+            <li><strong>密码 bcrypt</strong>：cost ≥ 12，永远不存明文</li>
+            <li><strong>JWT 双 token</strong>：access 短期 + refresh 长期</li>
+            <li><strong>输入校验 Zod</strong>：请求体 schema 校验后再处理</li>
+            <li><strong>日志用 pino</strong>：结构化 JSON，不记敏感信息</li>
+            <li><strong>PM2 集群</strong>：跑满所有 CPU 核，自动重启</li>
+            <li><strong>Nginx 反代 + HTTPS</strong>：certbot 免费证书，强制 443</li>
+            <li><strong>缓存放 Redis</strong>：session、计数器、热点数据</li>
+            <li><strong>监控 + 健康检查</strong>：<code>/health</code> 端点必做，故障告警自动</li>
+          </ol>
+        </div>
+
+        <p>按这十六句口诀对照检查，Node.js 后端开发就能上手做项目。指南到这里就结束了，<strong>祝你编码愉快</strong>。</p>
+      </section>    </main>
+    <script>
+      const toggle = document.getElementById('menuToggle')
+      const sidebar = document.getElementById('sidebar')
+      const overlay = document.getElementById('overlay')
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open')
+        overlay.classList.toggle('open')
+      })
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open')
+        overlay.classList.remove('open')
+      })
+      document.querySelectorAll('.toc a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'))
+          if (target) {
+            e.preventDefault()
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+          sidebar.classList.remove('open')
+          overlay.classList.remove('open')
+        })
+      })
+      const sections = document.querySelectorAll('.section')
+      const tocLinks = document.querySelectorAll('.toc a')
+      function updateActiveLink() {
+        let current = ''
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 120) current = section.id
+        })
+        tocLinks.forEach((link) => {
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + current,
+          )
+        })
+      }
+      window.addEventListener('scroll', updateActiveLink, { passive: true })
+      updateActiveLink()
+      function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre')
+        navigator.clipboard
+          .writeText(pre.innerText)
+          .then(() => {
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+          .catch(() => {
+            const range = document.createRange()
+            range.selectNode(pre)
+            window.getSelection().removeAllRanges()
+            window.getSelection().addRange(range)
+            document.execCommand('copy')
+            btn.textContent = '已复制!'
+            setTimeout(() => {
+              btn.textContent = '复制'
+            }, 1500)
+          })
+      }
+    </script>
+  </body>
+</html>
